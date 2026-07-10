@@ -7,12 +7,20 @@ interface PageHeaderProps {
   onIcon: (icon: string) => void;
   onDelete: () => void;
   onToggleFavorite: (favorite: boolean) => void;
+  onExport: () => void;
 }
 
 const ICONS = ['📄', '📝', '📌', '💡', '✅', '📚', '🚀', '🗂️'];
 
 /** The page's icon picker + title field + favorite star + trash control. */
-export function PageHeader({ page, onTitle, onIcon, onDelete, onToggleFavorite }: PageHeaderProps) {
+export function PageHeader({
+  page,
+  onTitle,
+  onIcon,
+  onDelete,
+  onToggleFavorite,
+  onExport,
+}: PageHeaderProps) {
   const [title, setTitle] = useState(page.title);
   return (
     <header className="pv-page-header">
@@ -44,6 +52,9 @@ export function PageHeader({ page, onTitle, onIcon, onDelete, onToggleFavorite }
           onClick={() => onToggleFavorite(!page.favorite)}
         >
           {page.favorite ? '★ Favorited' : '☆ Favorite'}
+        </button>
+        <button className="pv-page-delete pv-muted" onClick={onExport}>
+          Export Markdown
         </button>
         <button className="pv-page-delete pv-muted" onClick={onDelete}>
           Move to trash

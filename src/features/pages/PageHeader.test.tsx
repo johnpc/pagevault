@@ -25,6 +25,7 @@ const props = {
   onIcon: vi.fn(),
   onDelete: vi.fn(),
   onToggleFavorite: vi.fn(),
+  onExport: vi.fn(),
 };
 
 describe('PageHeader', () => {
@@ -50,6 +51,13 @@ describe('PageHeader', () => {
     render(<PageHeader {...props} onDelete={onDelete} />);
     await userEvent.click(screen.getByText('Move to trash'));
     expect(onDelete).toHaveBeenCalled();
+  });
+
+  it('exports the page', async () => {
+    const onExport = vi.fn();
+    render(<PageHeader {...props} onExport={onExport} />);
+    await userEvent.click(screen.getByText('Export Markdown'));
+    expect(onExport).toHaveBeenCalled();
   });
 
   it('toggles favorite on', async () => {

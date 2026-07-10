@@ -24,6 +24,7 @@ export function PageEditor() {
     removePage,
     moveBlockTo,
     addSubPage,
+    exportMarkdown,
   } = usePageEditor(id);
   const dnd = useBlockDnd(moveBlockTo);
 
@@ -53,6 +54,7 @@ export function PageEditor() {
                   onIcon={setIcon}
                   onDelete={onDelete}
                   onToggleFavorite={setFavorite}
+                  onExport={exportMarkdown}
                 />
                 <LoadState
                   loading={blocks.isLoading}

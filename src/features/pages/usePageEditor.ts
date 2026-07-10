@@ -7,20 +7,15 @@ import {
   usePages,
   useToggleFavorite,
 } from './pagesApi';
-import {
-  useBlocks,
-  useCreateBlock,
-  useUpdateBlock,
-  useDeleteBlock,
-  useReorderBlocks,
-} from '../blocks/blocksApi';
-import { moveBlock, sortUpdates } from '../blocks/reorder';
-import type { BlockRecord } from '../../lib/pbClient';
-import type { BlockType } from '../../lib/pbTypes';
+import { useBlocks } from '../blocks/blocksApi';
+import { useBlockActions } from '../blocks/useBlockActions';
+import { pageToMarkdown, fileSlug } from '../blocks/exportMarkdown';
+import { downloadText } from '../../lib/download';
 
 /**
  * Orchestrates one page's editing surface: the page record + its blocks, plus
- * the mutations the editor needs. Keeps all logic out of the view component.
+ * the mutations the editor needs. Block-list actions live in useBlockActions;
+ * page-level actions are here.
  */
 export function usePageEditor(pageId: string) {
   const page = usePage(pageId);
@@ -28,12 +23,9 @@ export function usePageEditor(pageId: string) {
   const updatePage = useUpdatePage();
   const archivePage = useArchivePage();
   const toggleFavorite = useToggleFavorite();
-  const createBlock = useCreateBlock(pageId);
-  const updateBlock = useUpdateBlock(pageId);
-  const deleteBlock = useDeleteBlock(pageId);
-  const reorderBlocks = useReorderBlocks(pageId);
   const createPage = useCreatePage();
   const allPages = usePages();
+  const blockActions = useBlockActions(pageId, blocks.data ?? []);
 
   /** Create a child page under this one; returns the new page's id to navigate. */
   const addSubPage = useCallback(async () => {
@@ -57,37 +49,21 @@ export function usePageEditor(pageId: string) {
     [pageId, toggleFavorite],
   );
 
-  const addBlock = useCallback(
-    (type: BlockType = 'text') =>
-      createBlock.mutate({ type, content: '', siblings: blocks.data ?? [] }),
-    [createBlock, blocks.data],
-  );
-
-  const editBlock = useCallback(
-    (id: string, patch: Partial<BlockRecord>) => updateBlock.mutate({ id, patch }),
-    [updateBlock],
-  );
-
-  const moveBlockTo = useCallback(
-    (fromId: string, toId: string) => {
-      const reordered = moveBlock(blocks.data ?? [], fromId, toId);
-      const updates = sortUpdates(reordered);
-      if (updates.length) reorderBlocks.mutate({ reordered, updates });
-    },
-    [blocks.data, reorderBlocks],
-  );
+  /** Download the current page as a Markdown file. */
+  const exportMarkdown = useCallback(() => {
+    if (!page.data) return;
+    downloadText(`${fileSlug(page.data.title)}.md`, pageToMarkdown(page.data, blocks.data ?? []));
+  }, [page.data, blocks.data]);
 
   return {
-    moveBlockTo,
+    ...blockActions,
     addSubPage,
+    exportMarkdown,
     page,
     blocks,
     setTitle,
     setIcon,
     setFavorite,
-    addBlock,
-    editBlock,
-    removeBlock: deleteBlock.mutate,
     removePage: archivePage.mutateAsync,
   };
 }

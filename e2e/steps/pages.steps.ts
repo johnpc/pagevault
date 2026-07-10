@@ -140,6 +140,31 @@ Then('I should see {string} in the sidebar favorites', async ({ page }, title: s
   ).toBeVisible();
 });
 
+// Downloaded file captured by the export step, read by the assertion steps.
+const downloads = new WeakMap<object, { name: string; body: string }>();
+
+When('I export the page as Markdown', async ({ page }) => {
+  const [download] = await Promise.all([
+    page.waitForEvent('download'),
+    active(page).getByRole('button', { name: 'Export Markdown' }).click(),
+  ]);
+  const stream = await download.createReadStream();
+  const chunks: Buffer[] = [];
+  for await (const c of stream) chunks.push(c as Buffer);
+  downloads.set(page, {
+    name: download.suggestedFilename(),
+    body: Buffer.concat(chunks).toString('utf8'),
+  });
+});
+
+Then('the downloaded file is named {string}', async ({ page }, name: string) => {
+  expect(downloads.get(page)?.name).toBe(name);
+});
+
+Then('the download contains {string}', async ({ page }, text: string) => {
+  expect(downloads.get(page)?.body).toContain(text);
+});
+
 Then('I should not see {string} in the sidebar', async ({ page }, title: string) => {
   await expect(sidebarRow(page, title)).toHaveCount(0);
 });

@@ -18,6 +18,9 @@ vi.mock('../../lib/pbClient', () => ({
   currentUserId: () => 'u1',
 }));
 
+const downloadText = vi.fn();
+vi.mock('../../lib/download', () => ({ downloadText: (...a: unknown[]) => downloadText(...a) }));
+
 import { usePageEditor } from './usePageEditor';
 
 const wrapper = ({ children }: { children: ReactNode }) => (
@@ -51,6 +54,7 @@ describe('usePageEditor', () => {
     act(() => result.current.setTitle('New title'));
     act(() => result.current.setIcon('🚀'));
     act(() => result.current.setFavorite(true));
+    act(() => result.current.exportMarkdown());
     act(() => result.current.addBlock('heading'));
     act(() => result.current.editBlock('b1', { content: 'x' }));
     act(() => result.current.removeBlock('b1'));
@@ -76,5 +80,7 @@ describe('usePageEditor', () => {
     expect(blocks.update).toHaveBeenCalledWith('b1', { sort: 1 });
     // addSubPage creates a child under the current page.
     expect(pages.create).toHaveBeenCalledWith(expect.objectContaining({ parent: 'p1' }));
+    // exportMarkdown downloads a .md file named from the page title.
+    expect(downloadText).toHaveBeenCalledWith('t.md', expect.stringContaining('# T'));
   });
 });

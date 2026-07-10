@@ -1,0 +1,15 @@
+/**
+ * Trigger a browser download of `text` as a file. Creates a temporary object
+ * URL + anchor and clicks it. Isolated here so callers stay pure/testable.
+ */
+export function downloadText(filename: string, text: string, mime = 'text/markdown'): void {
+  const blob = new Blob([text], { type: mime });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}

@@ -64,3 +64,12 @@ Feature: Pages and blocks
     When I open the page "Team wiki"
     And I favorite the open page
     Then I should see "Team wiki" in the sidebar favorites
+
+  Scenario: Export a page as Markdown
+    Given I have a page titled "Release notes"
+    When I open the page "Release notes"
+    And I add a block with the text "Shipped the thing"
+    And I export the page as Markdown
+    Then the downloaded file is named "release-notes.md"
+    And the download contains "# Release notes"
+    And the download contains "Shipped the thing"

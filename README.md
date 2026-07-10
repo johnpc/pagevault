@@ -26,6 +26,7 @@ account, no third-party service, no lock-in.
 | Sub-pages + breadcrumb navigation                                    | ✅     |
 | Archive to trash → restore or delete forever                         | ✅     |
 | Favorite pages (pinned Favorites section)                            | ✅     |
+| Export a page as Markdown                                            | ✅     |
 | Block editor — text, headings, lists, to-dos, quotes, code, dividers | ✅     |
 | Markdown shortcuts (`# `, `- `, `1. `, `[] `, `> `, ` ``` `)         | ✅     |
 | Slash command menu (`/` to pick a block type)                        | ✅     |
