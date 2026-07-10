@@ -33,9 +33,10 @@ Then('I should see {string} in the sidebar', async ({ page }, title: string) => 
 });
 
 // Ionic keeps the previous route's page mounted (hidden) during transitions,
-// so scope queries to the VISIBLE page — the one without .ion-page-hidden.
+// so scope queries to the truly VISIBLE page — filtering on visibility (not just
+// the absence of .ion-page-hidden) so a page animating out isn't picked.
 const active = (page: import('@playwright/test').Page) =>
-  page.locator('.ion-page:not(.ion-page-hidden)').last();
+  page.locator('.ion-page:not(.ion-page-hidden)').filter({ visible: true }).last();
 
 When('I open the page {string}', async ({ page }, title: string) => {
   await sidebarRow(page, title).click();
@@ -87,7 +88,36 @@ When('I open the search result {string}', async ({ page }, title: string) => {
 });
 
 Then('I should see the open page titled {string}', async ({ page }, title: string) => {
-  await expect(active(page).getByLabel('Page title')).toHaveValue(title);
+  // Ionic can keep an outgoing page mounted mid-transition, so assert that SOME
+  // visible page-title input holds the expected value (not a specific one).
+  await expect
+    .poll(() =>
+      page.getByLabel('Page title').evaluateAll(
+        (els, t) =>
+          els.some((el) => {
+            const i = el as HTMLInputElement;
+            return i.offsetParent !== null && i.value === t;
+          }),
+        title,
+      ),
+    )
+    .toBe(true);
+});
+
+When('I add a sub-page', async ({ page }) => {
+  await active(page).getByRole('button', { name: '+ Add a sub-page' }).click();
+});
+
+When('I name the open page {string}', async ({ page }, title: string) => {
+  const input = active(page).getByLabel('Page title');
+  await input.fill(title);
+  await input.blur();
+});
+
+Then('I should see {string} in the breadcrumb', async ({ page }, title: string) => {
+  // Assert within the ACTIVE page's breadcrumb (parallel workers share the
+  // backend, and Ionic keeps other pages mounted).
+  await expect(active(page).getByTestId('breadcrumb')).toContainText(title);
 });
 
 const blockInputs = (page: import('@playwright/test').Page) =>

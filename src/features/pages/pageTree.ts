@@ -39,3 +39,21 @@ export function nextSort(items: { sort: number }[]): number {
 export function displayTitle(page: Pick<PageRecord, 'title'>): string {
   return page.title.trim() || 'Untitled';
 }
+
+/**
+ * The ancestor path for a page, root-first and INCLUDING the page itself, by
+ * walking the `parent` chain. Guards against cycles/missing parents so a
+ * corrupt link can't loop forever. Pure — unit-testable.
+ */
+export function ancestorPath(pages: PageRecord[], pageId: string): PageRecord[] {
+  const byId = new Map(pages.map((p) => [p.id, p]));
+  const path: PageRecord[] = [];
+  const seen = new Set<string>();
+  let current = byId.get(pageId);
+  while (current && !seen.has(current.id)) {
+    seen.add(current.id);
+    path.unshift(current);
+    current = current.parent ? byId.get(current.parent) : undefined;
+  }
+  return path;
+}

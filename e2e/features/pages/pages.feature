@@ -43,3 +43,11 @@ Feature: Pages and blocks
     When I search for "Quarterly budget"
     And I open the search result "Quarterly budget"
     Then I should see the open page titled "Quarterly budget"
+
+  Scenario: Create a sub-page nested under its parent
+    Given I have a page titled "Projects"
+    When I open the page "Projects"
+    And I add a sub-page
+    And I name the open page "Website redesign"
+    Then I should see "Projects" in the breadcrumb
+    And I should see "Website redesign" in the breadcrumb

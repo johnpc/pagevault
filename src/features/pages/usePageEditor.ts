@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { usePage, useUpdatePage, useDeletePage } from './pagesApi';
+import { usePage, useUpdatePage, useDeletePage, useCreatePage, usePages } from './pagesApi';
 import {
   useBlocks,
   useCreateBlock,
@@ -24,6 +24,15 @@ export function usePageEditor(pageId: string) {
   const updateBlock = useUpdateBlock(pageId);
   const deleteBlock = useDeleteBlock(pageId);
   const reorderBlocks = useReorderBlocks(pageId);
+  const createPage = useCreatePage();
+  const allPages = usePages();
+
+  /** Create a child page under this one; returns the new page's id to navigate. */
+  const addSubPage = useCallback(async () => {
+    const siblings = (allPages.data ?? []).filter((p) => p.parent === pageId);
+    const child = await createPage.mutateAsync({ parent: pageId, siblings });
+    return child.id;
+  }, [allPages.data, createPage, pageId]);
 
   const setTitle = useCallback(
     (title: string) => updatePage.mutate({ id: pageId, patch: { title } }),
@@ -57,6 +66,7 @@ export function usePageEditor(pageId: string) {
 
   return {
     moveBlockTo,
+    addSubPage,
     page,
     blocks,
     setTitle,

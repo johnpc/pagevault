@@ -1,0 +1,42 @@
+.pv-crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px;
+  margin-bottom: 12px;
+  font-size: 13px;
+}
+
+.pv-crumb {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.pv-crumb-link {
+  background: none;
+  border: none;
+  font: inherit;
+  color: var(--pv-text-muted);
+  padding: 2px 6px;
+  border-radius: var(--pv-radius-sm);
+  cursor: pointer;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pv-crumb-link:hover:not(:disabled) {
+  background: var(--pv-hover);
+  color: var(--pv-text);
+}
+.pv-crumb-link:disabled {
+  color: var(--pv-text);
+  font-weight: 600;
+  cursor: default;
+}
+
+.pv-crumb-sep {
+  color: var(--pv-text-muted);
+  opacity: 0.6;
+}

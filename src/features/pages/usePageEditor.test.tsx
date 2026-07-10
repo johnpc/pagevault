@@ -3,7 +3,13 @@ import { renderHook, act, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 
-const pages = { getOne: vi.fn(), update: vi.fn(), delete: vi.fn() };
+const pages = {
+  getOne: vi.fn(),
+  update: vi.fn(),
+  delete: vi.fn(),
+  getFullList: vi.fn(),
+  create: vi.fn(),
+};
 const blocks = { getFullList: vi.fn(), create: vi.fn(), update: vi.fn(), delete: vi.fn() };
 const cols: Record<string, unknown> = { pages, blocks };
 
@@ -30,6 +36,8 @@ describe('usePageEditor', () => {
     ]);
     pages.update.mockResolvedValue({ id: 'p1' });
     pages.delete.mockResolvedValue(true);
+    pages.getFullList.mockResolvedValue([{ id: 'p1', parent: '', sort: 0 }]);
+    pages.create.mockResolvedValue({ id: 'child1' });
     blocks.create.mockResolvedValue({ id: 'b2' });
     blocks.update.mockResolvedValue({ id: 'b1' });
     blocks.delete.mockResolvedValue(true);
@@ -46,6 +54,9 @@ describe('usePageEditor', () => {
     act(() => result.current.editBlock('b1', { content: 'x' }));
     act(() => result.current.removeBlock('b1'));
     await act(() => result.current.removePage('p1'));
+    await act(async () => {
+      expect(await result.current.addSubPage()).toBe('child1');
+    });
 
     await waitFor(() => {
       expect(pages.update).toHaveBeenCalledWith('p1', { title: 'New title' });
@@ -60,5 +71,7 @@ describe('usePageEditor', () => {
     // moveBlockTo('b2','b1') swaps order → both blocks get a new sort.
     expect(blocks.update).toHaveBeenCalledWith('b2', { sort: 0 });
     expect(blocks.update).toHaveBeenCalledWith('b1', { sort: 1 });
+    // addSubPage creates a child under the current page.
+    expect(pages.create).toHaveBeenCalledWith(expect.objectContaining({ parent: 'p1' }));
   });
 });

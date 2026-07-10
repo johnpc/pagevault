@@ -1,5 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import { buildTree, nextSort, displayTitle, sortNodes, type PageNode } from './pageTree';
+import {
+  buildTree,
+  nextSort,
+  displayTitle,
+  sortNodes,
+  ancestorPath,
+  type PageNode,
+} from './pageTree';
 import type { PageRecord } from '../../lib/pbClient';
 
 const mk = (id: string, over: Partial<PageRecord> = {}): PageRecord =>
@@ -66,5 +73,35 @@ describe('displayTitle', () => {
   it('falls back to Untitled for blank titles', () => {
     expect(displayTitle({ title: '   ' })).toBe('Untitled');
     expect(displayTitle({ title: 'Roadmap' })).toBe('Roadmap');
+  });
+});
+
+describe('ancestorPath', () => {
+  const pages = [
+    mk('a'),
+    mk('b', { parent: 'a' }),
+    mk('c', { parent: 'b' }),
+    mk('orphan', { parent: 'gone' }),
+  ];
+
+  it('returns the root-first path including the page itself', () => {
+    expect(ancestorPath(pages, 'c').map((p) => p.id)).toEqual(['a', 'b', 'c']);
+  });
+
+  it('returns just the page for a top-level page', () => {
+    expect(ancestorPath(pages, 'a').map((p) => p.id)).toEqual(['a']);
+  });
+
+  it('stops at a missing parent', () => {
+    expect(ancestorPath(pages, 'orphan').map((p) => p.id)).toEqual(['orphan']);
+  });
+
+  it('is empty for an unknown id', () => {
+    expect(ancestorPath(pages, 'nope')).toEqual([]);
+  });
+
+  it('does not loop on a cycle', () => {
+    const cyclic = [mk('x', { parent: 'y' }), mk('y', { parent: 'x' })];
+    expect(ancestorPath(cyclic, 'x').length).toBeLessThanOrEqual(2);
   });
 });

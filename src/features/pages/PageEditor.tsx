@@ -3,11 +3,12 @@ import { IonContent, IonPage } from '@ionic/react';
 import { usePageEditor } from './usePageEditor';
 import { LoadState } from '../shell/LoadState';
 import { PageHeader } from './PageHeader';
+import { Breadcrumbs } from './Breadcrumbs';
 import { BlockRow } from '../blocks/BlockRow';
 import { useBlockDnd } from '../blocks/useBlockDnd';
 import './PageEditor.css';
 
-/** The main document surface: header (icon + title) + the editable block list. */
+/** The main document surface: breadcrumbs + header + the editable block list. */
 export function PageEditor() {
   const { id } = useParams<{ id: string }>();
   const history = useHistory();
@@ -21,6 +22,7 @@ export function PageEditor() {
     removeBlock,
     removePage,
     moveBlockTo,
+    addSubPage,
   } = usePageEditor(id);
   const dnd = useBlockDnd(moveBlockTo);
 
@@ -28,6 +30,8 @@ export function PageEditor() {
     await removePage(id);
     history.push('/');
   };
+
+  const onSubPage = async () => history.push(`/page/${await addSubPage()}`);
 
   return (
     <IonPage>
@@ -41,6 +45,7 @@ export function PageEditor() {
           >
             {page.data && (
               <>
+                <Breadcrumbs pageId={id} />
                 <PageHeader
                   page={page.data}
                   onTitle={setTitle}
@@ -67,6 +72,9 @@ export function PageEditor() {
                   </div>
                   <button className="pv-add-block pv-muted" onClick={() => addBlock('text')}>
                     + Add a block
+                  </button>
+                  <button className="pv-add-block pv-muted" onClick={onSubPage}>
+                    + Add a sub-page
                   </button>
                 </LoadState>
               </>

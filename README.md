@@ -23,6 +23,7 @@ account, no third-party service, no lock-in.
 | -------------------------------------------------------------------- | ------ |
 | Email/password accounts (private, owner-scoped)                      | ✅     |
 | Nested pages in a sidebar tree                                       | ✅     |
+| Sub-pages + breadcrumb navigation                                    | ✅     |
 | Block editor — text, headings, lists, to-dos, quotes, code, dividers | ✅     |
 | Markdown shortcuts (`# `, `- `, `1. `, `[] `, `> `, ` ``` `)         | ✅     |
 | Slash command menu (`/` to pick a block type)                        | ✅     |
