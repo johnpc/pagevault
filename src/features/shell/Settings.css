@@ -1,0 +1,70 @@
+.pv-settings {
+  max-width: var(--pv-content-max);
+  margin: 0 auto;
+  padding: 64px 56px 120px;
+}
+
+.pv-settings h1 {
+  font-size: 34px;
+  margin: 0 0 24px;
+}
+
+.pv-settings-section {
+  margin-bottom: 32px;
+}
+
+.pv-settings-label {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--pv-text-muted);
+  margin: 0 0 12px;
+}
+
+.pv-theme-options {
+  display: flex;
+  gap: 10px;
+}
+
+.pv-theme-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 96px;
+  padding: 16px;
+  background: var(--pv-surface);
+  border: 1px solid var(--pv-border);
+  border-radius: var(--pv-radius);
+  font: inherit;
+  color: var(--pv-text);
+  cursor: pointer;
+}
+.pv-theme-option:hover {
+  border-color: var(--pv-accent);
+}
+.pv-theme-option--on {
+  border-color: var(--pv-accent);
+  background: var(--pv-accent-soft);
+  font-weight: 600;
+}
+
+.pv-theme-icon {
+  font-size: 22px;
+}
+
+.pv-settings-signout {
+  margin-top: 8px;
+  background: none;
+  border: 1px solid var(--pv-border);
+  font: inherit;
+  color: var(--pv-text);
+  padding: 8px 18px;
+  border-radius: var(--pv-radius-sm);
+  cursor: pointer;
+}
+.pv-settings-signout:hover {
+  border-color: var(--pv-danger);
+  color: var(--pv-danger);
+}

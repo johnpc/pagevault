@@ -32,7 +32,7 @@ account, no third-party service, no lock-in.
 | Markdown shortcuts (`# `, `- `, `1. `, `[] `, `> `, ` ``` `)         | ✅     |
 | Slash command menu (`/` to pick a block type)                        | ✅     |
 | Page icons                                                           | ✅     |
-| Light / dark / system theme                                          | ✅     |
+| Light / dark / system theme (Settings switcher)                      | ✅     |
 | Installable PWA                                                      | ✅     |
 | Self-hosted via `docker compose`                                     | ✅     |
 | Rich text (bold/italic) inside blocks                                | ⬜     |

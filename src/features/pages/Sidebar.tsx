@@ -85,6 +85,9 @@ export function Sidebar({ onSearch }: { onSearch: () => void }) {
       <button className="pv-signout pv-muted" onClick={() => history.push('/trash')}>
         🗑 Trash
       </button>
+      <button className="pv-signout pv-muted" onClick={() => history.push('/settings')}>
+        ⚙ Settings
+      </button>
       <button className="pv-signout pv-muted" onClick={signOut}>
         Sign out
       </button>

@@ -4,6 +4,7 @@ import { Sidebar } from '../pages/Sidebar';
 import { HomeScreen } from './HomeScreen';
 import { PageEditor } from '../pages/PageEditor';
 import { Trash } from '../pages/Trash';
+import { Settings } from './Settings';
 import { QuickFind } from '../search/QuickFind';
 import { useQuickFind } from '../search/useQuickFind';
 import './Workspace.css';
@@ -22,6 +23,7 @@ export function Workspace() {
         <IonRouterOutlet>
           <Route exact path="/" component={HomeScreen} />
           <Route exact path="/trash" component={Trash} />
+          <Route exact path="/settings" component={Settings} />
           <Route exact path="/page/:id" component={PageEditor} />
           <Redirect to="/" />
         </IonRouterOutlet>
