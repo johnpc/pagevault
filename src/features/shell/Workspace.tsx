@@ -3,6 +3,8 @@ import { Route, Redirect } from 'react-router-dom';
 import { Sidebar } from '../pages/Sidebar';
 import { HomeScreen } from './HomeScreen';
 import { PageEditor } from '../pages/PageEditor';
+import { QuickFind } from '../search/QuickFind';
+import { useQuickFind } from '../search/useQuickFind';
 import './Workspace.css';
 
 /**
@@ -11,9 +13,10 @@ import './Workspace.css';
  * spread here directly (never wrapped in a fragment) to avoid 404 shadowing.
  */
 export function Workspace() {
+  const { open, setOpen } = useQuickFind();
   return (
     <div className="pv-workspace">
-      <Sidebar />
+      <Sidebar onSearch={() => setOpen(true)} />
       <div className="pv-workspace-content">
         <IonRouterOutlet>
           <Route exact path="/" component={HomeScreen} />
@@ -21,6 +24,7 @@ export function Workspace() {
           <Redirect to="/" />
         </IonRouterOutlet>
       </div>
+      {open && <QuickFind onClose={() => setOpen(false)} />}
     </div>
   );
 }

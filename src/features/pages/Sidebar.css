@@ -38,6 +38,29 @@
   background: var(--pv-hover);
 }
 
+.pv-search {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: none;
+  border: none;
+  color: var(--pv-text-muted);
+  font: inherit;
+  padding: 6px 8px;
+  border-radius: var(--pv-radius-sm);
+  cursor: pointer;
+}
+.pv-search:hover {
+  background: var(--pv-hover);
+}
+.pv-kbd {
+  font-size: 11px;
+  color: var(--pv-text-muted);
+  border: 1px solid var(--pv-border);
+  border-radius: 4px;
+  padding: 1px 5px;
+}
+
 .pv-sidebar-tree {
   flex: 1;
   display: flex;

@@ -34,7 +34,7 @@ account, no third-party service, no lock-in.
 | Drag-to-reorder blocks (optimistic)                                  | ✅     |
 | Drag-to-reorder pages                                                | ⬜     |
 | File & image uploads                                                 | ⬜     |
-| Full-text search                                                     | ⬜     |
+| Quick-find search (⌘K, titles + block content)                       | ✅     |
 | Native iOS / Android builds (Capacitor)                              | ⬜     |
 
 ## Quick start (self-host in two commands)

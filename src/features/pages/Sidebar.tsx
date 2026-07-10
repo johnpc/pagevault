@@ -6,8 +6,8 @@ import { SidebarRow } from './SidebarRow';
 import { useAuth } from '../auth/useAuth';
 import './Sidebar.css';
 
-/** The left rail: workspace title, the page tree, "New page", and sign-out. */
-export function Sidebar() {
+/** The left rail: workspace title, search, the page tree, "New page", sign-out. */
+export function Sidebar({ onSearch }: { onSearch: () => void }) {
   const history = useHistory();
   const { id } = useParams<{ id?: string }>();
   const { signOut, user } = useAuth();
@@ -25,6 +25,11 @@ export function Sidebar() {
         <span className="pv-heading">PageVault</span>
         <span className="pv-muted pv-sidebar-user">{user?.email}</span>
       </div>
+
+      <button className="pv-search" onClick={onSearch}>
+        <span>🔍 Search</span>
+        <kbd className="pv-kbd">⌘K</kbd>
+      </button>
 
       <button className="pv-new-page" onClick={newPage} disabled={create.isPending}>
         + New page

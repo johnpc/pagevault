@@ -73,6 +73,23 @@ When('I choose {string} from the slash menu', async ({ page }, label: string) =>
   await active(page).getByRole('option', { name: label }).click();
 });
 
+When('I search for {string}', async ({ page }, query: string) => {
+  await page
+    .getByRole('button', { name: /Search/ })
+    .first()
+    .click();
+  await page.getByLabel('Search pages').fill(query);
+});
+
+When('I open the search result {string}', async ({ page }, title: string) => {
+  const dialog = page.getByRole('dialog', { name: 'Quick find' });
+  await dialog.getByText(title, { exact: true }).first().click();
+});
+
+Then('I should see the open page titled {string}', async ({ page }, title: string) => {
+  await expect(active(page).getByLabel('Page title')).toHaveValue(title);
+});
+
 const blockInputs = (page: import('@playwright/test').Page) =>
   active(page).locator('textarea.pv-block-input');
 

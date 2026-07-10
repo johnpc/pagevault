@@ -1,0 +1,79 @@
+import { describe, it, expect } from 'vitest';
+import { mergeResults, snippetAround } from './searchResults';
+import type { PageRecord, BlockRecord } from '../../lib/pbClient';
+
+const page = (id: string, over: Partial<PageRecord> = {}): PageRecord =>
+  ({
+    id,
+    title: id,
+    icon: '',
+    archived: false,
+    sort: 0,
+    parent: '',
+    owner: 'u1',
+    created: '',
+    updated: '',
+    collectionId: 'c',
+    collectionName: 'pages',
+    ...over,
+  }) as PageRecord;
+
+const block = (id: string, pageId: string, content: string): BlockRecord =>
+  ({
+    id,
+    page: pageId,
+    type: 'text',
+    content,
+    checked: false,
+    sort: 0,
+    owner: 'u1',
+    created: '',
+    updated: '',
+    collectionId: 'c',
+    collectionName: 'blocks',
+  }) as BlockRecord;
+
+describe('snippetAround', () => {
+  it('returns context around the match with ellipses', () => {
+    const s = snippetAround('the quick brown fox jumps over the lazy dog', 'fox', 5);
+    expect(s).toContain('fox');
+    expect(s.startsWith('…')).toBe(true);
+    expect(s.endsWith('…')).toBe(true);
+  });
+  it('handles no match by returning a prefix', () => {
+    expect(snippetAround('hello world', 'zzz', 3)).toBe('hello ');
+  });
+  it('is case-insensitive', () => {
+    expect(snippetAround('Hello World', 'world', 2)).toContain('World');
+  });
+});
+
+describe('mergeResults', () => {
+  it('lists title matches first, then block matches for other pages', () => {
+    const pages = [page('p1', { title: 'Roadmap', icon: '🚀' })];
+    const blocks = [block('b1', 'p2', 'discuss the roadmap timeline')];
+    const map = new Map([
+      ['p1', page('p1', { title: 'Roadmap' })],
+      ['p2', page('p2', { title: 'Meeting' })],
+    ]);
+    const results = mergeResults('roadmap', pages, blocks, map);
+    expect(results.map((r) => [r.pageId, r.kind])).toEqual([
+      ['p1', 'title'],
+      ['p2', 'block'],
+    ]);
+    expect(results[1].snippet).toContain('roadmap');
+  });
+
+  it('does not duplicate a page that matched by title AND block', () => {
+    const pages = [page('p1', { title: 'Roadmap' })];
+    const blocks = [block('b1', 'p1', 'roadmap notes')];
+    const map = new Map([['p1', page('p1', { title: 'Roadmap' })]]);
+    expect(mergeResults('roadmap', pages, blocks, map)).toHaveLength(1);
+  });
+
+  it('skips block hits whose page is missing or archived', () => {
+    const blocks = [block('b1', 'gone', 'x'), block('b2', 'arch', 'x')];
+    const map = new Map([['arch', page('arch', { archived: true })]]);
+    expect(mergeResults('x', [], blocks, map)).toHaveLength(0);
+  });
+});

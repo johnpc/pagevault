@@ -1,0 +1,80 @@
+.pv-qf-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(20, 28, 46, 0.35);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 12vh;
+}
+
+.pv-qf {
+  width: min(560px, 92vw);
+  background: var(--pv-surface);
+  border: 1px solid var(--pv-border);
+  border-radius: var(--pv-radius);
+  box-shadow: var(--pv-shadow);
+  overflow: hidden;
+}
+
+.pv-qf-input {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid var(--pv-border);
+  background: none;
+  color: var(--pv-text);
+  font: inherit;
+  font-size: 16px;
+  padding: 16px 18px;
+}
+.pv-qf-input:focus {
+  outline: none;
+}
+
+.pv-qf-results {
+  max-height: 50vh;
+  overflow-y: auto;
+}
+.pv-qf-results ul {
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+}
+
+.pv-qf-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  font: inherit;
+  color: var(--pv-text);
+  padding: 10px 12px;
+  border-radius: var(--pv-radius-sm);
+  cursor: pointer;
+}
+.pv-qf-item:hover {
+  background: var(--pv-accent-soft);
+}
+
+.pv-qf-icon {
+  font-size: 18px;
+}
+.pv-qf-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+}
+.pv-qf-title {
+  font-weight: 600;
+}
+.pv-qf-snippet {
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

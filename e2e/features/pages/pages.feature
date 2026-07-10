@@ -37,3 +37,9 @@ Feature: Pages and blocks
     And I type "/quote" into a new block
     And I choose "Quote" from the slash menu
     Then the last block should be a "quote" block
+
+  Scenario: Quick-find a page by title and open it
+    Given I have a page titled "Quarterly budget"
+    When I search for "Quarterly budget"
+    And I open the search result "Quarterly budget"
+    Then I should see the open page titled "Quarterly budget"
