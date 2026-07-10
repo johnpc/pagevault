@@ -1,7 +1,7 @@
 .pv-home {
   max-width: var(--pv-content-max);
   margin: 0 auto;
-  padding: 18vh 56px 0;
+  padding: 10vh 56px 60px;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -26,4 +26,53 @@
 }
 .pv-home-cta:disabled {
   opacity: 0.6;
+}
+
+.pv-home-recent {
+  align-self: stretch;
+  margin-top: 40px;
+}
+
+.pv-home-section {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0 0 12px;
+}
+
+.pv-home-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.pv-home-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+  text-align: left;
+  padding: 16px;
+  background: var(--pv-surface);
+  border: 1px solid var(--pv-border);
+  border-radius: var(--pv-radius);
+  font: inherit;
+  color: var(--pv-text);
+  cursor: pointer;
+}
+.pv-home-card:hover {
+  border-color: var(--pv-accent);
+  box-shadow: var(--pv-shadow);
+}
+
+.pv-home-card-icon {
+  font-size: 24px;
+}
+.pv-home-card-title {
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
 }

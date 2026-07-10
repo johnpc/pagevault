@@ -48,6 +48,16 @@ export function favoritePages(pages: PageRecord[]): PageRecord[] {
     .sort((a, b) => displayTitle(a).localeCompare(displayTitle(b)));
 }
 
+/** The most-recently-edited pages (newest first), capped at `limit`. Pure —
+ * powers the Home screen's "recently edited" grid. */
+export function recentPages(pages: PageRecord[], limit = 6): PageRecord[] {
+  return pages
+    .filter((p) => !p.archived)
+    .slice()
+    .sort((a, b) => (a.updated < b.updated ? 1 : a.updated > b.updated ? -1 : 0))
+    .slice(0, limit);
+}
+
 /**
  * The ancestor path for a page, root-first and INCLUDING the page itself, by
  * walking the `parent` chain. Guards against cycles/missing parents so a

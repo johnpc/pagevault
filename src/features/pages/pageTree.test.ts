@@ -6,6 +6,7 @@ import {
   sortNodes,
   ancestorPath,
   favoritePages,
+  recentPages,
   type PageNode,
 } from './pageTree';
 import type { PageRecord } from '../../lib/pbClient';
@@ -88,6 +89,21 @@ describe('favoritePages', () => {
   });
   it('returns empty when nothing is favorited', () => {
     expect(favoritePages([mk('a')])).toEqual([]);
+  });
+});
+
+describe('recentPages', () => {
+  const pages = [
+    mk('old', { updated: '2026-01-01T00:00:00Z' }),
+    mk('new', { updated: '2026-03-01T00:00:00Z' }),
+    mk('mid', { updated: '2026-02-01T00:00:00Z' }),
+    mk('arch', { updated: '2026-04-01T00:00:00Z', archived: true }),
+  ];
+  it('orders by updated desc and excludes archived', () => {
+    expect(recentPages(pages).map((p) => p.id)).toEqual(['new', 'mid', 'old']);
+  });
+  it('respects the limit', () => {
+    expect(recentPages(pages, 1).map((p) => p.id)).toEqual(['new']);
   });
 });
 
