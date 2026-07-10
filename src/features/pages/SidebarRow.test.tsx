@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route } from 'react-router-dom';
@@ -27,33 +27,47 @@ const node: PageNode = {
   children: [{ page: mk('child', { title: 'Child' }), children: [] }],
 };
 
+const renderRow = (n: PageNode, collapsed = new Set<string>(), onToggle = vi.fn()) => {
+  let location = '';
+  render(
+    <MemoryRouter initialEntries={['/']}>
+      <SidebarRow node={n} depth={0} activeId="parent" collapsed={collapsed} onToggle={onToggle} />
+      <Route
+        path="*"
+        render={({ location: loc }) => {
+          location = loc.pathname;
+          return null;
+        }}
+      />
+    </MemoryRouter>,
+  );
+  return () => location;
+};
+
 describe('SidebarRow', () => {
   it('renders the row and nested children, and navigates on click', async () => {
-    let location = '';
-    render(
-      <MemoryRouter initialEntries={['/']}>
-        <SidebarRow node={node} depth={0} activeId="parent" />
-        <Route
-          path="*"
-          render={({ location: loc }) => {
-            location = loc.pathname;
-            return null;
-          }}
-        />
-      </MemoryRouter>,
-    );
+    const getLocation = renderRow(node);
     expect(screen.getByText('Parent')).toBeInTheDocument();
     expect(screen.getByText('Child')).toBeInTheDocument();
     await userEvent.click(screen.getByText('Child'));
-    expect(location).toBe('/page/child');
+    expect(getLocation()).toBe('/page/child');
+  });
+
+  it('hides children when the node is collapsed', () => {
+    renderRow(node, new Set(['parent']));
+    expect(screen.getByText('Parent')).toBeInTheDocument();
+    expect(screen.queryByText('Child')).not.toBeInTheDocument();
+  });
+
+  it('toggles collapse via the disclosure caret', async () => {
+    const onToggle = vi.fn();
+    renderRow(node, new Set(), onToggle);
+    await userEvent.click(screen.getByRole('button', { name: 'Collapse' }));
+    expect(onToggle).toHaveBeenCalledWith('parent');
   });
 
   it('falls back to a default icon and Untitled', () => {
-    render(
-      <MemoryRouter>
-        <SidebarRow node={{ page: mk('x', { title: '' }), children: [] }} depth={0} />
-      </MemoryRouter>,
-    );
+    renderRow({ page: mk('x', { title: '' }), children: [] });
     expect(screen.getByText('📄')).toBeInTheDocument();
     expect(screen.getByText('Untitled')).toBeInTheDocument();
   });

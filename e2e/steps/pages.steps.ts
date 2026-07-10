@@ -106,12 +106,26 @@ Then('I should see the open page titled {string}', async ({ page }, title: strin
 
 When('I add a sub-page', async ({ page }) => {
   await active(page).getByRole('button', { name: '+ Add a sub-page' }).click();
+  // Wait for the new (empty-title) page to settle as the sole visible editor —
+  // Ionic keeps the previous page mounted mid-transition.
+  await expect
+    .poll(() =>
+      page
+        .getByLabel('Page title')
+        .evaluateAll((els) =>
+          els
+            .filter((el) => (el as HTMLInputElement).offsetParent !== null)
+            .map((el) => (el as HTMLInputElement).value),
+        ),
+    )
+    .toEqual(['']);
 });
 
 When('I name the open page {string}', async ({ page }, title: string) => {
   const input = active(page).getByLabel('Page title');
   await input.fill(title);
   await input.blur();
+  await expect(input).toHaveValue(title);
 });
 
 Then(
@@ -125,6 +139,15 @@ Then(
     await expect(crumb).toContainText(child);
   },
 );
+
+When('I collapse the sidebar page {string}', async ({ page }, title: string) => {
+  // The row whose OWN open-button shows the title (not an ancestor containing it).
+  const row = page
+    .locator('.pv-sidebar-tree .pv-sidebar-row')
+    .filter({ has: page.getByRole('button', { name: new RegExp(`${title}$`) }) })
+    .first();
+  await row.getByRole('button', { name: 'Collapse' }).click();
+});
 
 When('I move the page to trash', async ({ page }) => {
   await active(page).getByRole('button', { name: 'Move to trash' }).click();

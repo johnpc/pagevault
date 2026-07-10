@@ -22,7 +22,7 @@ account, no third-party service, no lock-in.
 | Feature                                                              | Status |
 | -------------------------------------------------------------------- | ------ |
 | Email/password accounts (private, owner-scoped)                      | ✅     |
-| Nested pages in a sidebar tree                                       | ✅     |
+| Nested pages in a collapsible sidebar tree                           | ✅     |
 | Sub-pages + breadcrumb navigation                                    | ✅     |
 | Archive to trash → restore or delete forever                         | ✅     |
 | Favorite pages (pinned Favorites section)                            | ✅     |

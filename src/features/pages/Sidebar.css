@@ -86,16 +86,11 @@
 .pv-sidebar-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 2px;
   width: 100%;
-  text-align: left;
-  background: none;
-  border: none;
-  font: inherit;
   color: var(--pv-text);
-  padding: 6px 8px;
+  padding: 4px 8px;
   border-radius: var(--pv-radius-sm);
-  cursor: pointer;
 }
 .pv-sidebar-row:hover {
   background: var(--pv-hover);
@@ -103,6 +98,32 @@
 .pv-sidebar-row--active {
   background: var(--pv-accent-soft);
   font-weight: 600;
+}
+
+.pv-sidebar-caret {
+  background: none;
+  border: none;
+  color: var(--pv-text-muted);
+  font-size: 10px;
+  width: 16px;
+  flex-shrink: 0;
+  cursor: pointer;
+  padding: 2px;
+}
+
+.pv-sidebar-open {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 2px 0;
 }
 
 .pv-sidebar-title {

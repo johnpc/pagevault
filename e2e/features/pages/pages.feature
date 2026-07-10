@@ -50,6 +50,9 @@ Feature: Pages and blocks
     And I add a sub-page
     And I name the open page "Website redesign"
     Then the breadcrumb for "Website redesign" should include "Projects"
+    And I should see "Website redesign" in the sidebar
+    When I collapse the sidebar page "Projects"
+    Then I should not see "Website redesign" in the sidebar
 
   Scenario: Move a page to trash and restore it
     Given I have a page titled "Draft memo"
