@@ -1,0 +1,79 @@
+.pv-page {
+  max-width: var(--pv-content-max);
+  margin: 0 auto;
+  padding: 64px 56px 120px;
+}
+
+.pv-page-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.pv-page-icons {
+  display: flex;
+  gap: 2px;
+}
+
+.pv-icon-choice {
+  background: none;
+  border: none;
+  font-size: 20px;
+  padding: 4px 6px;
+  border-radius: var(--pv-radius-sm);
+  cursor: pointer;
+  opacity: 0.5;
+}
+.pv-icon-choice:hover {
+  background: var(--pv-hover);
+  opacity: 1;
+}
+.pv-icon-choice--on {
+  opacity: 1;
+  background: var(--pv-accent-soft);
+}
+
+.pv-page-title {
+  border: none;
+  background: none;
+  font-size: 40px;
+  font-weight: 800;
+  color: var(--pv-text);
+  padding: 0;
+  font-family: var(--pv-font-sans);
+}
+.pv-page-title:focus {
+  outline: none;
+}
+
+.pv-page-delete {
+  align-self: flex-start;
+  background: none;
+  border: none;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.pv-page-delete:hover {
+  color: var(--pv-danger);
+}
+
+.pv-blocks {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pv-add-block {
+  margin-top: 8px;
+  background: none;
+  border: none;
+  font: inherit;
+  padding: 6px 2px;
+  cursor: pointer;
+  text-align: left;
+}
+.pv-add-block:hover {
+  color: var(--pv-text);
+}

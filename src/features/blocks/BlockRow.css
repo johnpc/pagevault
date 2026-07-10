@@ -1,0 +1,75 @@
+.pv-block {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  position: relative;
+}
+
+.pv-block-style {
+  opacity: 0;
+  background: none;
+  border: none;
+  color: var(--pv-text-muted);
+  cursor: grab;
+  padding: 4px 2px;
+  font-size: 12px;
+  line-height: 1.4;
+}
+.pv-block:hover .pv-block-style {
+  opacity: 1;
+}
+
+.pv-block-input {
+  flex: 1;
+  border: none;
+  background: none;
+  resize: none;
+  font: inherit;
+  color: var(--pv-text);
+  padding: 3px 2px;
+  line-height: 1.55;
+  overflow: hidden;
+  field-sizing: content;
+}
+.pv-block-input:focus {
+  outline: none;
+}
+
+.pv-block--heading .pv-block-input {
+  font-size: 24px;
+  font-weight: 700;
+}
+.pv-block--subheading .pv-block-input {
+  font-size: 19px;
+  font-weight: 600;
+}
+.pv-block--quote .pv-block-input {
+  border-left: 3px solid var(--pv-border);
+  padding-left: 12px;
+  color: var(--pv-text-muted);
+  font-style: italic;
+}
+.pv-block--todo .pv-block-input {
+  padding-top: 1px;
+}
+
+.pv-block--divider {
+  align-items: center;
+}
+.pv-block--divider hr {
+  flex: 1;
+  border: none;
+  border-top: 1px solid var(--pv-border);
+}
+
+.pv-block-del {
+  opacity: 0;
+  background: none;
+  border: none;
+  color: var(--pv-text-muted);
+  cursor: pointer;
+  font-size: 16px;
+}
+.pv-block:hover .pv-block-del {
+  opacity: 1;
+}

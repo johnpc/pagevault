@@ -1,0 +1,29 @@
+.pv-workspace {
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+
+.pv-workspace-content {
+  position: relative;
+  flex: 1;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* On a phone the sidebar would crowd the editor; collapse it to a slim rail.
+   (A full drawer toggle is a follow-up slice — the desktop/PWA layout is the
+   primary target per the project charter.) */
+@media (max-width: 640px) {
+  .pv-sidebar {
+    width: 56px;
+    min-width: 56px;
+  }
+  .pv-sidebar-title,
+  .pv-sidebar-user,
+  .pv-heading,
+  .pv-new-page,
+  .pv-signout {
+    display: none;
+  }
+}

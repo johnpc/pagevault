@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>PageVault — your self-hosted workspace for notes &amp; docs</title>
+    <meta
+      name="description"
+      content="A fast, self-hosted Notion-style workspace. Organize pages, write in blocks, own your data — runs anywhere Docker does."
+    />
+
+    <base href="/" />
+
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#3f6fd6" />
+    <!-- Allow pinch-zoom (no maximum-scale / user-scalable=no) — disabling it
+         fails WCAG 1.4.4 and blocks low-vision users. viewport-fit=cover is kept
+         for the notch/Dynamic Island safe-area insets. -->
+    <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+
+    <!-- PWA manifest -->
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+    <link rel="shortcut icon" type="image/png" href="/favicon.png" />
+
+    <!-- Add to homescreen for iOS -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="PageVault" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

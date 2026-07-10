@@ -1,0 +1,96 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  quality:
+    name: Lint, Test, Coverage, CRAP & Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Format check
+        run: npm run format:check
+      - name: Lint
+        run: npm run lint
+      - name: File-length discipline (max 100 lines)
+        run: npm run check:lines
+      - name: Feature-coverage map
+        run: npm run check:features
+      - name: Unit tests with coverage (80% floor)
+        run: npm run test:coverage
+      - name: CRAP score analysis (threshold 15)
+        run: npm run crap
+      - name: Build
+        run: npm run build
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage/
+          retention-days: 7
+
+  acceptance:
+    # One job per feature area, each its own check. Every job boots a fresh
+    # PocketBase via docker-compose (the exact self-hosted stack users deploy),
+    # seeds it to a known state, then runs that area's Gherkin specs. Grows a
+    # matrix entry per feature area as slices land (check:features enforces this).
+    name: Acceptance Tests (${{ matrix.area.name }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        area:
+          - name: auth
+            paths: .features-gen/e2e/features/auth
+          - name: pages
+            paths: .features-gen/e2e/features/pages
+    env:
+      VITE_PB_URL: http://localhost:8090
+      PB_ADMIN_EMAIL: admin@pagevault.local
+      PB_ADMIN_PASSWORD: AdminPass123!
+      TEST_USERNAME: test@example.com
+      TEST_PASSWORD: TestPassw0rd!
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Boot PocketBase (docker compose)
+        run: |
+          docker compose up -d --build
+          for i in $(seq 1 30); do
+            curl -sf http://localhost:8090/api/health && break
+            sleep 1
+          done
+      - name: Seed the backend to a known state
+        run: npm run seed
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+      - name: Run acceptance tests (${{ matrix.area.name }})
+        run: npx bddgen && npx playwright test ${{ matrix.area.paths }}
+      - name: Tear down PocketBase
+        if: always()
+        run: docker compose down
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-${{ matrix.area.name }}
+          path: playwright-report/
+          retention-days: 7

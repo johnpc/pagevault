@@ -1,0 +1,19 @@
+.pv-loadstate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--pv-gap);
+  padding: 48px 24px;
+  text-align: center;
+}
+
+.pv-retry {
+  background: var(--pv-accent);
+  color: var(--pv-accent-contrast);
+  border: none;
+  border-radius: var(--pv-radius-sm);
+  padding: 8px 20px;
+  font: inherit;
+  cursor: pointer;
+}

@@ -1,0 +1,32 @@
+# PageVault backend — one self-hosted service, zero cloud dependencies.
+#
+#   docker compose up -d     # boot PocketBase on http://localhost:8090
+#   docker compose logs -f   # watch it
+#   docker compose down      # stop (pb_data volume persists your DB)
+#
+# The Admin UI lives at http://localhost:8090/_/ and the REST/realtime API at
+# http://localhost:8090/api/. The frontend talks to it via VITE_PB_URL.
+services:
+  pocketbase:
+    build:
+      context: .
+      args:
+        # Bump deliberately; migrations in pb_migrations/ replay on the new binary.
+        PB_VERSION: 0.39.6
+    image: pagevault-pocketbase:0.39.6
+    container_name: pagevault-pocketbase
+    restart: unless-stopped
+    ports:
+      - '8090:8090'
+    volumes:
+      # Persisted database + uploaded files (gitignored).
+      - ./pb_data:/pb_data
+      # Version-controlled schema + optional server hooks (read-only in the container).
+      - ./pb_migrations:/pb_migrations:ro
+      - ./pb_hooks:/pb_hooks:ro
+    healthcheck:
+      test: ['CMD', 'wget', '-qO-', 'http://127.0.0.1:8090/api/health']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s

@@ -1,0 +1,16 @@
+dist
+coverage
+node_modules
+.features-gen
+playwright-report
+test-results
+package-lock.json
+# PocketBase runtime data (the SQLite db + uploads) — never source to format.
+pb_data
+# Capacitor copies the built web bundle into the native projects' public/
+# mirror on `cap sync` — generated artifacts, not source to format.
+ios/App/App/public
+android/app/src/main/assets/public
+# Generated native icon asset catalogs (produced by gen:icons) — not source.
+ios/App/App/Assets.xcassets
+android/app/src/main/res
