@@ -1,6 +1,6 @@
-import { useState, type KeyboardEvent } from 'react';
+import { useState, type ChangeEvent, type KeyboardEvent } from 'react';
 import type { BlockRecord } from '../../lib/pbClient';
-import { placeholderFor, cycleType } from './blockText';
+import { placeholderFor, cycleType, markdownShortcut } from './blockText';
 import './BlockRow.css';
 
 interface BlockRowProps {
@@ -14,6 +14,18 @@ interface BlockRowProps {
  * growing textarea. The style button cycles the block type. */
 export function BlockRow({ block, onEdit, onRemove, onEnter }: BlockRowProps) {
   const [value, setValue] = useState(block.content);
+
+  // Notion-style markdown: typing a prefix like "# " or "- " converts the block.
+  const change = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    const next = e.target.value;
+    const shortcut = block.type === 'text' ? markdownShortcut(next) : null;
+    if (shortcut) {
+      setValue(shortcut.content);
+      onEdit(block.id, { type: shortcut.type, content: shortcut.content });
+    } else {
+      setValue(next);
+    }
+  };
 
   const keyDown = (e: KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -64,7 +76,7 @@ export function BlockRow({ block, onEdit, onRemove, onEnter }: BlockRowProps) {
         rows={1}
         value={value}
         placeholder={placeholderFor(block.type)}
-        onChange={(e) => setValue(e.target.value)}
+        onChange={change}
         onBlur={() => onEdit(block.id, { content: value })}
         onKeyDown={keyDown}
       />

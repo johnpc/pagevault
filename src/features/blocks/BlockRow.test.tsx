@@ -77,6 +77,34 @@ describe('BlockRow', () => {
     expect(onEdit).toHaveBeenCalledWith('b1', { checked: true });
   });
 
+  it('converts a text block when a markdown prefix is typed', async () => {
+    const onEdit = vi.fn();
+    render(
+      <BlockRow block={mk({ content: '' })} onEdit={onEdit} onRemove={vi.fn()} onEnter={vi.fn()} />,
+    );
+    // Typing "- " turns the block into a bullet and consumes the prefix.
+    await userEvent.type(screen.getByLabelText('Block content'), '- ');
+    expect(onEdit).toHaveBeenCalledWith('b1', { type: 'bullet', content: '' });
+  });
+
+  it('does not treat a prefix in a non-text block as a shortcut', async () => {
+    const onEdit = vi.fn();
+    render(
+      <BlockRow
+        block={mk({ type: 'heading', content: '' })}
+        onEdit={onEdit}
+        onRemove={vi.fn()}
+        onEnter={vi.fn()}
+      />,
+    );
+    await userEvent.type(screen.getByLabelText('Block content'), '- ');
+    // No type-conversion call fired (only a possible blur save later).
+    expect(onEdit).not.toHaveBeenCalledWith(
+      'b1',
+      expect.objectContaining({ type: expect.anything() }),
+    );
+  });
+
   it('renders a divider with a delete control', async () => {
     const onRemove = vi.fn();
     render(

@@ -23,12 +23,13 @@ account, no third-party service, no lock-in.
 | -------------------------------------------------------------------- | ------ |
 | Email/password accounts (private, owner-scoped)                      | ✅     |
 | Nested pages in a sidebar tree                                       | ✅     |
-| Block editor — text, headings, subheadings, to-dos, quotes, dividers | ✅     |
+| Block editor — text, headings, lists, to-dos, quotes, code, dividers | ✅     |
+| Markdown shortcuts (`# `, `- `, `1. `, `[] `, `> `, ` ``` `)         | ✅     |
 | Page icons                                                           | ✅     |
 | Light / dark / system theme                                          | ✅     |
 | Installable PWA                                                      | ✅     |
 | Self-hosted via `docker compose`                                     | ✅     |
-| Rich text / markdown inside blocks                                   | ⬜     |
+| Rich text (bold/italic) inside blocks                                | ⬜     |
 | Drag-to-reorder blocks & pages                                       | ⬜     |
 | File & image uploads                                                 | ⬜     |
 | Full-text search                                                     | ⬜     |

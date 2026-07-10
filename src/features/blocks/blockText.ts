@@ -11,6 +11,12 @@ export function placeholderFor(type: BlockType): string {
       return 'To-do';
     case 'quote':
       return 'Quote';
+    case 'bullet':
+      return 'List item';
+    case 'numbered':
+      return 'List item';
+    case 'code':
+      return 'Code';
     case 'divider':
       return '';
     default:
@@ -18,8 +24,46 @@ export function placeholderFor(type: BlockType): string {
   }
 }
 
+/** Order used when cycling a block's style via the toolbar button. */
+export const TYPE_ORDER: BlockType[] = [
+  'text',
+  'heading',
+  'subheading',
+  'bullet',
+  'numbered',
+  'todo',
+  'quote',
+  'code',
+  'divider',
+];
+
 /** The next type when a user cycles a block's style (toolbar button). */
 export function cycleType(type: BlockType): BlockType {
-  const order: BlockType[] = ['text', 'heading', 'subheading', 'todo', 'quote', 'divider'];
-  return order[(order.indexOf(type) + 1) % order.length];
+  return TYPE_ORDER[(TYPE_ORDER.indexOf(type) + 1) % TYPE_ORDER.length];
+}
+
+/** Markdown prefixes that convert a text block as you type (Notion-style). */
+const SHORTCUTS: { prefix: RegExp; type: BlockType }[] = [
+  { prefix: /^# $/, type: 'heading' },
+  { prefix: /^## $/, type: 'subheading' },
+  { prefix: /^### $/, type: 'subheading' },
+  { prefix: /^[-*] $/, type: 'bullet' },
+  { prefix: /^1\. $/, type: 'numbered' },
+  { prefix: /^\[\] $/, type: 'todo' },
+  { prefix: /^\[ \] $/, type: 'todo' },
+  { prefix: /^> $/, type: 'quote' },
+  { prefix: /^``` $/, type: 'code' },
+  { prefix: /^--- $/, type: 'divider' },
+];
+
+/**
+ * If `value` is exactly a markdown prefix (e.g. "# " or "- "), return the block
+ * type it should become and the remaining content (empty — the prefix is
+ * consumed). Otherwise null. Pure, so it's trivially unit-tested.
+ */
+export function markdownShortcut(value: string): { type: BlockType; content: string } | null {
+  for (const { prefix, type } of SHORTCUTS) {
+    if (prefix.test(value)) return { type, content: '' };
+  }
+  return null;
 }

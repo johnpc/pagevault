@@ -63,6 +63,8 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+  /* Reset the ordered-list counter so numbered blocks count from 1 per page. */
+  counter-reset: pv-ol;
 }
 
 .pv-add-block {

@@ -16,3 +16,9 @@ Feature: Pages and blocks
     And I add a block with the text "Discuss Q3 roadmap"
     And I reopen the page "Meeting notes"
     Then I should see a block containing "Discuss Q3 roadmap"
+
+  Scenario: Markdown shortcut converts a block to a bullet
+    Given I have a page titled "Shopping"
+    When I open the page "Shopping"
+    And I add a block with the text "- Milk"
+    Then the last block should be a "bullet" block

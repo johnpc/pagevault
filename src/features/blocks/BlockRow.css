@@ -53,6 +53,38 @@
   padding-top: 1px;
 }
 
+/* Bulleted list: a marker before the textarea. */
+.pv-block--bullet::before {
+  content: '•';
+  color: var(--pv-text-muted);
+  padding: 3px 4px 0 2px;
+  line-height: 1.55;
+}
+
+/* Numbered list: a CSS counter auto-numbers consecutive numbered blocks, so
+   the component needs no index prop. `.pv-blocks` resets the counter. */
+.pv-block--numbered {
+  counter-increment: pv-ol;
+}
+.pv-block--numbered::before {
+  content: counter(pv-ol) '.';
+  color: var(--pv-text-muted);
+  padding: 3px 4px 0 2px;
+  line-height: 1.55;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Code: monospace on a tinted, rounded surface. */
+.pv-block--code {
+  background: var(--pv-hover);
+  border-radius: var(--pv-radius-sm);
+  padding: 6px 10px;
+}
+.pv-block--code .pv-block-input {
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 13.5px;
+}
+
 .pv-block--divider {
   align-items: center;
 }

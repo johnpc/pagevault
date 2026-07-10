@@ -14,7 +14,8 @@ export interface BaseRecord {
   collectionName: string;
 }
 
-export type BlockType = 'text' | 'heading' | 'subheading' | 'todo' | 'quote' | 'divider';
+export type BlockType =
+  'text' | 'heading' | 'subheading' | 'todo' | 'quote' | 'divider' | 'bullet' | 'numbered' | 'code';
 
 export interface PagesResponse extends BaseRecord {
   title: string;

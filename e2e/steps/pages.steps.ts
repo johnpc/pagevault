@@ -45,8 +45,15 @@ When('I reopen the page {string}', async ({ page }, title: string) => {
 When('I add a block with the text {string}', async ({ page }, text: string) => {
   await page.getByRole('button', { name: '+ Add a block' }).click();
   const input = page.getByLabel('Block content').last();
-  await input.fill(text);
+  // Type character-by-character so markdown shortcuts (e.g. "- ") fire — a
+  // one-shot fill() would bypass the per-keystroke transform.
+  await input.pressSequentially(text);
   await input.blur();
+});
+
+Then('the last block should be a {string} block', async ({ page }, type: string) => {
+  // The block wrapper carries a pv-block--<type> class; assert on the real DOM.
+  await expect(page.locator(`.pv-block.pv-block--${type}`).last()).toBeVisible();
 });
 
 Then('I should see a block containing {string}', async ({ page }, text: string) => {
