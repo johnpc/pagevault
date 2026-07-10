@@ -33,7 +33,7 @@ account, no third-party service, no lock-in.
 | Block editor — text, headings, lists, to-dos, quotes, code, dividers | ✅     |
 | Markdown shortcuts (`# `, `- `, `1. `, `[] `, `> `, ` ``` `)         | ✅     |
 | Slash command menu (`/` to pick a block type)                        | ✅     |
-| Page icons                                                           | ✅     |
+| Page icons + cover gradient banners                                  | ✅     |
 | Light / dark / system theme (Settings switcher)                      | ✅     |
 | Installable PWA                                                      | ✅     |
 | Self-hosted via `docker compose`                                     | ✅     |

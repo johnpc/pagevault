@@ -10,6 +10,7 @@ const page = {
   icon: '📄',
   archived: false,
   favorite: false,
+  cover: '',
   sort: 0,
   parent: '',
   owner: 'u1',
@@ -27,6 +28,7 @@ const props = {
   onToggleFavorite: vi.fn(),
   onExport: vi.fn(),
   onDuplicate: vi.fn(),
+  onCover: vi.fn(),
 };
 
 describe('PageHeader', () => {

@@ -11,6 +11,32 @@
   margin-bottom: 20px;
 }
 
+.pv-cover-strip {
+  height: 140px;
+  border-radius: var(--pv-radius);
+  margin-bottom: 8px;
+}
+
+.pv-cover-swatches {
+  display: flex;
+  gap: 6px;
+}
+
+.pv-cover-swatch {
+  width: 28px;
+  height: 20px;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 0;
+}
+.pv-cover-swatch:hover {
+  border-color: var(--pv-border);
+}
+.pv-cover-swatch--on {
+  border-color: var(--pv-text);
+}
+
 .pv-page-icons {
   display: flex;
   gap: 2px;

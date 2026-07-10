@@ -17,6 +17,12 @@ Feature: Pages and blocks
     And I reopen the page "Meeting notes"
     Then I should see a block containing "Discuss Q3 roadmap"
 
+  Scenario: Add a cover banner to a page
+    Given I have a page titled "Cover me"
+    When I open the page "Cover me"
+    And I set the "Ocean" cover
+    Then the page shows a cover banner
+
   Scenario: The page footer shows a word count
     Given I have a page titled "Stats page"
     When I open the page "Stats page"

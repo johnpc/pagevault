@@ -19,6 +19,7 @@ export function PageEditor() {
     setTitle,
     setIcon,
     setFavorite,
+    setCover,
     addBlock,
     editBlock,
     removeBlock,
@@ -57,6 +58,7 @@ export function PageEditor() {
                   onIcon={setIcon}
                   onDelete={onDelete}
                   onToggleFavorite={setFavorite}
+                  onCover={setCover}
                   onExport={exportMarkdown}
                   onDuplicate={onDuplicate}
                 />

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { PageRecord } from '../../lib/pbClient';
+import { CoverPicker } from './CoverPicker';
 
 interface PageHeaderProps {
   page: PageRecord;
@@ -9,6 +10,7 @@ interface PageHeaderProps {
   onToggleFavorite: (favorite: boolean) => void;
   onExport: () => void;
   onDuplicate: () => void;
+  onCover: (id: string) => void;
 }
 
 const ICONS = ['📄', '📝', '📌', '💡', '✅', '📚', '🚀', '🗂️'];
@@ -22,10 +24,12 @@ export function PageHeader({
   onToggleFavorite,
   onExport,
   onDuplicate,
+  onCover,
 }: PageHeaderProps) {
   const [title, setTitle] = useState(page.title);
   return (
     <header className="pv-page-header">
+      <CoverPicker cover={page.cover} onCover={onCover} />
       <div className="pv-page-icons">
         {ICONS.map((icon) => (
           <button

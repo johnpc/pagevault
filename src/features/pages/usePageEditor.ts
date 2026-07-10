@@ -58,6 +58,11 @@ export function usePageEditor(pageId: string) {
     [pageId, toggleFavorite],
   );
 
+  const setCover = useCallback(
+    (cover: string) => updatePage.mutate({ id: pageId, patch: { cover } }),
+    [pageId, updatePage],
+  );
+
   /** Download the current page as a Markdown file. */
   const exportMarkdown = useCallback(() => {
     if (!page.data) return;
@@ -74,6 +79,7 @@ export function usePageEditor(pageId: string) {
     setTitle,
     setIcon,
     setFavorite,
+    setCover,
     removePage: archivePage.mutateAsync,
   };
 }

@@ -22,6 +22,7 @@ export interface PagesResponse extends BaseRecord {
   icon: string;
   archived: boolean;
   favorite: boolean;
+  cover: string; // gradient id, or '' for none
   sort: number;
   parent: string; // '' when top-level
   owner: string;

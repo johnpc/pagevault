@@ -144,6 +144,14 @@ Then('the page footer shows {string}', async ({ page }, text: string) => {
   await expect(active(page).locator('.pv-page-info')).toContainText(text);
 });
 
+When('I set the {string} cover', async ({ page }, label: string) => {
+  await active(page).getByLabel(`Cover ${label}`).click();
+});
+
+Then('the page shows a cover banner', async ({ page }) => {
+  await expect(active(page).getByTestId('cover-strip')).toBeVisible();
+});
+
 When('I collapse the sidebar page {string}', async ({ page }, title: string) => {
   // The row whose OWN open-button shows the title (not an ancestor containing it).
   const row = page
