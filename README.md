@@ -30,7 +30,8 @@ account, no third-party service, no lock-in.
 | Installable PWA                                                      | ✅     |
 | Self-hosted via `docker compose`                                     | ✅     |
 | Rich text (bold/italic) inside blocks                                | ⬜     |
-| Drag-to-reorder blocks & pages                                       | ⬜     |
+| Drag-to-reorder blocks (optimistic)                                  | ✅     |
+| Drag-to-reorder pages                                                | ⬜     |
 | File & image uploads                                                 | ⬜     |
 | Full-text search                                                     | ⬜     |
 | Native iOS / Android builds (Capacitor)                              | ⬜     |

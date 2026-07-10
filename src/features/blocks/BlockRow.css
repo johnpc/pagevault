@@ -15,6 +15,18 @@
   font-size: 12px;
   line-height: 1.4;
 }
+.pv-block-style:active {
+  cursor: grabbing;
+}
+
+/* Drag feedback: dim the block being dragged, and show a drop line above the
+   block it would land on. */
+.pv-block--dragging {
+  opacity: 0.4;
+}
+.pv-block--over {
+  box-shadow: inset 0 2px 0 0 var(--pv-accent);
+}
 .pv-block:hover .pv-block-style {
   opacity: 1;
 }

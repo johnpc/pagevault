@@ -24,7 +24,10 @@ describe('usePageEditor', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     pages.getOne.mockResolvedValue({ id: 'p1', title: 'T' });
-    blocks.getFullList.mockResolvedValue([{ id: 'b1', sort: 0 }]);
+    blocks.getFullList.mockResolvedValue([
+      { id: 'b1', sort: 0 },
+      { id: 'b2', sort: 1 },
+    ]);
     pages.update.mockResolvedValue({ id: 'p1' });
     pages.delete.mockResolvedValue(true);
     blocks.create.mockResolvedValue({ id: 'b2' });
@@ -34,8 +37,9 @@ describe('usePageEditor', () => {
 
   it('exposes every editor action wired to the client', async () => {
     const { result } = renderHook(() => usePageEditor('p1'), { wrapper });
-    await waitFor(() => expect(result.current.blocks.data).toHaveLength(1));
+    await waitFor(() => expect(result.current.blocks.data).toHaveLength(2));
 
+    act(() => result.current.moveBlockTo('b2', 'b1'));
     act(() => result.current.setTitle('New title'));
     act(() => result.current.setIcon('🚀'));
     act(() => result.current.addBlock('heading'));
@@ -48,10 +52,13 @@ describe('usePageEditor', () => {
       expect(pages.update).toHaveBeenCalledWith('p1', { icon: '🚀' });
     });
     expect(blocks.create).toHaveBeenCalledWith(
-      expect.objectContaining({ type: 'heading', sort: 1 }),
+      expect.objectContaining({ type: 'heading', sort: 2 }),
     );
     expect(blocks.update).toHaveBeenCalledWith('b1', { content: 'x' });
     expect(blocks.delete).toHaveBeenCalledWith('b1');
     expect(pages.delete).toHaveBeenCalledWith('p1');
+    // moveBlockTo('b2','b1') swaps order → both blocks get a new sort.
+    expect(blocks.update).toHaveBeenCalledWith('b2', { sort: 0 });
+    expect(blocks.update).toHaveBeenCalledWith('b1', { sort: 1 });
   });
 });

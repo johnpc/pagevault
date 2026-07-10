@@ -1,8 +1,17 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { BlockRow } from './BlockRow';
+import { BlockRow, type BlockDndHandlers } from './BlockRow';
 import type { BlockRecord } from '../../lib/pbClient';
+
+const noopDnd: BlockDndHandlers = {
+  draggingId: null,
+  overId: null,
+  onDragStart: () => {},
+  onDragOver: () => {},
+  onDrop: () => {},
+  onDragEnd: () => {},
+};
 
 const mk = (over: Partial<BlockRecord> = {}): BlockRecord =>
   ({
@@ -23,7 +32,9 @@ const mk = (over: Partial<BlockRecord> = {}): BlockRecord =>
 describe('BlockRow', () => {
   it('saves content on blur', async () => {
     const onEdit = vi.fn();
-    render(<BlockRow block={mk()} onEdit={onEdit} onRemove={vi.fn()} onEnter={vi.fn()} />);
+    render(
+      <BlockRow block={mk()} onEdit={onEdit} onRemove={vi.fn()} onEnter={vi.fn()} dnd={noopDnd} />,
+    );
     const input = screen.getByLabelText('Block content');
     await userEvent.clear(input);
     await userEvent.type(input, 'world');
@@ -34,7 +45,9 @@ describe('BlockRow', () => {
   it('Enter saves and requests a new block', async () => {
     const onEnter = vi.fn();
     const onEdit = vi.fn();
-    render(<BlockRow block={mk()} onEdit={onEdit} onRemove={vi.fn()} onEnter={onEnter} />);
+    render(
+      <BlockRow block={mk()} onEdit={onEdit} onRemove={vi.fn()} onEnter={onEnter} dnd={noopDnd} />,
+    );
     screen.getByLabelText('Block content').focus();
     await userEvent.keyboard('{Enter}');
     expect(onEnter).toHaveBeenCalled();
@@ -49,6 +62,7 @@ describe('BlockRow', () => {
         onEdit={vi.fn()}
         onRemove={onRemove}
         onEnter={vi.fn()}
+        dnd={noopDnd}
       />,
     );
     screen.getByLabelText('Block content').focus();
@@ -58,8 +72,10 @@ describe('BlockRow', () => {
 
   it('cycles the block type via the style button', async () => {
     const onEdit = vi.fn();
-    render(<BlockRow block={mk()} onEdit={onEdit} onRemove={vi.fn()} onEnter={vi.fn()} />);
-    await userEvent.click(screen.getByLabelText('Change block type'));
+    render(
+      <BlockRow block={mk()} onEdit={onEdit} onRemove={vi.fn()} onEnter={vi.fn()} dnd={noopDnd} />,
+    );
+    await userEvent.click(screen.getByLabelText(/change block type/i));
     expect(onEdit).toHaveBeenCalledWith('b1', { type: 'heading' });
   });
 
@@ -71,6 +87,7 @@ describe('BlockRow', () => {
         onEdit={onEdit}
         onRemove={vi.fn()}
         onEnter={vi.fn()}
+        dnd={noopDnd}
       />,
     );
     await userEvent.click(screen.getByLabelText('Toggle to-do'));
@@ -80,7 +97,13 @@ describe('BlockRow', () => {
   it('converts a text block when a markdown prefix is typed', async () => {
     const onEdit = vi.fn();
     render(
-      <BlockRow block={mk({ content: '' })} onEdit={onEdit} onRemove={vi.fn()} onEnter={vi.fn()} />,
+      <BlockRow
+        block={mk({ content: '' })}
+        onEdit={onEdit}
+        onRemove={vi.fn()}
+        onEnter={vi.fn()}
+        dnd={noopDnd}
+      />,
     );
     // Typing "- " turns the block into a bullet and consumes the prefix.
     await userEvent.type(screen.getByLabelText('Block content'), '- ');
@@ -95,6 +118,7 @@ describe('BlockRow', () => {
         onEdit={onEdit}
         onRemove={vi.fn()}
         onEnter={vi.fn()}
+        dnd={noopDnd}
       />,
     );
     await userEvent.type(screen.getByLabelText('Block content'), '- ');
@@ -105,6 +129,18 @@ describe('BlockRow', () => {
     );
   });
 
+  it('starts a drag from the handle and drops onto another block', () => {
+    const dnd: BlockDndHandlers = { ...noopDnd, onDragStart: vi.fn(), onDrop: vi.fn() };
+    render(
+      <BlockRow block={mk()} onEdit={vi.fn()} onRemove={vi.fn()} onEnter={vi.fn()} dnd={dnd} />,
+    );
+    const handle = screen.getByLabelText(/drag to reorder/i);
+    fireEvent.dragStart(handle);
+    expect(dnd.onDragStart).toHaveBeenCalledWith('b1');
+    fireEvent.drop(screen.getByLabelText('Block content').closest('.pv-block')!);
+    expect(dnd.onDrop).toHaveBeenCalledWith('b1');
+  });
+
   it('renders a divider with a delete control', async () => {
     const onRemove = vi.fn();
     render(
@@ -113,6 +149,7 @@ describe('BlockRow', () => {
         onEdit={vi.fn()}
         onRemove={onRemove}
         onEnter={vi.fn()}
+        dnd={noopDnd}
       />,
     );
     await userEvent.click(screen.getByLabelText('Delete block'));

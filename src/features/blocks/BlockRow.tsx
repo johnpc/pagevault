@@ -1,46 +1,64 @@
-import { useState, type ChangeEvent, type KeyboardEvent } from 'react';
+import type { DragEvent } from 'react';
 import type { BlockRecord } from '../../lib/pbClient';
-import { placeholderFor, cycleType, markdownShortcut } from './blockText';
+import { placeholderFor, cycleType } from './blockText';
+import { useBlockInput } from './useBlockInput';
 import './BlockRow.css';
+
+export interface BlockDndHandlers {
+  draggingId: string | null;
+  overId: string | null;
+  onDragStart: (id: string) => void;
+  onDragOver: (id: string) => void;
+  onDrop: (id: string) => void;
+  onDragEnd: () => void;
+}
 
 interface BlockRowProps {
   block: BlockRecord;
   onEdit: (id: string, patch: Partial<BlockRecord>) => void;
   onRemove: (id: string) => void;
   onEnter: () => void;
+  dnd: BlockDndHandlers;
 }
 
 /** One editable content block. A divider renders a rule; everything else is a
- * growing textarea. The style button cycles the block type. */
-export function BlockRow({ block, onEdit, onRemove, onEnter }: BlockRowProps) {
-  const [value, setValue] = useState(block.content);
+ * growing textarea. The ⋮⋮ handle drags to reorder; clicking it cycles type. */
+export function BlockRow({ block, onEdit, onRemove, onEnter, dnd }: BlockRowProps) {
+  const { value, change, keyDown, save } = useBlockInput(block, onEdit, onRemove, onEnter);
 
-  // Notion-style markdown: typing a prefix like "# " or "- " converts the block.
-  const change = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    const next = e.target.value;
-    const shortcut = block.type === 'text' ? markdownShortcut(next) : null;
-    if (shortcut) {
-      setValue(shortcut.content);
-      onEdit(block.id, { type: shortcut.type, content: shortcut.content });
-    } else {
-      setValue(next);
-    }
+  const cls =
+    `pv-block pv-block--${block.type}` +
+    (dnd.draggingId === block.id ? ' pv-block--dragging' : '') +
+    (dnd.overId === block.id && dnd.draggingId !== block.id ? ' pv-block--over' : '');
+
+  const rowDrag = {
+    onDragOver: (e: DragEvent) => {
+      e.preventDefault();
+      dnd.onDragOver(block.id);
+    },
+    onDrop: (e: DragEvent) => {
+      e.preventDefault();
+      dnd.onDrop(block.id);
+    },
+    onDragEnd: dnd.onDragEnd,
   };
 
-  const keyDown = (e: KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      onEdit(block.id, { content: value });
-      onEnter();
-    } else if (e.key === 'Backspace' && value === '') {
-      e.preventDefault();
-      onRemove(block.id);
-    }
-  };
+  const handle = (
+    <button
+      className="pv-block-style"
+      aria-label="Drag to reorder or click to change block type"
+      draggable
+      onDragStart={() => dnd.onDragStart(block.id)}
+      onClick={() => onEdit(block.id, { type: cycleType(block.type) })}
+    >
+      ⋮⋮
+    </button>
+  );
 
   if (block.type === 'divider') {
     return (
-      <div className="pv-block pv-block--divider">
+      <div className={cls} {...rowDrag}>
+        {handle}
         <hr />
         <button
           className="pv-block-del"
@@ -54,7 +72,7 @@ export function BlockRow({ block, onEdit, onRemove, onEnter }: BlockRowProps) {
   }
 
   return (
-    <div className={`pv-block pv-block--${block.type}`}>
+    <div className={cls} {...rowDrag}>
       {block.type === 'todo' && (
         <input
           type="checkbox"
@@ -63,13 +81,7 @@ export function BlockRow({ block, onEdit, onRemove, onEnter }: BlockRowProps) {
           onChange={(e) => onEdit(block.id, { checked: e.target.checked })}
         />
       )}
-      <button
-        className="pv-block-style"
-        aria-label="Change block type"
-        onClick={() => onEdit(block.id, { type: cycleType(block.type) })}
-      >
-        ⋮⋮
-      </button>
+      {handle}
       <textarea
         className="pv-block-input"
         aria-label="Block content"
@@ -77,7 +89,7 @@ export function BlockRow({ block, onEdit, onRemove, onEnter }: BlockRowProps) {
         value={value}
         placeholder={placeholderFor(block.type)}
         onChange={change}
-        onBlur={() => onEdit(block.id, { content: value })}
+        onBlur={save}
         onKeyDown={keyDown}
       />
     </div>

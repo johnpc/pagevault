@@ -1,6 +1,13 @@
 import { useCallback } from 'react';
 import { usePage, useUpdatePage, useDeletePage } from './pagesApi';
-import { useBlocks, useCreateBlock, useUpdateBlock, useDeleteBlock } from '../blocks/blocksApi';
+import {
+  useBlocks,
+  useCreateBlock,
+  useUpdateBlock,
+  useDeleteBlock,
+  useReorderBlocks,
+} from '../blocks/blocksApi';
+import { moveBlock, sortUpdates } from '../blocks/reorder';
 import type { BlockRecord } from '../../lib/pbClient';
 import type { BlockType } from '../../lib/pbTypes';
 
@@ -16,6 +23,7 @@ export function usePageEditor(pageId: string) {
   const createBlock = useCreateBlock(pageId);
   const updateBlock = useUpdateBlock(pageId);
   const deleteBlock = useDeleteBlock(pageId);
+  const reorderBlocks = useReorderBlocks(pageId);
 
   const setTitle = useCallback(
     (title: string) => updatePage.mutate({ id: pageId, patch: { title } }),
@@ -38,7 +46,17 @@ export function usePageEditor(pageId: string) {
     [updateBlock],
   );
 
+  const moveBlockTo = useCallback(
+    (fromId: string, toId: string) => {
+      const reordered = moveBlock(blocks.data ?? [], fromId, toId);
+      const updates = sortUpdates(reordered);
+      if (updates.length) reorderBlocks.mutate({ reordered, updates });
+    },
+    [blocks.data, reorderBlocks],
+  );
+
   return {
+    moveBlockTo,
     page,
     blocks,
     setTitle,

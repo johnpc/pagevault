@@ -22,3 +22,11 @@ Feature: Pages and blocks
     When I open the page "Shopping"
     And I add a block with the text "- Milk"
     Then the last block should be a "bullet" block
+
+  Scenario: Reorder blocks by dragging
+    Given I have a page titled "Agenda"
+    When I open the page "Agenda"
+    And I add a block with the text "First"
+    And I add a block with the text "Second"
+    And I drag the block "Second" above the block "First"
+    Then the first block should contain "Second"

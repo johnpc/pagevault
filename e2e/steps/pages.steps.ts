@@ -56,6 +56,38 @@ Then('the last block should be a {string} block', async ({ page }, type: string)
   await expect(page.locator(`.pv-block.pv-block--${type}`).last()).toBeVisible();
 });
 
+/** Index of the block whose textarea's live value equals `text`. */
+async function blockIndexByText(page: import('@playwright/test').Page, text: string) {
+  return page
+    .locator('textarea.pv-block-input')
+    .evaluateAll((els, t) => els.findIndex((el) => (el as HTMLTextAreaElement).value === t), text);
+}
+
+When(
+  'I drag the block {string} above the block {string}',
+  async ({ page }, from: string, to: string) => {
+    const fromIdx = await blockIndexByText(page, from);
+    const toIdx = await blockIndexByText(page, to);
+    // Drag the source block's handle onto the target block (native HTML5 DnD).
+    await page
+      .locator('.pv-block')
+      .nth(fromIdx)
+      .getByLabel(/drag to reorder/i)
+      .dragTo(page.locator('.pv-block').nth(toIdx));
+  },
+);
+
+Then('the first block should contain {string}', async ({ page }, text: string) => {
+  await expect
+    .poll(() =>
+      page
+        .locator('textarea.pv-block-input')
+        .first()
+        .evaluate((el) => (el as HTMLTextAreaElement).value),
+    )
+    .toContain(text);
+});
+
 Then('I should see a block containing {string}', async ({ page }, text: string) => {
   // Honest e2e: assert the real persisted block content is rendered. A block is
   // a textarea, whose VALUE (not text content) holds the string — so poll the

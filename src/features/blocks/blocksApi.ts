@@ -52,3 +52,26 @@ export function useDeleteBlock(pageId: string) {
     onSuccess: () => qc.invalidateQueries({ queryKey: key(pageId) }),
   });
 }
+
+/**
+ * Persist a reordered block list. Optimistically writes the new order to the
+ * cache so the drag feels instant, then patches only the changed `sort`s. On
+ * error it restores the previous order and refetches.
+ */
+export function useReorderBlocks(pageId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (input: { reordered: BlockRecord[]; updates: { id: string; sort: number }[] }) =>
+      Promise.all(input.updates.map((u) => pb.collection('blocks').update(u.id, { sort: u.sort }))),
+    onMutate: async ({ reordered }) => {
+      await qc.cancelQueries({ queryKey: key(pageId) });
+      const previous = qc.getQueryData<BlockRecord[]>(key(pageId));
+      qc.setQueryData(key(pageId), reordered);
+      return { previous };
+    },
+    onError: (_e, _v, ctx) => {
+      if (ctx?.previous) qc.setQueryData(key(pageId), ctx.previous);
+    },
+    onSettled: () => qc.invalidateQueries({ queryKey: key(pageId) }),
+  });
+}
