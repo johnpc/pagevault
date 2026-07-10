@@ -62,6 +62,9 @@ describe('usePageEditor', () => {
     await act(async () => {
       expect(await result.current.addSubPage()).toBe('child1');
     });
+    await act(async () => {
+      expect(await result.current.duplicate()).toBe('child1');
+    });
 
     await waitFor(() => {
       expect(pages.update).toHaveBeenCalledWith('p1', { title: 'New title' });

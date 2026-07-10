@@ -26,6 +26,7 @@ const props = {
   onDelete: vi.fn(),
   onToggleFavorite: vi.fn(),
   onExport: vi.fn(),
+  onDuplicate: vi.fn(),
 };
 
 describe('PageHeader', () => {
@@ -51,6 +52,13 @@ describe('PageHeader', () => {
     render(<PageHeader {...props} onDelete={onDelete} />);
     await userEvent.click(screen.getByText('Move to trash'));
     expect(onDelete).toHaveBeenCalled();
+  });
+
+  it('duplicates the page', async () => {
+    const onDuplicate = vi.fn();
+    render(<PageHeader {...props} onDuplicate={onDuplicate} />);
+    await userEvent.click(screen.getByText('Duplicate'));
+    expect(onDuplicate).toHaveBeenCalled();
   });
 
   it('exports the page', async () => {

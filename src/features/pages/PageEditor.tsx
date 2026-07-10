@@ -24,6 +24,7 @@ export function PageEditor() {
     removePage,
     moveBlockTo,
     addSubPage,
+    duplicate,
     exportMarkdown,
   } = usePageEditor(id);
   const dnd = useBlockDnd(moveBlockTo);
@@ -34,6 +35,7 @@ export function PageEditor() {
   };
 
   const onSubPage = async () => history.push(`/page/${await addSubPage()}`);
+  const onDuplicate = async () => history.push(`/page/${await duplicate()}`);
 
   return (
     <IonPage>
@@ -55,6 +57,7 @@ export function PageEditor() {
                   onDelete={onDelete}
                   onToggleFavorite={setFavorite}
                   onExport={exportMarkdown}
+                  onDuplicate={onDuplicate}
                 />
                 <LoadState
                   loading={blocks.isLoading}

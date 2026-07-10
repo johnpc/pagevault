@@ -11,9 +11,11 @@ const pages = {
   update: vi.fn(),
   delete: vi.fn(),
 };
+const blocks = { create: vi.fn() };
+const cols: Record<string, unknown> = { pages, blocks };
 
 vi.mock('../../lib/pbClient', () => ({
-  pb: { collection: () => pages },
+  pb: { collection: (n: string) => cols[n] },
   currentUserId: () => 'u1',
 }));
 
@@ -27,7 +29,9 @@ import {
   useArchivePage,
   useRestorePage,
   useToggleFavorite,
+  useDuplicatePage,
 } from './pagesApi';
+import type { PageRecord, BlockRecord } from '../../lib/pbClient';
 
 const wrapper = ({ children }: { children: ReactNode }) => {
   const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
@@ -101,5 +105,30 @@ describe('pagesApi', () => {
     const { result } = renderHook(() => useToggleFavorite(), { wrapper });
     await result.current.mutateAsync({ id: 'p1', favorite: true });
     expect(pages.update).toHaveBeenCalledWith('p1', { favorite: true });
+  });
+
+  it('useDuplicatePage creates a page copy plus cloned blocks', async () => {
+    pages.create.mockResolvedValue({ id: 'copy1' });
+    blocks.create.mockResolvedValue({ id: 'nb' });
+    const source = {
+      id: 'p1',
+      title: 'Plan',
+      icon: '🚀',
+      parent: '',
+      archived: false,
+      favorite: false,
+    } as PageRecord;
+    const srcBlocks = [
+      { id: 'b1', type: 'text', content: 'A', sort: 0, checked: false } as BlockRecord,
+      { id: 'b2', type: 'todo', content: 'B', sort: 1, checked: true } as BlockRecord,
+    ];
+    const { result } = renderHook(() => useDuplicatePage(), { wrapper });
+    const newId = await result.current.mutateAsync({ source, blocks: srcBlocks, siblings: [] });
+    expect(newId).toBe('copy1');
+    expect(pages.create).toHaveBeenCalledWith(expect.objectContaining({ title: 'Plan (copy)' }));
+    expect(blocks.create).toHaveBeenCalledTimes(2);
+    expect(blocks.create).toHaveBeenCalledWith(
+      expect.objectContaining({ page: 'copy1', content: 'A' }),
+    );
   });
 });

@@ -134,6 +134,10 @@ When('I favorite the open page', async ({ page }) => {
   await active(page).getByRole('button', { name: 'Add to favorites' }).click();
 });
 
+When('I duplicate the page', async ({ page }) => {
+  await active(page).getByRole('button', { name: 'Duplicate' }).click();
+});
+
 Then('I should see {string} in the sidebar favorites', async ({ page }, title: string) => {
   await expect(
     page.getByRole('navigation', { name: 'Favorites' }).getByText(title, { exact: true }).first(),

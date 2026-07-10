@@ -65,6 +65,14 @@ Feature: Pages and blocks
     And I favorite the open page
     Then I should see "Team wiki" in the sidebar favorites
 
+  Scenario: Duplicate a page with its content
+    Given I have a page titled "Template"
+    When I open the page "Template"
+    And I add a block with the text "Reusable content"
+    And I duplicate the page
+    Then I should see the open page titled "Template (copy)"
+    And I should see a block containing "Reusable content"
+
   Scenario: Export a page as Markdown
     Given I have a page titled "Release notes"
     When I open the page "Release notes"

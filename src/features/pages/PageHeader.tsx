@@ -8,6 +8,7 @@ interface PageHeaderProps {
   onDelete: () => void;
   onToggleFavorite: (favorite: boolean) => void;
   onExport: () => void;
+  onDuplicate: () => void;
 }
 
 const ICONS = ['📄', '📝', '📌', '💡', '✅', '📚', '🚀', '🗂️'];
@@ -20,6 +21,7 @@ export function PageHeader({
   onDelete,
   onToggleFavorite,
   onExport,
+  onDuplicate,
 }: PageHeaderProps) {
   const [title, setTitle] = useState(page.title);
   return (
@@ -52,6 +54,9 @@ export function PageHeader({
           onClick={() => onToggleFavorite(!page.favorite)}
         >
           {page.favorite ? '★ Favorited' : '☆ Favorite'}
+        </button>
+        <button className="pv-page-delete pv-muted" onClick={onDuplicate}>
+          Duplicate
         </button>
         <button className="pv-page-delete pv-muted" onClick={onExport}>
           Export Markdown

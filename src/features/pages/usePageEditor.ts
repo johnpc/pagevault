@@ -4,6 +4,7 @@ import {
   useUpdatePage,
   useArchivePage,
   useCreatePage,
+  useDuplicatePage,
   usePages,
   useToggleFavorite,
 } from './pagesApi';
@@ -24,8 +25,16 @@ export function usePageEditor(pageId: string) {
   const archivePage = useArchivePage();
   const toggleFavorite = useToggleFavorite();
   const createPage = useCreatePage();
+  const duplicatePage = useDuplicatePage();
   const allPages = usePages();
   const blockActions = useBlockActions(pageId, blocks.data ?? []);
+
+  /** Duplicate this page + its blocks; returns the copy's id to navigate to. */
+  const duplicate = useCallback(async () => {
+    if (!page.data) return pageId;
+    const siblings = (allPages.data ?? []).filter((p) => p.parent === page.data!.parent);
+    return duplicatePage.mutateAsync({ source: page.data, blocks: blocks.data ?? [], siblings });
+  }, [page.data, blocks.data, allPages.data, duplicatePage, pageId]);
 
   /** Create a child page under this one; returns the new page's id to navigate. */
   const addSubPage = useCallback(async () => {
@@ -58,6 +67,7 @@ export function usePageEditor(pageId: string) {
   return {
     ...blockActions,
     addSubPage,
+    duplicate,
     exportMarkdown,
     page,
     blocks,

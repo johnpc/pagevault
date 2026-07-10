@@ -7,6 +7,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { pb, currentUserId } from '../../lib/pbClient';
 import type { PageRecord } from '../../lib/pbClient';
 import { nextSort } from './pageTree';
+import { runDuplicate } from './duplicate';
 
 const KEY = ['pages'];
 
@@ -40,6 +41,15 @@ export function useCreatePage() {
   });
 }
 
+/** Duplicate a page and all its blocks into a sibling copy. Returns the new id. */
+export function useDuplicatePage() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: runDuplicate,
+    onSuccess: () => qc.invalidateQueries({ queryKey: KEY, exact: false }),
+  });
+}
+
 export function useUpdatePage() {
   const qc = useQueryClient();
   return useMutation({
@@ -63,35 +73,6 @@ export function useArchivedPages() {
   });
 }
 
-/** A page mutation that invalidates all page lists + the affected page. `getId`
- * pulls the page id from the mutation variables. Powers the writes below. */
-function usePageMutation<V>(fn: (v: V) => Promise<unknown>, getId: (v: V) => string) {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: fn,
-    onSuccess: (_r, v) => {
-      qc.invalidateQueries({ queryKey: KEY, exact: false });
-      qc.invalidateQueries({ queryKey: ['page', getId(v)] });
-    },
-  });
-}
-
-const byId = (v: string) => v;
-
-/** Move a page to the trash (soft delete). Reversible via restore. */
-export const useArchivePage = () =>
-  usePageMutation((id: string) => pb.collection('pages').update(id, { archived: true }), byId);
-/** Restore a page from the trash. */
-export const useRestorePage = () =>
-  usePageMutation((id: string) => pb.collection('pages').update(id, { archived: false }), byId);
-/** Permanently delete a page (from the trash — cascades to its blocks). */
-export const useDeletePage = () =>
-  usePageMutation((id: string) => pb.collection('pages').delete(id), byId);
-
-/** Pin/unpin a page to the sidebar Favorites section. */
-export const useToggleFavorite = () =>
-  usePageMutation(
-    (v: { id: string; favorite: boolean }) =>
-      pb.collection('pages').update(v.id, { favorite: v.favorite }),
-    (v) => v.id,
-  );
+// Single-page flag mutations live in pageFlags.ts; re-exported so existing
+// imports from './pagesApi' keep working.
+export { useArchivePage, useRestorePage, useDeletePage, useToggleFavorite } from './pageFlags';
