@@ -1,5 +1,12 @@
 import { useCallback } from 'react';
-import { usePage, useUpdatePage, useArchivePage, useCreatePage, usePages } from './pagesApi';
+import {
+  usePage,
+  useUpdatePage,
+  useArchivePage,
+  useCreatePage,
+  usePages,
+  useToggleFavorite,
+} from './pagesApi';
 import {
   useBlocks,
   useCreateBlock,
@@ -20,6 +27,7 @@ export function usePageEditor(pageId: string) {
   const blocks = useBlocks(pageId);
   const updatePage = useUpdatePage();
   const archivePage = useArchivePage();
+  const toggleFavorite = useToggleFavorite();
   const createBlock = useCreateBlock(pageId);
   const updateBlock = useUpdateBlock(pageId);
   const deleteBlock = useDeleteBlock(pageId);
@@ -42,6 +50,11 @@ export function usePageEditor(pageId: string) {
   const setIcon = useCallback(
     (icon: string) => updatePage.mutate({ id: pageId, patch: { icon } }),
     [pageId, updatePage],
+  );
+
+  const setFavorite = useCallback(
+    (favorite: boolean) => toggleFavorite.mutate({ id: pageId, favorite }),
+    [pageId, toggleFavorite],
   );
 
   const addBlock = useCallback(
@@ -71,6 +84,7 @@ export function usePageEditor(pageId: string) {
     blocks,
     setTitle,
     setIcon,
+    setFavorite,
     addBlock,
     editBlock,
     removeBlock: deleteBlock.mutate,

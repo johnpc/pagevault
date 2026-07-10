@@ -1,6 +1,6 @@
 import { useHistory, useParams } from 'react-router-dom';
 import { usePages, useCreatePage } from './pagesApi';
-import { buildTree } from './pageTree';
+import { buildTree, favoritePages, displayTitle } from './pageTree';
 import { LoadState } from '../shell/LoadState';
 import { SidebarRow } from './SidebarRow';
 import { useAuth } from '../auth/useAuth';
@@ -34,6 +34,22 @@ export function Sidebar({ onSearch }: { onSearch: () => void }) {
       <button className="pv-new-page" onClick={newPage} disabled={create.isPending}>
         + New page
       </button>
+
+      {favoritePages(pages ?? []).length > 0 && (
+        <nav className="pv-sidebar-section" aria-label="Favorites">
+          <span className="pv-sidebar-label pv-muted">Favorites</span>
+          {favoritePages(pages ?? []).map((page) => (
+            <button
+              key={page.id}
+              className={`pv-sidebar-row${page.id === id ? ' pv-sidebar-row--active' : ''}`}
+              onClick={() => history.push(`/page/${page.id}`)}
+            >
+              <span className="pv-sidebar-icon">{page.icon || '📄'}</span>
+              <span className="pv-sidebar-title">{displayTitle(page)}</span>
+            </button>
+          ))}
+        </nav>
+      )}
 
       <nav className="pv-sidebar-tree">
         <LoadState

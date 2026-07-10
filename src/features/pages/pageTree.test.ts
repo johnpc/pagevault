@@ -5,6 +5,7 @@ import {
   displayTitle,
   sortNodes,
   ancestorPath,
+  favoritePages,
   type PageNode,
 } from './pageTree';
 import type { PageRecord } from '../../lib/pbClient';
@@ -73,6 +74,20 @@ describe('displayTitle', () => {
   it('falls back to Untitled for blank titles', () => {
     expect(displayTitle({ title: '   ' })).toBe('Untitled');
     expect(displayTitle({ title: 'Roadmap' })).toBe('Roadmap');
+  });
+});
+
+describe('favoritePages', () => {
+  it('returns only favorites, ordered by title', () => {
+    const pages = [
+      mk('z', { title: 'Zebra', favorite: true }),
+      mk('a', { title: 'Apple', favorite: true }),
+      mk('n', { title: 'Nope', favorite: false }),
+    ];
+    expect(favoritePages(pages).map((p) => p.id)).toEqual(['a', 'z']);
+  });
+  it('returns empty when nothing is favorited', () => {
+    expect(favoritePages([mk('a')])).toEqual([]);
   });
 });
 

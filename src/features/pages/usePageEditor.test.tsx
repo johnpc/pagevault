@@ -50,6 +50,7 @@ describe('usePageEditor', () => {
     act(() => result.current.moveBlockTo('b2', 'b1'));
     act(() => result.current.setTitle('New title'));
     act(() => result.current.setIcon('🚀'));
+    act(() => result.current.setFavorite(true));
     act(() => result.current.addBlock('heading'));
     act(() => result.current.editBlock('b1', { content: 'x' }));
     act(() => result.current.removeBlock('b1'));
@@ -61,6 +62,7 @@ describe('usePageEditor', () => {
     await waitFor(() => {
       expect(pages.update).toHaveBeenCalledWith('p1', { title: 'New title' });
       expect(pages.update).toHaveBeenCalledWith('p1', { icon: '🚀' });
+      expect(pages.update).toHaveBeenCalledWith('p1', { favorite: true });
     });
     expect(blocks.create).toHaveBeenCalledWith(
       expect.objectContaining({ type: 'heading', sort: 2 }),

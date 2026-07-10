@@ -25,6 +25,7 @@ account, no third-party service, no lock-in.
 | Nested pages in a sidebar tree                                       | ✅     |
 | Sub-pages + breadcrumb navigation                                    | ✅     |
 | Archive to trash → restore or delete forever                         | ✅     |
+| Favorite pages (pinned Favorites section)                            | ✅     |
 | Block editor — text, headings, lists, to-dos, quotes, code, dividers | ✅     |
 | Markdown shortcuts (`# `, `- `, `1. `, `[] `, `> `, ` ``` `)         | ✅     |
 | Slash command menu (`/` to pick a block type)                        | ✅     |

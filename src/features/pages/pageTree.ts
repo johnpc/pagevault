@@ -40,6 +40,14 @@ export function displayTitle(page: Pick<PageRecord, 'title'>): string {
   return page.title.trim() || 'Untitled';
 }
 
+/** The favorited pages, ordered by title. Pure — for the sidebar's Favorites
+ * section. */
+export function favoritePages(pages: PageRecord[]): PageRecord[] {
+  return pages
+    .filter((p) => p.favorite)
+    .sort((a, b) => displayTitle(a).localeCompare(displayTitle(b)));
+}
+
 /**
  * The ancestor path for a page, root-first and INCLUDING the page itself, by
  * walking the `parent` chain. Guards against cycles/missing parents so a

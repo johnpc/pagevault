@@ -47,8 +47,13 @@
   outline: none;
 }
 
+.pv-page-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
 .pv-page-delete {
-  align-self: flex-start;
   background: none;
   border: none;
   font: inherit;
@@ -57,6 +62,19 @@
 }
 .pv-page-delete:hover {
   color: var(--pv-danger);
+}
+
+.pv-page-fav {
+  background: none;
+  border: none;
+  font: inherit;
+  font-size: 13px;
+  color: var(--pv-text-muted);
+  cursor: pointer;
+}
+.pv-page-fav:hover,
+.pv-page-fav--on {
+  color: var(--pv-star);
 }
 
 .pv-blocks {

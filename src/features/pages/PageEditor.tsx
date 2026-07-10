@@ -17,6 +17,7 @@ export function PageEditor() {
     blocks,
     setTitle,
     setIcon,
+    setFavorite,
     addBlock,
     editBlock,
     removeBlock,
@@ -51,6 +52,7 @@ export function PageEditor() {
                   onTitle={setTitle}
                   onIcon={setIcon}
                   onDelete={onDelete}
+                  onToggleFavorite={setFavorite}
                 />
                 <LoadState
                   loading={blocks.isLoading}

@@ -63,32 +63,35 @@ export function useArchivedPages() {
   });
 }
 
-const invalidateAll = (qc: ReturnType<typeof useQueryClient>) =>
-  qc.invalidateQueries({ queryKey: KEY, exact: false });
+/** A page mutation that invalidates all page lists + the affected page. `getId`
+ * pulls the page id from the mutation variables. Powers the writes below. */
+function usePageMutation<V>(fn: (v: V) => Promise<unknown>, getId: (v: V) => string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: fn,
+    onSuccess: (_r, v) => {
+      qc.invalidateQueries({ queryKey: KEY, exact: false });
+      qc.invalidateQueries({ queryKey: ['page', getId(v)] });
+    },
+  });
+}
+
+const byId = (v: string) => v;
 
 /** Move a page to the trash (soft delete). Reversible via restore. */
-export function useArchivePage() {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: (id: string) => pb.collection('pages').update<PageRecord>(id, { archived: true }),
-    onSuccess: () => invalidateAll(qc),
-  });
-}
-
+export const useArchivePage = () =>
+  usePageMutation((id: string) => pb.collection('pages').update(id, { archived: true }), byId);
 /** Restore a page from the trash. */
-export function useRestorePage() {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: (id: string) => pb.collection('pages').update<PageRecord>(id, { archived: false }),
-    onSuccess: () => invalidateAll(qc),
-  });
-}
-
+export const useRestorePage = () =>
+  usePageMutation((id: string) => pb.collection('pages').update(id, { archived: false }), byId);
 /** Permanently delete a page (from the trash — cascades to its blocks). */
-export function useDeletePage() {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: (id: string) => pb.collection('pages').delete(id),
-    onSuccess: () => invalidateAll(qc),
-  });
-}
+export const useDeletePage = () =>
+  usePageMutation((id: string) => pb.collection('pages').delete(id), byId);
+
+/** Pin/unpin a page to the sidebar Favorites section. */
+export const useToggleFavorite = () =>
+  usePageMutation(
+    (v: { id: string; favorite: boolean }) =>
+      pb.collection('pages').update(v.id, { favorite: v.favorite }),
+    (v) => v.id,
+  );

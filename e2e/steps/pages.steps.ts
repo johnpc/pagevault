@@ -130,6 +130,16 @@ When('I move the page to trash', async ({ page }) => {
   await active(page).getByRole('button', { name: 'Move to trash' }).click();
 });
 
+When('I favorite the open page', async ({ page }) => {
+  await active(page).getByRole('button', { name: 'Add to favorites' }).click();
+});
+
+Then('I should see {string} in the sidebar favorites', async ({ page }, title: string) => {
+  await expect(
+    page.getByRole('navigation', { name: 'Favorites' }).getByText(title, { exact: true }).first(),
+  ).toBeVisible();
+});
+
 Then('I should not see {string} in the sidebar', async ({ page }, title: string) => {
   await expect(sidebarRow(page, title)).toHaveCount(0);
 });

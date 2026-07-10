@@ -26,6 +26,7 @@ import {
   useArchivedPages,
   useArchivePage,
   useRestorePage,
+  useToggleFavorite,
 } from './pagesApi';
 
 const wrapper = ({ children }: { children: ReactNode }) => {
@@ -93,5 +94,12 @@ describe('pagesApi', () => {
     const { result } = renderHook(() => useRestorePage(), { wrapper });
     await result.current.mutateAsync('p1');
     expect(pages.update).toHaveBeenCalledWith('p1', { archived: false });
+  });
+
+  it('useToggleFavorite sets the favorite flag', async () => {
+    pages.update.mockResolvedValue({ id: 'p1' });
+    const { result } = renderHook(() => useToggleFavorite(), { wrapper });
+    await result.current.mutateAsync({ id: 'p1', favorite: true });
+    expect(pages.update).toHaveBeenCalledWith('p1', { favorite: true });
   });
 });

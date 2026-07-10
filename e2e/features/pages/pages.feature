@@ -58,3 +58,9 @@ Feature: Pages and blocks
     Then I should not see "Draft memo" in the sidebar
     When I restore "Draft memo" from the trash
     Then I should see "Draft memo" in the sidebar
+
+  Scenario: Favorite a page and see it pinned in the sidebar
+    Given I have a page titled "Team wiki"
+    When I open the page "Team wiki"
+    And I favorite the open page
+    Then I should see "Team wiki" in the sidebar favorites

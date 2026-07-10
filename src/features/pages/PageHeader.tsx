@@ -6,12 +6,13 @@ interface PageHeaderProps {
   onTitle: (title: string) => void;
   onIcon: (icon: string) => void;
   onDelete: () => void;
+  onToggleFavorite: (favorite: boolean) => void;
 }
 
 const ICONS = ['📄', '📝', '📌', '💡', '✅', '📚', '🚀', '🗂️'];
 
-/** The page's icon picker + title field + delete control. */
-export function PageHeader({ page, onTitle, onIcon, onDelete }: PageHeaderProps) {
+/** The page's icon picker + title field + favorite star + trash control. */
+export function PageHeader({ page, onTitle, onIcon, onDelete, onToggleFavorite }: PageHeaderProps) {
   const [title, setTitle] = useState(page.title);
   return (
     <header className="pv-page-header">
@@ -35,9 +36,19 @@ export function PageHeader({ page, onTitle, onIcon, onDelete }: PageHeaderProps)
         onChange={(e) => setTitle(e.target.value)}
         onBlur={() => onTitle(title)}
       />
-      <button className="pv-page-delete pv-muted" onClick={onDelete}>
-        Move to trash
-      </button>
+      <div className="pv-page-actions">
+        <button
+          className={`pv-page-fav${page.favorite ? ' pv-page-fav--on' : ''}`}
+          aria-label={page.favorite ? 'Remove from favorites' : 'Add to favorites'}
+          aria-pressed={page.favorite}
+          onClick={() => onToggleFavorite(!page.favorite)}
+        >
+          {page.favorite ? '★ Favorited' : '☆ Favorite'}
+        </button>
+        <button className="pv-page-delete pv-muted" onClick={onDelete}>
+          Move to trash
+        </button>
+      </div>
     </header>
   );
 }
