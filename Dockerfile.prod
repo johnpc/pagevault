@@ -1,0 +1,39 @@
+# Production image: ONE container that serves both the app and the API on a
+# single port, same-origin. Stage 1 compiles the Vite SPA with VITE_PB_URL="/"
+# so the browser talks to whatever origin served the page (works behind any
+# host/reverse-proxy, no CORS, no baked-in LAN IP). Stage 2 is PocketBase with
+# the built SPA dropped into pb_public — PocketBase serves the static files with
+# SPA deep-link fallback AND keeps /api/* same-origin.
+
+# ---- Stage 1: build the SPA --------------------------------------------------
+FROM node:22-alpine AS web
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci
+COPY . .
+# Same-origin backend: the SPA calls /api/... on the origin it was loaded from.
+ENV VITE_PB_URL=/
+RUN npm run build
+
+# ---- Stage 2: PocketBase + the built SPA ------------------------------------
+FROM alpine:3.20
+ARG PB_VERSION=0.39.6
+ARG TARGETARCH=amd64
+
+RUN apk add --no-cache ca-certificates unzip wget \
+  && wget -q "https://github.com/pocketbase/pocketbase/releases/download/v${PB_VERSION}/pocketbase_${PB_VERSION}_linux_${TARGETARCH}.zip" -O /tmp/pb.zip \
+  && unzip /tmp/pb.zip -d /pb \
+  && rm /tmp/pb.zip
+
+# Version-controlled schema (auto-applied on boot) + optional server hooks.
+COPY pb_migrations /pb_migrations
+COPY pb_hooks /pb_hooks
+# The compiled SPA — PocketBase serves it from pb_public with SPA fallback.
+COPY --from=web /app/dist /pb_public
+
+EXPOSE 8090
+
+# pb_data (the SQLite DB + uploads) is a mounted volume so it survives rebuilds.
+ENTRYPOINT ["/pb/pocketbase", "serve", "--http=0.0.0.0:8090", \
+  "--dir=/pb_data", "--migrationsDir=/pb_migrations", "--hooksDir=/pb_hooks", \
+  "--publicDir=/pb_public"]

@@ -1,0 +1,29 @@
+# PageVault — Dockge stack for the Umbrel DinD (192.168.7.211).
+#
+# Deploy: clone the repo to /opt/stacks/pagevault, copy this file to the stack
+# root as compose.yaml (so the build context "." is the repo root), then
+# `docker compose -p pagevault up -d --build` from inside dockge_dockge_1.
+#
+# ONE container: a multi-stage build (Dockerfile.prod) compiles the SPA with
+# VITE_PB_URL=/ into PocketBase's pb_public, so app + API are same-origin on a
+# single port — works on the raw LAN IP and behind a reverse proxy alike.
+services:
+  pagevault:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+      args:
+        PB_VERSION: 0.39.6
+        TARGETARCH: amd64
+    image: pagevault:local
+    container_name: pagevault
+    restart: unless-stopped
+    network_mode: bridge
+    ports:
+      # Host 9873 -> PocketBase 8090 (9872 is taken by homie).
+      - 9873:8090
+    volumes:
+      # The SQLite DB + uploaded files — survives image rebuilds. Bind-mounted
+      # under /downloads like the other Umbrel stacks so it's easy to back up.
+      - /downloads/pagevault/pb_data:/pb_data
+networks: {}
