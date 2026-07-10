@@ -78,6 +78,11 @@ jobs:
             curl -sf http://localhost:8090/api/health && break
             sleep 1
           done
+      - name: Create the PocketBase superuser
+        run: |
+          docker compose exec -T pocketbase /pb/pocketbase \
+            --dir=/pb_data --migrationsDir=/pb_migrations \
+            superuser upsert "$PB_ADMIN_EMAIL" "$PB_ADMIN_PASSWORD"
       - name: Seed the backend to a known state
         run: npm run seed
       - name: Install Playwright browsers
