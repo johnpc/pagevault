@@ -1,0 +1,9 @@
+.pv-page-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 40px;
+  padding-top: 16px;
+  border-top: 1px solid var(--pv-border);
+  font-size: 12px;
+}

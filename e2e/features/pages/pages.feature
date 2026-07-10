@@ -17,6 +17,12 @@ Feature: Pages and blocks
     And I reopen the page "Meeting notes"
     Then I should see a block containing "Discuss Q3 roadmap"
 
+  Scenario: The page footer shows a word count
+    Given I have a page titled "Stats page"
+    When I open the page "Stats page"
+    And I add a block with the text "one two three four five"
+    Then the page footer shows "5 words"
+
   Scenario: Markdown shortcut converts a block to a bullet
     Given I have a page titled "Shopping"
     When I open the page "Shopping"

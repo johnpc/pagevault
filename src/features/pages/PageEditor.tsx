@@ -4,6 +4,7 @@ import { usePageEditor } from './usePageEditor';
 import { LoadState } from '../shell/LoadState';
 import { PageHeader } from './PageHeader';
 import { Breadcrumbs } from './Breadcrumbs';
+import { PageInfo } from './PageInfo';
 import { BlockRow } from '../blocks/BlockRow';
 import { useBlockDnd } from '../blocks/useBlockDnd';
 import './PageEditor.css';
@@ -83,6 +84,7 @@ export function PageEditor() {
                   <button className="pv-add-block pv-muted" onClick={onSubPage}>
                     + Add a sub-page
                   </button>
+                  <PageInfo page={page.data} blocks={blocks.data ?? []} />
                 </LoadState>
               </>
             )}

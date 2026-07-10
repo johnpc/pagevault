@@ -140,6 +140,10 @@ Then(
   },
 );
 
+Then('the page footer shows {string}', async ({ page }, text: string) => {
+  await expect(active(page).locator('.pv-page-info')).toContainText(text);
+});
+
 When('I collapse the sidebar page {string}', async ({ page }, title: string) => {
   // The row whose OWN open-button shows the title (not an ancestor containing it).
   const row = page
