@@ -141,6 +141,57 @@ describe('BlockRow', () => {
     expect(dnd.onDrop).toHaveBeenCalledWith('b1');
   });
 
+  it('opens the slash menu and converts the block on selection', async () => {
+    const onEdit = vi.fn();
+    render(
+      <BlockRow
+        block={mk({ content: '' })}
+        onEdit={onEdit}
+        onRemove={vi.fn()}
+        onEnter={vi.fn()}
+        dnd={noopDnd}
+      />,
+    );
+    await userEvent.type(screen.getByLabelText('Block content'), '/');
+    expect(screen.getByRole('listbox', { name: 'Block types' })).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('option', { name: /Quote/ }));
+    expect(onEdit).toHaveBeenCalledWith('b1', { type: 'quote', content: '' });
+  });
+
+  it('filters the slash menu as you type', async () => {
+    render(
+      <BlockRow
+        block={mk({ content: '' })}
+        onEdit={vi.fn()}
+        onRemove={vi.fn()}
+        onEnter={vi.fn()}
+        dnd={noopDnd}
+      />,
+    );
+    await userEvent.type(screen.getByLabelText('Block content'), '/code');
+    const options = screen.getAllByRole('option');
+    expect(options).toHaveLength(1);
+    expect(options[0]).toHaveTextContent('Code');
+  });
+
+  it('selects a slash command with arrow keys + Enter', async () => {
+    const onEdit = vi.fn();
+    render(
+      <BlockRow
+        block={mk({ content: '' })}
+        onEdit={onEdit}
+        onRemove={vi.fn()}
+        onEnter={vi.fn()}
+        dnd={noopDnd}
+      />,
+    );
+    const input = screen.getByLabelText('Block content');
+    await userEvent.type(input, '/');
+    // First item is Text; ArrowDown → Heading, Enter picks it.
+    await userEvent.keyboard('{ArrowDown}{Enter}');
+    expect(onEdit).toHaveBeenCalledWith('b1', { type: 'heading', content: '' });
+  });
+
   it('renders a divider with a delete control', async () => {
     const onRemove = vi.fn();
     render(

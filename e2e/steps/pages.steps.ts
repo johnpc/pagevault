@@ -3,15 +3,16 @@ import { expect, type Page } from '@playwright/test';
 
 const { Given, When, Then } = createBdd();
 
-/** The sidebar row for a page title. `.first()` guards against a retry having
- * created a duplicate on the shared backend (strict-mode would otherwise fail). */
+/** The sidebar row for a page title. EXACT text match (not substring) so
+ * "Notes" doesn't also match "Meeting notes"; `.first()` guards against a retry
+ * having created a duplicate on the shared backend. */
 const sidebarRow = (page: Page, title: string) =>
-  page.locator('.pv-sidebar-title', { hasText: title }).first();
+  page.locator('.pv-sidebar-tree').getByText(title, { exact: true }).first();
 
 /** Create a page via the sidebar and rename it by typing into the title. */
 async function createPageTitled(page: Page, title: string) {
   await page.getByRole('button', { name: '+ New page' }).click();
-  const titleInput = page.getByLabel('Page title');
+  const titleInput = active(page).getByLabel('Page title');
   await expect(titleInput).toBeVisible();
   await titleInput.fill(title);
   await titleInput.blur();
@@ -31,20 +32,25 @@ Then('I should see {string} in the sidebar', async ({ page }, title: string) => 
   await expect(sidebarRow(page, title)).toBeVisible();
 });
 
+// Ionic keeps the previous route's page mounted (hidden) during transitions,
+// so scope queries to the VISIBLE page — the one without .ion-page-hidden.
+const active = (page: import('@playwright/test').Page) =>
+  page.locator('.ion-page:not(.ion-page-hidden)').last();
+
 When('I open the page {string}', async ({ page }, title: string) => {
   await sidebarRow(page, title).click();
-  await expect(page.getByLabel('Page title')).toHaveValue(title);
+  await expect(active(page).getByLabel('Page title')).toHaveValue(title);
 });
 
 When('I reopen the page {string}', async ({ page }, title: string) => {
   await page.goto('/');
   await sidebarRow(page, title).click();
-  await expect(page.getByLabel('Page title')).toHaveValue(title);
+  await expect(active(page).getByLabel('Page title')).toHaveValue(title);
 });
 
 When('I add a block with the text {string}', async ({ page }, text: string) => {
-  await page.getByRole('button', { name: '+ Add a block' }).click();
-  const input = page.getByLabel('Block content').last();
+  await active(page).getByRole('button', { name: '+ Add a block' }).click();
+  const input = active(page).getByLabel('Block content').last();
   // Type character-by-character so markdown shortcuts (e.g. "- ") fire — a
   // one-shot fill() would bypass the per-keystroke transform.
   await input.pressSequentially(text);
@@ -53,14 +59,29 @@ When('I add a block with the text {string}', async ({ page }, text: string) => {
 
 Then('the last block should be a {string} block', async ({ page }, type: string) => {
   // The block wrapper carries a pv-block--<type> class; assert on the real DOM.
-  await expect(page.locator(`.pv-block.pv-block--${type}`).last()).toBeVisible();
+  await expect(active(page).locator(`.pv-block.pv-block--${type}`).last()).toBeVisible();
 });
+
+When('I type {string} into a new block', async ({ page }, text: string) => {
+  // Add a block and type into it WITHOUT blurring — so the slash menu stays open.
+  await active(page).getByRole('button', { name: '+ Add a block' }).click();
+  await active(page).getByLabel('Block content').last().pressSequentially(text);
+});
+
+When('I choose {string} from the slash menu', async ({ page }, label: string) => {
+  await expect(active(page).getByRole('listbox', { name: 'Block types' })).toBeVisible();
+  await active(page).getByRole('option', { name: label }).click();
+});
+
+const blockInputs = (page: import('@playwright/test').Page) =>
+  active(page).locator('textarea.pv-block-input');
 
 /** Index of the block whose textarea's live value equals `text`. */
 async function blockIndexByText(page: import('@playwright/test').Page, text: string) {
-  return page
-    .locator('textarea.pv-block-input')
-    .evaluateAll((els, t) => els.findIndex((el) => (el as HTMLTextAreaElement).value === t), text);
+  return blockInputs(page).evaluateAll(
+    (els, t) => els.findIndex((el) => (el as HTMLTextAreaElement).value === t),
+    text,
+  );
 }
 
 When(
@@ -68,20 +89,19 @@ When(
   async ({ page }, from: string, to: string) => {
     const fromIdx = await blockIndexByText(page, from);
     const toIdx = await blockIndexByText(page, to);
+    const blocks = active(page).locator('.pv-block');
     // Drag the source block's handle onto the target block (native HTML5 DnD).
-    await page
-      .locator('.pv-block')
+    await blocks
       .nth(fromIdx)
       .getByLabel(/drag to reorder/i)
-      .dragTo(page.locator('.pv-block').nth(toIdx));
+      .dragTo(blocks.nth(toIdx));
   },
 );
 
 Then('the first block should contain {string}', async ({ page }, text: string) => {
   await expect
     .poll(() =>
-      page
-        .locator('textarea.pv-block-input')
+      blockInputs(page)
         .first()
         .evaluate((el) => (el as HTMLTextAreaElement).value),
     )
@@ -94,12 +114,10 @@ Then('I should see a block containing {string}', async ({ page }, text: string) 
   // live input values until one matches.
   await expect
     .poll(() =>
-      page
-        .locator('textarea.pv-block-input')
-        .evaluateAll(
-          (els, t) => els.some((el) => (el as HTMLTextAreaElement).value.includes(t)),
-          text,
-        ),
+      blockInputs(page).evaluateAll(
+        (els, t) => els.some((el) => (el as HTMLTextAreaElement).value.includes(t)),
+        text,
+      ),
     )
     .toBe(true);
 });

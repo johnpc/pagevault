@@ -30,3 +30,10 @@ Feature: Pages and blocks
     And I add a block with the text "Second"
     And I drag the block "Second" above the block "First"
     Then the first block should contain "Second"
+
+  Scenario: Insert a block type with the slash menu
+    Given I have a page titled "Notes"
+    When I open the page "Notes"
+    And I type "/quote" into a new block
+    And I choose "Quote" from the slash menu
+    Then the last block should be a "quote" block

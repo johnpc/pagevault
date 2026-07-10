@@ -1,7 +1,8 @@
-import type { DragEvent } from 'react';
 import type { BlockRecord } from '../../lib/pbClient';
-import { placeholderFor, cycleType } from './blockText';
+import { placeholderFor } from './blockText';
 import { useBlockInput } from './useBlockInput';
+import { useBlockDrag } from './useBlockDrag';
+import { SlashMenu } from './SlashMenu';
 import './BlockRow.css';
 
 export interface BlockDndHandlers {
@@ -22,38 +23,15 @@ interface BlockRowProps {
 }
 
 /** One editable content block. A divider renders a rule; everything else is a
- * growing textarea. The ⋮⋮ handle drags to reorder; clicking it cycles type. */
+ * growing textarea with a slash-command menu. The ⋮⋮ handle drags to reorder. */
 export function BlockRow({ block, onEdit, onRemove, onEnter, dnd }: BlockRowProps) {
-  const { value, change, keyDown, save } = useBlockInput(block, onEdit, onRemove, onEnter);
-
-  const cls =
-    `pv-block pv-block--${block.type}` +
-    (dnd.draggingId === block.id ? ' pv-block--dragging' : '') +
-    (dnd.overId === block.id && dnd.draggingId !== block.id ? ' pv-block--over' : '');
-
-  const rowDrag = {
-    onDragOver: (e: DragEvent) => {
-      e.preventDefault();
-      dnd.onDragOver(block.id);
-    },
-    onDrop: (e: DragEvent) => {
-      e.preventDefault();
-      dnd.onDrop(block.id);
-    },
-    onDragEnd: dnd.onDragEnd,
-  };
-
-  const handle = (
-    <button
-      className="pv-block-style"
-      aria-label="Drag to reorder or click to change block type"
-      draggable
-      onDragStart={() => dnd.onDragStart(block.id)}
-      onClick={() => onEdit(block.id, { type: cycleType(block.type) })}
-    >
-      ⋮⋮
-    </button>
+  const { value, change, keyDown, save, matches, active, pick } = useBlockInput(
+    block,
+    onEdit,
+    onRemove,
+    onEnter,
   );
+  const { cls, rowDrag, handle } = useBlockDrag(block, onEdit, dnd);
 
   if (block.type === 'divider') {
     return (
@@ -92,6 +70,7 @@ export function BlockRow({ block, onEdit, onRemove, onEnter, dnd }: BlockRowProp
         onBlur={save}
         onKeyDown={keyDown}
       />
+      {matches && <SlashMenu commands={matches} active={active} onPick={pick} />}
     </div>
   );
 }
