@@ -49,5 +49,12 @@ Feature: Pages and blocks
     When I open the page "Projects"
     And I add a sub-page
     And I name the open page "Website redesign"
-    Then I should see "Projects" in the breadcrumb
-    And I should see "Website redesign" in the breadcrumb
+    Then the breadcrumb for "Website redesign" should include "Projects"
+
+  Scenario: Move a page to trash and restore it
+    Given I have a page titled "Draft memo"
+    When I open the page "Draft memo"
+    And I move the page to trash
+    Then I should not see "Draft memo" in the sidebar
+    When I restore "Draft memo" from the trash
+    Then I should see "Draft memo" in the sidebar

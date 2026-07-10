@@ -3,6 +3,7 @@ import { Route, Redirect } from 'react-router-dom';
 import { Sidebar } from '../pages/Sidebar';
 import { HomeScreen } from './HomeScreen';
 import { PageEditor } from '../pages/PageEditor';
+import { Trash } from '../pages/Trash';
 import { QuickFind } from '../search/QuickFind';
 import { useQuickFind } from '../search/useQuickFind';
 import './Workspace.css';
@@ -20,6 +21,7 @@ export function Workspace() {
       <div className="pv-workspace-content">
         <IonRouterOutlet>
           <Route exact path="/" component={HomeScreen} />
+          <Route exact path="/trash" component={Trash} />
           <Route exact path="/page/:id" component={PageEditor} />
           <Redirect to="/" />
         </IonRouterOutlet>

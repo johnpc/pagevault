@@ -36,10 +36,10 @@ describe('PageHeader', () => {
     expect(onIcon).toHaveBeenCalledWith('🚀');
   });
 
-  it('deletes the page', async () => {
+  it('moves the page to trash', async () => {
     const onDelete = vi.fn();
     render(<PageHeader page={page} onTitle={vi.fn()} onIcon={vi.fn()} onDelete={onDelete} />);
-    await userEvent.click(screen.getByText('Delete page'));
+    await userEvent.click(screen.getByText('Move to trash'));
     expect(onDelete).toHaveBeenCalled();
   });
 });

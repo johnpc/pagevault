@@ -67,7 +67,8 @@ describe('usePageEditor', () => {
     );
     expect(blocks.update).toHaveBeenCalledWith('b1', { content: 'x' });
     expect(blocks.delete).toHaveBeenCalledWith('b1');
-    expect(pages.delete).toHaveBeenCalledWith('p1');
+    // removePage now archives (soft delete), not a hard delete.
+    expect(pages.update).toHaveBeenCalledWith('p1', { archived: true });
     // moveBlockTo('b2','b1') swaps order → both blocks get a new sort.
     expect(blocks.update).toHaveBeenCalledWith('b2', { sort: 0 });
     expect(blocks.update).toHaveBeenCalledWith('b1', { sort: 1 });

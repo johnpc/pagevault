@@ -114,10 +114,30 @@ When('I name the open page {string}', async ({ page }, title: string) => {
   await input.blur();
 });
 
-Then('I should see {string} in the breadcrumb', async ({ page }, title: string) => {
-  // Assert within the ACTIVE page's breadcrumb (parallel workers share the
-  // backend, and Ionic keeps other pages mounted).
-  await expect(active(page).getByTestId('breadcrumb')).toContainText(title);
+Then(
+  'the breadcrumb for {string} should include {string}',
+  async ({ page }, child: string, ancestor: string) => {
+    // After naming the open page there's no route transition, so the active
+    // page's own breadcrumb is deterministic for this browser. Assert its trail
+    // shows both the ancestor and the current page.
+    const crumb = active(page).getByTestId('breadcrumb');
+    await expect(crumb).toContainText(ancestor);
+    await expect(crumb).toContainText(child);
+  },
+);
+
+When('I move the page to trash', async ({ page }) => {
+  await active(page).getByRole('button', { name: 'Move to trash' }).click();
+});
+
+Then('I should not see {string} in the sidebar', async ({ page }, title: string) => {
+  await expect(sidebarRow(page, title)).toHaveCount(0);
+});
+
+When('I restore {string} from the trash', async ({ page }, title: string) => {
+  await page.getByRole('button', { name: '🗑 Trash' }).click();
+  const row = active(page).locator('.pv-trash-row').filter({ hasText: title }).first();
+  await row.getByRole('button', { name: 'Restore' }).click();
 });
 
 const blockInputs = (page: import('@playwright/test').Page) =>

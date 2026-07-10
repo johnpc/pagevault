@@ -17,7 +17,16 @@ vi.mock('../../lib/pbClient', () => ({
   currentUserId: () => 'u1',
 }));
 
-import { usePages, usePage, useCreatePage, useUpdatePage, useDeletePage } from './pagesApi';
+import {
+  usePages,
+  usePage,
+  useCreatePage,
+  useUpdatePage,
+  useDeletePage,
+  useArchivedPages,
+  useArchivePage,
+  useRestorePage,
+} from './pagesApi';
 
 const wrapper = ({ children }: { children: ReactNode }) => {
   const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
@@ -63,5 +72,26 @@ describe('pagesApi', () => {
     const { result } = renderHook(() => useDeletePage(), { wrapper });
     await result.current.mutateAsync('p1');
     expect(pages.delete).toHaveBeenCalledWith('p1');
+  });
+
+  it('useArchivedPages lists archived pages newest-first', async () => {
+    pages.getFullList.mockResolvedValue([{ id: 'p1' }]);
+    const { result } = renderHook(() => useArchivedPages(), { wrapper });
+    await waitFor(() => expect(result.current.data).toHaveLength(1));
+    expect(pages.getFullList).toHaveBeenCalledWith({ filter: 'archived = true', sort: '-updated' });
+  });
+
+  it('useArchivePage soft-deletes (archived: true)', async () => {
+    pages.update.mockResolvedValue({ id: 'p1' });
+    const { result } = renderHook(() => useArchivePage(), { wrapper });
+    await result.current.mutateAsync('p1');
+    expect(pages.update).toHaveBeenCalledWith('p1', { archived: true });
+  });
+
+  it('useRestorePage un-archives (archived: false)', async () => {
+    pages.update.mockResolvedValue({ id: 'p1' });
+    const { result } = renderHook(() => useRestorePage(), { wrapper });
+    await result.current.mutateAsync('p1');
+    expect(pages.update).toHaveBeenCalledWith('p1', { archived: false });
   });
 });

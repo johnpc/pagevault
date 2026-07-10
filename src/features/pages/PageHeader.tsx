@@ -36,7 +36,7 @@ export function PageHeader({ page, onTitle, onIcon, onDelete }: PageHeaderProps)
         onBlur={() => onTitle(title)}
       />
       <button className="pv-page-delete pv-muted" onClick={onDelete}>
-        Delete page
+        Move to trash
       </button>
     </header>
   );

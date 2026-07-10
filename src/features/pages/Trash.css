@@ -1,0 +1,63 @@
+.pv-trash {
+  max-width: var(--pv-content-max);
+  margin: 0 auto;
+  padding: 64px 56px 120px;
+}
+
+.pv-trash h1 {
+  font-size: 34px;
+  margin: 0 0 4px;
+}
+
+.pv-trash-list {
+  list-style: none;
+  margin: 24px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pv-trash-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--pv-radius-sm);
+}
+.pv-trash-row:hover {
+  background: var(--pv-hover);
+}
+
+.pv-trash-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pv-trash-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.pv-trash-restore,
+.pv-trash-delete {
+  background: none;
+  border: 1px solid var(--pv-border);
+  font: inherit;
+  font-size: 13px;
+  padding: 4px 12px;
+  border-radius: var(--pv-radius-sm);
+  cursor: pointer;
+  color: var(--pv-text);
+}
+.pv-trash-restore:hover {
+  border-color: var(--pv-accent);
+  color: var(--pv-accent-strong);
+}
+.pv-trash-delete:hover {
+  border-color: var(--pv-danger);
+  color: var(--pv-danger);
+}

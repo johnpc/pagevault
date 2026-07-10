@@ -52,10 +52,43 @@ export function useUpdatePage() {
   });
 }
 
+/** Archived (trashed) pages, newest first — the Trash view's data. */
+export function useArchivedPages() {
+  return useQuery({
+    queryKey: ['pages', 'archived'],
+    queryFn: () =>
+      pb
+        .collection('pages')
+        .getFullList<PageRecord>({ filter: 'archived = true', sort: '-updated' }),
+  });
+}
+
+const invalidateAll = (qc: ReturnType<typeof useQueryClient>) =>
+  qc.invalidateQueries({ queryKey: KEY, exact: false });
+
+/** Move a page to the trash (soft delete). Reversible via restore. */
+export function useArchivePage() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => pb.collection('pages').update<PageRecord>(id, { archived: true }),
+    onSuccess: () => invalidateAll(qc),
+  });
+}
+
+/** Restore a page from the trash. */
+export function useRestorePage() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => pb.collection('pages').update<PageRecord>(id, { archived: false }),
+    onSuccess: () => invalidateAll(qc),
+  });
+}
+
+/** Permanently delete a page (from the trash — cascades to its blocks). */
 export function useDeletePage() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (id: string) => pb.collection('pages').delete(id),
-    onSuccess: () => qc.invalidateQueries({ queryKey: KEY }),
+    onSuccess: () => invalidateAll(qc),
   });
 }

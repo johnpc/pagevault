@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { usePage, useUpdatePage, useDeletePage, useCreatePage, usePages } from './pagesApi';
+import { usePage, useUpdatePage, useArchivePage, useCreatePage, usePages } from './pagesApi';
 import {
   useBlocks,
   useCreateBlock,
@@ -19,7 +19,7 @@ export function usePageEditor(pageId: string) {
   const page = usePage(pageId);
   const blocks = useBlocks(pageId);
   const updatePage = useUpdatePage();
-  const deletePage = useDeletePage();
+  const archivePage = useArchivePage();
   const createBlock = useCreateBlock(pageId);
   const updateBlock = useUpdateBlock(pageId);
   const deleteBlock = useDeleteBlock(pageId);
@@ -74,6 +74,6 @@ export function usePageEditor(pageId: string) {
     addBlock,
     editBlock,
     removeBlock: deleteBlock.mutate,
-    removePage: deletePage.mutateAsync,
+    removePage: archivePage.mutateAsync,
   };
 }
