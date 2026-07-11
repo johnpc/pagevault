@@ -35,7 +35,10 @@ export function BlockRow(props: BlockRowProps) {
   const { onEnter, autoFocus, onFocused, dnd } = props;
   const { cls, rowDrag, handle } = useBlockDrag(block, onEdit, dnd);
   const style = { marginLeft: `${(block.depth ?? 0) * 24}px` };
-  const controls = <BlockControls block={block} onDuplicate={onDuplicate} onRemove={onRemove} />;
+  const onColor = (id: string, color: string) => onEdit(id, { color });
+  const controls = (
+    <BlockControls block={block} onDuplicate={onDuplicate} onRemove={onRemove} onColor={onColor} />
+  );
 
   // Divider / image / table render as whole elements, not an editable text line.
   const media = (

@@ -21,14 +21,23 @@ interface MediaProps {
  * BlockRow can fall through to its text body. Keeps BlockRow under length. */
 export function MediaBlockRow(props: MediaProps) {
   const { block, cls, style, rowDrag, handle, onEdit, onRemove, onDuplicate, onUpload } = props;
-  const controls = <BlockControls block={block} onDuplicate={onDuplicate} onRemove={onRemove} />;
+  const onColor = (id: string, color: string) => onEdit(id, { color });
+  const controls = (
+    <BlockControls block={block} onDuplicate={onDuplicate} onRemove={onRemove} onColor={onColor} />
+  );
 
   if (block.type === 'divider') {
     return (
       <div className={cls} style={style} {...rowDrag}>
         {handle}
         <hr />
-        <BlockControls block={block} onDuplicate={onDuplicate} onRemove={onRemove} withDelete />
+        <BlockControls
+          block={block}
+          onDuplicate={onDuplicate}
+          onRemove={onRemove}
+          onColor={onColor}
+          withDelete
+        />
       </div>
     );
   }

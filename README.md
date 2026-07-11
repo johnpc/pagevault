@@ -48,6 +48,7 @@ account, no third-party service, no lock-in.
 | Self-hosted via `docker compose`                                       | ✅     |
 | Inline markdown — **bold**, _italic_, `code`                           | ✅     |
 | @-mentions — type `@` to link another page inline                      | ✅     |
+| Block color & background highlight (text + `-bg` palette)              | ✅     |
 | Duplicate a block (inserts below)                                      | ✅     |
 | Nested lists — Tab / Shift-Tab to indent & outdent blocks              | ✅     |
 | Drag-to-reorder blocks (optimistic)                                    | ✅     |
