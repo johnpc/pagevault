@@ -1,5 +1,6 @@
 import type { PageRecord, BlockRecord } from '../../lib/pbClient';
 import { displayTitle } from '../pages/pageTree';
+import { titleRank } from './highlight';
 
 /** A single quick-find hit: always resolves to a page to open. */
 export interface SearchResult {
@@ -43,7 +44,12 @@ export function mergeResults(
   const results: SearchResult[] = [];
   const seen = new Set<string>();
 
-  for (const page of pages) {
+  // Title matches first, ranked exact → prefix → word-start → substring (stable
+  // within a rank by the incoming order), so the best title lands at the top.
+  const rankedPages = pages
+    .map((page, i) => ({ page, i, rank: titleRank(displayTitle(page), query) }))
+    .sort((a, b) => a.rank - b.rank || a.i - b.i);
+  for (const { page } of rankedPages) {
     seen.add(page.id);
     results.push({
       pageId: page.id,
