@@ -41,6 +41,7 @@ const renderList = (data: BlockRecord[]) =>
       onIndent={vi.fn()}
       onPasteMarkdown={vi.fn()}
       onSplit={vi.fn()}
+      onUpload={vi.fn()}
       onAddBlock={vi.fn()}
       onSubPage={vi.fn()}
       focusId={null}

@@ -21,6 +21,7 @@ interface BlockRowProps {
   onDuplicate: (block: BlockRecord) => void;
   onIndent: (id: string, dir: 'in' | 'out') => void;
   onPasteMarkdown: (block: BlockRecord, text: string) => void;
+  onUpload: (id: string, file: File) => void;
   onEnter: (caret: number, value: string) => boolean;
   autoFocus?: boolean;
   onFocused?: () => void;
@@ -50,7 +51,7 @@ export function BlockRow(props: BlockRowProps) {
     return (
       <div className={cls} style={style} {...rowDrag}>
         {handle}
-        <ImageBlock block={block} onEdit={onEdit} />
+        <ImageBlock block={block} onEdit={onEdit} onUpload={props.onUpload} />
         {controls}
       </div>
     );

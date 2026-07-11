@@ -6,6 +6,7 @@ import {
   useReorderBlocks,
   useDuplicateBlock,
 } from './blocksApi';
+import { useUploadBlockFile } from './uploadBlockFileApi';
 import { moveBlock, sortUpdates } from './reorder';
 import { indentDepth } from './indent';
 import { useImportMarkdown } from './markdownImportApi';
@@ -24,6 +25,7 @@ export function useBlockActions(pageId: string, blocks: BlockRecord[]) {
   const deleteBlock = useDeleteBlock(pageId);
   const reorderBlocks = useReorderBlocks(pageId);
   const duplicateBlock = useDuplicateBlock(pageId);
+  const uploadFile = useUploadBlockFile(pageId);
   const importMd = useImportMarkdown(pageId);
   // id of the block that should grab focus next (the one just created by Enter).
   const [focusId, setFocusId] = useState<string | null>(null);
@@ -76,6 +78,11 @@ export function useBlockActions(pageId: string, blocks: BlockRecord[]) {
 
   const splitBlock = useEnterSplit(pageId, blocks, { indentBlock, editBlock, setFocusId });
 
+  const uploadImage = useCallback(
+    (id: string, file: File) => uploadFile.mutate({ id, file }),
+    [uploadFile],
+  );
+
   return {
     addBlock,
     editBlock,
@@ -84,6 +91,7 @@ export function useBlockActions(pageId: string, blocks: BlockRecord[]) {
     indentBlock,
     importMarkdown,
     splitBlock,
+    uploadImage,
     focusId,
     clearFocusId: () => setFocusId(null),
     removeBlock: deleteBlock.mutate,

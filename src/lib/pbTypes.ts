@@ -47,6 +47,7 @@ export interface BlocksResponse extends BaseRecord {
   content: string;
   checked: boolean;
   collapsed: boolean; // for `toggle` blocks: hide the nested (deeper-depth) children
+  file: string; // uploaded image filename (image blocks); '' when using a URL
   depth: number; // indentation level (0 = top); for nested lists
   sort: number;
   owner: string;

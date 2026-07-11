@@ -22,6 +22,7 @@ import {
   useDeleteBlock,
   useDuplicateBlock,
 } from './blocksApi';
+import { useUploadBlockFile } from './uploadBlockFileApi';
 import type { BlockRecord } from '../../lib/pbClient';
 
 const wrapper = ({ children }: { children: ReactNode }) => {
@@ -68,6 +69,18 @@ describe('blocksApi', () => {
     const del = renderHook(() => useDeleteBlock('p1'), { wrapper });
     await del.result.current.mutateAsync('b1');
     expect(blocks.delete).toHaveBeenCalledWith('b1');
+  });
+
+  it('useUploadBlockFile sends the file as form data and clears the URL', async () => {
+    blocks.update.mockResolvedValue({ id: 'b1', file: 'pic.png' });
+    const { result } = renderHook(() => useUploadBlockFile('p1'), { wrapper });
+    const file = new File(['x'], 'pic.png', { type: 'image/png' });
+    await result.current.mutateAsync({ id: 'b1', file });
+    const [id, body] = blocks.update.mock.calls[0];
+    expect(id).toBe('b1');
+    expect(body).toBeInstanceOf(FormData);
+    expect((body as FormData).get('file')).toBe(file);
+    expect((body as FormData).get('content')).toBe('');
   });
 
   it('useDuplicateBlock clones a block and inserts it below the source', async () => {
