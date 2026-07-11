@@ -15,13 +15,8 @@ vi.mock('../../lib/pbClient', () => ({
   currentUserId: () => 'u1',
 }));
 
-import {
-  useBlocks,
-  useCreateBlock,
-  useUpdateBlock,
-  useDeleteBlock,
-  useDuplicateBlock,
-} from './blocksApi';
+import { useBlocks, useCreateBlock, useDeleteBlock, useDuplicateBlock } from './blocksApi';
+import { useUpdateBlock } from './updateBlockApi';
 import { useUploadBlockFile } from './uploadBlockFileApi';
 import type { BlockRecord } from '../../lib/pbClient';
 

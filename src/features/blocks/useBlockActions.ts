@@ -1,11 +1,6 @@
 import { useCallback, useState } from 'react';
-import {
-  useCreateBlock,
-  useUpdateBlock,
-  useDeleteBlock,
-  useReorderBlocks,
-  useDuplicateBlock,
-} from './blocksApi';
+import { useCreateBlock, useDeleteBlock, useReorderBlocks, useDuplicateBlock } from './blocksApi';
+import { useUpdateBlock } from './updateBlockApi';
 import { useUploadBlockFile } from './uploadBlockFileApi';
 import { moveBlock, sortUpdates } from './reorder';
 import { indentDepth } from './indent';
