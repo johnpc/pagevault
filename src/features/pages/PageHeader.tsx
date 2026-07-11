@@ -13,6 +13,7 @@ interface PageHeaderProps {
   onExport: () => void;
   onDuplicate: () => void;
   onCover: (id: string) => void;
+  onCoverUpload: (file: File) => void;
   onMove: (parent: string) => void;
 }
 
@@ -29,6 +30,7 @@ export function PageHeader({
   onExport,
   onDuplicate,
   onCover,
+  onCoverUpload,
   onMove,
 }: PageHeaderProps) {
   // The header stays mounted across /page/:id changes. Resync the local title
@@ -43,7 +45,7 @@ export function PageHeader({
   }
   return (
     <header className="pv-page-header">
-      <CoverPicker cover={page.cover} onCover={onCover} />
+      <CoverPicker page={page} onCover={onCover} onUpload={onCoverUpload} />
       <div className="pv-page-icons">
         {ICONS.map((icon) => (
           <button

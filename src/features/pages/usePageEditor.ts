@@ -8,6 +8,8 @@ import {
   usePages,
   useToggleFavorite,
 } from './pagesApi';
+import { useUploadCover } from './uploadCoverApi';
+import type { PageRecord } from '../../lib/pbClient';
 import { useBlocks } from '../blocks/blocksApi';
 import { useBlockActions } from '../blocks/useBlockActions';
 import { pageToMarkdown, fileSlug } from '../blocks/exportMarkdown';
@@ -26,6 +28,7 @@ export function usePageEditor(pageId: string) {
   const toggleFavorite = useToggleFavorite();
   const createPage = useCreatePage();
   const duplicatePage = useDuplicatePage();
+  const uploadCover = useUploadCover();
   const allPages = usePages();
   const blockActions = useBlockActions(pageId, blocks.data ?? []);
 
@@ -43,29 +46,24 @@ export function usePageEditor(pageId: string) {
     return child.id;
   }, [allPages.data, createPage, pageId]);
 
-  const setTitle = useCallback(
-    (title: string) => updatePage.mutate({ id: pageId, patch: { title } }),
+  // Single-field page patches (title/icon/cover/parent) all share one shape.
+  const patch = useCallback(
+    (p: Partial<PageRecord>) => updatePage.mutate({ id: pageId, patch: p }),
     [pageId, updatePage],
   );
-
-  const setIcon = useCallback(
-    (icon: string) => updatePage.mutate({ id: pageId, patch: { icon } }),
-    [pageId, updatePage],
-  );
+  const setTitle = useCallback((title: string) => patch({ title }), [patch]);
+  const setIcon = useCallback((icon: string) => patch({ icon }), [patch]);
+  const setCover = useCallback((cover: string) => patch({ cover }), [patch]);
+  const setParent = useCallback((parent: string) => patch({ parent }), [patch]);
 
   const setFavorite = useCallback(
     (favorite: boolean) => toggleFavorite.mutate({ id: pageId, favorite }),
     [pageId, toggleFavorite],
   );
 
-  const setCover = useCallback(
-    (cover: string) => updatePage.mutate({ id: pageId, patch: { cover } }),
-    [pageId, updatePage],
-  );
-
-  const setParent = useCallback(
-    (parent: string) => updatePage.mutate({ id: pageId, patch: { parent } }),
-    [pageId, updatePage],
+  const setCoverImage = useCallback(
+    (file: File) => uploadCover.mutate({ id: pageId, file }),
+    [pageId, uploadCover],
   );
 
   /** Download the current page as a Markdown file. */
@@ -85,6 +83,7 @@ export function usePageEditor(pageId: string) {
     setIcon,
     setFavorite,
     setCover,
+    setCoverImage,
     setParent,
     allPages,
     removePage: archivePage.mutateAsync,

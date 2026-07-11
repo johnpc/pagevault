@@ -12,31 +12,11 @@ import './PageEditor.css';
 export function PageEditor() {
   const { id } = useParams<{ id: string }>();
   const history = useHistory();
-  const {
-    page,
-    blocks,
-    setTitle,
-    setIcon,
-    setFavorite,
-    setCover,
-    setParent,
-    allPages,
-    addBlock,
-    editBlock,
-    removeBlock,
-    cloneBlock,
-    indentBlock,
-    importMarkdown,
-    splitBlock,
-    uploadImage,
-    focusId,
-    clearFocusId,
-    removePage,
-    moveBlockTo,
-    addSubPage,
-    duplicate,
-    exportMarkdown,
-  } = usePageEditor(id);
+  const { page, blocks, allPages, ...ed } = usePageEditor(id);
+  const { setTitle, setIcon, setFavorite, setCover, setCoverImage, setParent } = ed;
+  const { addBlock, editBlock, removeBlock, cloneBlock, indentBlock, importMarkdown } = ed;
+  const { splitBlock, uploadImage, focusId, clearFocusId, moveBlockTo } = ed;
+  const { removePage, addSubPage, duplicate, exportMarkdown } = ed;
   const dnd = useBlockDnd(moveBlockTo);
 
   const onDelete = async () => {
@@ -68,6 +48,7 @@ export function PageEditor() {
                   onDelete={onDelete}
                   onToggleFavorite={setFavorite}
                   onCover={setCover}
+                  onCoverUpload={setCoverImage}
                   onMove={setParent}
                   onExport={exportMarkdown}
                   onDuplicate={onDuplicate}
