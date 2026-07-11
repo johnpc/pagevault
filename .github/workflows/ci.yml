@@ -76,6 +76,8 @@ jobs:
             paths: .features-gen/e2e/features/upload
           - name: reorder-pages
             paths: .features-gen/e2e/features/reorder-pages
+          - name: table
+            paths: .features-gen/e2e/features/table
     env:
       VITE_PB_URL: http://localhost:8090
       PB_ADMIN_EMAIL: admin@pagevault.local

@@ -33,6 +33,22 @@ describe('blockToMarkdown', () => {
     expect(blockToMarkdown(blk('callout', 'Heads up'))).toBe('> 💡 Heads up');
     expect(blockToMarkdown(blk('text', 'Plain'))).toBe('Plain');
   });
+
+  it('renders a table block as a GFM table', () => {
+    const table = {
+      ...blk('table', ''),
+      data: {
+        columns: ['Name', 'Qty'],
+        rows: [
+          ['Apples', '3'],
+          ['Pears', '5'],
+        ],
+      },
+    } as BlockRecord;
+    expect(blockToMarkdown(table)).toBe(
+      '| Name | Qty |\n| --- | --- |\n| Apples | 3 |\n| Pears | 5 |',
+    );
+  });
 });
 
 describe('pageToMarkdown', () => {

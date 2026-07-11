@@ -273,11 +273,22 @@ When(
     const fromIdx = await blockIndexByText(page, from);
     const toIdx = await blockIndexByText(page, to);
     const blocks = active(page).locator('.pv-block');
-    // Drag the source block's handle onto the target block (native HTML5 DnD).
+    // HTML5 drag: Playwright's real-mouse dragTo doesn't reliably fire dragstart/
+    // drop, so dispatch the events directly (shared DataTransfer) onto the handle
+    // and target — exactly what the block's React handlers listen for.
     await blocks
       .nth(fromIdx)
       .getByLabel(/drag to reorder/i)
-      .dragTo(blocks.nth(toIdx));
+      .evaluate((el) => {
+        const dt = new DataTransfer();
+        el.dispatchEvent(new DragEvent('dragstart', { bubbles: true, dataTransfer: dt }));
+        (window as unknown as { __dt: DataTransfer }).__dt = dt;
+      });
+    await blocks.nth(toIdx).evaluate((el) => {
+      const dt = (window as unknown as { __dt: DataTransfer }).__dt;
+      el.dispatchEvent(new DragEvent('dragover', { bubbles: true, dataTransfer: dt }));
+      el.dispatchEvent(new DragEvent('drop', { bubbles: true, dataTransfer: dt }));
+    });
   },
 );
 

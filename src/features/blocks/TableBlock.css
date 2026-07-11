@@ -1,0 +1,75 @@
+.pv-table-wrap {
+  flex: 1;
+  overflow-x: auto;
+}
+
+.pv-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+.pv-table th,
+.pv-table td {
+  border: 1px solid var(--pv-border);
+  padding: 0;
+  position: relative;
+}
+.pv-table th {
+  background: var(--pv-hover);
+}
+.pv-table input {
+  border: none;
+  background: none;
+  font: inherit;
+  color: var(--pv-text);
+  padding: 6px 8px;
+  width: 100%;
+  min-width: 90px;
+}
+.pv-table th input {
+  font-weight: 600;
+}
+.pv-table input:focus {
+  outline: 2px solid var(--pv-accent);
+  outline-offset: -2px;
+}
+
+/* Delete affordances: a faint × that darkens on hover. */
+.pv-table-del,
+.pv-table-rowdel button {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: none;
+  border: none;
+  color: var(--pv-text-muted);
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 1;
+  opacity: 0;
+  padding: 2px 4px;
+}
+.pv-table th:hover .pv-table-del,
+.pv-table td:hover .pv-table-rowdel button {
+  opacity: 1;
+}
+.pv-table-rowdel {
+  border: none;
+  width: 24px;
+}
+
+.pv-table-addcol button,
+.pv-table-addrow {
+  background: none;
+  border: none;
+  color: var(--pv-text-muted);
+  cursor: pointer;
+  font: inherit;
+  padding: 6px 10px;
+}
+.pv-table-addcol button:hover,
+.pv-table-addrow:hover {
+  color: var(--pv-text);
+}
+.pv-table-addrow {
+  margin-top: 4px;
+}

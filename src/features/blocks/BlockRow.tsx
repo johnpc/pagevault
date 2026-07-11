@@ -1,6 +1,6 @@
 import type { BlockRecord } from '../../lib/pbClient';
 import { useBlockDrag } from './useBlockDrag';
-import { ImageBlock } from './ImageBlock';
+import { MediaBlockRow } from './MediaBlockRow';
 import { TextBlockBody } from './TextBlockBody';
 import { BlockControls } from './BlockControls';
 import './BlockRow.css';
@@ -37,25 +37,21 @@ export function BlockRow(props: BlockRowProps) {
   const style = { marginLeft: `${(block.depth ?? 0) * 24}px` };
   const controls = <BlockControls block={block} onDuplicate={onDuplicate} onRemove={onRemove} />;
 
-  if (block.type === 'divider') {
-    return (
-      <div className={cls} style={style} {...rowDrag}>
-        {handle}
-        <hr />
-        <BlockControls block={block} onDuplicate={onDuplicate} onRemove={onRemove} withDelete />
-      </div>
-    );
-  }
-
-  if (block.type === 'image') {
-    return (
-      <div className={cls} style={style} {...rowDrag}>
-        {handle}
-        <ImageBlock block={block} onEdit={onEdit} onUpload={props.onUpload} />
-        {controls}
-      </div>
-    );
-  }
+  // Divider / image / table render as whole elements, not an editable text line.
+  const media = (
+    <MediaBlockRow
+      block={block}
+      cls={cls}
+      style={style}
+      rowDrag={rowDrag}
+      handle={handle}
+      onEdit={onEdit}
+      onRemove={onRemove}
+      onDuplicate={onDuplicate}
+      onUpload={props.onUpload}
+    />
+  );
+  if (block.type === 'divider' || block.type === 'image' || block.type === 'table') return media;
 
   return (
     <div className={cls} style={style} {...rowDrag}>

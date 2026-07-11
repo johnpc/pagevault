@@ -26,7 +26,14 @@ export type BlockType =
   | 'code'
   | 'image'
   | 'callout'
-  | 'toggle';
+  | 'toggle'
+  | 'table';
+
+/** The grid stored in a `table` block's JSON `data` field. */
+export interface TableData {
+  columns: string[]; // header labels
+  rows: string[][]; // each row is a cell value per column
+}
 
 export interface PagesResponse extends BaseRecord {
   title: string;
@@ -48,6 +55,7 @@ export interface BlocksResponse extends BaseRecord {
   checked: boolean;
   collapsed: boolean; // for `toggle` blocks: hide the nested (deeper-depth) children
   file: string; // uploaded image filename (image blocks); '' when using a URL
+  data: TableData | null; // grid for `table` blocks; null for every other type
   depth: number; // indentation level (0 = top); for nested lists
   sort: number;
   owner: string;
