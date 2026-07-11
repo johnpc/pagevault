@@ -1,21 +1,33 @@
-import type { TableData } from '../../lib/pbTypes';
+import type { TableData, TableColumn, TableColumnType } from '../../lib/pbTypes';
 
-/** A fresh 2×2 table (two columns, one empty body row) for a new table block. */
+const col = (name: string, type: TableColumnType = 'text'): TableColumn => ({ name, type });
+
+/** A fresh 2-column, 1-row table for a new table block. */
 export function emptyTable(): TableData {
-  return { columns: ['Name', 'Notes'], rows: [['', '']] };
+  return { columns: [col('Name'), col('Notes')], rows: [['', '']] };
 }
 
-/** Normalize possibly-missing/ragged data into a valid grid (≥1 column, every
- * row padded/truncated to the column count). Pure — guards render + edits. */
+/** Coerce one column entry (which may be a legacy plain string from an older
+ * table) into a typed TableColumn. */
+function toColumn(c: TableColumn | string): TableColumn {
+  if (typeof c === 'string') return col(c);
+  return { name: c.name, type: c.type ?? 'text', ...(c.options ? { options: c.options } : {}) };
+}
+
+/** Normalize possibly-missing/ragged/legacy data into a valid typed grid (≥1
+ * column, every row padded/truncated to the column count). Pure — guards render
+ * + edits, and upgrades old string[] columns to typed ones. */
 export function normalize(data: TableData | null | undefined): TableData {
-  if (!data || !Array.isArray(data.columns) || data.columns.length === 0) return emptyTable();
-  const width = data.columns.length;
-  const rows = (data.rows ?? []).map((row) => {
+  const raw = (data?.columns ?? []) as (TableColumn | string)[];
+  if (raw.length === 0) return emptyTable();
+  const columns = raw.map(toColumn);
+  const width = columns.length;
+  const rows = (data?.rows ?? []).map((row) => {
     const cells = Array.isArray(row) ? row.slice(0, width) : [];
     while (cells.length < width) cells.push('');
     return cells;
   });
-  return { columns: data.columns.slice(), rows };
+  return { columns, rows };
 }
 
 /** Set one cell, returning a new grid. */
@@ -26,9 +38,23 @@ export function setCell(data: TableData, r: number, c: number, value: string): T
   return { columns: data.columns, rows };
 }
 
-/** Rename one column header, returning a new grid. */
-export function setColumn(data: TableData, c: number, label: string): TableData {
-  return { columns: data.columns.map((v, j) => (j === c ? label : v)), rows: data.rows };
+/** Rename one column header. */
+export function setColumn(data: TableData, c: number, name: string): TableData {
+  return {
+    columns: data.columns.map((col, j) => (j === c ? { ...col, name } : col)),
+    rows: data.rows,
+  };
+}
+
+/** Change one column's type (and seed select options from distinct cell values). */
+export function setColumnType(data: TableData, c: number, type: TableColumnType): TableData {
+  const columns = data.columns.map((col, j) => {
+    if (j !== c) return col;
+    if (type !== 'select') return { name: col.name, type };
+    const options = [...new Set(data.rows.map((row) => row[c]).filter(Boolean))];
+    return { name: col.name, type, options };
+  });
+  return { columns, rows: data.rows };
 }
 
 /** Append an empty row. */
@@ -36,10 +62,10 @@ export function addRow(data: TableData): TableData {
   return { columns: data.columns, rows: [...data.rows, data.columns.map(() => '')] };
 }
 
-/** Append a new column (with a default header) and an empty cell in every row. */
+/** Append a new text column and an empty cell in every row. */
 export function addColumn(data: TableData): TableData {
   return {
-    columns: [...data.columns, `Column ${data.columns.length + 1}`],
+    columns: [...data.columns, col(`Column ${data.columns.length + 1}`)],
     rows: data.rows.map((row) => [...row, '']),
   };
 }

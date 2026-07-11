@@ -3,12 +3,17 @@ import type { TableData } from '../../lib/pbTypes';
 import { displayTitle } from '../pages/pageTree';
 import { normalize } from './tableData';
 
-/** A GFM table from a block's grid data. Pure. */
+/** A GFM table from a block's grid data. Checkbox cells render as ✓ / blank.
+ * Pure. */
 function tableToMarkdown(data: TableData | null): string {
   const { columns, rows } = normalize(data);
   const line = (cells: string[]) => `| ${cells.join(' | ')} |`;
+  const header = line(columns.map((c) => c.name));
   const divider = `| ${columns.map(() => '---').join(' | ')} |`;
-  return [line(columns), divider, ...rows.map((r) => line(r))].join('\n');
+  const cell = (value: string, colIdx: number) =>
+    columns[colIdx]?.type === 'checkbox' ? (value === 'true' ? '✓' : '') : value;
+  const body = rows.map((r) => line(r.map(cell)));
+  return [header, divider, ...body].join('\n');
 }
 
 /** Serialize one block to its Markdown line. `ordinal` is the 1-based position

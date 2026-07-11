@@ -1,19 +1,13 @@
 import type { BlockRecord } from '../../lib/pbClient';
 import type { TableData } from '../../lib/pbTypes';
-import {
-  normalize,
-  setCell,
-  setColumn,
-  addRow,
-  addColumn,
-  removeRow,
-  removeColumn,
-} from './tableData';
+import { normalize, setCell, addRow, removeRow } from './tableData';
+import { TableHead } from './TableHead';
+import { TableCell } from './TableCell';
 import './TableBlock.css';
 
-/** An editable table/database grid. The whole grid lives in the block's `data`
- * JSON field; every edit patches it via onEdit. Render-only — all grid logic is
- * in the pure tableData helpers. */
+/** An editable typed table/database grid. The whole grid lives in the block's
+ * `data` JSON field; every edit patches it via onEdit. Render-only — all grid
+ * logic is in the pure tableData helpers, cells render by column type. */
 export function TableBlock({
   block,
   onEdit,
@@ -27,42 +21,17 @@ export function TableBlock({
   return (
     <div className="pv-table-wrap">
       <table className="pv-table">
-        <thead>
-          <tr>
-            {data.columns.map((col, c) => (
-              <th key={c}>
-                <input
-                  aria-label={`Column ${c + 1} name`}
-                  value={col}
-                  onChange={(e) => save(setColumn(data, c, e.target.value))}
-                />
-                {data.columns.length > 1 && (
-                  <button
-                    className="pv-table-del"
-                    aria-label={`Delete column ${c + 1}`}
-                    onClick={() => save(removeColumn(data, c))}
-                  >
-                    ×
-                  </button>
-                )}
-              </th>
-            ))}
-            <th className="pv-table-addcol">
-              <button aria-label="Add column" onClick={() => save(addColumn(data))}>
-                +
-              </button>
-            </th>
-          </tr>
-        </thead>
+        <TableHead data={data} save={save} />
         <tbody>
           {data.rows.map((row, r) => (
             <tr key={r}>
               {row.map((cell, c) => (
                 <td key={c}>
-                  <input
-                    aria-label={`Cell ${r + 1},${c + 1}`}
+                  <TableCell
+                    column={data.columns[c]}
                     value={cell}
-                    onChange={(e) => save(setCell(data, r, c, e.target.value))}
+                    label={`Cell ${r + 1},${c + 1}`}
+                    onChange={(v) => save(setCell(data, r, c, v))}
                   />
                 </td>
               ))}

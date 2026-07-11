@@ -29,10 +29,21 @@ export type BlockType =
   | 'toggle'
   | 'table';
 
-/** The grid stored in a `table` block's JSON `data` field. */
+/** A table column's cell kind. Cells are always stored as strings; the type
+ * decides how a cell renders/edits (number input, checkbox, select…). */
+export type TableColumnType = 'text' | 'number' | 'checkbox' | 'select';
+
+export interface TableColumn {
+  name: string; // header label
+  type: TableColumnType;
+  options?: string[]; // choices for a `select` column
+}
+
+/** The grid stored in a `table` block's JSON `data` field. Cells stay as a
+ * string per column; `checkbox` uses 'true'/'' and `select` holds one option. */
 export interface TableData {
-  columns: string[]; // header labels
-  rows: string[][]; // each row is a cell value per column
+  columns: TableColumn[];
+  rows: string[][];
 }
 
 export interface PagesResponse extends BaseRecord {
