@@ -17,20 +17,31 @@ interface BlockRowProps {
   block: BlockRecord;
   onEdit: (id: string, patch: Partial<BlockRecord>) => void;
   onRemove: (id: string) => void;
+  onDuplicate: (block: BlockRecord) => void;
   onEnter: () => void;
   dnd: BlockDndHandlers;
 }
 
 /** One block row: the drag handle + a type-specific body (divider rule, image,
  * or the editable text body with inline preview + slash menu). */
-export function BlockRow({ block, onEdit, onRemove, onEnter, dnd }: BlockRowProps) {
+export function BlockRow({ block, onEdit, onRemove, onDuplicate, onEnter, dnd }: BlockRowProps) {
   const { cls, rowDrag, handle } = useBlockDrag(block, onEdit, dnd);
+  const dup = (
+    <button
+      className="pv-block-dup"
+      aria-label="Duplicate block"
+      onClick={() => onDuplicate(block)}
+    >
+      ⧉
+    </button>
+  );
 
   if (block.type === 'divider') {
     return (
       <div className={cls} {...rowDrag}>
         {handle}
         <hr />
+        {dup}
         <button
           className="pv-block-del"
           aria-label="Delete block"
@@ -47,6 +58,7 @@ export function BlockRow({ block, onEdit, onRemove, onEnter, dnd }: BlockRowProp
       <div className={cls} {...rowDrag}>
         {handle}
         <ImageBlock block={block} onEdit={onEdit} />
+        {dup}
       </div>
     );
   }
@@ -68,6 +80,7 @@ export function BlockRow({ block, onEdit, onRemove, onEnter, dnd }: BlockRowProp
         </span>
       )}
       <TextBlockBody block={block} onEdit={onEdit} onRemove={onRemove} onEnter={onEnter} />
+      {dup}
     </div>
   );
 }

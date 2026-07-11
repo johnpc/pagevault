@@ -1,5 +1,11 @@
 import { useCallback } from 'react';
-import { useCreateBlock, useUpdateBlock, useDeleteBlock, useReorderBlocks } from './blocksApi';
+import {
+  useCreateBlock,
+  useUpdateBlock,
+  useDeleteBlock,
+  useReorderBlocks,
+  useDuplicateBlock,
+} from './blocksApi';
 import { moveBlock, sortUpdates } from './reorder';
 import type { BlockRecord } from '../../lib/pbClient';
 import type { BlockType } from '../../lib/pbTypes';
@@ -13,6 +19,7 @@ export function useBlockActions(pageId: string, blocks: BlockRecord[]) {
   const updateBlock = useUpdateBlock(pageId);
   const deleteBlock = useDeleteBlock(pageId);
   const reorderBlocks = useReorderBlocks(pageId);
+  const duplicateBlock = useDuplicateBlock(pageId);
 
   const addBlock = useCallback(
     (type: BlockType = 'text') => createBlock.mutate({ type, content: '', siblings: blocks }),
@@ -33,5 +40,10 @@ export function useBlockActions(pageId: string, blocks: BlockRecord[]) {
     [blocks, reorderBlocks],
   );
 
-  return { addBlock, editBlock, moveBlockTo, removeBlock: deleteBlock.mutate };
+  const cloneBlock = useCallback(
+    (source: BlockRecord) => duplicateBlock.mutate({ source, blocks }),
+    [duplicateBlock, blocks],
+  );
+
+  return { addBlock, editBlock, moveBlockTo, cloneBlock, removeBlock: deleteBlock.mutate };
 }

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { moveBlock, sortUpdates } from './reorder';
+import { moveBlock, sortUpdates, cloneFields, insertAfterUpdates } from './reorder';
 import type { BlockRecord } from '../../lib/pbClient';
 
 const mk = (id: string, sort: number): BlockRecord =>
@@ -47,5 +47,25 @@ describe('sortUpdates', () => {
   });
   it('returns nothing when order is already sequential', () => {
     expect(sortUpdates(list())).toEqual([]);
+  });
+});
+
+describe('cloneFields', () => {
+  it('copies type, content and checked only', () => {
+    expect(cloneFields(mk('a', 3))).toEqual({ type: 'text', content: 'a', checked: false });
+  });
+});
+
+describe('insertAfterUpdates', () => {
+  it('places a clone directly after its source', () => {
+    const clone = mk('clone', 4);
+    const withClone = [...list(), clone]; // a,b,c,d,clone
+    // Insert clone after 'b' → a,b,clone,c,d
+    const updates = insertAfterUpdates(withClone, clone, 'b');
+    expect(updates).toEqual([
+      { id: 'clone', sort: 2 },
+      { id: 'c', sort: 3 },
+      { id: 'd', sort: 4 },
+    ]);
   });
 });

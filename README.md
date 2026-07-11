@@ -41,6 +41,7 @@ account, no third-party service, no lock-in.
 | Installable PWA                                                        | ✅     |
 | Self-hosted via `docker compose`                                       | ✅     |
 | Inline markdown — **bold**, _italic_, `code`                           | ✅     |
+| Duplicate a block (inserts below)                                      | ✅     |
 | Drag-to-reorder blocks (optimistic)                                    | ✅     |
 | Drag-to-reorder pages                                                  | ⬜     |
 | Image blocks (embed by URL)                                            | ✅     |

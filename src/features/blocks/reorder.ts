@@ -27,3 +27,23 @@ export function sortUpdates(reordered: BlockRecord[]): { id: string; sort: numbe
   });
   return updates;
 }
+
+/** The content-carrying fields to copy when duplicating a block. Pure. */
+export function cloneFields(block: BlockRecord): Pick<BlockRecord, 'type' | 'content' | 'checked'> {
+  return { type: block.type, content: block.content, checked: block.checked };
+}
+
+/**
+ * The {id, sort} updates to place `clone` directly after `sourceId` within
+ * `blocks` (which already includes the clone). Pure — unit-testable.
+ */
+export function insertAfterUpdates(
+  blocks: BlockRecord[],
+  clone: BlockRecord,
+  sourceId: string,
+): { id: string; sort: number }[] {
+  const ordered = blocks.filter((b) => b.id !== clone.id);
+  const srcIdx = ordered.findIndex((b) => b.id === sourceId);
+  ordered.splice(srcIdx + 1, 0, clone);
+  return sortUpdates(ordered);
+}

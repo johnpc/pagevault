@@ -10,6 +10,7 @@ interface BlockListProps {
   dnd: BlockDndHandlers;
   onEdit: (id: string, patch: Partial<BlockRecord>) => void;
   onRemove: (id: string) => void;
+  onDuplicate: (block: BlockRecord) => void;
   onAddBlock: (type?: BlockType) => void;
   onSubPage: () => void;
 }
@@ -21,6 +22,7 @@ export function BlockList({
   dnd,
   onEdit,
   onRemove,
+  onDuplicate,
   onAddBlock,
   onSubPage,
 }: BlockListProps) {
@@ -38,6 +40,7 @@ export function BlockList({
             block={block}
             onEdit={onEdit}
             onRemove={onRemove}
+            onDuplicate={onDuplicate}
             onEnter={() => onAddBlock('text')}
             dnd={dnd}
           />

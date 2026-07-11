@@ -7,6 +7,7 @@ import { pb, currentUserId } from '../../lib/pbClient';
 import type { BlockRecord } from '../../lib/pbClient';
 import type { BlockType } from '../../lib/pbTypes';
 import { nextSort } from '../pages/pageTree';
+import { cloneFields, insertAfterUpdates } from './reorder';
 
 const key = (pageId: string) => ['blocks', pageId];
 
@@ -49,6 +50,27 @@ export function useDeleteBlock(pageId: string) {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (id: string) => pb.collection('blocks').delete(id),
+    onSuccess: () => qc.invalidateQueries({ queryKey: key(pageId) }),
+  });
+}
+
+/**
+ * Duplicate a block: create a copy (appended), then reorder it to sit directly
+ * below the source. `blocks` is the current ordered list. Returns nothing.
+ */
+export function useDuplicateBlock(pageId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (input: { source: BlockRecord; blocks: BlockRecord[] }) => {
+      const created = await pb.collection('blocks').create<BlockRecord>({
+        page: pageId,
+        ...cloneFields(input.source),
+        sort: nextSort(input.blocks),
+        owner: currentUserId(),
+      });
+      const updates = insertAfterUpdates([...input.blocks, created], created, input.source.id);
+      await Promise.all(updates.map((u) => pb.collection('blocks').update(u.id, { sort: u.sort })));
+    },
     onSuccess: () => qc.invalidateQueries({ queryKey: key(pageId) }),
   });
 }

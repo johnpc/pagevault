@@ -24,6 +24,7 @@ export function PageEditor() {
     addBlock,
     editBlock,
     removeBlock,
+    cloneBlock,
     removePage,
     moveBlockTo,
     addSubPage,
@@ -71,6 +72,7 @@ export function PageEditor() {
                   dnd={dnd}
                   onEdit={editBlock}
                   onRemove={removeBlock}
+                  onDuplicate={cloneBlock}
                   onAddBlock={addBlock}
                   onSubPage={onSubPage}
                 />

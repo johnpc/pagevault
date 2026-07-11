@@ -199,7 +199,8 @@ When('I favorite the open page', async ({ page }) => {
 });
 
 When('I duplicate the page', async ({ page }) => {
-  await active(page).getByRole('button', { name: 'Duplicate' }).click();
+  // Exact match so it doesn't also catch the per-block "Duplicate block" button.
+  await active(page).getByRole('button', { name: 'Duplicate', exact: true }).click();
 });
 
 Then('I should see {string} in the sidebar favorites', async ({ page }, title: string) => {
@@ -291,3 +292,21 @@ Then('I should see a block containing {string}', async ({ page }, text: string) 
     )
     .toBe(true);
 });
+
+When('I duplicate the first block', async ({ page }) => {
+  await active(page).getByLabel('Duplicate block').first().click();
+});
+
+Then(
+  'I should see {int} blocks containing {string}',
+  async ({ page }, count: number, text: string) => {
+    await expect
+      .poll(() =>
+        blockInputs(page).evaluateAll(
+          (els, t) => els.filter((el) => (el as HTMLTextAreaElement).value.includes(t)).length,
+          text,
+        ),
+      )
+      .toBe(count);
+  },
+);

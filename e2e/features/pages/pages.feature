@@ -62,6 +62,13 @@ Feature: Pages and blocks
     And I add a block with the text "- Milk"
     Then the last block should be a "bullet" block
 
+  Scenario: Duplicate a block
+    Given I have a page titled "Dupes"
+    When I open the page "Dupes"
+    And I add a block with the text "repeat me"
+    And I duplicate the first block
+    Then I should see 2 blocks containing "repeat me"
+
   Scenario: Reorder blocks by dragging
     Given I have a page titled "Agenda"
     When I open the page "Agenda"

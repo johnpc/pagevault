@@ -141,14 +141,22 @@
   border-top: 1px solid var(--pv-border);
 }
 
-.pv-block-del {
+.pv-block-del,
+.pv-block-dup {
   opacity: 0;
   background: none;
   border: none;
   color: var(--pv-text-muted);
   cursor: pointer;
   font-size: 16px;
+  padding: 2px 4px;
+  flex-shrink: 0;
 }
-.pv-block:hover .pv-block-del {
+.pv-block:hover .pv-block-del,
+.pv-block:hover .pv-block-dup {
   opacity: 1;
+}
+.pv-block-dup:hover,
+.pv-block-del:hover {
+  color: var(--pv-text);
 }

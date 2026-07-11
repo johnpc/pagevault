@@ -33,7 +33,14 @@ describe('BlockRow', () => {
   it('saves content on blur', async () => {
     const onEdit = vi.fn();
     render(
-      <BlockRow block={mk()} onEdit={onEdit} onRemove={vi.fn()} onEnter={vi.fn()} dnd={noopDnd} />,
+      <BlockRow
+        block={mk()}
+        onEdit={onEdit}
+        onRemove={vi.fn()}
+        onEnter={vi.fn()}
+        onDuplicate={vi.fn()}
+        dnd={noopDnd}
+      />,
     );
     const input = screen.getByLabelText('Block content');
     await userEvent.clear(input);
@@ -46,7 +53,14 @@ describe('BlockRow', () => {
     const onEnter = vi.fn();
     const onEdit = vi.fn();
     render(
-      <BlockRow block={mk()} onEdit={onEdit} onRemove={vi.fn()} onEnter={onEnter} dnd={noopDnd} />,
+      <BlockRow
+        block={mk()}
+        onEdit={onEdit}
+        onRemove={vi.fn()}
+        onEnter={onEnter}
+        onDuplicate={vi.fn()}
+        dnd={noopDnd}
+      />,
     );
     screen.getByLabelText('Block content').focus();
     await userEvent.keyboard('{Enter}');
@@ -62,6 +76,7 @@ describe('BlockRow', () => {
         onEdit={vi.fn()}
         onRemove={onRemove}
         onEnter={vi.fn()}
+        onDuplicate={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -73,7 +88,14 @@ describe('BlockRow', () => {
   it('cycles the block type via the style button', async () => {
     const onEdit = vi.fn();
     render(
-      <BlockRow block={mk()} onEdit={onEdit} onRemove={vi.fn()} onEnter={vi.fn()} dnd={noopDnd} />,
+      <BlockRow
+        block={mk()}
+        onEdit={onEdit}
+        onRemove={vi.fn()}
+        onEnter={vi.fn()}
+        onDuplicate={vi.fn()}
+        dnd={noopDnd}
+      />,
     );
     await userEvent.click(screen.getByLabelText(/change block type/i));
     expect(onEdit).toHaveBeenCalledWith('b1', { type: 'heading' });
@@ -87,6 +109,7 @@ describe('BlockRow', () => {
         onEdit={onEdit}
         onRemove={vi.fn()}
         onEnter={vi.fn()}
+        onDuplicate={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -102,6 +125,7 @@ describe('BlockRow', () => {
         onEdit={onEdit}
         onRemove={vi.fn()}
         onEnter={vi.fn()}
+        onDuplicate={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -118,6 +142,7 @@ describe('BlockRow', () => {
         onEdit={onEdit}
         onRemove={vi.fn()}
         onEnter={vi.fn()}
+        onDuplicate={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -132,7 +157,14 @@ describe('BlockRow', () => {
   it('starts a drag from the handle and drops onto another block', () => {
     const dnd: BlockDndHandlers = { ...noopDnd, onDragStart: vi.fn(), onDrop: vi.fn() };
     render(
-      <BlockRow block={mk()} onEdit={vi.fn()} onRemove={vi.fn()} onEnter={vi.fn()} dnd={dnd} />,
+      <BlockRow
+        block={mk()}
+        onEdit={vi.fn()}
+        onRemove={vi.fn()}
+        onEnter={vi.fn()}
+        onDuplicate={vi.fn()}
+        dnd={dnd}
+      />,
     );
     const handle = screen.getByLabelText(/drag to reorder/i);
     fireEvent.dragStart(handle);
@@ -149,6 +181,7 @@ describe('BlockRow', () => {
         onEdit={onEdit}
         onRemove={vi.fn()}
         onEnter={vi.fn()}
+        onDuplicate={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -165,6 +198,7 @@ describe('BlockRow', () => {
         onEdit={vi.fn()}
         onRemove={vi.fn()}
         onEnter={vi.fn()}
+        onDuplicate={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -182,6 +216,7 @@ describe('BlockRow', () => {
         onEdit={onEdit}
         onRemove={vi.fn()}
         onEnter={vi.fn()}
+        onDuplicate={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -199,6 +234,7 @@ describe('BlockRow', () => {
         onEdit={vi.fn()}
         onRemove={vi.fn()}
         onEnter={vi.fn()}
+        onDuplicate={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -210,6 +246,23 @@ describe('BlockRow', () => {
     expect(screen.getByLabelText('Block content')).toHaveValue('hello **world**');
   });
 
+  it('duplicates the block via the duplicate control', async () => {
+    const onDuplicate = vi.fn();
+    const block = mk({ content: 'copy me' });
+    render(
+      <BlockRow
+        block={block}
+        onEdit={vi.fn()}
+        onRemove={vi.fn()}
+        onEnter={vi.fn()}
+        onDuplicate={onDuplicate}
+        dnd={noopDnd}
+      />,
+    );
+    await userEvent.click(screen.getByLabelText('Duplicate block'));
+    expect(onDuplicate).toHaveBeenCalledWith(block);
+  });
+
   it('renders a callout with its icon and editable body', () => {
     render(
       <BlockRow
@@ -217,6 +270,7 @@ describe('BlockRow', () => {
         onEdit={vi.fn()}
         onRemove={vi.fn()}
         onEnter={vi.fn()}
+        onDuplicate={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -232,6 +286,7 @@ describe('BlockRow', () => {
         onEdit={vi.fn()}
         onRemove={onRemove}
         onEnter={vi.fn()}
+        onDuplicate={vi.fn()}
         dnd={noopDnd}
       />,
     );

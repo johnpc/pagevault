@@ -15,7 +15,14 @@ vi.mock('../../lib/pbClient', () => ({
   currentUserId: () => 'u1',
 }));
 
-import { useBlocks, useCreateBlock, useUpdateBlock, useDeleteBlock } from './blocksApi';
+import {
+  useBlocks,
+  useCreateBlock,
+  useUpdateBlock,
+  useDeleteBlock,
+  useDuplicateBlock,
+} from './blocksApi';
+import type { BlockRecord } from '../../lib/pbClient';
 
 const wrapper = ({ children }: { children: ReactNode }) => {
   const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
@@ -61,5 +68,34 @@ describe('blocksApi', () => {
     const del = renderHook(() => useDeleteBlock('p1'), { wrapper });
     await del.result.current.mutateAsync('b1');
     expect(blocks.delete).toHaveBeenCalledWith('b1');
+  });
+
+  it('useDuplicateBlock clones a block and inserts it below the source', async () => {
+    const b = (id: string, sort: number, over: Partial<BlockRecord> = {}): BlockRecord =>
+      ({
+        id,
+        sort,
+        page: 'p1',
+        type: 'text',
+        content: id,
+        checked: false,
+        owner: 'u1',
+        created: '',
+        updated: '',
+        collectionId: 'c',
+        collectionName: 'blocks',
+        ...over,
+      }) as BlockRecord;
+    const list = [b('a', 0), b('b', 1), b('c', 2)];
+    blocks.create.mockResolvedValue(b('new', 3, { content: 'a' }));
+    blocks.update.mockResolvedValue({});
+    const { result } = renderHook(() => useDuplicateBlock('p1'), { wrapper });
+    await result.current.mutateAsync({ source: list[0], blocks: list });
+    // The clone copies the source's content and is created for this page.
+    expect(blocks.create).toHaveBeenCalledWith(
+      expect.objectContaining({ page: 'p1', content: 'a', owner: 'u1' }),
+    );
+    // Desired order a,new,b,c → the clone must land at sort 1 (right after a).
+    expect(blocks.update).toHaveBeenCalledWith('new', { sort: 1 });
   });
 });
