@@ -53,6 +53,14 @@ describe('blockToMarkdown', () => {
       '| Name | Qty | Done |\n| --- | --- | --- |\n| Apples | 3 | ✓ |\n| Pears | 5 |  |',
     );
   });
+
+  it('flattens a columns block to its contents split by a rule', () => {
+    const columns = {
+      ...blk('columns', ''),
+      data: { cols: ['Left side', '', 'Right side'] },
+    } as BlockRecord;
+    expect(blockToMarkdown(columns)).toBe('Left side\n\n---\n\nRight side');
+  });
 });
 
 describe('pageToMarkdown', () => {

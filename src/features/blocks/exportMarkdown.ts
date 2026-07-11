@@ -1,7 +1,8 @@
 import type { BlockRecord, PageRecord } from '../../lib/pbClient';
-import type { TableData } from '../../lib/pbTypes';
+import type { TableData, ColumnsData } from '../../lib/pbTypes';
 import { displayTitle } from '../pages/pageTree';
 import { normalize } from './tableData';
+import { normalizeColumns } from './columnsData';
 
 /** A GFM table from a block's grid data. Checkbox cells render as ✓ / blank.
  * Pure. */
@@ -16,6 +17,24 @@ function tableToMarkdown(data: TableData | null): string {
   return [header, divider, ...body].join('\n');
 }
 
+/** Columns flatten to their contents separated by a rule — Markdown has no
+ * native side-by-side layout. Pure. */
+function columnsToMarkdown(data: ColumnsData | null): string {
+  return normalizeColumns(data).cols.filter(Boolean).join('\n\n---\n\n');
+}
+
+/** The simple prefix-style renderers, keyed by block type. */
+const PREFIX: Partial<Record<BlockRecord['type'], (t: string) => string>> = {
+  heading: (t) => `# ${t}`,
+  subheading: (t) => `## ${t}`,
+  bullet: (t) => `- ${t}`,
+  quote: (t) => `> ${t}`,
+  code: (t) => '```\n' + t + '\n```',
+  image: (t) => `![](${t})`,
+  callout: (t) => `> 💡 ${t}`,
+  toggle: (t) => `▸ **${t}**`,
+};
+
 /** Serialize one block to its Markdown line. `ordinal` is the 1-based position
  * among consecutive numbered blocks (for `1.`, `2.`, …). Pure. */
 export function blockToMarkdown(
@@ -23,29 +42,17 @@ export function blockToMarkdown(
   ordinal = 1,
 ): string {
   const text = block.content;
+  const prefix = PREFIX[block.type];
+  if (prefix) return prefix(text);
   switch (block.type) {
-    case 'heading':
-      return `# ${text}`;
-    case 'subheading':
-      return `## ${text}`;
-    case 'bullet':
-      return `- ${text}`;
     case 'numbered':
       return `${ordinal}. ${text}`;
     case 'todo':
       return `- [${block.checked ? 'x' : ' '}] ${text}`;
-    case 'quote':
-      return `> ${text}`;
-    case 'code':
-      return '```\n' + text + '\n```';
-    case 'image':
-      return `![](${text})`;
-    case 'callout':
-      return `> 💡 ${text}`;
-    case 'toggle':
-      return `▸ **${text}**`;
     case 'table':
-      return tableToMarkdown(block.data);
+      return tableToMarkdown(block.data as TableData | null);
+    case 'columns':
+      return columnsToMarkdown(block.data as ColumnsData | null);
     case 'divider':
       return '---';
     default:

@@ -19,7 +19,7 @@ export function TableBlock({
   block: BlockRecord;
   onEdit: (id: string, patch: Partial<BlockRecord>) => void;
 }) {
-  const data = normalize(block.data);
+  const data = normalize(block.data as TableData | null);
   const save = (next: TableData) => onEdit(block.id, { data: next });
   // Which column is sorted, and which way — transient (not persisted); a click
   // cycles asc → desc and rewrites the stored row order.

@@ -54,7 +54,8 @@ export function BlockRow(props: BlockRowProps) {
       onUpload={props.onUpload}
     />
   );
-  if (block.type === 'divider' || block.type === 'image' || block.type === 'table') return media;
+  const mediaTypes = ['divider', 'image', 'table', 'columns'];
+  if (mediaTypes.includes(block.type)) return media;
 
   return (
     <div className={cls} style={style} {...rowDrag}>

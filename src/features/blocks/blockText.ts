@@ -44,6 +44,7 @@ export const TYPE_ORDER: BlockType[] = [
   'code',
   'image',
   'table',
+  'columns',
   'divider',
 ];
 

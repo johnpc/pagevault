@@ -27,7 +27,8 @@ export type BlockType =
   | 'image'
   | 'callout'
   | 'toggle'
-  | 'table';
+  | 'table'
+  | 'columns';
 
 /** A table column's cell kind. Cells are always stored as strings; the type
  * decides how a cell renders/edits (number input, checkbox, select…). */
@@ -46,6 +47,13 @@ export interface TableData {
   rows: string[][];
   view?: 'table' | 'board'; // display mode; defaults to 'table'
   groupBy?: number; // for the board view: index of the `select` column to group by
+}
+
+/** The layout stored in a `columns` block's JSON `data` field: side-by-side
+ * text columns (each column is one string of content). The block's `type`
+ * disambiguates this from TableData. */
+export interface ColumnsData {
+  cols: string[];
 }
 
 export interface PagesResponse extends BaseRecord {
@@ -69,7 +77,7 @@ export interface BlocksResponse extends BaseRecord {
   checked: boolean;
   collapsed: boolean; // for `toggle` blocks: hide the nested (deeper-depth) children
   file: string; // uploaded image filename (image blocks); '' when using a URL
-  data: TableData | null; // grid for `table` blocks; null for every other type
+  data: TableData | ColumnsData | null; // table grid / column layout; null otherwise
   color: string; // text/background color token (e.g. 'red', 'yellow-bg'); '' = default
   depth: number; // indentation level (0 = top); for nested lists
   sort: number;
