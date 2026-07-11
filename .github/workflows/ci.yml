@@ -104,6 +104,8 @@ jobs:
             paths: .features-gen/e2e/features/turn-into
           - name: codelang
             paths: .features-gen/e2e/features/codelang
+          - name: font
+            paths: .features-gen/e2e/features/font
     env:
       VITE_PB_URL: http://localhost:8090
       PB_ADMIN_EMAIL: admin@pagevault.local

@@ -56,6 +56,7 @@ export function usePageEditor(pageId: string) {
   const setCover = useCallback((cover: string) => patch({ cover }), [patch]);
   const setParent = useCallback((parent: string) => patch({ parent }), [patch]);
   const setFullWidth = useCallback((fullWidth: boolean) => patch({ fullWidth }), [patch]);
+  const setFont = useCallback((font: string) => patch({ font }), [patch]);
 
   const setFavorite = useCallback(
     (favorite: boolean) => toggleFavorite.mutate({ id: pageId, favorite }),
@@ -87,6 +88,7 @@ export function usePageEditor(pageId: string) {
     setCoverImage,
     setParent,
     setFullWidth,
+    setFont,
     allPages,
     removePage: archivePage.mutateAsync,
   };

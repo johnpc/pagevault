@@ -7,6 +7,8 @@
 
 :root {
   --pv-font-sans: 'Inter', system-ui, sans-serif;
+  --pv-font-serif: Georgia, Cambria, 'Times New Roman', serif;
+  --pv-font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 
   /* accent doubles as the fill under WHITE button text, so it clears WCAG AA
      4.5:1 for white (#3f6fd6 = 4.71:1). */

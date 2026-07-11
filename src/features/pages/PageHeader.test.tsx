@@ -37,6 +37,7 @@ const props = {
   onCoverUpload: vi.fn(),
   onMove: vi.fn(),
   onFullWidth: vi.fn(),
+  onFont: vi.fn(),
 };
 
 describe('PageHeader', () => {

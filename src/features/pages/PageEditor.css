@@ -8,6 +8,55 @@
   max-width: 1100px;
 }
 
+/* Per-page typeface (Notion's "Style"): applied to the title + block text. The
+   default font needs no class. Code blocks keep their own monospace. */
+.pv-font-serif .pv-page-title,
+.pv-font-serif .pv-block-input,
+.pv-font-serif .pv-block-preview {
+  font-family: var(--pv-font-serif);
+}
+.pv-font-mono .pv-page-title,
+.pv-font-mono .pv-block-input,
+.pv-font-mono .pv-block-preview {
+  font-family: var(--pv-font-mono);
+}
+/* The picker popover in the actions row. */
+.pv-font {
+  position: relative;
+}
+.pv-font-menu {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  z-index: 20;
+  margin: 2px 0 0;
+  padding: 4px;
+  list-style: none;
+  background: var(--pv-surface);
+  border: 1px solid var(--pv-border);
+  border-radius: var(--pv-radius-sm);
+  box-shadow: var(--pv-shadow);
+  min-width: 128px;
+}
+.pv-font-item {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  color: var(--pv-text);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 6px 8px;
+  text-align: left;
+}
+.pv-font-item:hover {
+  background: var(--pv-hover);
+}
+.pv-font-item--on {
+  font-weight: 600;
+}
+
 .pv-page-header {
   display: flex;
   flex-direction: column;

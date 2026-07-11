@@ -1,6 +1,7 @@
 import type { PageRecord } from '../../lib/pbClient';
 import { MovePicker } from './MovePicker';
 import { ShareButton } from './ShareButton';
+import { FontPicker } from './FontPicker';
 
 export interface PageActionsProps {
   page: PageRecord;
@@ -10,10 +11,11 @@ export interface PageActionsProps {
   onDuplicate: () => void;
   onExport: () => void;
   onFullWidth: (fullWidth: boolean) => void;
+  onFont: (font: string) => void;
   onDelete: () => void;
 }
 
-/** The row of page-level actions under the title: favorite, move, width,
+/** The row of page-level actions under the title: favorite, move, width, font,
  * duplicate, export, trash. Kept separate so PageHeader stays small. */
 export function PageActions({
   page,
@@ -23,6 +25,7 @@ export function PageActions({
   onDuplicate,
   onExport,
   onFullWidth,
+  onFont,
   onDelete,
 }: PageActionsProps) {
   return (
@@ -45,6 +48,7 @@ export function PageActions({
       >
         {page.fullWidth ? '↔ Full width ✓' : '↔ Full width'}
       </button>
+      <FontPicker current={page.font ?? ''} onPick={onFont} />
       <button className="pv-page-delete pv-muted" onClick={onDuplicate}>
         Duplicate
       </button>

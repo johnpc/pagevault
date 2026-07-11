@@ -8,6 +8,7 @@ import { BlockList } from './BlockList';
 import { Backlinks } from './Backlinks';
 import { Comments } from '../comments/Comments';
 import { useBlockDnd } from '../blocks/useBlockDnd';
+import { pageFontClass } from './pageFont';
 import './PageEditor.css';
 
 /** The main document surface: breadcrumbs + header + the editable block list. */
@@ -16,6 +17,7 @@ export function PageEditor() {
   const history = useHistory();
   const { page, blocks, allPages, ...ed } = usePageEditor(id);
   const { setTitle, setIcon, setFavorite, setCover, setCoverImage, setParent, setFullWidth } = ed;
+  const { setFont } = ed;
   const { addBlock, editBlock, removeBlock, cloneBlock, indentBlock, importMarkdown } = ed;
   const { splitBlock, uploadImage, focusId, clearFocusId, moveBlockTo } = ed;
   const { removePage, addSubPage, duplicate, exportMarkdown } = ed;
@@ -32,7 +34,11 @@ export function PageEditor() {
   return (
     <IonPage>
       <IonContent>
-        <div className={`pv-page${page.data?.fullWidth ? ' pv-page--wide' : ''}`}>
+        <div
+          className={`pv-page${page.data?.fullWidth ? ' pv-page--wide' : ''} ${pageFontClass(
+            page.data?.font ?? '',
+          )}`}
+        >
           <LoadState
             loading={page.isLoading}
             error={page.isError}
@@ -55,6 +61,7 @@ export function PageEditor() {
                   onExport={exportMarkdown}
                   onDuplicate={onDuplicate}
                   onFullWidth={setFullWidth}
+                  onFont={setFont}
                 />
                 <BlockList
                   page={page.data}
