@@ -7,6 +7,11 @@ vi.mock('../auth/useAuth', () => ({
   useAuth: () => ({ user: { email: 'me@x.z' }, signOut }),
 }));
 
+const exportAll = vi.fn();
+vi.mock('./useExportWorkspace', () => ({
+  useExportWorkspace: () => ({ exportAll, busy: false }),
+}));
+
 import { Settings } from './Settings';
 
 describe('Settings', () => {
@@ -40,5 +45,11 @@ describe('Settings', () => {
     render(<Settings />);
     await userEvent.click(screen.getByRole('button', { name: 'Sign out' }));
     expect(signOut).toHaveBeenCalled();
+  });
+
+  it('exports the workspace on click', async () => {
+    render(<Settings />);
+    await userEvent.click(screen.getByRole('button', { name: /Export workspace/ }));
+    expect(exportAll).toHaveBeenCalled();
   });
 });

@@ -1,5 +1,6 @@
 import { IonContent, IonPage } from '@ionic/react';
 import { useTheme } from './useTheme';
+import { useExportWorkspace } from './useExportWorkspace';
 import { useAuth } from '../auth/useAuth';
 import type { ThemeChoice } from './theme';
 import './Settings.css';
@@ -13,6 +14,7 @@ const OPTIONS: { value: ThemeChoice; label: string; icon: string }[] = [
 /** Workspace settings: appearance (theme) + account. */
 export function Settings() {
   const [theme, setTheme] = useTheme();
+  const { exportAll, busy } = useExportWorkspace();
   const { user, signOut } = useAuth();
 
   return (
@@ -37,6 +39,14 @@ export function Settings() {
                 </button>
               ))}
             </div>
+          </section>
+
+          <section className="pv-settings-section">
+            <h2 className="pv-settings-label">Export</h2>
+            <p className="pv-muted">Download every page as a single Markdown file.</p>
+            <button className="pv-settings-export" onClick={exportAll} disabled={busy}>
+              {busy ? 'Exporting…' : '⬇ Export workspace'}
+            </button>
           </section>
 
           <section className="pv-settings-section">

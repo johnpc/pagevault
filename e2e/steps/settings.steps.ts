@@ -18,3 +18,16 @@ Then('the app uses the {string} theme', async ({ page }, theme: string) => {
     .poll(() => page.evaluate(() => document.documentElement.getAttribute('data-theme')))
     .toBe(theme);
 });
+
+let lastDownload: import('@playwright/test').Download | undefined;
+
+When('I export the workspace', async ({ page }) => {
+  const wait = page.waitForEvent('download');
+  await page.getByRole('button', { name: /Export workspace/ }).click();
+  lastDownload = await wait;
+});
+
+Then('a Markdown file named {string} is downloaded', async ({ page }, name: string) => {
+  void page;
+  expect(lastDownload?.suggestedFilename()).toBe(name);
+});

@@ -68,3 +68,22 @@
   border-color: var(--pv-danger);
   color: var(--pv-danger);
 }
+
+.pv-settings-export {
+  margin-top: 8px;
+  background: none;
+  border: 1px solid var(--pv-border);
+  font: inherit;
+  color: var(--pv-text);
+  padding: 8px 18px;
+  border-radius: var(--pv-radius-sm);
+  cursor: pointer;
+}
+.pv-settings-export:hover {
+  border-color: var(--pv-accent);
+  color: var(--pv-accent);
+}
+.pv-settings-export:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
