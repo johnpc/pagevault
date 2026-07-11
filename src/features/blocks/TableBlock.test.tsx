@@ -116,6 +116,28 @@ describe('TableBlock', () => {
     expect(onEdit).toHaveBeenCalledWith('b1', { data: { columns: cols('B'), rows: [['2']] } });
   });
 
+  it('sorts rows by a column when its header sort button is clicked', async () => {
+    const onEdit = vi.fn();
+    const data: TableData = { columns: cols('A'), rows: [['banana'], ['apple'], ['cherry']] };
+    render(<TableBlock block={mk(data)} onEdit={onEdit} />);
+    await userEvent.click(screen.getByLabelText('Sort by column 1'));
+    expect(onEdit).toHaveBeenLastCalledWith('b1', {
+      data: { columns: cols('A'), rows: [['apple'], ['banana'], ['cherry']] },
+    });
+  });
+
+  it('toggles a column sort from ascending to descending on a second click', async () => {
+    const onEdit = vi.fn();
+    const data: TableData = { columns: cols('A'), rows: [['b'], ['a'], ['c']] };
+    render(<TableBlock block={mk(data)} onEdit={onEdit} />);
+    const sortBtn = screen.getByLabelText('Sort by column 1');
+    await userEvent.click(sortBtn); // asc
+    await userEvent.click(sortBtn); // desc
+    expect(onEdit).toHaveBeenLastCalledWith('b1', {
+      data: { columns: cols('A'), rows: [['c'], ['b'], ['a']] },
+    });
+  });
+
   it('deletes a row', async () => {
     const onEdit = vi.fn();
     const two: TableData = { columns: cols('A'), rows: [['1'], ['2']] };

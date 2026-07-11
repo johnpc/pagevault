@@ -59,3 +59,22 @@ Then(
     await expect(checkbox(page, r, c)).toBeChecked();
   },
 );
+
+When('I sort by table column {int}', async ({ page }, col: number) => {
+  await table(page).getByLabel(`Sort by column ${col}`).click();
+});
+
+// Reads column `col`'s cells top-to-bottom and asserts the first two match.
+Then(
+  'table column {int} reads {string} then {string}',
+  async ({ page }, col: number, first: string, second: string) => {
+    await expect
+      .poll(async () => {
+        const vals = await table(page)
+          .locator(`tbody tr td:nth-child(${col + 1}) input`)
+          .evaluateAll((els) => els.map((el) => (el as HTMLInputElement).value));
+        return vals[0] === first && vals[1] === second;
+      })
+      .toBe(true);
+  },
+);
