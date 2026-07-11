@@ -5,6 +5,8 @@ import { normalize, addRow } from './tableData';
 import { sortByColumn } from './tableSort';
 import { TableHead } from './TableHead';
 import { TableBody } from './TableBody';
+import { TableBoard } from './TableBoard';
+import { TableViewToggle } from './TableViewToggle';
 import './TableBlock.css';
 
 /** An editable typed table/database grid. The whole grid lives in the block's
@@ -31,13 +33,20 @@ export function TableBlock({
 
   return (
     <div className="pv-table-wrap">
-      <table className="pv-table">
-        <TableHead data={data} save={save} onSort={onSort} sort={sort} />
-        <TableBody data={data} save={save} />
-      </table>
-      <button className="pv-table-addrow pv-muted" onClick={() => save(addRow(data))}>
-        + Add row
-      </button>
+      <TableViewToggle data={data} onView={(view) => save({ ...data, view })} />
+      {data.view === 'board' ? (
+        <TableBoard data={data} save={save} />
+      ) : (
+        <>
+          <table className="pv-table">
+            <TableHead data={data} save={save} onSort={onSort} sort={sort} />
+            <TableBody data={data} save={save} />
+          </table>
+          <button className="pv-table-addrow pv-muted" onClick={() => save(addRow(data))}>
+            + Add row
+          </button>
+        </>
+      )}
     </div>
   );
 }
