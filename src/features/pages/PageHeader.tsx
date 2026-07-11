@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { PageRecord } from '../../lib/pbClient';
 import { CoverPicker } from './CoverPicker';
 import { PageActions } from './PageActions';
+import { useReconciled } from '../blocks/useReconciled';
 
 interface PageHeaderProps {
   page: PageRecord;
@@ -35,16 +36,12 @@ export function PageHeader({
   onMove,
   onFullWidth,
 }: PageHeaderProps) {
-  // The header stays mounted across /page/:id changes. Resync the local title
-  // DURING render (not in an effect) when the page id changes, so a blur-save
-  // never fires against the previous page — the bug where rapidly creating pages
-  // wrote each title onto the prior page, blanking it.
-  const [title, setTitle] = useState(page.title);
-  const [seenId, setSeenId] = useState(page.id);
-  if (seenId !== page.id) {
-    setSeenId(page.id);
-    setTitle(page.title);
-  }
+  // The header stays mounted across /page/:id changes. useReconciled adopts the
+  // external title (a page switch, or a realtime edit from another tab) DURING
+  // render whenever this input is unfocused — so a blur-save never fires against
+  // the previous page, and a live update lands without yanking the caret.
+  const [focused, setFocused] = useState(false);
+  const [title, setTitle] = useReconciled(page.title, focused);
   return (
     <header className="pv-page-header">
       <CoverPicker page={page} onCover={onCover} onUpload={onCoverUpload} />
@@ -66,7 +63,11 @@ export function PageHeader({
         placeholder="Untitled"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        onBlur={() => onTitle(title)}
+        onFocus={() => setFocused(true)}
+        onBlur={() => {
+          setFocused(false);
+          onTitle(title);
+        }}
       />
       <PageActions
         page={page}

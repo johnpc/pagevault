@@ -9,6 +9,7 @@ import { QuickFind } from '../search/QuickFind';
 import { useQuickFind } from '../search/useQuickFind';
 import { ShortcutHelp } from './ShortcutHelp';
 import { useShortcutHelp } from './useShortcutHelp';
+import { useRealtimeSync } from './useRealtimeSync';
 import './Workspace.css';
 
 /**
@@ -19,6 +20,7 @@ import './Workspace.css';
 export function Workspace() {
   const { open, setOpen } = useQuickFind();
   const help = useShortcutHelp();
+  useRealtimeSync();
   return (
     <div className="pv-workspace">
       <Sidebar onSearch={() => setOpen(true)} onHelp={() => help.setOpen(true)} />
