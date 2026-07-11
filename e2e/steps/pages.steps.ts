@@ -90,7 +90,8 @@ When('I choose {string} from the slash menu', async ({ page }, label: string) =>
   // also exposes role=option children that would otherwise collide.
   const menu = active(page).getByRole('listbox', { name: 'Block types' });
   await expect(menu).toBeVisible();
-  await menu.getByRole('option', { name: label }).click();
+  // Exact match: "Table" must not also select "Table of contents".
+  await menu.getByRole('option', { name: label, exact: true }).click();
 });
 
 When('I search for {string}', async ({ page }, query: string) => {
