@@ -5,6 +5,7 @@ import { LoadState } from '../shell/LoadState';
 import { PageHeader } from './PageHeader';
 import { Breadcrumbs } from './Breadcrumbs';
 import { BlockList } from './BlockList';
+import { Backlinks } from './Backlinks';
 import { useBlockDnd } from '../blocks/useBlockDnd';
 import './PageEditor.css';
 
@@ -69,6 +70,7 @@ export function PageEditor() {
                   focusId={focusId}
                   onFocused={clearFocusId}
                 />
+                <Backlinks pageId={id} />
               </>
             )}
           </LoadState>

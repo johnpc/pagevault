@@ -1,0 +1,39 @@
+.pv-backlinks {
+  margin-top: 28px;
+  border-top: 1px solid var(--pv-border);
+  padding-top: 12px;
+}
+.pv-backlinks-head {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+.pv-backlink {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: 1px solid var(--pv-border);
+  border-radius: var(--pv-radius-sm);
+  cursor: pointer;
+  padding: 8px 10px;
+  margin-bottom: 6px;
+  color: var(--pv-text);
+}
+.pv-backlink:hover {
+  background: var(--pv-hover);
+}
+.pv-backlink-title {
+  display: block;
+  font-weight: 600;
+  font-size: 14px;
+}
+.pv-backlink-snippet {
+  display: block;
+  color: var(--pv-text-muted);
+  font-size: 13px;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
