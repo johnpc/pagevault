@@ -22,6 +22,7 @@ account, no third-party service, no lock-in.
 | Feature                                                                | Status |
 | ---------------------------------------------------------------------- | ------ |
 | Email/password accounts (private, owner-scoped)                        | ✅     |
+| Page templates (Meeting notes, To-do, Blank)                           | ✅     |
 | Home screen with recently edited pages                                 | ✅     |
 | Nested pages in a collapsible sidebar tree                             | ✅     |
 | Sub-pages + breadcrumb navigation                                      | ✅     |

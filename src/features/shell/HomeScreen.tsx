@@ -1,32 +1,23 @@
 import { IonContent, IonPage } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
-import { usePages, useCreatePage } from '../pages/pagesApi';
+import { usePages } from '../pages/pagesApi';
 import { recentPages, displayTitle } from '../pages/pageTree';
+import { TemplatePicker } from '../pages/TemplatePicker';
 import './HomeScreen.css';
 
-/** The landing surface: a welcome, a create button, and recently-edited pages. */
+/** The landing surface: a welcome, template picker, and recently-edited pages. */
 export function HomeScreen() {
   const history = useHistory();
   const { data: pages } = usePages();
-  const create = useCreatePage();
   const recent = recentPages(pages ?? []);
-
-  const start = async () => {
-    const page = await create.mutateAsync({ title: 'Getting started', siblings: pages ?? [] });
-    history.push(`/page/${page.id}`);
-  };
 
   return (
     <IonPage>
       <IonContent>
         <div className="pv-home">
           <h1 className="pv-heading">Welcome to PageVault</h1>
-          <p className="pv-muted">
-            Your self-hosted workspace. Pick a page from the sidebar, or create a new one.
-          </p>
-          <button className="pv-home-cta" onClick={start} disabled={create.isPending}>
-            Create a page
-          </button>
+          <p className="pv-muted">Your self-hosted workspace. Start a new page from a template:</p>
+          <TemplatePicker />
 
           {recent.length > 0 && (
             <section className="pv-home-recent">

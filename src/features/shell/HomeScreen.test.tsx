@@ -37,16 +37,17 @@ describe('HomeScreen', () => {
     pages.getFullList.mockResolvedValue([]);
   });
 
-  it('greets the user and creates a first page on CTA', async () => {
+  it('greets the user and creates a page from a template', async () => {
     pages.create.mockResolvedValue({ id: 'p1' });
-    renderHome();
+    const getPath = renderHome();
     expect(screen.getByText('Welcome to PageVault')).toBeInTheDocument();
-    await userEvent.click(screen.getByText('Create a page'));
+    await userEvent.click(screen.getByText('Meeting notes'));
     await waitFor(() =>
       expect(pages.create).toHaveBeenCalledWith(
-        expect.objectContaining({ title: 'Getting started', owner: 'u1' }),
+        expect.objectContaining({ title: 'Meeting notes', owner: 'u1' }),
       ),
     );
+    await waitFor(() => expect(getPath()).toBe('/page/p1'));
   });
 
   it('shows recently edited pages and navigates to one on click', async () => {

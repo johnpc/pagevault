@@ -8,6 +8,7 @@ import { pb, currentUserId } from '../../lib/pbClient';
 import type { PageRecord } from '../../lib/pbClient';
 import { nextSort } from './pageTree';
 import { runDuplicate } from './duplicate';
+import { runTemplate, type Template } from './templates';
 
 const KEY = ['pages'];
 
@@ -46,6 +47,16 @@ export function useDuplicatePage() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: runDuplicate,
+    onSuccess: () => qc.invalidateQueries({ queryKey: KEY, exact: false }),
+  });
+}
+
+/** Create a new page from a template (title + preset blocks). Returns new id. */
+export function useCreateFromTemplate() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (input: { template: Template; siblings: PageRecord[] }) =>
+      runTemplate(input.template, input.siblings),
     onSuccess: () => qc.invalidateQueries({ queryKey: KEY, exact: false }),
   });
 }

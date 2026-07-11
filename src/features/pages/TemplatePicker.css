@@ -1,0 +1,30 @@
+.pv-templates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.pv-template {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: var(--pv-surface);
+  border: 1px solid var(--pv-border);
+  border-radius: var(--pv-radius);
+  font: inherit;
+  color: var(--pv-text);
+  cursor: pointer;
+}
+.pv-template:hover {
+  border-color: var(--pv-accent);
+}
+.pv-template:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.pv-template-icon {
+  font-size: 18px;
+}
