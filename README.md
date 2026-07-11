@@ -57,7 +57,7 @@ account, no third-party service, no lock-in.
 | Drag-to-reorder pages in the sidebar (same-parent siblings)            | ✅     |
 | Image blocks (embed by URL)                                            | ✅     |
 | Image uploads (stored in PocketBase, served same-origin)               | ✅     |
-| Quick-find search (⌘K, keyboard-navigable, titles + content)           | ✅     |
+| Quick-find search (⌘K, ranked, match-highlighted, titles + content)    | ✅     |
 | Native iOS / Android builds (Capacitor)                                | ⬜     |
 
 ## Quick start (self-host in two commands)

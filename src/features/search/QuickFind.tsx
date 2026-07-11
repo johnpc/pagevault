@@ -2,6 +2,7 @@ import { useState, type KeyboardEvent } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useSearch } from './searchApi';
 import { nextActiveIndex } from './searchResults';
+import { Highlighted } from './Highlighted';
 import { LoadState } from '../shell/LoadState';
 import './QuickFind.css';
 
@@ -74,8 +75,14 @@ export function QuickFind({ onClose }: QuickFindProps) {
                     >
                       <span className="pv-qf-icon">{r.icon}</span>
                       <span className="pv-qf-text">
-                        <span className="pv-qf-title">{r.title}</span>
-                        {r.snippet && <span className="pv-qf-snippet pv-muted">{r.snippet}</span>}
+                        <span className="pv-qf-title">
+                          <Highlighted text={r.title} query={query} />
+                        </span>
+                        {r.snippet && (
+                          <span className="pv-qf-snippet pv-muted">
+                            <Highlighted text={r.snippet} query={query} />
+                          </span>
+                        )}
                       </span>
                     </button>
                   </li>

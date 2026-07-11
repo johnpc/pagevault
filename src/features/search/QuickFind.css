@@ -79,3 +79,10 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+/* The matched query run inside a title/snippet. */
+.pv-qf-mark {
+  background: var(--pv-accent-soft);
+  color: inherit;
+  border-radius: 3px;
+  padding: 0 1px;
+}

@@ -17,6 +17,11 @@ vi.mock('./searchApi', () => ({
 
 import { QuickFind } from './QuickFind';
 
+// A result option's title/snippet is split into highlight runs across elements,
+// so match an option by its concatenated textContent.
+const optionByText = (name: RegExp) => (_content: string, el: Element | null) =>
+  el?.getAttribute('role') === 'option' && name.test(el.textContent ?? '');
+
 const renderQF = (onClose = vi.fn()) => {
   let path = '/';
   render(
@@ -55,9 +60,9 @@ describe('QuickFind', () => {
     ]);
     const { onClose, getPath } = renderQF();
     await userEvent.type(screen.getByLabelText('Search pages'), 'road');
-    await waitFor(() => expect(screen.getByText('Roadmap')).toBeInTheDocument());
-    expect(screen.getByText('…roadmap…')).toBeInTheDocument();
-    await userEvent.click(screen.getByText('Meeting'));
+    await waitFor(() => expect(screen.getByText(optionByText(/Roadmap/))).toBeInTheDocument());
+    expect(screen.getByText(optionByText(/roadmap/))).toBeInTheDocument();
+    await userEvent.click(screen.getByText(optionByText(/Meeting/)));
     expect(onClose).toHaveBeenCalled();
     expect(getPath()).toBe('/page/p2');
   });
@@ -70,7 +75,7 @@ describe('QuickFind', () => {
     const { getPath } = renderQF();
     const input = screen.getByLabelText('Search pages');
     await userEvent.type(input, 'road');
-    await waitFor(() => expect(screen.getByText('Roadmap')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText(optionByText(/Roadmap/))).toBeInTheDocument());
     // First result is active by default; ArrowDown → second, Enter opens it.
     await userEvent.keyboard('{ArrowDown}{Enter}');
     expect(getPath()).toBe('/page/p2');

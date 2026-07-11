@@ -76,6 +76,17 @@ describe('mergeResults', () => {
     const map = new Map([['arch', page('arch', { archived: true })]]);
     expect(mergeResults('x', [], blocks, map)).toHaveLength(0);
   });
+
+  it('ranks title hits: exact, then prefix, then substring', () => {
+    const pages = [
+      page('sub', { title: 'crossroad' }), // substring
+      page('exact', { title: 'road' }), // exact
+      page('prefix', { title: 'roadmap' }), // prefix
+    ];
+    const map = new Map(pages.map((p) => [p.id, p]));
+    const results = mergeResults('road', pages, [], map);
+    expect(results.map((r) => r.pageId)).toEqual(['exact', 'prefix', 'sub']);
+  });
 });
 
 describe('nextActiveIndex', () => {
