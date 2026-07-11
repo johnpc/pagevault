@@ -228,7 +228,8 @@
 .pv-block--code {
   background: var(--pv-hover);
   border-radius: var(--pv-radius-sm);
-  padding: 6px 10px;
+  /* Extra top padding reserves a header strip for the language label. */
+  padding: 30px 10px 6px;
   position: relative;
 }
 .pv-block--code .pv-block-input {
@@ -428,4 +429,60 @@
   font-size: 12px;
   font-weight: 700;
   color: var(--pv-text-muted);
+}
+
+/* Code-language label + picker, pinned to the code block's top-right corner. */
+.pv-codelang {
+  position: absolute;
+  top: 6px;
+  left: 10px;
+  z-index: 15;
+}
+.pv-codelang-btn {
+  background: var(--pv-surface);
+  border: 1px solid var(--pv-border);
+  border-radius: var(--pv-radius-sm);
+  color: var(--pv-text-muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 11px;
+  padding: 1px 6px;
+}
+.pv-codelang-btn:hover {
+  color: var(--pv-text);
+  background: var(--pv-hover);
+}
+.pv-codelang-menu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  z-index: 20;
+  margin: 2px 0 0;
+  padding: 4px;
+  list-style: none;
+  background: var(--pv-surface);
+  border: 1px solid var(--pv-border);
+  border-radius: var(--pv-radius-sm);
+  box-shadow: var(--pv-shadow);
+  min-width: 148px;
+  max-height: 280px;
+  overflow-y: auto;
+}
+.pv-codelang-item {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  color: var(--pv-text);
+  cursor: pointer;
+  font: inherit;
+  padding: 5px 8px;
+  text-align: left;
+}
+.pv-codelang-item:hover {
+  background: var(--pv-hover);
+}
+.pv-codelang-item--on {
+  font-weight: 600;
 }

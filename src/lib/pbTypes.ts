@@ -6,6 +6,12 @@
  * Every base record carries PocketBase's system fields (id + autodates); we add
  * the collection-specific fields on top.
  */
+import type { TableData, ColumnsData } from './blockData';
+
+// Re-export the block `data` payload shapes so existing imports from the
+// pbTypes barrel keep working after the split into blockData.ts.
+export type { TableColumnType, TableColumn, TableData, ColumnsData } from './blockData';
+
 export interface BaseRecord {
   id: string;
   created: string;
@@ -31,32 +37,6 @@ export type BlockType =
   | 'columns'
   | 'toc';
 
-/** A table column's cell kind. Cells are always stored as strings; the type
- * decides how a cell renders/edits (number input, checkbox, select…). */
-export type TableColumnType = 'text' | 'number' | 'checkbox' | 'select';
-
-export interface TableColumn {
-  name: string; // header label
-  type: TableColumnType;
-  options?: string[]; // choices for a `select` column
-}
-
-/** The grid stored in a `table` block's JSON `data` field. Cells stay as a
- * string per column; `checkbox` uses 'true'/'' and `select` holds one option. */
-export interface TableData {
-  columns: TableColumn[];
-  rows: string[][];
-  view?: 'table' | 'board'; // display mode; defaults to 'table'
-  groupBy?: number; // for the board view: index of the `select` column to group by
-}
-
-/** The layout stored in a `columns` block's JSON `data` field: side-by-side
- * text columns (each column is one string of content). The block's `type`
- * disambiguates this from TableData. */
-export interface ColumnsData {
-  cols: string[];
-}
-
 export interface PagesResponse extends BaseRecord {
   title: string;
   icon: string;
@@ -81,6 +61,7 @@ export interface BlocksResponse extends BaseRecord {
   file: string; // uploaded image filename (image blocks); '' when using a URL
   data: TableData | ColumnsData | null; // table grid / column layout; null otherwise
   color: string; // text/background color token (e.g. 'red', 'yellow-bg'); '' = default
+  lang: string; // code block language (e.g. 'js', 'python'); '' = plain
   depth: number; // indentation level (0 = top); for nested lists
   sort: number;
   owner: string;

@@ -29,7 +29,6 @@ const PREFIX: Partial<Record<BlockRecord['type'], (t: string) => string>> = {
   subheading: (t) => `## ${t}`,
   bullet: (t) => `- ${t}`,
   quote: (t) => `> ${t}`,
-  code: (t) => '```\n' + t + '\n```',
   image: (t) => `![](${t})`,
   callout: (t) => `> 💡 ${t}`,
   toggle: (t) => `▸ **${t}**`,
@@ -38,13 +37,16 @@ const PREFIX: Partial<Record<BlockRecord['type'], (t: string) => string>> = {
 /** Serialize one block to its Markdown line. `ordinal` is the 1-based position
  * among consecutive numbered blocks (for `1.`, `2.`, …). Pure. */
 export function blockToMarkdown(
-  block: Pick<BlockRecord, 'type' | 'content' | 'checked' | 'data'>,
+  block: Pick<BlockRecord, 'type' | 'content' | 'checked' | 'data' | 'lang'>,
   ordinal = 1,
 ): string {
   const text = block.content;
   const prefix = PREFIX[block.type];
   if (prefix) return prefix(text);
   switch (block.type) {
+    case 'code':
+      // Emit the fenced language so highlighting survives the round-trip.
+      return '```' + (block.lang ?? '') + '\n' + text + '\n```';
     case 'numbered':
       return `${ordinal}. ${text}`;
     case 'todo':
