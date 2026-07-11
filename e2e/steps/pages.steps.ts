@@ -53,9 +53,21 @@ When('I reopen the page {string}', async ({ page }, title: string) => {
   await expect(active(page).getByLabel('Page title')).toHaveValue(title);
 });
 
-When('I add a block with the text {string}', async ({ page }, text: string) => {
+// Add a block and wait for the new (empty) input to mount + focus before typing,
+// so a still-settling create from a prior step doesn't leave us typing into a
+// stale block under CI load.
+async function addBlockAndFocus(page: import('@playwright/test').Page) {
+  const inputs = active(page).getByLabel('Block content');
+  const before = await inputs.count();
   await active(page).getByRole('button', { name: '+ Add a block' }).click();
-  const input = active(page).getByLabel('Block content').last();
+  await expect.poll(() => inputs.count()).toBeGreaterThan(before);
+  const input = inputs.last();
+  await expect(input).toHaveValue('');
+  return input;
+}
+
+When('I add a block with the text {string}', async ({ page }, text: string) => {
+  const input = await addBlockAndFocus(page);
   // Type character-by-character so markdown shortcuts (e.g. "- ") fire — a
   // one-shot fill() would bypass the per-keystroke transform.
   await input.pressSequentially(text);
@@ -69,8 +81,8 @@ Then('the last block should be a {string} block', async ({ page }, type: string)
 
 When('I type {string} into a new block', async ({ page }, text: string) => {
   // Add a block and type into it WITHOUT blurring — so the slash menu stays open.
-  await active(page).getByRole('button', { name: '+ Add a block' }).click();
-  await active(page).getByLabel('Block content').last().pressSequentially(text);
+  const input = await addBlockAndFocus(page);
+  await input.pressSequentially(text);
 });
 
 When('I choose {string} from the slash menu', async ({ page }, label: string) => {

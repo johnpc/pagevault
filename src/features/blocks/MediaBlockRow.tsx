@@ -3,6 +3,7 @@ import type { BlockRecord } from '../../lib/pbClient';
 import { ImageBlock } from './ImageBlock';
 import { TableBlock } from './TableBlock';
 import { ColumnsBlock } from './ColumnsBlock';
+import { TableOfContents } from './TableOfContents';
 import { BlockControls } from './BlockControls';
 
 interface MediaProps {
@@ -68,6 +69,16 @@ export function MediaBlockRow(props: MediaProps) {
       <div className={cls} style={style} {...rowDrag}>
         {handle}
         <ColumnsBlock block={block} onEdit={onEdit} />
+        {controls}
+      </div>
+    );
+  }
+
+  if (block.type === 'toc') {
+    return (
+      <div className={cls} style={style} {...rowDrag}>
+        {handle}
+        <TableOfContents pageId={block.page} />
         {controls}
       </div>
     );
