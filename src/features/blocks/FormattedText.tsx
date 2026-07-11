@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
 import { parseInline } from './inlineMarkdown';
 
-/** Renders inline markdown (bold / italic / code) and page mentions as styled
- * spans. A mention becomes a link to its page. Read-only — shown when a block is
- * not being edited. */
+/** Renders inline markdown (bold / italic / code / strikethrough / underline)
+ * and page mentions as styled spans. A mention becomes a link to its page.
+ * Read-only — shown when a block is not being edited. */
 export function FormattedText({ text }: { text: string }) {
   return (
     <>
@@ -17,6 +17,8 @@ export function FormattedText({ text }: { text: string }) {
         if (seg.code) return <code key={i}>{seg.text}</code>;
         if (seg.bold) return <strong key={i}>{seg.text}</strong>;
         if (seg.italic) return <em key={i}>{seg.text}</em>;
+        if (seg.strike) return <del key={i}>{seg.text}</del>;
+        if (seg.underline) return <u key={i}>{seg.text}</u>;
         return <span key={i}>{seg.text}</span>;
       })}
     </>

@@ -33,6 +33,20 @@ describe('parseInline', () => {
     expect(parseInline('`a*b*c`')).toEqual([{ text: 'a*b*c', code: true }]);
   });
 
+  it('parses strikethrough (~~) and underline (__)', () => {
+    expect(parseInline('~~gone~~')).toEqual([{ text: 'gone', strike: true }]);
+    expect(parseInline('__under__')).toEqual([{ text: 'under', underline: true }]);
+  });
+
+  it('mixes strike/underline with plain text in order', () => {
+    expect(parseInline('a ~~b~~ __c__')).toEqual([
+      { text: 'a ' },
+      { text: 'b', strike: true },
+      { text: ' ' },
+      { text: 'c', underline: true },
+    ]);
+  });
+
   it('parses a page mention into a mention segment', () => {
     expect(parseInline('see @[Trip](p1) today')).toEqual([
       { text: 'see ' },
@@ -52,5 +66,7 @@ describe('hasInlineMarkup', () => {
     expect(hasInlineMarkup('has **bold**')).toBe(true);
     expect(hasInlineMarkup('has `code`')).toBe(true);
     expect(hasInlineMarkup('has @[Page](p1)')).toBe(true);
+    expect(hasInlineMarkup('has ~~strike~~')).toBe(true);
+    expect(hasInlineMarkup('has __underline__')).toBe(true);
   });
 });
