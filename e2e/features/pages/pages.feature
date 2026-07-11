@@ -23,6 +23,12 @@ Feature: Pages and blocks
     And I add a block with the text "make it **bold**"
     Then the block renders "bold" in bold
 
+  Scenario: Move a page under another via the picker
+    Given I have a page titled "Standalone"
+    When I open the page "Standalone"
+    And I move the page under "Reading list"
+    Then the move picker shows "Reading list" as the parent
+
   Scenario: Insert a callout block
     Given I have a page titled "Tips"
     When I open the page "Tips"

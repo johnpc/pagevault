@@ -154,6 +154,21 @@ Then('the page shows an image {string}', async ({ page }, url: string) => {
   await expect(active(page).locator(`img.pv-block-image[src="${url}"]`)).toBeVisible();
 });
 
+When('I move the page under {string}', async ({ page }, parentTitle: string) => {
+  const select = active(page).getByLabel('Move page under');
+  // The option text is "<icon> <title>"; find the matching option's value.
+  const value = await select
+    .locator('option', { hasText: parentTitle })
+    .first()
+    .getAttribute('value');
+  await select.selectOption(value!);
+});
+
+Then('the move picker shows {string} as the parent', async ({ page }, parentTitle: string) => {
+  const selected = active(page).getByLabel('Move page under').locator('option:checked');
+  await expect(selected).toContainText(parentTitle);
+});
+
 Then('the block renders {string} in bold', async ({ page }, text: string) => {
   await expect(active(page).locator('.pv-block-preview strong', { hasText: text })).toBeVisible();
 });

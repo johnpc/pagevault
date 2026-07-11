@@ -55,6 +55,7 @@ describe('usePageEditor', () => {
     act(() => result.current.setIcon('🚀'));
     act(() => result.current.setFavorite(true));
     act(() => result.current.setCover('ocean'));
+    act(() => result.current.setParent('parentX'));
     act(() => result.current.exportMarkdown());
     act(() => result.current.addBlock('heading'));
     act(() => result.current.editBlock('b1', { content: 'x' }));
@@ -72,6 +73,7 @@ describe('usePageEditor', () => {
       expect(pages.update).toHaveBeenCalledWith('p1', { icon: '🚀' });
       expect(pages.update).toHaveBeenCalledWith('p1', { favorite: true });
       expect(pages.update).toHaveBeenCalledWith('p1', { cover: 'ocean' });
+      expect(pages.update).toHaveBeenCalledWith('p1', { parent: 'parentX' });
     });
     expect(blocks.create).toHaveBeenCalledWith(
       expect.objectContaining({ type: 'heading', sort: 2 }),

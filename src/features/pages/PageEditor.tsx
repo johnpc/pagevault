@@ -4,8 +4,7 @@ import { usePageEditor } from './usePageEditor';
 import { LoadState } from '../shell/LoadState';
 import { PageHeader } from './PageHeader';
 import { Breadcrumbs } from './Breadcrumbs';
-import { PageInfo } from './PageInfo';
-import { BlockRow } from '../blocks/BlockRow';
+import { BlockList } from './BlockList';
 import { useBlockDnd } from '../blocks/useBlockDnd';
 import './PageEditor.css';
 
@@ -20,6 +19,8 @@ export function PageEditor() {
     setIcon,
     setFavorite,
     setCover,
+    setParent,
+    allPages,
     addBlock,
     editBlock,
     removeBlock,
@@ -54,40 +55,25 @@ export function PageEditor() {
                 <Breadcrumbs pageId={id} />
                 <PageHeader
                   page={page.data}
+                  pages={allPages.data ?? []}
                   onTitle={setTitle}
                   onIcon={setIcon}
                   onDelete={onDelete}
                   onToggleFavorite={setFavorite}
                   onCover={setCover}
+                  onMove={setParent}
                   onExport={exportMarkdown}
                   onDuplicate={onDuplicate}
                 />
-                <LoadState
-                  loading={blocks.isLoading}
-                  error={blocks.isError}
-                  empty={false}
-                  onRetry={blocks.refetch}
-                >
-                  <div className="pv-blocks">
-                    {(blocks.data ?? []).map((block) => (
-                      <BlockRow
-                        key={block.id}
-                        block={block}
-                        onEdit={editBlock}
-                        onRemove={removeBlock}
-                        onEnter={() => addBlock('text')}
-                        dnd={dnd}
-                      />
-                    ))}
-                  </div>
-                  <button className="pv-add-block pv-muted" onClick={() => addBlock('text')}>
-                    + Add a block
-                  </button>
-                  <button className="pv-add-block pv-muted" onClick={onSubPage}>
-                    + Add a sub-page
-                  </button>
-                  <PageInfo page={page.data} blocks={blocks.data ?? []} />
-                </LoadState>
+                <BlockList
+                  page={page.data}
+                  blocks={blocks}
+                  dnd={dnd}
+                  onEdit={editBlock}
+                  onRemove={removeBlock}
+                  onAddBlock={addBlock}
+                  onSubPage={onSubPage}
+                />
               </>
             )}
           </LoadState>

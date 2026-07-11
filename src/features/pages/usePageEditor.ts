@@ -63,6 +63,11 @@ export function usePageEditor(pageId: string) {
     [pageId, updatePage],
   );
 
+  const setParent = useCallback(
+    (parent: string) => updatePage.mutate({ id: pageId, patch: { parent } }),
+    [pageId, updatePage],
+  );
+
   /** Download the current page as a Markdown file. */
   const exportMarkdown = useCallback(() => {
     if (!page.data) return;
@@ -80,6 +85,8 @@ export function usePageEditor(pageId: string) {
     setIcon,
     setFavorite,
     setCover,
+    setParent,
+    allPages,
     removePage: archivePage.mutateAsync,
   };
 }

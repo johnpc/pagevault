@@ -22,6 +22,7 @@ const page = {
 
 const props = {
   page,
+  pages: [page],
   onTitle: vi.fn(),
   onIcon: vi.fn(),
   onDelete: vi.fn(),
@@ -29,6 +30,7 @@ const props = {
   onExport: vi.fn(),
   onDuplicate: vi.fn(),
   onCover: vi.fn(),
+  onMove: vi.fn(),
 };
 
 describe('PageHeader', () => {

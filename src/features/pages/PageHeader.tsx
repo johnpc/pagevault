@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import type { PageRecord } from '../../lib/pbClient';
 import { CoverPicker } from './CoverPicker';
+import { PageActions } from './PageActions';
 
 interface PageHeaderProps {
   page: PageRecord;
+  pages: PageRecord[];
   onTitle: (title: string) => void;
   onIcon: (icon: string) => void;
   onDelete: () => void;
@@ -11,13 +13,15 @@ interface PageHeaderProps {
   onExport: () => void;
   onDuplicate: () => void;
   onCover: (id: string) => void;
+  onMove: (parent: string) => void;
 }
 
 const ICONS = ['📄', '📝', '📌', '💡', '✅', '📚', '🚀', '🗂️'];
 
-/** The page's icon picker + title field + favorite star + trash control. */
+/** The page's cover + icon picker + title field + the actions row. */
 export function PageHeader({
   page,
+  pages,
   onTitle,
   onIcon,
   onDelete,
@@ -25,6 +29,7 @@ export function PageHeader({
   onExport,
   onDuplicate,
   onCover,
+  onMove,
 }: PageHeaderProps) {
   const [title, setTitle] = useState(page.title);
   return (
@@ -50,25 +55,15 @@ export function PageHeader({
         onChange={(e) => setTitle(e.target.value)}
         onBlur={() => onTitle(title)}
       />
-      <div className="pv-page-actions">
-        <button
-          className={`pv-page-fav${page.favorite ? ' pv-page-fav--on' : ''}`}
-          aria-label={page.favorite ? 'Remove from favorites' : 'Add to favorites'}
-          aria-pressed={page.favorite}
-          onClick={() => onToggleFavorite(!page.favorite)}
-        >
-          {page.favorite ? '★ Favorited' : '☆ Favorite'}
-        </button>
-        <button className="pv-page-delete pv-muted" onClick={onDuplicate}>
-          Duplicate
-        </button>
-        <button className="pv-page-delete pv-muted" onClick={onExport}>
-          Export Markdown
-        </button>
-        <button className="pv-page-delete pv-muted" onClick={onDelete}>
-          Move to trash
-        </button>
-      </div>
+      <PageActions
+        page={page}
+        pages={pages}
+        onToggleFavorite={onToggleFavorite}
+        onMove={onMove}
+        onDuplicate={onDuplicate}
+        onExport={onExport}
+        onDelete={onDelete}
+      />
     </header>
   );
 }
