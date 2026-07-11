@@ -32,12 +32,25 @@ describe('parseInline', () => {
   it('treats code contents literally (no nested emphasis)', () => {
     expect(parseInline('`a*b*c`')).toEqual([{ text: 'a*b*c', code: true }]);
   });
+
+  it('parses a page mention into a mention segment', () => {
+    expect(parseInline('see @[Trip](p1) today')).toEqual([
+      { text: 'see ' },
+      { text: 'Trip', mentionId: 'p1' },
+      { text: ' today' },
+    ]);
+  });
+
+  it('does not re-parse emphasis inside a mention title', () => {
+    expect(parseInline('@[a*b*c](p1)')).toEqual([{ text: 'a*b*c', mentionId: 'p1' }]);
+  });
 });
 
 describe('hasInlineMarkup', () => {
-  it('is true only when a mark is present', () => {
+  it('is true only when a mark or mention is present', () => {
     expect(hasInlineMarkup('plain')).toBe(false);
     expect(hasInlineMarkup('has **bold**')).toBe(true);
     expect(hasInlineMarkup('has `code`')).toBe(true);
+    expect(hasInlineMarkup('has @[Page](p1)')).toBe(true);
   });
 });

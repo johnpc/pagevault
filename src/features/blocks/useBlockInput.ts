@@ -91,5 +91,5 @@ export function useBlockInput(
     onEdit(block.id, { content: value });
   };
 
-  return { value, change, keyDown, save, focus, focused, matches, active, pick };
+  return { value, setValue, change, keyDown, save, focus, focused, matches, active, pick };
 }

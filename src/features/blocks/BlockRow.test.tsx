@@ -1,8 +1,24 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render as rtlRender, screen, fireEvent, type RenderResult } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { MemoryRouter } from 'react-router-dom';
+import type { ReactElement } from 'react';
 import { BlockRow, type BlockDndHandlers } from './BlockRow';
 import type { BlockRecord } from '../../lib/pbClient';
+
+// The block editor now uses usePages() (for @-mentions) and react-router Links,
+// so every BlockRow render needs those providers.
+vi.mock('../pages/pagesApi', () => ({ usePages: () => ({ data: [] }) }));
+
+const render = (ui: ReactElement): RenderResult =>
+  rtlRender(
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
+      <MemoryRouter>{ui}</MemoryRouter>
+    </QueryClientProvider>,
+  );
 
 const noopDnd: BlockDndHandlers = {
   draggingId: null,
