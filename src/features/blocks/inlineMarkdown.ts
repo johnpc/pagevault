@@ -6,20 +6,25 @@ export interface Segment {
   bold?: boolean;
   italic?: boolean;
   code?: boolean;
+  strike?: boolean;
+  underline?: boolean;
   mentionId?: string;
 }
 
-type Mark = 'bold' | 'italic' | 'code';
+type Mark = 'bold' | 'italic' | 'code' | 'strike' | 'underline';
 
 // A mention token: @[Page Title](pageId). Highest priority so its inner text
 // (which may contain * or `) isn't re-parsed as emphasis.
 const MENTION_RE = /@\[([^\]]+)\]\(([^)]+)\)/;
 
-// Order matters: code first (its contents are literal), then bold (**), then
-// italic (*). Each pattern captures the inner text.
+// Order matters: code first (its contents are literal), then the double-char
+// marks (**, ~~, __) before the single-char italic (*). Each captures the inner
+// text. Earliest match across all rules wins, so ordering only breaks ties.
 const RULES: { re: RegExp; mark: Mark }[] = [
   { re: /`([^`]+)`/, mark: 'code' },
   { re: /\*\*([^*]+)\*\*/, mark: 'bold' },
+  { re: /~~([^~]+)~~/, mark: 'strike' },
+  { re: /__([^_]+)__/, mark: 'underline' },
   { re: /\*([^*]+)\*/, mark: 'italic' },
 ];
 
@@ -71,5 +76,7 @@ export function parseInline(text: string): Segment[] {
 /** True when the text contains any inline markup worth rendering (emphasis or a
  * mention) — i.e. the idle preview should show formatted, not raw. */
 export function hasInlineMarkup(text: string): boolean {
-  return parseInline(text).some((s) => s.bold || s.italic || s.code || s.mentionId);
+  return parseInline(text).some(
+    (s) => s.bold || s.italic || s.code || s.strike || s.underline || s.mentionId,
+  );
 }

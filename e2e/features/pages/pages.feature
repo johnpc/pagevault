@@ -23,6 +23,12 @@ Feature: Pages and blocks
     And I add a block with the text "make it **bold**"
     Then the block renders "bold" in bold
 
+  Scenario: Strikethrough markdown renders when the block is idle
+    Given I have a page titled "Struck"
+    When I open the page "Struck"
+    And I add a block with the text "this is ~~gone~~"
+    Then the block renders "gone" struck through
+
   Scenario: Move a page under another via the picker
     Given I have a page titled "Standalone"
     When I open the page "Standalone"

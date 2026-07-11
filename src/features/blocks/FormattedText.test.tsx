@@ -15,6 +15,12 @@ describe('FormattedText', () => {
     expect(screen.getByText('c').tagName).toBe('CODE');
   });
 
+  it('renders strikethrough and underline as del/u elements', () => {
+    render(<FormattedText text="~~gone~~ __under__" />);
+    expect(screen.getByText('gone').tagName).toBe('DEL');
+    expect(screen.getByText('under').tagName).toBe('U');
+  });
+
   it('renders plain text in a span', () => {
     render(<FormattedText text="plain" />);
     expect(screen.getByText('plain').tagName).toBe('SPAN');
