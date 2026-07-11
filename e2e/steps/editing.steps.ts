@@ -20,12 +20,28 @@ When('I press Enter with the caret after {string}', async ({ page }, prefix: str
   await expect.poll(() => inputs(page).count()).toBeGreaterThan(before);
 });
 
-// Presses Enter on an already-empty, focused list item (which should exit the
-// list / outdent rather than create yet another bullet). No new block is added,
-// so we can't poll on count — settle on the re-render instead.
+// A "list level" fingerprint of the focused block's row: list types score 1,
+// plus the indent depth. Enter on an empty list item either outdents (depth
+// drops) or exits to a plain paragraph (type score drops) — either way this
+// number strictly decreases, giving one thing to wait on.
+const focusedListLevel = (page: Page) =>
+  focused(page).evaluate((el) => {
+    const row = (el as HTMLElement).closest('.pv-block') as HTMLElement | null;
+    if (!row) return -1;
+    const isList = /pv-block--(bullet|numbered|todo)/.test(row.className);
+    const depth = parseFloat(row.style.marginLeft || '0') / 24;
+    return (isList ? 1 : 0) + depth;
+  });
+
+// Presses Enter on an already-empty, focused list item — one press either
+// outdents a nested item (depth drops, still a list) or exits a top-level one to
+// a paragraph. The block is already empty, so a value check proves nothing; poll
+// until the list level actually drops (or is already 0), so a chained next step
+// doesn't race the async transition and land in a still-a-list block.
 When('I press Enter on the empty list item', async ({ page }) => {
+  const before = await focusedListLevel(page);
   await focused(page).press('Enter');
-  await expect(focused(page)).toHaveValue('');
+  await expect.poll(() => focusedListLevel(page)).toBeLessThan(Math.max(before, 1));
 });
 
 // Asserts the block value directly BELOW the one whose value contains `head`

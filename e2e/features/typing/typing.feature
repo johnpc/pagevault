@@ -5,9 +5,9 @@ Feature: Typing a full document
 
   Background:
     Given I am signed in as the test user
-    And I have a page titled "Trip plan"
 
   Scenario: Compose a document with headings, lists, code and nesting, then share it
+    Given I have a page titled "Trip plan"
     When I open the page "Trip plan"
     And I focus the first block
     And I type "# Trip to Japan" then Enter
@@ -32,12 +32,13 @@ Feature: Typing a full document
     And the document has an indented block containing "USB-C cable"
 
   Scenario: Share the typed document via link, readable signed out
-    When I open the page "Trip plan"
+    Given I have a page titled "Shared notes"
+    When I open the page "Shared notes"
     And I focus the first block
     And I type "# Shareable notes" then Enter
     And I type "public paragraph" then Enter
     And I enable sharing for the page
     And I sign out
     And I visit the shared link
-    Then I should see the shared title "Trip plan"
+    Then I should see the shared title "Shared notes"
     And I should see the shared content "public paragraph"
