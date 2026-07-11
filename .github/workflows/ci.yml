@@ -92,6 +92,8 @@ jobs:
             paths: .features-gen/e2e/features/columns
           - name: comments
             paths: .features-gen/e2e/features/comments
+          - name: toc
+            paths: .features-gen/e2e/features/toc
     env:
       VITE_PB_URL: http://localhost:8090
       PB_ADMIN_EMAIL: admin@pagevault.local

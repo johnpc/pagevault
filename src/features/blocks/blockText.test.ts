@@ -40,7 +40,8 @@ describe('cycleType', () => {
     expect(cycleType('code')).toBe('image');
     expect(cycleType('image')).toBe('table');
     expect(cycleType('table')).toBe('columns');
-    expect(cycleType('columns')).toBe('divider');
+    expect(cycleType('columns')).toBe('toc');
+    expect(cycleType('toc')).toBe('divider');
   });
 });
 

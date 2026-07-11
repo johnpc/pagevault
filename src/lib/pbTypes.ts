@@ -28,7 +28,8 @@ export type BlockType =
   | 'callout'
   | 'toggle'
   | 'table'
-  | 'columns';
+  | 'columns'
+  | 'toc';
 
 /** A table column's cell kind. Cells are always stored as strings; the type
  * decides how a cell renders/edits (number input, checkbox, select…). */

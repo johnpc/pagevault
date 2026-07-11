@@ -48,6 +48,12 @@ export const SLASH_COMMANDS: SlashCommand[] = [
     keywords: ['columns', 'column', 'layout', 'side', 'grid'],
   },
   {
+    type: 'toc',
+    label: 'Table of contents',
+    icon: '≣',
+    keywords: ['toc', 'table of contents', 'outline', 'contents', 'headings'],
+  },
+  {
     type: 'divider',
     label: 'Divider',
     icon: '—',

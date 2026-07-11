@@ -1,9 +1,14 @@
 import type { BlockRecord } from '../../lib/pbClient';
 import { useBlockDrag } from './useBlockDrag';
 import { MediaBlockRow } from './MediaBlockRow';
+import { BlockLead } from './BlockLead';
 import { TextBlockBody } from './TextBlockBody';
 import { BlockControls } from './BlockControls';
+import { blockAnchorId } from './tocData';
 import './BlockRow.css';
+
+/** Block types that render as a whole element via MediaBlockRow, not a text line. */
+const MEDIA_TYPES = new Set(['divider', 'image', 'table', 'columns', 'toc']);
 
 export interface BlockDndHandlers {
   draggingId: string | null;
@@ -54,29 +59,11 @@ export function BlockRow(props: BlockRowProps) {
       onUpload={props.onUpload}
     />
   );
-  const mediaTypes = ['divider', 'image', 'table', 'columns'];
-  if (mediaTypes.includes(block.type)) return media;
+  if (MEDIA_TYPES.has(block.type)) return media;
 
   return (
-    <div className={cls} style={style} {...rowDrag}>
-      {block.type === 'todo' && (
-        <input
-          type="checkbox"
-          aria-label="Toggle to-do"
-          checked={block.checked}
-          onChange={(e) => onEdit(block.id, { checked: e.target.checked })}
-        />
-      )}
-      {block.type === 'toggle' && (
-        <button
-          className="pv-toggle-chevron"
-          aria-label={block.collapsed ? 'Expand toggle' : 'Collapse toggle'}
-          aria-expanded={!block.collapsed}
-          onClick={() => onEdit(block.id, { collapsed: !block.collapsed })}
-        >
-          {block.collapsed ? '▸' : '▾'}
-        </button>
-      )}
+    <div id={blockAnchorId(block.id)} className={cls} style={style} {...rowDrag}>
+      <BlockLead block={block} onEdit={onEdit} />
       {handle}
       {block.type === 'callout' && (
         <span className="pv-callout-icon" aria-hidden="true">
