@@ -1,10 +1,20 @@
 import type { BlockRecord, PageRecord } from '../../lib/pbClient';
+import type { TableData } from '../../lib/pbTypes';
 import { displayTitle } from '../pages/pageTree';
+import { normalize } from './tableData';
+
+/** A GFM table from a block's grid data. Pure. */
+function tableToMarkdown(data: TableData | null): string {
+  const { columns, rows } = normalize(data);
+  const line = (cells: string[]) => `| ${cells.join(' | ')} |`;
+  const divider = `| ${columns.map(() => '---').join(' | ')} |`;
+  return [line(columns), divider, ...rows.map((r) => line(r))].join('\n');
+}
 
 /** Serialize one block to its Markdown line. `ordinal` is the 1-based position
  * among consecutive numbered blocks (for `1.`, `2.`, …). Pure. */
 export function blockToMarkdown(
-  block: Pick<BlockRecord, 'type' | 'content' | 'checked'>,
+  block: Pick<BlockRecord, 'type' | 'content' | 'checked' | 'data'>,
   ordinal = 1,
 ): string {
   const text = block.content;
@@ -29,6 +39,8 @@ export function blockToMarkdown(
       return `> 💡 ${text}`;
     case 'toggle':
       return `▸ **${text}**`;
+    case 'table':
+      return tableToMarkdown(block.data);
     case 'divider':
       return '---';
     default:

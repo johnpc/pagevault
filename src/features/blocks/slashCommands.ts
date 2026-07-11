@@ -36,6 +36,12 @@ export const SLASH_COMMANDS: SlashCommand[] = [
     keywords: ['toggle', 'collapse', 'collapsible', 'fold', 'expand'],
   },
   {
+    type: 'table',
+    label: 'Table',
+    icon: '▦',
+    keywords: ['table', 'database', 'grid', 'spreadsheet', 'db'],
+  },
+  {
     type: 'divider',
     label: 'Divider',
     icon: '—',

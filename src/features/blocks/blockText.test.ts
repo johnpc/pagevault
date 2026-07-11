@@ -38,7 +38,8 @@ describe('cycleType', () => {
     expect(cycleType('subheading')).toBe('bullet');
     expect(cycleType('bullet')).toBe('numbered');
     expect(cycleType('code')).toBe('image');
-    expect(cycleType('image')).toBe('divider');
+    expect(cycleType('image')).toBe('table');
+    expect(cycleType('table')).toBe('divider');
   });
 });
 
