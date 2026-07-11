@@ -28,6 +28,19 @@
   --pv-text: #1b1d22;
   --pv-text-muted: #6b7280;
 
+  /* Block text + background palette (Notion-like), tuned for the light paper. */
+  --pv-c-gray: #6b7280;
+  --pv-c-red: #c0392b;
+  --pv-c-orange: #c26a1b;
+  --pv-c-green: #2e7d4f;
+  --pv-c-blue: #2f6fd0;
+  --pv-c-purple: #8043c4;
+  --pv-bg-gray: #ececea;
+  --pv-bg-yellow: #fbf3cf;
+  --pv-bg-green: #dcefe2;
+  --pv-bg-blue: #e2ecfb;
+  --pv-bg-pink: #f8e1ee;
+
   --pv-radius: 12px;
   --pv-radius-sm: 8px;
   --pv-gap: 16px;
@@ -60,6 +73,16 @@
     --pv-text: #f2f4f8;
     --pv-text-muted: #9aa2b1;
     --pv-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.35);
+    --pv-c-red: #e06a5f;
+    --pv-c-orange: #d8944a;
+    --pv-c-green: #5cbd88;
+    --pv-c-blue: #6fa0e8;
+    --pv-c-purple: #b083e0;
+    --pv-bg-gray: #2f2f2f;
+    --pv-bg-yellow: #4a4327;
+    --pv-bg-green: #24402f;
+    --pv-bg-blue: #26344d;
+    --pv-bg-pink: #45283a;
   }
 }
 

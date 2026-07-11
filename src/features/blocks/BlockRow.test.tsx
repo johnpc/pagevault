@@ -301,6 +301,43 @@ describe('BlockRow', () => {
     expect((container.querySelector('.pv-block') as HTMLElement).style.marginLeft).toBe('48px');
   });
 
+  it('applies the block color as a tint class on the row', () => {
+    const { container } = render(
+      <BlockRow
+        block={mk({ color: 'yellow-bg' })}
+        onEdit={vi.fn()}
+        onRemove={vi.fn()}
+        onEnter={vi.fn()}
+        onDuplicate={vi.fn()}
+        onIndent={vi.fn()}
+        onPasteMarkdown={vi.fn()}
+        onUpload={vi.fn()}
+        dnd={noopDnd}
+      />,
+    );
+    expect(container.querySelector('.pv-block')).toHaveClass('pv-color--yellow-bg');
+  });
+
+  it('sets a block color from the color menu', async () => {
+    const onEdit = vi.fn();
+    render(
+      <BlockRow
+        block={mk()}
+        onEdit={onEdit}
+        onRemove={vi.fn()}
+        onEnter={vi.fn()}
+        onDuplicate={vi.fn()}
+        onIndent={vi.fn()}
+        onPasteMarkdown={vi.fn()}
+        onUpload={vi.fn()}
+        dnd={noopDnd}
+      />,
+    );
+    await userEvent.click(screen.getByLabelText('Block color'));
+    await userEvent.click(screen.getByRole('option', { name: 'Blue' }));
+    expect(onEdit).toHaveBeenCalledWith('b1', { color: 'blue' });
+  });
+
   it('starts a drag from the handle and drops onto another block', () => {
     const dnd: BlockDndHandlers = { ...noopDnd, onDragStart: vi.fn(), onDrop: vi.fn() };
     render(

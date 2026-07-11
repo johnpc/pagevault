@@ -67,6 +67,7 @@ export interface BlocksResponse extends BaseRecord {
   collapsed: boolean; // for `toggle` blocks: hide the nested (deeper-depth) children
   file: string; // uploaded image filename (image blocks); '' when using a URL
   data: TableData | null; // grid for `table` blocks; null for every other type
+  color: string; // text/background color token (e.g. 'red', 'yellow-bg'); '' = default
   depth: number; // indentation level (0 = top); for nested lists
   sort: number;
   owner: string;

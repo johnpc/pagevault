@@ -5,6 +5,57 @@
   position: relative;
 }
 
+/* Per-block text colors — tint the editable text + idle preview. */
+.pv-color--gray .pv-block-input,
+.pv-color--gray .pv-block-preview {
+  color: var(--pv-c-gray);
+}
+.pv-color--red .pv-block-input,
+.pv-color--red .pv-block-preview {
+  color: var(--pv-c-red);
+}
+.pv-color--orange .pv-block-input,
+.pv-color--orange .pv-block-preview {
+  color: var(--pv-c-orange);
+}
+.pv-color--green .pv-block-input,
+.pv-color--green .pv-block-preview {
+  color: var(--pv-c-green);
+}
+.pv-color--blue .pv-block-input,
+.pv-color--blue .pv-block-preview {
+  color: var(--pv-c-blue);
+}
+.pv-color--purple .pv-block-input,
+.pv-color--purple .pv-block-preview {
+  color: var(--pv-c-purple);
+}
+
+/* Per-block background highlights — tint the whole row. */
+.pv-color--gray-bg,
+.pv-color--yellow-bg,
+.pv-color--green-bg,
+.pv-color--blue-bg,
+.pv-color--pink-bg {
+  border-radius: var(--pv-radius-sm);
+  padding: 2px 6px;
+}
+.pv-color--gray-bg {
+  background: var(--pv-bg-gray);
+}
+.pv-color--yellow-bg {
+  background: var(--pv-bg-yellow);
+}
+.pv-color--green-bg {
+  background: var(--pv-bg-green);
+}
+.pv-color--blue-bg {
+  background: var(--pv-bg-blue);
+}
+.pv-color--pink-bg {
+  background: var(--pv-bg-pink);
+}
+
 .pv-block-style {
   opacity: 0;
   background: none;
@@ -211,4 +262,93 @@
 .pv-block-dup:hover,
 .pv-block-del:hover {
   color: var(--pv-text);
+}
+
+/* Color picker: a paint button that reveals it, and a floating swatch list. */
+.pv-color {
+  position: relative;
+  flex-shrink: 0;
+}
+.pv-color .pv-block-dup {
+  font-size: 14px;
+}
+.pv-color-menu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  z-index: 20;
+  margin: 2px 0 0;
+  padding: 4px;
+  list-style: none;
+  background: var(--pv-surface);
+  border: 1px solid var(--pv-border);
+  border-radius: var(--pv-radius-sm);
+  box-shadow: var(--pv-shadow);
+  min-width: 168px;
+}
+.pv-color-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  color: var(--pv-text);
+  cursor: pointer;
+  font: inherit;
+  padding: 5px 8px;
+  text-align: left;
+}
+.pv-color-item:hover {
+  background: var(--pv-hover);
+}
+.pv-color-item--on {
+  font-weight: 600;
+}
+.pv-color-swatch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--pv-border);
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 700;
+}
+/* Tint the swatch by the item's color token (text items color the letter,
+   background items fill the box). */
+.pv-color--gray .pv-color-swatch {
+  color: var(--pv-c-gray);
+}
+.pv-color--red .pv-color-swatch {
+  color: var(--pv-c-red);
+}
+.pv-color--orange .pv-color-swatch {
+  color: var(--pv-c-orange);
+}
+.pv-color--green .pv-color-swatch {
+  color: var(--pv-c-green);
+}
+.pv-color--blue .pv-color-swatch {
+  color: var(--pv-c-blue);
+}
+.pv-color--purple .pv-color-swatch {
+  color: var(--pv-c-purple);
+}
+.pv-color--gray-bg .pv-color-swatch {
+  background: var(--pv-bg-gray);
+}
+.pv-color--yellow-bg .pv-color-swatch {
+  background: var(--pv-bg-yellow);
+}
+.pv-color--green-bg .pv-color-swatch {
+  background: var(--pv-bg-green);
+}
+.pv-color--blue-bg .pv-color-swatch {
+  background: var(--pv-bg-blue);
+}
+.pv-color--pink-bg .pv-color-swatch {
+  background: var(--pv-bg-pink);
 }

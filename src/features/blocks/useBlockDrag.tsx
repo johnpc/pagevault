@@ -1,6 +1,7 @@
 import type { DragEvent } from 'react';
 import type { BlockRecord } from '../../lib/pbClient';
 import { cycleType } from './blockText';
+import { colorClass } from './blockColors';
 import type { BlockDndHandlers } from './BlockRow';
 
 /**
@@ -13,8 +14,10 @@ export function useBlockDrag(
   onEdit: (id: string, patch: Partial<BlockRecord>) => void,
   dnd: BlockDndHandlers,
 ) {
+  const tint = colorClass(block.color);
   const cls =
     `pv-block pv-block--${block.type}` +
+    (tint ? ` ${tint}` : '') +
     (dnd.draggingId === block.id ? ' pv-block--dragging' : '') +
     (dnd.overId === block.id && dnd.draggingId !== block.id ? ' pv-block--over' : '');
 
