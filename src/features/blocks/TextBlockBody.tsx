@@ -8,7 +8,7 @@ import { useMention } from './useMention';
 import { useAutoFocus } from './useAutoFocus';
 import { SlashMenu } from './SlashMenu';
 import { MentionMenu } from './MentionMenu';
-import { CopyButton } from './CopyButton';
+import { CodeBlockChrome } from './CodeBlockChrome';
 import { FormattedText } from './FormattedText';
 
 /** The editable body of a text-ish block: an idle formatted preview (when it
@@ -87,7 +87,7 @@ export function TextBlockBody({
           onPaste={onPaste}
         />
       )}
-      {block.type === 'code' && value !== '' && <CopyButton text={value} />}
+      <CodeBlockChrome block={block} value={value} onEdit={onEdit} />
       {matches && <SlashMenu commands={matches} active={active} onPick={pick} />}
       {mention.open && (
         <MentionMenu pages={mention.matches} active={mention.active} onPick={mention.pick} />
