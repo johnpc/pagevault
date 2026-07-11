@@ -15,6 +15,7 @@ interface PageHeaderProps {
   onCover: (id: string) => void;
   onCoverUpload: (file: File) => void;
   onMove: (parent: string) => void;
+  onFullWidth: (fullWidth: boolean) => void;
 }
 
 const ICONS = ['📄', '📝', '📌', '💡', '✅', '📚', '🚀', '🗂️'];
@@ -32,6 +33,7 @@ export function PageHeader({
   onCover,
   onCoverUpload,
   onMove,
+  onFullWidth,
 }: PageHeaderProps) {
   // The header stays mounted across /page/:id changes. Resync the local title
   // DURING render (not in an effect) when the page id changes, so a blur-save
@@ -73,6 +75,7 @@ export function PageHeader({
         onMove={onMove}
         onDuplicate={onDuplicate}
         onExport={onExport}
+        onFullWidth={onFullWidth}
         onDelete={onDelete}
       />
     </header>

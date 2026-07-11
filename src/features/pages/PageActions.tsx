@@ -9,11 +9,12 @@ export interface PageActionsProps {
   onMove: (parent: string) => void;
   onDuplicate: () => void;
   onExport: () => void;
+  onFullWidth: (fullWidth: boolean) => void;
   onDelete: () => void;
 }
 
-/** The row of page-level actions under the title: favorite, move, duplicate,
- * export, trash. Kept separate so PageHeader stays small. */
+/** The row of page-level actions under the title: favorite, move, width,
+ * duplicate, export, trash. Kept separate so PageHeader stays small. */
 export function PageActions({
   page,
   pages,
@@ -21,6 +22,7 @@ export function PageActions({
   onMove,
   onDuplicate,
   onExport,
+  onFullWidth,
   onDelete,
 }: PageActionsProps) {
   return (
@@ -35,6 +37,14 @@ export function PageActions({
       </button>
       <MovePicker page={page} pages={pages} onMove={onMove} />
       <ShareButton page={page} />
+      <button
+        className={`pv-page-delete pv-muted${page.fullWidth ? ' pv-page-width--on' : ''}`}
+        aria-label="Toggle full width"
+        aria-pressed={page.fullWidth}
+        onClick={() => onFullWidth(!page.fullWidth)}
+      >
+        {page.fullWidth ? '↔ Full width ✓' : '↔ Full width'}
+      </button>
       <button className="pv-page-delete pv-muted" onClick={onDuplicate}>
         Duplicate
       </button>

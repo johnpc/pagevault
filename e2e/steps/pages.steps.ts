@@ -358,3 +358,11 @@ Then(
       .toBe(count);
   },
 );
+
+When('I toggle full width on', async ({ page }) => {
+  await active(page).getByLabel('Toggle full width').click();
+});
+
+Then('the page is full width', async ({ page }) => {
+  await expect(active(page).locator('.pv-page--wide')).toBeVisible();
+});

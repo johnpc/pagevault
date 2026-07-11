@@ -66,6 +66,7 @@ export interface PagesResponse extends BaseRecord {
   coverImage: string; // uploaded cover image filename; '' when using a gradient/none
   isPublic: boolean;
   shareToken: string; // random slug for the /shared/<token> link, '' when private
+  fullWidth: boolean; // widen the content area beyond the reading column
   sort: number;
   parent: string; // '' when top-level
   owner: string;

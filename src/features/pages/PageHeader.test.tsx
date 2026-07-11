@@ -36,6 +36,7 @@ const props = {
   onCover: vi.fn(),
   onCoverUpload: vi.fn(),
   onMove: vi.fn(),
+  onFullWidth: vi.fn(),
 };
 
 describe('PageHeader', () => {
@@ -75,6 +76,13 @@ describe('PageHeader', () => {
     render(<PageHeader {...props} onExport={onExport} />);
     await userEvent.click(screen.getByText('Export Markdown'));
     expect(onExport).toHaveBeenCalled();
+  });
+
+  it('toggles full width on', async () => {
+    const onFullWidth = vi.fn();
+    render(<PageHeader {...props} onFullWidth={onFullWidth} />);
+    await userEvent.click(screen.getByLabelText('Toggle full width'));
+    expect(onFullWidth).toHaveBeenCalledWith(true);
   });
 
   it('toggles favorite on', async () => {

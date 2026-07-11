@@ -3,6 +3,10 @@
   margin: 0 auto;
   padding: 64px 56px 120px;
 }
+/* Full-width pages use (almost) the whole content column. */
+.pv-page--wide {
+  max-width: 1100px;
+}
 
 .pv-page-header {
   display: flex;
