@@ -7,6 +7,8 @@ import { Trash } from '../pages/Trash';
 import { Settings } from './Settings';
 import { QuickFind } from '../search/QuickFind';
 import { useQuickFind } from '../search/useQuickFind';
+import { ShortcutHelp } from './ShortcutHelp';
+import { useShortcutHelp } from './useShortcutHelp';
 import './Workspace.css';
 
 /**
@@ -16,9 +18,10 @@ import './Workspace.css';
  */
 export function Workspace() {
   const { open, setOpen } = useQuickFind();
+  const help = useShortcutHelp();
   return (
     <div className="pv-workspace">
-      <Sidebar onSearch={() => setOpen(true)} />
+      <Sidebar onSearch={() => setOpen(true)} onHelp={() => help.setOpen(true)} />
       <div className="pv-workspace-content">
         <IonRouterOutlet>
           <Route exact path="/" component={HomeScreen} />
@@ -29,6 +32,7 @@ export function Workspace() {
         </IonRouterOutlet>
       </div>
       {open && <QuickFind onClose={() => setOpen(false)} />}
+      {help.open && <ShortcutHelp onClose={() => help.setOpen(false)} />}
     </div>
   );
 }

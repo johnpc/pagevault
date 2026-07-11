@@ -43,7 +43,7 @@ describe('workspace integration', () => {
 
   it('sidebar shows the empty state, then creates a page', async () => {
     seed([]);
-    renderAt(<Sidebar onSearch={() => {}} />);
+    renderAt(<Sidebar onSearch={() => {}} onHelp={() => {}} />);
     await waitFor(() => expect(screen.getByText('No pages yet')).toBeInTheDocument());
     await userEvent.click(screen.getByText('+ New page'));
     await waitFor(() => expect(cols.pages.create).toHaveBeenCalled());
@@ -53,7 +53,7 @@ describe('workspace integration', () => {
     seed([
       { id: 'p1', title: 'Roadmap', icon: '🚀', parent: '', sort: 0, archived: false, owner: 'u1' },
     ]);
-    renderAt(<Sidebar onSearch={() => {}} />);
+    renderAt(<Sidebar onSearch={() => {}} onHelp={() => {}} />);
     await waitFor(() => expect(screen.getByText('Roadmap')).toBeInTheDocument());
   });
 

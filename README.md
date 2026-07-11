@@ -36,6 +36,7 @@ account, no third-party service, no lock-in.
 | Slash command menu (`/` to pick a block type)                          | ✅     |
 | Page icons + cover gradient banners                                    | ✅     |
 | Light / dark / system theme (Settings switcher)                        | ✅     |
+| Keyboard shortcut help overlay (?)                                     | ✅     |
 | Installable PWA                                                        | ✅     |
 | Self-hosted via `docker compose`                                       | ✅     |
 | Inline markdown — **bold**, _italic_, `code`                           | ✅     |

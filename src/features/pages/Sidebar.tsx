@@ -9,7 +9,7 @@ import { useAuth } from '../auth/useAuth';
 import './Sidebar.css';
 
 /** The left rail: workspace title, search, the page tree, "New page", sign-out. */
-export function Sidebar({ onSearch }: { onSearch: () => void }) {
+export function Sidebar({ onSearch, onHelp }: { onSearch: () => void; onHelp: () => void }) {
   const history = useHistory();
   const { id } = useParams<{ id?: string }>();
   const { signOut, user } = useAuth();
@@ -87,6 +87,9 @@ export function Sidebar({ onSearch }: { onSearch: () => void }) {
       </button>
       <button className="pv-signout pv-muted" onClick={() => history.push('/settings')}>
         ⚙ Settings
+      </button>
+      <button className="pv-signout pv-muted" onClick={onHelp}>
+        ⌨ Shortcuts
       </button>
       <button className="pv-signout pv-muted" onClick={signOut}>
         Sign out

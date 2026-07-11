@@ -1,0 +1,26 @@
+/** A documented keyboard shortcut / editor gesture — DATA for the help overlay. */
+export interface Shortcut {
+  keys: string;
+  action: string;
+}
+
+export const SHORTCUTS: Shortcut[] = [
+  { keys: '⌘K / Ctrl+K', action: 'Open quick find (search pages & content)' },
+  { keys: '?', action: 'Show this shortcut help' },
+  { keys: 'Esc', action: 'Close a dialog or menu' },
+  { keys: '/', action: 'Open the block-type menu in an empty block' },
+  { keys: '# ', action: 'Turn a block into a heading (## for subheading)' },
+  { keys: '- ', action: 'Bulleted list ( 1. for numbered, [] for to-do )' },
+  { keys: '> ', action: 'Quote block ( ``` for code, --- for divider )' },
+  { keys: '**text**', action: 'Bold (  *text* italic,  `text` inline code )' },
+  { keys: 'Enter', action: 'Add a new block below' },
+  { keys: 'Backspace', action: 'Delete an empty block' },
+];
+
+/** True when a keypress originated in an editable field (so global single-key
+ * shortcuts like "?" shouldn't hijack it). Pure — takes the event target. */
+export function isTypingTarget(target: EventTarget | null): boolean {
+  if (!(target instanceof HTMLElement)) return false;
+  const tag = target.tagName;
+  return tag === 'INPUT' || tag === 'TEXTAREA' || target.isContentEditable === true;
+}

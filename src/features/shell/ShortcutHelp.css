@@ -1,0 +1,57 @@
+.pv-help-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(20, 28, 46, 0.35);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 10vh;
+}
+
+.pv-help {
+  width: min(520px, 92vw);
+  max-height: 70vh;
+  overflow-y: auto;
+  background: var(--pv-surface);
+  border: 1px solid var(--pv-border);
+  border-radius: var(--pv-radius);
+  box-shadow: var(--pv-shadow);
+  padding: 24px;
+}
+
+.pv-help h2 {
+  margin: 0 0 16px;
+}
+
+.pv-help-list {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pv-help-row {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+}
+.pv-help-row dt {
+  flex-shrink: 0;
+  width: 130px;
+}
+.pv-help-row dd {
+  margin: 0;
+  font-size: 14px;
+}
+
+.pv-help-close {
+  margin-top: 20px;
+  background: var(--pv-accent);
+  color: var(--pv-accent-contrast);
+  border: none;
+  border-radius: var(--pv-radius-sm);
+  padding: 8px 18px;
+  font: inherit;
+  cursor: pointer;
+}
