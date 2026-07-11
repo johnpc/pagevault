@@ -89,3 +89,9 @@ export interface UsersResponse extends BaseRecord {
   name: string;
   verified: boolean;
 }
+
+export interface CommentsResponse extends BaseRecord {
+  page: string;
+  body: string;
+  owner: string;
+}

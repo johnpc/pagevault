@@ -10,7 +10,7 @@
  * docker-compose'd instance on localhost:8090 for local dev.
  */
 import PocketBase from 'pocketbase';
-import type { PagesResponse, BlocksResponse, UsersResponse } from './pbTypes';
+import type { PagesResponse, BlocksResponse, UsersResponse, CommentsResponse } from './pbTypes';
 
 export const PB_URL = import.meta.env.VITE_PB_URL ?? 'http://localhost:8090';
 
@@ -25,3 +25,4 @@ export const currentUserId = (): string => pb.authStore.record?.id ?? '';
 export type PageRecord = PagesResponse;
 export type BlockRecord = BlocksResponse;
 export type UserRecord = UsersResponse;
+export type CommentRecord = CommentsResponse;

@@ -6,6 +6,7 @@ import { PageHeader } from './PageHeader';
 import { Breadcrumbs } from './Breadcrumbs';
 import { BlockList } from './BlockList';
 import { Backlinks } from './Backlinks';
+import { Comments } from '../comments/Comments';
 import { useBlockDnd } from '../blocks/useBlockDnd';
 import './PageEditor.css';
 
@@ -71,6 +72,7 @@ export function PageEditor() {
                   onFocused={clearFocusId}
                 />
                 <Backlinks pageId={id} />
+                <Comments pageId={id} />
               </>
             )}
           </LoadState>
