@@ -229,10 +229,32 @@
   background: var(--pv-hover);
   border-radius: var(--pv-radius-sm);
   padding: 6px 10px;
+  position: relative;
 }
 .pv-block--code .pv-block-input {
   font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   font-size: 13.5px;
+}
+/* Copy button on a code block: appears on hover in the top-right corner. */
+.pv-code-copy {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  background: var(--pv-surface);
+  border: 1px solid var(--pv-border);
+  border-radius: 4px;
+  color: var(--pv-text-muted);
+  cursor: pointer;
+  font-size: 11px;
+  padding: 2px 8px;
+  opacity: 0;
+}
+.pv-block--code:hover .pv-code-copy,
+.pv-code-copy:focus-visible {
+  opacity: 1;
+}
+.pv-code-copy:hover {
+  color: var(--pv-text);
 }
 
 .pv-block--divider {

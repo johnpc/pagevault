@@ -582,4 +582,35 @@ describe('BlockRow', () => {
     await userEvent.click(screen.getByLabelText('Expand toggle'));
     expect(onEdit).toHaveBeenCalledWith('b1', { collapsed: false });
   });
+
+  it('shows a copy button on a non-empty code block, not on an empty one', () => {
+    const { rerender } = render(
+      <BlockRow
+        block={mk({ type: 'code', content: 'npm run build' })}
+        onEdit={vi.fn()}
+        onRemove={vi.fn()}
+        onEnter={vi.fn()}
+        onDuplicate={vi.fn()}
+        onIndent={vi.fn()}
+        onPasteMarkdown={vi.fn()}
+        onUpload={vi.fn()}
+        dnd={noopDnd}
+      />,
+    );
+    expect(screen.getByRole('button', { name: 'Copy code' })).toBeInTheDocument();
+    rerender(
+      <BlockRow
+        block={mk({ type: 'code', content: '' })}
+        onEdit={vi.fn()}
+        onRemove={vi.fn()}
+        onEnter={vi.fn()}
+        onDuplicate={vi.fn()}
+        onIndent={vi.fn()}
+        onPasteMarkdown={vi.fn()}
+        onUpload={vi.fn()}
+        dnd={noopDnd}
+      />,
+    );
+    expect(screen.queryByRole('button', { name: 'Copy code' })).not.toBeInTheDocument();
+  });
 });
