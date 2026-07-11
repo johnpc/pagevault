@@ -40,6 +40,45 @@
   margin: 8px;
 }
 
+/* Row drag handle column: narrow, faint grip that darkens on row hover. */
+.pv-table-drag {
+  width: 22px;
+  border: none;
+  text-align: center;
+}
+.pv-table-drag button {
+  background: none;
+  border: none;
+  color: var(--pv-text-muted);
+  cursor: grab;
+  font-size: 11px;
+  opacity: 0;
+  padding: 4px 2px;
+}
+.pv-table tr:hover .pv-table-drag button {
+  opacity: 1;
+}
+.pv-table-drag button:active {
+  cursor: grabbing;
+}
+.pv-table-row--dragging {
+  opacity: 0.4;
+}
+
+/* Sort toggle in a header cell. */
+.pv-table-sort {
+  background: none;
+  border: none;
+  color: var(--pv-text-muted);
+  cursor: pointer;
+  font-size: 10px;
+  align-self: flex-start;
+  padding: 2px 6px 0;
+}
+.pv-table-sort:hover {
+  color: var(--pv-text);
+}
+
 /* Header cell: name input on top, a small type picker beneath. */
 .pv-table-head {
   display: flex;

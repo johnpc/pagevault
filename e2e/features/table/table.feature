@@ -27,3 +27,13 @@ Feature: Table (database) blocks
     Then the table checkbox in row 1 column 2 is checked
     When I reopen the page "Checklist"
     Then the table checkbox in row 1 column 2 is checked
+
+  Scenario: Sort rows by clicking a column header
+    Given I have a page titled "Sortable"
+    When I type "/table" into a new block
+    And I choose "Table" from the slash menu
+    And I fill table cell "1,1" with "Charlie"
+    And I add a table row
+    And I fill table cell "2,1" with "Alpha"
+    And I sort by table column 1
+    Then table column 1 reads "Alpha" then "Charlie"

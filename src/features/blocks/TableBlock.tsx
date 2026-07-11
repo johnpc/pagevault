@@ -1,13 +1,15 @@
+import { useState } from 'react';
 import type { BlockRecord } from '../../lib/pbClient';
 import type { TableData } from '../../lib/pbTypes';
-import { normalize, setCell, addRow, removeRow } from './tableData';
+import { normalize, addRow } from './tableData';
+import { sortByColumn } from './tableSort';
 import { TableHead } from './TableHead';
-import { TableCell } from './TableCell';
+import { TableBody } from './TableBody';
 import './TableBlock.css';
 
 /** An editable typed table/database grid. The whole grid lives in the block's
- * `data` JSON field; every edit patches it via onEdit. Render-only — all grid
- * logic is in the pure tableData helpers, cells render by column type. */
+ * `data` JSON field; every edit patches it via onEdit. Render-only — grid logic
+ * is in the pure tableData helpers; rows drag to reorder, headers click to sort. */
 export function TableBlock({
   block,
   onEdit,
@@ -17,37 +19,21 @@ export function TableBlock({
 }) {
   const data = normalize(block.data);
   const save = (next: TableData) => onEdit(block.id, { data: next });
+  // Which column is sorted, and which way — transient (not persisted); a click
+  // cycles asc → desc and rewrites the stored row order.
+  const [sort, setSort] = useState<{ col: number; dir: 'asc' | 'desc' } | null>(null);
+
+  const onSort = (col: number) => {
+    const dir = sort?.col === col && sort.dir === 'asc' ? 'desc' : 'asc';
+    setSort({ col, dir });
+    save(sortByColumn(data, col, dir));
+  };
 
   return (
     <div className="pv-table-wrap">
       <table className="pv-table">
-        <TableHead data={data} save={save} />
-        <tbody>
-          {data.rows.map((row, r) => (
-            <tr key={r}>
-              {row.map((cell, c) => (
-                <td key={c}>
-                  <TableCell
-                    column={data.columns[c]}
-                    value={cell}
-                    label={`Cell ${r + 1},${c + 1}`}
-                    onChange={(v) => save(setCell(data, r, c, v))}
-                  />
-                </td>
-              ))}
-              <td className="pv-table-rowdel">
-                {data.rows.length > 1 && (
-                  <button
-                    aria-label={`Delete row ${r + 1}`}
-                    onClick={() => save(removeRow(data, r))}
-                  >
-                    ×
-                  </button>
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
+        <TableHead data={data} save={save} onSort={onSort} sort={sort} />
+        <TableBody data={data} save={save} />
       </table>
       <button className="pv-table-addrow pv-muted" onClick={() => save(addRow(data))}>
         + Add row
