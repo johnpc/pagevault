@@ -45,6 +45,7 @@ export interface BlocksResponse extends BaseRecord {
   type: BlockType;
   content: string;
   checked: boolean;
+  depth: number; // indentation level (0 = top); for nested lists
   sort: number;
   owner: string;
 }

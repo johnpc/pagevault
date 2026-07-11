@@ -51,6 +51,7 @@ describe('usePageEditor', () => {
     await waitFor(() => expect(result.current.blocks.data).toHaveLength(2));
 
     act(() => result.current.moveBlockTo('b2', 'b1'));
+    act(() => result.current.indentBlock('b2', 'in'));
     act(() => result.current.setTitle('New title'));
     act(() => result.current.setIcon('🚀'));
     act(() => result.current.setFavorite(true));
@@ -79,6 +80,8 @@ describe('usePageEditor', () => {
       expect.objectContaining({ type: 'heading', sort: 2 }),
     );
     expect(blocks.update).toHaveBeenCalledWith('b1', { content: 'x' });
+    // indentBlock('b2','in'): b2 sits below b1 (depth 0) → new depth 1.
+    expect(blocks.update).toHaveBeenCalledWith('b2', { depth: 1 });
     expect(blocks.delete).toHaveBeenCalledWith('b1');
     // removePage now archives (soft delete), not a hard delete.
     expect(pages.update).toHaveBeenCalledWith('p1', { archived: true });

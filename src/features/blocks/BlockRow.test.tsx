@@ -39,13 +39,15 @@ describe('BlockRow', () => {
         onRemove={vi.fn()}
         onEnter={vi.fn()}
         onDuplicate={vi.fn()}
+        onIndent={vi.fn()}
         dnd={noopDnd}
       />,
     );
     const input = screen.getByLabelText('Block content');
     await userEvent.clear(input);
     await userEvent.type(input, 'world');
-    await userEvent.tab();
+    // Blur directly — Tab is now captured for indent, so it no longer blurs.
+    input.blur();
     expect(onEdit).toHaveBeenCalledWith('b1', { content: 'world' });
   });
 
@@ -59,6 +61,7 @@ describe('BlockRow', () => {
         onRemove={vi.fn()}
         onEnter={onEnter}
         onDuplicate={vi.fn()}
+        onIndent={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -77,6 +80,7 @@ describe('BlockRow', () => {
         onRemove={onRemove}
         onEnter={vi.fn()}
         onDuplicate={vi.fn()}
+        onIndent={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -94,6 +98,7 @@ describe('BlockRow', () => {
         onRemove={vi.fn()}
         onEnter={vi.fn()}
         onDuplicate={vi.fn()}
+        onIndent={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -110,6 +115,7 @@ describe('BlockRow', () => {
         onRemove={vi.fn()}
         onEnter={vi.fn()}
         onDuplicate={vi.fn()}
+        onIndent={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -126,6 +132,7 @@ describe('BlockRow', () => {
         onRemove={vi.fn()}
         onEnter={vi.fn()}
         onDuplicate={vi.fn()}
+        onIndent={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -143,6 +150,7 @@ describe('BlockRow', () => {
         onRemove={vi.fn()}
         onEnter={vi.fn()}
         onDuplicate={vi.fn()}
+        onIndent={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -154,6 +162,43 @@ describe('BlockRow', () => {
     );
   });
 
+  it('indents on Tab and outdents on Shift-Tab', async () => {
+    const onIndent = vi.fn();
+    render(
+      <BlockRow
+        block={mk({ content: 'item' })}
+        onEdit={vi.fn()}
+        onRemove={vi.fn()}
+        onEnter={vi.fn()}
+        onDuplicate={vi.fn()}
+        onIndent={onIndent}
+        dnd={noopDnd}
+      />,
+    );
+    const input = screen.getByLabelText('Block content');
+    input.focus();
+    await userEvent.keyboard('{Tab}');
+    expect(onIndent).toHaveBeenLastCalledWith('b1', 'in');
+    input.focus();
+    await userEvent.keyboard('{Shift>}{Tab}{/Shift}');
+    expect(onIndent).toHaveBeenLastCalledWith('b1', 'out');
+  });
+
+  it('renders the block indented by its depth', () => {
+    const { container } = render(
+      <BlockRow
+        block={mk({ depth: 2 })}
+        onEdit={vi.fn()}
+        onRemove={vi.fn()}
+        onEnter={vi.fn()}
+        onDuplicate={vi.fn()}
+        onIndent={vi.fn()}
+        dnd={noopDnd}
+      />,
+    );
+    expect((container.querySelector('.pv-block') as HTMLElement).style.marginLeft).toBe('48px');
+  });
+
   it('starts a drag from the handle and drops onto another block', () => {
     const dnd: BlockDndHandlers = { ...noopDnd, onDragStart: vi.fn(), onDrop: vi.fn() };
     render(
@@ -163,6 +208,7 @@ describe('BlockRow', () => {
         onRemove={vi.fn()}
         onEnter={vi.fn()}
         onDuplicate={vi.fn()}
+        onIndent={vi.fn()}
         dnd={dnd}
       />,
     );
@@ -182,6 +228,7 @@ describe('BlockRow', () => {
         onRemove={vi.fn()}
         onEnter={vi.fn()}
         onDuplicate={vi.fn()}
+        onIndent={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -199,6 +246,7 @@ describe('BlockRow', () => {
         onRemove={vi.fn()}
         onEnter={vi.fn()}
         onDuplicate={vi.fn()}
+        onIndent={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -217,6 +265,7 @@ describe('BlockRow', () => {
         onRemove={vi.fn()}
         onEnter={vi.fn()}
         onDuplicate={vi.fn()}
+        onIndent={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -235,6 +284,7 @@ describe('BlockRow', () => {
         onRemove={vi.fn()}
         onEnter={vi.fn()}
         onDuplicate={vi.fn()}
+        onIndent={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -256,6 +306,7 @@ describe('BlockRow', () => {
         onRemove={vi.fn()}
         onEnter={vi.fn()}
         onDuplicate={onDuplicate}
+        onIndent={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -271,6 +322,7 @@ describe('BlockRow', () => {
         onRemove={vi.fn()}
         onEnter={vi.fn()}
         onDuplicate={vi.fn()}
+        onIndent={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -287,6 +339,7 @@ describe('BlockRow', () => {
         onRemove={onRemove}
         onEnter={vi.fn()}
         onDuplicate={vi.fn()}
+        onIndent={vi.fn()}
         dnd={noopDnd}
       />,
     );

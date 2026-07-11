@@ -7,6 +7,7 @@ import {
   useDuplicateBlock,
 } from './blocksApi';
 import { moveBlock, sortUpdates } from './reorder';
+import { indentDepth } from './indent';
 import type { BlockRecord } from '../../lib/pbClient';
 import type { BlockType } from '../../lib/pbTypes';
 
@@ -45,5 +46,22 @@ export function useBlockActions(pageId: string, blocks: BlockRecord[]) {
     [duplicateBlock, blocks],
   );
 
-  return { addBlock, editBlock, moveBlockTo, cloneBlock, removeBlock: deleteBlock.mutate };
+  const indentBlock = useCallback(
+    (id: string, dir: 'in' | 'out') => {
+      const index = blocks.findIndex((b) => b.id === id);
+      if (index === -1) return;
+      const depth = indentDepth(blocks, index, dir);
+      if (depth !== (blocks[index].depth ?? 0)) updateBlock.mutate({ id, patch: { depth } });
+    },
+    [blocks, updateBlock],
+  );
+
+  return {
+    addBlock,
+    editBlock,
+    moveBlockTo,
+    cloneBlock,
+    indentBlock,
+    removeBlock: deleteBlock.mutate,
+  };
 }

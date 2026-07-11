@@ -25,6 +25,7 @@ export function PageEditor() {
     editBlock,
     removeBlock,
     cloneBlock,
+    indentBlock,
     removePage,
     moveBlockTo,
     addSubPage,
@@ -73,6 +74,7 @@ export function PageEditor() {
                   onEdit={editBlock}
                   onRemove={removeBlock}
                   onDuplicate={cloneBlock}
+                  onIndent={indentBlock}
                   onAddBlock={addBlock}
                   onSubPage={onSubPage}
                 />

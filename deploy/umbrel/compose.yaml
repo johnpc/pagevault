@@ -19,6 +19,11 @@ services:
     container_name: pagevault
     restart: unless-stopped
     network_mode: bridge
+    # Secrets (superuser + seed creds) come from a host-side .env in the stack
+    # dir (0600, gitignored) — nothing sensitive is committed or baked into the
+    # image. Create it from deploy/umbrel/.env.example on first deploy.
+    env_file:
+      - .env
     ports:
       # Host 9873 -> PocketBase 8090 (9872 is taken by homie).
       - 9873:8090
