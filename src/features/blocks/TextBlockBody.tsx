@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import type { BlockRecord } from '../../lib/pbClient';
 import { placeholderFor } from './blockText';
 import { hasInlineMarkup } from './inlineMarkdown';
@@ -15,12 +15,16 @@ export function TextBlockBody({
   onRemove,
   onEnter,
   onIndent,
+  autoFocus,
+  onFocused,
 }: {
   block: BlockRecord;
   onEdit: (id: string, patch: Partial<BlockRecord>) => void;
   onRemove: (id: string) => void;
   onEnter: () => void;
   onIndent: (dir: 'in' | 'out') => void;
+  autoFocus?: boolean;
+  onFocused?: () => void;
 }) {
   const { value, change, keyDown, save, focus, focused, matches, active, pick } = useBlockInput(
     block,
@@ -31,6 +35,14 @@ export function TextBlockBody({
   );
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const showPreview = !focused && hasInlineMarkup(value);
+
+  // When this block was just created by Enter, grab focus so typing flows on.
+  useEffect(() => {
+    if (autoFocus && inputRef.current) {
+      inputRef.current.focus();
+      onFocused?.();
+    }
+  }, [autoFocus, onFocused]);
 
   return (
     <>

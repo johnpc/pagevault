@@ -26,6 +26,8 @@ export function PageEditor() {
     removeBlock,
     cloneBlock,
     indentBlock,
+    focusId,
+    clearFocusId,
     removePage,
     moveBlockTo,
     addSubPage,
@@ -77,6 +79,8 @@ export function PageEditor() {
                   onIndent={indentBlock}
                   onAddBlock={addBlock}
                   onSubPage={onSubPage}
+                  focusId={focusId}
+                  onFocused={clearFocusId}
                 />
               </>
             )}
