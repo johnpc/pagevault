@@ -34,6 +34,7 @@ const props = {
   onExport: vi.fn(),
   onDuplicate: vi.fn(),
   onCover: vi.fn(),
+  onCoverUpload: vi.fn(),
   onMove: vi.fn(),
 };
 

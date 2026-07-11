@@ -2,7 +2,7 @@ import { IonContent, IonPage } from '@ionic/react';
 import { useParams } from 'react-router-dom';
 import { usePublicPage, usePublicBlocks } from './sharingApi';
 import { displayTitle } from './pageTree';
-import { coverGradient } from './covers';
+import { coverBackground } from './coverSource';
 import { FormattedText } from '../blocks/FormattedText';
 import { LoadState } from '../shell/LoadState';
 import './SharedPage.css';
@@ -13,7 +13,7 @@ export function SharedPage() {
   const { token } = useParams<{ token: string }>();
   const page = usePublicPage(token);
   const blocks = usePublicBlocks(page.data?.id);
-  const gradient = page.data ? coverGradient(page.data.cover) : null;
+  const background = page.data ? coverBackground(page.data) : null;
 
   return (
     <IonPage>
@@ -28,7 +28,7 @@ export function SharedPage() {
           >
             {page.data && (
               <article className="pv-shared-doc">
-                {gradient && <div className="pv-cover-strip" style={{ background: gradient }} />}
+                {background && <div className="pv-cover-strip" style={{ background }} />}
                 <h1 className="pv-shared-title">
                   {page.data.icon && <span>{page.data.icon} </span>}
                   {displayTitle(page.data)}

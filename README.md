@@ -41,7 +41,7 @@ account, no third-party service, no lock-in.
 | Enter splits at the caret into a block below (Notion-smooth typing)    | ✅     |
 | Enter continues a list; an empty item exits / outdents the list        | ✅     |
 | Slash command menu (`/` to pick a block type)                          | ✅     |
-| Page icons + cover gradient banners                                    | ✅     |
+| Page icons + cover banners (gradient or uploaded image)                | ✅     |
 | Light / dark / system theme (Settings switcher)                        | ✅     |
 | Keyboard shortcut help overlay (?)                                     | ✅     |
 | Installable PWA                                                        | ✅     |

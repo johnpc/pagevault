@@ -54,6 +54,7 @@ export interface PagesResponse extends BaseRecord {
   archived: boolean;
   favorite: boolean;
   cover: string; // gradient id, or '' for none
+  coverImage: string; // uploaded cover image filename; '' when using a gradient/none
   isPublic: boolean;
   shareToken: string; // random slug for the /shared/<token> link, '' when private
   sort: number;
