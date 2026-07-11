@@ -26,6 +26,12 @@ When('I type {string} then Enter', async ({ page }, text: string) => {
   const before = await blockInputs(page).count();
   const input = focused(page);
   await input.pressSequentially(text);
+  // A markdown shortcut ("# ", "- ", "1. ", "> ", "``` ") converts the block via
+  // an async mutation that STRIPS the prefix. Pressing Enter before that lands
+  // would split a still-plain block. Wait for the visible value to settle to the
+  // post-conversion text (prefix consumed) so the split sees the right type.
+  const expected = stripShortcutPrefix(text);
+  if (expected !== text) await expect(input).toHaveValue(expected);
   await input.press('Enter');
   await expect.poll(() => blockInputs(page).count()).toBeGreaterThan(before);
   // The split lands the caret in a fresh EMPTY block below — wait for focus to
@@ -33,6 +39,13 @@ When('I type {string} then Enter', async ({ page }, text: string) => {
   // into the old block and concatenate.
   await expect(focused(page)).toHaveValue('');
 });
+
+/** The visible text after a markdown-shortcut prefix is consumed, matching the
+ * app's markdownShortcut() rules. Non-shortcut text is returned unchanged. */
+function stripShortcutPrefix(text: string): string {
+  const m = /^(# |## |### |[-*] |1\. |\[\] |\[ \] |> |``` )/.exec(text);
+  return m ? text.slice(m[0].length) : text;
+}
 
 // Types WITHOUT Enter — for a two-part sequence (e.g. "``` " then the code body).
 When('I type {string}', async ({ page }, text: string) => {
