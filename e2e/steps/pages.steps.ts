@@ -90,8 +90,13 @@ When('I choose {string} from the slash menu', async ({ page }, label: string) =>
   // also exposes role=option children that would otherwise collide.
   const menu = active(page).getByRole('listbox', { name: 'Block types' });
   await expect(menu).toBeVisible();
-  // Exact match: "Table" must not also select "Table of contents".
-  await menu.getByRole('option', { name: label, exact: true }).click();
+  // Match the option whose LABEL span is exactly `label` — the option's own
+  // accessible name includes the icon glyph, and a substring match would let
+  // "Table" also select "Table of contents".
+  await menu
+    .getByRole('option')
+    .filter({ has: page.getByText(label, { exact: true }) })
+    .click();
 });
 
 When('I search for {string}', async ({ page }, query: string) => {
