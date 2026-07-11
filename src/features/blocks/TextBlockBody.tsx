@@ -14,17 +14,20 @@ export function TextBlockBody({
   onEdit,
   onRemove,
   onEnter,
+  onIndent,
 }: {
   block: BlockRecord;
   onEdit: (id: string, patch: Partial<BlockRecord>) => void;
   onRemove: (id: string) => void;
   onEnter: () => void;
+  onIndent: (dir: 'in' | 'out') => void;
 }) {
   const { value, change, keyDown, save, focus, focused, matches, active, pick } = useBlockInput(
     block,
     onEdit,
     onRemove,
     onEnter,
+    onIndent,
   );
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const showPreview = !focused && hasInlineMarkup(value);

@@ -11,6 +11,7 @@ interface BlockListProps {
   onEdit: (id: string, patch: Partial<BlockRecord>) => void;
   onRemove: (id: string) => void;
   onDuplicate: (block: BlockRecord) => void;
+  onIndent: (id: string, dir: 'in' | 'out') => void;
   onAddBlock: (type?: BlockType) => void;
   onSubPage: () => void;
 }
@@ -23,6 +24,7 @@ export function BlockList({
   onEdit,
   onRemove,
   onDuplicate,
+  onIndent,
   onAddBlock,
   onSubPage,
 }: BlockListProps) {
@@ -41,6 +43,7 @@ export function BlockList({
             onEdit={onEdit}
             onRemove={onRemove}
             onDuplicate={onDuplicate}
+            onIndent={onIndent}
             onEnter={() => onAddBlock('text')}
             dnd={dnd}
           />
