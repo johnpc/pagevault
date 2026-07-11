@@ -32,6 +32,7 @@ account, no third-party service, no lock-in.
 | Page footer: word/block count + last edited                            | ✅     |
 | Duplicate a page (with all its blocks)                                 | ✅     |
 | Export a page as Markdown                                              | ✅     |
+| Export the whole workspace as one Markdown file (Settings)             | ✅     |
 | Blocks — text, headings, lists, to-dos, quotes, code, images, callouts | ✅     |
 | Code blocks — one-click copy button                                    | ✅     |
 | Toggle blocks — collapse/expand to fold away nested content            | ✅     |

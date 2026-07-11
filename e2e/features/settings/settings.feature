@@ -10,3 +10,9 @@ Feature: Settings
     When I open settings
     And I choose the "Dark" theme
     Then the app uses the "dark" theme
+
+  Scenario: Export the whole workspace as Markdown
+    Given I have a page titled "Exportable"
+    When I open settings
+    And I export the workspace
+    Then a Markdown file named "pagevault-workspace.md" is downloaded
