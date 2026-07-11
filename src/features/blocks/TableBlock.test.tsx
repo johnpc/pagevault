@@ -18,6 +18,39 @@ describe('TableBlock', () => {
     expect(screen.getByLabelText('Cell 1,2')).toHaveValue('2');
   });
 
+  it('renders the board view when data.view is board', () => {
+    const boardData = {
+      columns: [
+        { name: 'Task', type: 'text' },
+        { name: 'Status', type: 'select', options: ['Todo'] },
+      ],
+      rows: [['A', 'Todo']],
+      view: 'board',
+    };
+    render(<TableBlock block={mk(boardData as never)} onEdit={vi.fn()} />);
+    expect(screen.getByText('Todo')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('A')).toBeInTheDocument();
+    // No table header inputs in the board view.
+    expect(screen.queryByLabelText('Column 1 name')).not.toBeInTheDocument();
+  });
+
+  it('switches to the board view via the toggle', async () => {
+    const onEdit = vi.fn();
+    const withSelect = {
+      columns: [
+        { name: 'T', type: 'text' },
+        { name: 'S', type: 'select', options: ['A'] },
+      ],
+      rows: [['x', 'A']],
+    };
+    render(<TableBlock block={mk(withSelect as never)} onEdit={onEdit} />);
+    await userEvent.click(screen.getByRole('tab', { name: 'Board' }));
+    expect(onEdit).toHaveBeenCalledWith(
+      'b1',
+      expect.objectContaining({ data: expect.objectContaining({ view: 'board' }) }),
+    );
+  });
+
   it('falls back to an empty 2-column table when data is null', () => {
     render(<TableBlock block={mk(null)} onEdit={vi.fn()} />);
     expect(screen.getByLabelText('Column 1 name')).toHaveValue('Name');

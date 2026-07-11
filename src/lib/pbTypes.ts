@@ -44,6 +44,8 @@ export interface TableColumn {
 export interface TableData {
   columns: TableColumn[];
   rows: string[][];
+  view?: 'table' | 'board'; // display mode; defaults to 'table'
+  groupBy?: number; // for the board view: index of the `select` column to group by
 }
 
 export interface PagesResponse extends BaseRecord {

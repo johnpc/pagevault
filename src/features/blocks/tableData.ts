@@ -27,7 +27,13 @@ export function normalize(data: TableData | null | undefined): TableData {
     while (cells.length < width) cells.push('');
     return cells;
   });
-  return { columns, rows };
+  const next: TableData = { columns, rows };
+  if (data?.view === 'board') next.view = 'board';
+  // Keep groupBy only if it points at a real column, else clamp to the default.
+  if (typeof data?.groupBy === 'number' && data.groupBy >= 0 && data.groupBy < width) {
+    next.groupBy = data.groupBy;
+  }
+  return next;
 }
 
 /** Set one cell, returning a new grid. */

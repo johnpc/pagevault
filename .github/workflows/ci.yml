@@ -82,6 +82,8 @@ jobs:
             paths: .features-gen/e2e/features/mention
           - name: color
             paths: .features-gen/e2e/features/color
+          - name: board
+            paths: .features-gen/e2e/features/board
     env:
       VITE_PB_URL: http://localhost:8090
       PB_ADMIN_EMAIL: admin@pagevault.local

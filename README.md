@@ -36,6 +36,7 @@ account, no third-party service, no lock-in.
 | Toggle blocks — collapse/expand to fold away nested content            | ✅     |
 | Table blocks — typed columns (text/number/checkbox/select), GFM export | ✅     |
 | Table rows — drag to reorder, click a header to sort (type-aware)      | ✅     |
+| Table board view — kanban grouped by a select column (drag cards)      | ✅     |
 | Markdown shortcuts (`# `, `- `, `1. `, `[] `, `> `, ` ``` `)           | ✅     |
 | Enter splits at the caret into a block below (Notion-smooth typing)    | ✅     |
 | Enter continues a list; an empty item exits / outdents the list        | ✅     |

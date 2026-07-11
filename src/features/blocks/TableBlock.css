@@ -131,3 +131,85 @@
 .pv-table-addrow {
   margin-top: 4px;
 }
+
+/* View toggle: Table | Board tabs above the grid. */
+.pv-table-views {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+.pv-table-view {
+  background: none;
+  border: none;
+  border-radius: 6px;
+  color: var(--pv-text-muted);
+  cursor: pointer;
+  font: inherit;
+  padding: 3px 10px;
+}
+.pv-table-view--on {
+  background: var(--pv-hover);
+  color: var(--pv-text);
+  font-weight: 600;
+}
+.pv-table-view:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Board (kanban): horizontally scrolling columns of cards. */
+.pv-board {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  align-items: flex-start;
+}
+.pv-board-col {
+  flex: 0 0 200px;
+  background: var(--pv-hover);
+  border-radius: var(--pv-radius-sm);
+  padding: 8px;
+  min-height: 60px;
+}
+.pv-board-col-head {
+  font-weight: 600;
+  font-size: 13px;
+  padding: 2px 4px 8px;
+}
+.pv-board-card {
+  background: var(--pv-surface);
+  border: 1px solid var(--pv-border);
+  border-radius: 6px;
+  box-shadow: var(--pv-shadow);
+  margin-bottom: 6px;
+  cursor: grab;
+}
+.pv-board-card:active {
+  cursor: grabbing;
+}
+.pv-board-card--dragging {
+  opacity: 0.4;
+}
+.pv-board-card input {
+  border: none;
+  background: none;
+  font: inherit;
+  color: var(--pv-text);
+  padding: 8px;
+  width: 100%;
+}
+.pv-board-card input:focus {
+  outline: 2px solid var(--pv-accent);
+  outline-offset: -2px;
+  border-radius: 6px;
+}
+.pv-board-add {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  padding: 4px;
+  width: 100%;
+  text-align: left;
+}
