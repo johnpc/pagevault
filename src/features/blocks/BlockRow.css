@@ -374,3 +374,58 @@
 .pv-color--pink-bg .pv-color-swatch {
   background: var(--pv-bg-pink);
 }
+
+/* Turn-into: a button that reveals a floating list of target block types. */
+.pv-turn {
+  position: relative;
+  flex-shrink: 0;
+}
+.pv-turn .pv-block-dup {
+  font-size: 14px;
+}
+.pv-turn-menu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  z-index: 20;
+  margin: 2px 0 0;
+  padding: 4px;
+  list-style: none;
+  background: var(--pv-surface);
+  border: 1px solid var(--pv-border);
+  border-radius: var(--pv-radius-sm);
+  box-shadow: var(--pv-shadow);
+  min-width: 168px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+.pv-turn-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  color: var(--pv-text);
+  cursor: pointer;
+  font: inherit;
+  padding: 5px 8px;
+  text-align: left;
+}
+.pv-turn-item:hover {
+  background: var(--pv-hover);
+}
+.pv-turn-item--on {
+  font-weight: 600;
+}
+.pv-turn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--pv-text-muted);
+}

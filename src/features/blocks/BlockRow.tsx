@@ -41,8 +41,16 @@ export function BlockRow(props: BlockRowProps) {
   const { cls, rowDrag, handle } = useBlockDrag(block, onEdit, dnd);
   const style = { marginLeft: `${(block.depth ?? 0) * 24}px` };
   const onColor = (id: string, color: string) => onEdit(id, { color });
+  // Turn-into converts the block type in place, keeping its content.
+  const onTurnInto = (id: string, type: BlockRecord['type']) => onEdit(id, { type });
   const controls = (
-    <BlockControls block={block} onDuplicate={onDuplicate} onRemove={onRemove} onColor={onColor} />
+    <BlockControls
+      block={block}
+      onDuplicate={onDuplicate}
+      onRemove={onRemove}
+      onColor={onColor}
+      onTurnInto={onTurnInto}
+    />
   );
 
   // Divider / image / table render as whole elements, not an editable text line.
