@@ -53,4 +53,16 @@ describe('PageInfo', () => {
     render(<PageInfo page={page({ updated: '' })} blocks={[]} />);
     expect(screen.queryByText(/Edited/)).not.toBeInTheDocument();
   });
+
+  it('shows to-do progress when the page has todos', () => {
+    const todo = (checked: boolean): BlockRecord =>
+      ({ ...blk('t'), type: 'todo', checked }) as BlockRecord;
+    render(<PageInfo page={page()} blocks={[todo(true), todo(false)]} />);
+    expect(screen.getByText('1/2 to-dos done')).toBeInTheDocument();
+  });
+
+  it('omits to-do progress when there are none', () => {
+    render(<PageInfo page={page()} blocks={[blk('text only')]} />);
+    expect(screen.queryByText(/to-dos done/)).not.toBeInTheDocument();
+  });
 });

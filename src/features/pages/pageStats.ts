@@ -13,6 +13,15 @@ export function countWords(text: string): number {
 }
 
 /**
+ * To-do completion for a page: how many todo blocks are checked, out of the
+ * total. `total` is 0 when the page has no todos. Pure.
+ */
+export function todoProgress(blocks: BlockRecord[]): { done: number; total: number } {
+  const todos = blocks.filter((b) => b.type === 'todo');
+  return { done: todos.filter((b) => b.checked).length, total: todos.length };
+}
+
+/**
  * A short "edited N ago" label from an ISO timestamp, relative to `now` (ms).
  * `now` is injected so it's deterministic under test. Falls back to '' for a
  * missing/invalid timestamp.

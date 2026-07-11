@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { pageStats, countWords, relativeTime } from './pageStats';
+import { pageStats, countWords, relativeTime, todoProgress } from './pageStats';
 import type { BlockRecord } from '../../lib/pbClient';
 
 const blk = (content: string): BlockRecord =>
@@ -48,5 +48,20 @@ describe('relativeTime', () => {
   });
   it('returns empty for an invalid timestamp', () => {
     expect(relativeTime('not-a-date', base)).toBe('');
+  });
+});
+
+describe('todoProgress', () => {
+  const todo = (checked: boolean): BlockRecord =>
+    ({ ...blk(''), type: 'todo', checked }) as BlockRecord;
+
+  it('counts checked todos out of the total, ignoring non-todos', () => {
+    expect(todoProgress([todo(true), todo(false), todo(true), blk('text')])).toEqual({
+      done: 2,
+      total: 3,
+    });
+  });
+  it('reports zero total when there are no todos', () => {
+    expect(todoProgress([blk('a'), blk('b')])).toEqual({ done: 0, total: 0 });
   });
 });

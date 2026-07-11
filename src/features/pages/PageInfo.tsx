@@ -1,10 +1,12 @@
 import type { PageRecord, BlockRecord } from '../../lib/pbClient';
-import { pageStats, relativeTime } from './pageStats';
+import { pageStats, relativeTime, todoProgress } from './pageStats';
 import './PageInfo.css';
 
-/** A quiet footer under the block list: word/block counts + last edited. */
+/** A quiet footer under the block list: word/block counts, to-do progress,
+ * and last edited. */
 export function PageInfo({ page, blocks }: { page: PageRecord; blocks: BlockRecord[] }) {
   const { words, blocks: count } = pageStats(blocks);
+  const todos = todoProgress(blocks);
   const edited = relativeTime(page.updated, Date.now());
   return (
     <footer className="pv-page-info pv-muted">
@@ -15,6 +17,14 @@ export function PageInfo({ page, blocks }: { page: PageRecord; blocks: BlockReco
       <span>
         {count} block{count === 1 ? '' : 's'}
       </span>
+      {todos.total > 0 && (
+        <>
+          <span>·</span>
+          <span>
+            {todos.done}/{todos.total} to-dos done
+          </span>
+        </>
+      )}
       {edited && (
         <>
           <span>·</span>
