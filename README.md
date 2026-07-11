@@ -39,6 +39,7 @@ account, no third-party service, no lock-in.
 | Light / dark / system theme (Settings switcher)                        | ✅     |
 | Keyboard shortcut help overlay (?)                                     | ✅     |
 | Installable PWA                                                        | ✅     |
+| Public link sharing (read-only /shared/<token>, no login)              | ✅     |
 | Self-hosted via `docker compose`                                       | ✅     |
 | Inline markdown — **bold**, _italic_, `code`                           | ✅     |
 | Duplicate a block (inserts below)                                      | ✅     |
