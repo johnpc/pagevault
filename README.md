@@ -46,7 +46,7 @@ account, no third-party service, no lock-in.
 | Drag-to-reorder pages                                                  | ⬜     |
 | Image blocks (embed by URL)                                            | ✅     |
 | File & image uploads                                                   | ⬜     |
-| Quick-find search (⌘K, titles + block content)                         | ✅     |
+| Quick-find search (⌘K, keyboard-navigable, titles + content)           | ✅     |
 | Native iOS / Android builds (Capacitor)                                | ⬜     |
 
 ## Quick start (self-host in two commands)

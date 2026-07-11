@@ -90,6 +90,12 @@ Feature: Pages and blocks
     And I open the search result "Quarterly budget"
     Then I should see the open page titled "Quarterly budget"
 
+  Scenario: Open a search result with the keyboard
+    Given I have a page titled "Keyboard nav target"
+    When I search for "Keyboard nav target"
+    And I press Enter to open the top result
+    Then I should see the open page titled "Keyboard nav target"
+
   Scenario: Create a sub-page nested under its parent
     Given I have a page titled "Projects"
     When I open the page "Projects"

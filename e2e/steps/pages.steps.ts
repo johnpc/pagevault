@@ -87,6 +87,14 @@ When('I open the search result {string}', async ({ page }, title: string) => {
   await dialog.getByText(title, { exact: true }).first().click();
 });
 
+When('I press Enter to open the top result', async ({ page }) => {
+  // Wait for at least one result inside the quick-find dialog, then Enter opens
+  // the active (first) one.
+  const dialog = page.getByRole('dialog', { name: 'Quick find' });
+  await expect(dialog.getByRole('option').first()).toBeVisible();
+  await page.getByLabel('Search pages').press('Enter');
+});
+
 Then('I should see the open page titled {string}', async ({ page }, title: string) => {
   // Ionic can keep an outgoing page mounted mid-transition, so assert that SOME
   // visible page-title input holds the expected value (not a specific one).

@@ -62,6 +62,20 @@ describe('QuickFind', () => {
     expect(getPath()).toBe('/page/p2');
   });
 
+  it('navigates results with arrow keys and opens with Enter', async () => {
+    results.mockReturnValue([
+      { pageId: 'p1', title: 'Roadmap', icon: '🚀', snippet: '', kind: 'title' },
+      { pageId: 'p2', title: 'Meeting', icon: '📄', snippet: '', kind: 'block' },
+    ]);
+    const { getPath } = renderQF();
+    const input = screen.getByLabelText('Search pages');
+    await userEvent.type(input, 'road');
+    await waitFor(() => expect(screen.getByText('Roadmap')).toBeInTheDocument());
+    // First result is active by default; ArrowDown → second, Enter opens it.
+    await userEvent.keyboard('{ArrowDown}{Enter}');
+    expect(getPath()).toBe('/page/p2');
+  });
+
   it('closes when the backdrop is clicked', async () => {
     const { onClose } = renderQF();
     await userEvent.click(screen.getByRole('dialog', { name: 'Quick find' }).parentElement!);

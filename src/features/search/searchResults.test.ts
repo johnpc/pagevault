@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { mergeResults, snippetAround } from './searchResults';
+import { mergeResults, snippetAround, nextActiveIndex } from './searchResults';
 import type { PageRecord, BlockRecord } from '../../lib/pbClient';
 
 const page = (id: string, over: Partial<PageRecord> = {}): PageRecord =>
@@ -75,5 +75,19 @@ describe('mergeResults', () => {
     const blocks = [block('b1', 'gone', 'x'), block('b2', 'arch', 'x')];
     const map = new Map([['arch', page('arch', { archived: true })]]);
     expect(mergeResults('x', [], blocks, map)).toHaveLength(0);
+  });
+});
+
+describe('nextActiveIndex', () => {
+  it('moves down and wraps to the top', () => {
+    expect(nextActiveIndex(0, 3, 'down')).toBe(1);
+    expect(nextActiveIndex(2, 3, 'down')).toBe(0);
+  });
+  it('moves up and wraps to the bottom', () => {
+    expect(nextActiveIndex(1, 3, 'up')).toBe(0);
+    expect(nextActiveIndex(0, 3, 'up')).toBe(2);
+  });
+  it('is a no-op for an empty list', () => {
+    expect(nextActiveIndex(0, 0, 'down')).toBe(0);
   });
 });

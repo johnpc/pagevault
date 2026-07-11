@@ -10,6 +10,16 @@ export interface SearchResult {
   kind: 'title' | 'block';
 }
 
+/**
+ * The next active index for a list of `count` items given an arrow key ('up' or
+ * 'down'), wrapping around. Returns `current` unchanged for an empty list. Pure.
+ */
+export function nextActiveIndex(current: number, count: number, dir: 'up' | 'down'): number {
+  if (count === 0) return current;
+  const step = dir === 'down' ? 1 : -1;
+  return (current + step + count) % count;
+}
+
 /** A short context snippet around the first match of `query` in `text`. */
 export function snippetAround(text: string, query: string, radius = 30): string {
   const idx = text.toLowerCase().indexOf(query.toLowerCase());

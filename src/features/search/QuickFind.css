@@ -56,7 +56,8 @@
   border-radius: var(--pv-radius-sm);
   cursor: pointer;
 }
-.pv-qf-item:hover {
+.pv-qf-item:hover,
+.pv-qf-item--active {
   background: var(--pv-accent-soft);
 }
 
