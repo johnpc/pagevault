@@ -51,6 +51,7 @@ account, no third-party service, no lock-in.
 | Public link sharing (read-only /shared/<token>, no login)              | ✅     |
 | Self-hosted via `docker compose`                                       | ✅     |
 | Inline markdown — bold, italic, code, strikethrough, underline         | ✅     |
+| Formatting shortcuts — Cmd/Ctrl+B/I/E wrap the selection               | ✅     |
 | @-mentions — type `@` to link another page inline                      | ✅     |
 | Backlinks — "Linked references" of every page that mentions this one   | ✅     |
 | Page comments — timestamped notes on a page (Cmd/Ctrl+Enter to post)   | ✅     |

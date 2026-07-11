@@ -3,6 +3,8 @@ import type { BlockRecord } from '../../lib/pbClient';
 import type { BlockType } from '../../lib/pbTypes';
 import { markdownShortcut } from './blockText';
 import { slashMatches, type SlashCommand } from './slashCommands';
+import { slashNav } from './slashNav';
+import { applyFormatKey } from './wrapSelection';
 
 /**
  * Editing behavior for one block's textarea: local value, markdown-prefix
@@ -45,21 +47,8 @@ export function useBlockInput(
   };
 
   // Slash-menu navigation, factored out to keep keyDown's complexity low.
-  // Returns true when it handled the key (so keyDown stops).
-  const slashKey = (e: KeyboardEvent): boolean => {
-    if (!matches || matches.length === 0) return false;
-    const handlers: Record<string, () => void> = {
-      ArrowDown: () => setActive((a) => (a + 1) % matches.length),
-      ArrowUp: () => setActive((a) => (a - 1 + matches.length) % matches.length),
-      Enter: () => pick(matches[active].type),
-      Escape: () => setValue(''),
-    };
-    const fn = handlers[e.key];
-    if (!fn) return false;
-    e.preventDefault();
-    fn();
-    return true;
-  };
+  const slashKey = (e: KeyboardEvent): boolean =>
+    slashNav(e, matches, active, { setActive, pick, clear: () => setValue('') });
 
   // Split at the caret into a new block below. Code blocks return false so the
   // real newline goes through; everything else prevents the default.
@@ -72,8 +61,9 @@ export function useBlockInput(
     setValue(value.slice(0, caret));
   };
 
-  const keyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (slashKey(e)) return;
+  // Tab indents, Enter splits, Backspace-on-empty removes. Split out so keyDown
+  // stays a flat chain of guards (keeps its complexity low).
+  const editKey = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Tab') {
       e.preventDefault();
       onIndent(e.shiftKey ? 'out' : 'in');
@@ -83,6 +73,13 @@ export function useBlockInput(
       e.preventDefault();
       onRemove(block.id);
     }
+  };
+
+  const keyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (slashKey(e)) return;
+    // Cmd/Ctrl+B/I/E wraps the selection in the matching markdown marker.
+    if (applyFormatKey(e, value, block.type === 'code', setValue)) return;
+    editKey(e);
   };
 
   const focus = () => setFocused(true);
