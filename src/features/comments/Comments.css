@@ -1,0 +1,76 @@
+.pv-comments {
+  margin-top: 24px;
+  border-top: 1px solid var(--pv-border);
+  padding-top: 12px;
+}
+.pv-comments-head {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+.pv-comment {
+  border: 1px solid var(--pv-border);
+  border-radius: var(--pv-radius-sm);
+  padding: 8px 10px;
+  margin-bottom: 6px;
+}
+.pv-comment-body {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.pv-comment-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-top: 4px;
+}
+.pv-comment-del {
+  background: none;
+  border: none;
+  color: var(--pv-text-muted);
+  cursor: pointer;
+  font-size: 14px;
+  opacity: 0;
+  padding: 0 4px;
+}
+.pv-comment:hover .pv-comment-del {
+  opacity: 1;
+}
+.pv-comment-del:hover {
+  color: var(--pv-danger);
+}
+.pv-comment-compose {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+.pv-comment-input {
+  border: 1px solid var(--pv-border);
+  border-radius: var(--pv-radius-sm);
+  background: var(--pv-surface);
+  color: var(--pv-text);
+  font: inherit;
+  padding: 8px;
+  resize: vertical;
+}
+.pv-comment-input:focus {
+  outline: 2px solid var(--pv-accent);
+  outline-offset: -1px;
+}
+.pv-comment-post {
+  align-self: flex-end;
+  background: var(--pv-accent);
+  color: var(--pv-accent-contrast);
+  border: none;
+  border-radius: var(--pv-radius-sm);
+  cursor: pointer;
+  font: inherit;
+  padding: 5px 14px;
+}
+.pv-comment-post:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

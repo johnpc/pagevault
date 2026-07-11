@@ -51,6 +51,7 @@ account, no third-party service, no lock-in.
 | Inline markdown — bold, italic, code, strikethrough, underline         | ✅     |
 | @-mentions — type `@` to link another page inline                      | ✅     |
 | Backlinks — "Linked references" of every page that mentions this one   | ✅     |
+| Page comments — timestamped notes on a page (Cmd/Ctrl+Enter to post)   | ✅     |
 | Block color & background highlight (text + `-bg` palette)              | ✅     |
 | Duplicate a block (inserts below)                                      | ✅     |
 | Nested lists — Tab / Shift-Tab to indent & outdent blocks              | ✅     |
