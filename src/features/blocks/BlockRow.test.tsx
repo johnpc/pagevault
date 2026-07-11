@@ -52,13 +52,12 @@ describe('BlockRow', () => {
     expect(onEdit).toHaveBeenCalledWith('b1', { content: 'world' });
   });
 
-  it('Enter saves and requests a new block', async () => {
-    const onEnter = vi.fn();
-    const onEdit = vi.fn();
+  it('Enter splits the block at the caret (passes caret + value)', async () => {
+    const onEnter = vi.fn().mockReturnValue(true);
     render(
       <BlockRow
         block={mk()}
-        onEdit={onEdit}
+        onEdit={vi.fn()}
         onRemove={vi.fn()}
         onEnter={onEnter}
         onDuplicate={vi.fn()}
@@ -67,10 +66,33 @@ describe('BlockRow', () => {
         dnd={noopDnd}
       />,
     );
-    screen.getByLabelText('Block content').focus();
+    const input = screen.getByLabelText('Block content') as HTMLTextAreaElement;
+    input.focus();
+    input.setSelectionRange(2, 2); // caret after "he" in "hello"
     await userEvent.keyboard('{Enter}');
-    expect(onEnter).toHaveBeenCalled();
-    expect(onEdit).toHaveBeenCalled();
+    expect(onEnter).toHaveBeenCalledWith(2, 'hello');
+  });
+
+  it('lets Enter insert a real newline when onEnter declines (code block)', async () => {
+    // onEnter returns false → the block keeps the default newline (code behavior).
+    const onEnter = vi.fn().mockReturnValue(false);
+    render(
+      <BlockRow
+        block={mk({ type: 'code', content: 'a' })}
+        onEdit={vi.fn()}
+        onRemove={vi.fn()}
+        onEnter={onEnter}
+        onDuplicate={vi.fn()}
+        onIndent={vi.fn()}
+        onPasteMarkdown={vi.fn()}
+        dnd={noopDnd}
+      />,
+    );
+    const input = screen.getByLabelText('Block content') as HTMLTextAreaElement;
+    input.focus();
+    input.setSelectionRange(1, 1);
+    await userEvent.keyboard('{Enter}');
+    expect(onEnter).toHaveBeenCalledWith(1, 'a');
   });
 
   it('Backspace on an empty block removes it', async () => {
@@ -330,6 +352,47 @@ describe('BlockRow', () => {
     // First item is Text; ArrowDown → Heading, Enter picks it.
     await userEvent.keyboard('{ArrowDown}{Enter}');
     expect(onEdit).toHaveBeenCalledWith('b1', { type: 'heading', content: '' });
+  });
+
+  it('wraps to the last slash command with ArrowUp', async () => {
+    const onEdit = vi.fn();
+    render(
+      <BlockRow
+        block={mk({ content: '' })}
+        onEdit={onEdit}
+        onRemove={vi.fn()}
+        onEnter={vi.fn()}
+        onDuplicate={vi.fn()}
+        onIndent={vi.fn()}
+        onPasteMarkdown={vi.fn()}
+        dnd={noopDnd}
+      />,
+    );
+    const input = screen.getByLabelText('Block content');
+    await userEvent.type(input, '/');
+    // From the first item, ArrowUp wraps to the last command (Divider).
+    await userEvent.keyboard('{ArrowUp}{Enter}');
+    expect(onEdit).toHaveBeenCalledWith('b1', { type: 'divider', content: '' });
+  });
+
+  it('Escape closes the slash menu', async () => {
+    render(
+      <BlockRow
+        block={mk({ content: '' })}
+        onEdit={vi.fn()}
+        onRemove={vi.fn()}
+        onEnter={vi.fn()}
+        onDuplicate={vi.fn()}
+        onIndent={vi.fn()}
+        onPasteMarkdown={vi.fn()}
+        dnd={noopDnd}
+      />,
+    );
+    const input = screen.getByLabelText('Block content');
+    await userEvent.type(input, '/');
+    expect(screen.getByRole('listbox', { name: 'Block types' })).toBeInTheDocument();
+    await userEvent.keyboard('{Escape}');
+    expect(screen.queryByRole('listbox', { name: 'Block types' })).not.toBeInTheDocument();
   });
 
   it('shows a formatted preview for a block with inline markup, editable on click', async () => {

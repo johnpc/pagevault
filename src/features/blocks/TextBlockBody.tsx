@@ -23,7 +23,7 @@ export function TextBlockBody({
   block: BlockRecord;
   onEdit: (id: string, patch: Partial<BlockRecord>) => void;
   onRemove: (id: string) => void;
-  onEnter: () => void;
+  onEnter: (caret: number, value: string) => boolean;
   onIndent: (dir: 'in' | 'out') => void;
   onPasteMarkdown: (text: string) => void;
   autoFocus?: boolean;

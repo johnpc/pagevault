@@ -16,12 +16,14 @@ Feature: Typing a full document
     And I type "Chargers" then Enter
     And I indent the current block
     And I type "USB-C cable" then Enter
-    And I outdent the current block
+    And I press Enter on the empty list item
+    And I press Enter on the empty list item
     And I type "1. Book flights" then Enter
     And I type "Reserve hotels" then Enter
-    And I type "``` "
-    And I type "npm run build" then Enter
+    And I press Enter on the empty list item
     And I type "> Remember travel insurance" then Enter
+    And I type "``` "
+    And I type "npm run build"
     Then the document has a "heading" block containing "Trip to Japan"
     And the document has a "bullet" block containing "Passport"
     And the document has a "numbered" block containing "Book flights"

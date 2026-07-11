@@ -28,7 +28,10 @@ When('I type {string} then Enter', async ({ page }, text: string) => {
   await input.pressSequentially(text);
   await input.press('Enter');
   await expect.poll(() => blockInputs(page).count()).toBeGreaterThan(before);
-  await expect(focused(page)).toBeVisible();
+  // The split lands the caret in a fresh EMPTY block below — wait for focus to
+  // actually move there (not just the count) so the next type() doesn't race
+  // into the old block and concatenate.
+  await expect(focused(page)).toHaveValue('');
 });
 
 // Types WITHOUT Enter — for a two-part sequence (e.g. "``` " then the code body).
@@ -41,11 +44,23 @@ When('type {string} then Enter', async ({ page }, text: string) => {
   await input.press('Enter');
 });
 
+// Tab/Shift-Tab persist a depth change via an async mutation; wait for the row's
+// indent to actually reflect it before typing, so the assertion isn't racing.
+const rowMargin = (page: Page) =>
+  focused(page).evaluate((el) => {
+    const row = (el as HTMLElement).closest('.pv-block') as HTMLElement | null;
+    return parseFloat(row?.style.marginLeft || '0');
+  });
+
 When('I indent the current block', async ({ page }) => {
+  const before = await rowMargin(page);
   await focused(page).press('Tab');
+  await expect.poll(() => rowMargin(page)).toBeGreaterThan(before);
 });
 When('I outdent the current block', async ({ page }) => {
+  const before = await rowMargin(page);
   await focused(page).press('Shift+Tab');
+  await expect.poll(() => rowMargin(page)).toBeLessThan(before);
 });
 
 Then(

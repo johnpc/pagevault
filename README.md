@@ -34,7 +34,8 @@ account, no third-party service, no lock-in.
 | Export a page as Markdown                                              | ✅     |
 | Blocks — text, headings, lists, to-dos, quotes, code, images, callouts | ✅     |
 | Markdown shortcuts (`# `, `- `, `1. `, `[] `, `> `, ` ``` `)           | ✅     |
-| Enter adds & focuses the next block (continuous typing)                | ✅     |
+| Enter splits at the caret into a block below (Notion-smooth typing)    | ✅     |
+| Enter continues a list; an empty item exits / outdents the list        | ✅     |
 | Slash command menu (`/` to pick a block type)                          | ✅     |
 | Page icons + cover gradient banners                                    | ✅     |
 | Light / dark / system theme (Settings switcher)                        | ✅     |
