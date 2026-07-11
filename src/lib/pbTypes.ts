@@ -47,6 +47,7 @@ export interface PagesResponse extends BaseRecord {
   isPublic: boolean;
   shareToken: string; // random slug for the /shared/<token> link, '' when private
   fullWidth: boolean; // widen the content area beyond the reading column
+  font: string; // per-page typeface: '' | 'default' (sans), 'serif', 'mono'
   sort: number;
   parent: string; // '' when top-level
   owner: string;

@@ -49,6 +49,7 @@ account, no third-party service, no lock-in.
 | Turn into — convert an existing block to another type, keeping content | ✅     |
 | Page icons + cover banners (gradient or uploaded image)                | ✅     |
 | Full-width page toggle (per page)                                      | ✅     |
+| Page font style — Default / Serif / Mono (per page)                    | ✅     |
 | Live sync across open tabs/devices (PocketBase realtime)               | ✅     |
 | Light / dark / system theme (Settings switcher)                        | ✅     |
 | Keyboard shortcut help overlay (?)                                     | ✅     |

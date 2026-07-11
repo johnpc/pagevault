@@ -17,6 +17,7 @@ interface PageHeaderProps {
   onCoverUpload: (file: File) => void;
   onMove: (parent: string) => void;
   onFullWidth: (fullWidth: boolean) => void;
+  onFont: (font: string) => void;
 }
 
 const ICONS = ['📄', '📝', '📌', '💡', '✅', '📚', '🚀', '🗂️'];
@@ -35,6 +36,7 @@ export function PageHeader({
   onCoverUpload,
   onMove,
   onFullWidth,
+  onFont,
 }: PageHeaderProps) {
   // The header stays mounted across /page/:id changes. useReconciled adopts the
   // external title (a page switch, or a realtime edit from another tab) DURING
@@ -77,6 +79,7 @@ export function PageHeader({
         onDuplicate={onDuplicate}
         onExport={onExport}
         onFullWidth={onFullWidth}
+        onFont={onFont}
         onDelete={onDelete}
       />
     </header>
