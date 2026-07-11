@@ -37,15 +37,6 @@ export function useCreateBlock(pageId: string) {
   });
 }
 
-export function useUpdateBlock(pageId: string) {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: (input: { id: string; patch: Partial<BlockRecord> }) =>
-      pb.collection('blocks').update<BlockRecord>(input.id, input.patch),
-    onSuccess: () => qc.invalidateQueries({ queryKey: key(pageId) }),
-  });
-}
-
 export function useDeleteBlock(pageId: string) {
   const qc = useQueryClient();
   return useMutation({
