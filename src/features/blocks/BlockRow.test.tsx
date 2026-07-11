@@ -192,6 +192,30 @@ describe('BlockRow', () => {
     expect(onEdit).toHaveBeenCalledWith('b1', { type: 'bullet', content: '' });
   });
 
+  it('wraps the selection in bold on Cmd/Ctrl+B', async () => {
+    const onEdit = vi.fn();
+    render(
+      <BlockRow
+        block={mk({ content: 'hello' })}
+        onEdit={onEdit}
+        onRemove={vi.fn()}
+        onEnter={vi.fn()}
+        onDuplicate={vi.fn()}
+        onIndent={vi.fn()}
+        onPasteMarkdown={vi.fn()}
+        onUpload={vi.fn()}
+        dnd={noopDnd}
+      />,
+    );
+    const input = screen.getByLabelText('Block content') as HTMLTextAreaElement;
+    input.focus();
+    input.setSelectionRange(0, 5); // select "hello"
+    await userEvent.keyboard('{Control>}b{/Control}');
+    // The wrap updates the field; blur then saves the bolded content.
+    input.blur();
+    expect(onEdit).toHaveBeenCalledWith('b1', { content: '**hello**' });
+  });
+
   it('does not treat a prefix in a non-text block as a shortcut', async () => {
     const onEdit = vi.fn();
     render(
