@@ -31,6 +31,7 @@ import {
   useToggleFavorite,
   useDuplicatePage,
 } from './pagesApi';
+import { useReorderPages } from './reorderPagesApi';
 import type { PageRecord, BlockRecord } from '../../lib/pbClient';
 
 const wrapper = ({ children }: { children: ReactNode }) => {
@@ -130,5 +131,16 @@ describe('pagesApi', () => {
     expect(blocks.create).toHaveBeenCalledWith(
       expect.objectContaining({ page: 'copy1', content: 'A' }),
     );
+  });
+
+  it('useReorderPages writes each changed sort', async () => {
+    pages.update.mockResolvedValue({});
+    const { result } = renderHook(() => useReorderPages(), { wrapper });
+    await result.current.mutateAsync([
+      { id: 'c', sort: 0 },
+      { id: 'a', sort: 1 },
+    ]);
+    expect(pages.update).toHaveBeenCalledWith('c', { sort: 0 });
+    expect(pages.update).toHaveBeenCalledWith('a', { sort: 1 });
   });
 });

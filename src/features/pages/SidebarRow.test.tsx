@@ -4,7 +4,17 @@ import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { SidebarRow } from './SidebarRow';
 import type { PageNode } from './pageTree';
+import type { PageDndHandlers } from './usePageDnd';
 import type { PageRecord } from '../../lib/pbClient';
+
+const noopDnd: PageDndHandlers = {
+  draggingId: null,
+  overId: null,
+  onDragStart: () => {},
+  onDragOver: () => {},
+  onDrop: () => {},
+  onDragEnd: () => {},
+};
 
 const mk = (id: string, over: Partial<PageRecord> = {}): PageRecord =>
   ({
@@ -31,7 +41,14 @@ const renderRow = (n: PageNode, collapsed = new Set<string>(), onToggle = vi.fn(
   let location = '';
   render(
     <MemoryRouter initialEntries={['/']}>
-      <SidebarRow node={n} depth={0} activeId="parent" collapsed={collapsed} onToggle={onToggle} />
+      <SidebarRow
+        node={n}
+        depth={0}
+        activeId="parent"
+        collapsed={collapsed}
+        onToggle={onToggle}
+        dnd={noopDnd}
+      />
       <Route
         path="*"
         render={({ location: loc }) => {

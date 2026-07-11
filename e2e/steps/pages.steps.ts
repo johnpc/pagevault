@@ -14,6 +14,10 @@ async function createPageTitled(page: Page, title: string) {
   await page.getByRole('button', { name: '+ New page' }).click();
   const titleInput = active(page).getByLabel('Page title');
   await expect(titleInput).toBeVisible();
+  // Wait until the NEW (empty) page is actually on screen — Ionic keeps the
+  // previous page mounted during its slide transition, so filling too early can
+  // save the title onto the page we just navigated away from.
+  await expect(titleInput).toHaveValue('');
   await titleInput.fill(title);
   await titleInput.blur();
   // The sidebar row reflects the saved title.

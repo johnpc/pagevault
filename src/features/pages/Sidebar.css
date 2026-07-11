@@ -99,6 +99,13 @@
   background: var(--pv-accent-soft);
   font-weight: 600;
 }
+/* Drag feedback: dim the row being dragged, show a drop line above the target. */
+.pv-sidebar-row--dragging {
+  opacity: 0.4;
+}
+.pv-sidebar-row--over {
+  box-shadow: inset 0 2px 0 0 var(--pv-accent);
+}
 
 .pv-sidebar-caret {
   background: none;
