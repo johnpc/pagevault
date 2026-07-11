@@ -34,6 +34,7 @@ account, no third-party service, no lock-in.
 | Export a page as Markdown                                              | ✅     |
 | Blocks — text, headings, lists, to-dos, quotes, code, images, callouts | ✅     |
 | Toggle blocks — collapse/expand to fold away nested content            | ✅     |
+| Column layouts — 2–4 side-by-side text columns                         | ✅     |
 | Table blocks — typed columns (text/number/checkbox/select), GFM export | ✅     |
 | Table rows — drag to reorder, click a header to sort (type-aware)      | ✅     |
 | Table board view — kanban grouped by a select column (drag cards)      | ✅     |

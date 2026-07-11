@@ -88,6 +88,8 @@ jobs:
             paths: .features-gen/e2e/features/cover
           - name: backlinks
             paths: .features-gen/e2e/features/backlinks
+          - name: columns
+            paths: .features-gen/e2e/features/columns
     env:
       VITE_PB_URL: http://localhost:8090
       PB_ADMIN_EMAIL: admin@pagevault.local

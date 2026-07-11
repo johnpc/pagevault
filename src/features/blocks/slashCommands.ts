@@ -42,6 +42,12 @@ export const SLASH_COMMANDS: SlashCommand[] = [
     keywords: ['table', 'database', 'grid', 'spreadsheet', 'db'],
   },
   {
+    type: 'columns',
+    label: 'Columns',
+    icon: '▥',
+    keywords: ['columns', 'column', 'layout', 'side', 'grid'],
+  },
+  {
     type: 'divider',
     label: 'Divider',
     icon: '—',
