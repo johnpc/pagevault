@@ -74,8 +74,11 @@ When('I type {string} into a new block', async ({ page }, text: string) => {
 });
 
 When('I choose {string} from the slash menu', async ({ page }, label: string) => {
-  await expect(active(page).getByRole('listbox', { name: 'Block types' })).toBeVisible();
-  await active(page).getByRole('option', { name: label }).click();
+  // Scope the option to the slash listbox — a page's "Move page under" <select>
+  // also exposes role=option children that would otherwise collide.
+  const menu = active(page).getByRole('listbox', { name: 'Block types' });
+  await expect(menu).toBeVisible();
+  await menu.getByRole('option', { name: label }).click();
 });
 
 When('I search for {string}', async ({ page }, query: string) => {
