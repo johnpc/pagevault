@@ -48,7 +48,7 @@ account, no third-party service, no lock-in.
 | Installable PWA                                                        | ✅     |
 | Public link sharing (read-only /shared/<token>, no login)              | ✅     |
 | Self-hosted via `docker compose`                                       | ✅     |
-| Inline markdown — bold, italic, code, ~~strike~~, **underline**        | ✅     |
+| Inline markdown — bold, italic, code, strikethrough, underline         | ✅     |
 | @-mentions — type `@` to link another page inline                      | ✅     |
 | Backlinks — "Linked references" of every page that mentions this one   | ✅     |
 | Block color & background highlight (text + `-bg` palette)              | ✅     |
