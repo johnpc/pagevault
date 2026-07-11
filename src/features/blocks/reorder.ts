@@ -18,12 +18,15 @@ export function moveBlock(blocks: BlockRecord[], fromId: string, toId: string): 
 
 /**
  * The minimal set of {id, sort} updates to persist a reordered list: only the
- * blocks whose index changed get a new sequential `sort`. Keeps writes small.
+ * items whose index changed get a new sequential `sort`. Keeps writes small.
+ * Generic over anything with an id + sort (blocks, pages, …).
  */
-export function sortUpdates(reordered: BlockRecord[]): { id: string; sort: number }[] {
+export function sortUpdates(
+  reordered: { id: string; sort: number }[],
+): { id: string; sort: number }[] {
   const updates: { id: string; sort: number }[] = [];
-  reordered.forEach((block, index) => {
-    if (block.sort !== index) updates.push({ id: block.id, sort: index });
+  reordered.forEach((item, index) => {
+    if (item.sort !== index) updates.push({ id: item.id, sort: index });
   });
   return updates;
 }

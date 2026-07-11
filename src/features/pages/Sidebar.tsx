@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { usePages, useCreatePage } from './pagesApi';
-import { buildTree, favoritePages, displayTitle } from './pageTree';
+import { buildTree } from './pageTree';
+import { FavoritesSection } from './FavoritesSection';
 import { readCollapsed, writeCollapsed, toggleCollapsed } from './expandStore';
 import { LoadState } from '../shell/LoadState';
 import { SidebarRow } from './SidebarRow';
+import { usePageDnd } from './usePageDnd';
 import { useAuth } from '../auth/useAuth';
 import './Sidebar.css';
 
@@ -15,6 +17,7 @@ export function Sidebar({ onSearch, onHelp }: { onSearch: () => void; onHelp: ()
   const { signOut, user } = useAuth();
   const { data: pages, isLoading, isError, refetch } = usePages();
   const create = useCreatePage();
+  const dnd = usePageDnd(pages ?? []);
   const [collapsed, setCollapsed] = useState(readCollapsed);
 
   const toggle = (pageId: string) => {
@@ -44,22 +47,7 @@ export function Sidebar({ onSearch, onHelp }: { onSearch: () => void; onHelp: ()
         + New page
       </button>
 
-      {favoritePages(pages ?? []).length > 0 && (
-        <nav className="pv-sidebar-section" aria-label="Favorites">
-          <span className="pv-sidebar-label pv-muted">Favorites</span>
-          {favoritePages(pages ?? []).map((page) => (
-            <div
-              key={page.id}
-              className={`pv-sidebar-row${page.id === id ? ' pv-sidebar-row--active' : ''}`}
-            >
-              <button className="pv-sidebar-open" onClick={() => history.push(`/page/${page.id}`)}>
-                <span className="pv-sidebar-icon">{page.icon || '📄'}</span>
-                <span className="pv-sidebar-title">{displayTitle(page)}</span>
-              </button>
-            </div>
-          ))}
-        </nav>
-      )}
+      <FavoritesSection pages={pages ?? []} activeId={id} />
 
       <nav className="pv-sidebar-tree">
         <LoadState
@@ -77,6 +65,7 @@ export function Sidebar({ onSearch, onHelp }: { onSearch: () => void; onHelp: ()
               activeId={id}
               collapsed={collapsed}
               onToggle={toggle}
+              dnd={dnd}
             />
           ))}
         </LoadState>

@@ -31,7 +31,16 @@ export function PageHeader({
   onCover,
   onMove,
 }: PageHeaderProps) {
+  // The header stays mounted across /page/:id changes. Resync the local title
+  // DURING render (not in an effect) when the page id changes, so a blur-save
+  // never fires against the previous page — the bug where rapidly creating pages
+  // wrote each title onto the prior page, blanking it.
   const [title, setTitle] = useState(page.title);
+  const [seenId, setSeenId] = useState(page.id);
+  if (seenId !== page.id) {
+    setSeenId(page.id);
+    setTitle(page.title);
+  }
   return (
     <header className="pv-page-header">
       <CoverPicker cover={page.cover} onCover={onCover} />

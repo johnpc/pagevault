@@ -48,7 +48,7 @@ account, no third-party service, no lock-in.
 | Duplicate a block (inserts below)                                      | ✅     |
 | Nested lists — Tab / Shift-Tab to indent & outdent blocks              | ✅     |
 | Drag-to-reorder blocks (optimistic)                                    | ✅     |
-| Drag-to-reorder pages                                                  | ⬜     |
+| Drag-to-reorder pages in the sidebar (same-parent siblings)            | ✅     |
 | Image blocks (embed by URL)                                            | ✅     |
 | Image uploads (stored in PocketBase, served same-origin)               | ✅     |
 | Quick-find search (⌘K, keyboard-navigable, titles + content)           | ✅     |
