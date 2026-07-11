@@ -1,12 +1,14 @@
-import { useEffect, useRef, type ClipboardEvent } from 'react';
+import { useRef, type ClipboardEvent } from 'react';
 import type { BlockRecord } from '../../lib/pbClient';
 import { placeholderFor } from './blockText';
 import { hasInlineMarkup } from './inlineMarkdown';
 import { looksLikeMarkdown } from './markdownImport';
 import { useBlockInput } from './useBlockInput';
 import { useMention } from './useMention';
+import { useAutoFocus } from './useAutoFocus';
 import { SlashMenu } from './SlashMenu';
 import { MentionMenu } from './MentionMenu';
+import { CopyButton } from './CopyButton';
 import { FormattedText } from './FormattedText';
 
 /** The editable body of a text-ish block: an idle formatted preview (when it
@@ -53,12 +55,7 @@ export function TextBlockBody({
   };
 
   // When this block was just created by Enter, grab focus so typing flows on.
-  useEffect(() => {
-    if (autoFocus && inputRef.current) {
-      inputRef.current.focus();
-      onFocused?.();
-    }
-  }, [autoFocus, onFocused]);
+  useAutoFocus(autoFocus, inputRef, onFocused);
 
   return (
     <>
@@ -90,6 +87,7 @@ export function TextBlockBody({
           onPaste={onPaste}
         />
       )}
+      {block.type === 'code' && value !== '' && <CopyButton text={value} />}
       {matches && <SlashMenu commands={matches} active={active} onPick={pick} />}
       {mention.open && (
         <MentionMenu pages={mention.matches} active={mention.active} onPick={mention.pick} />

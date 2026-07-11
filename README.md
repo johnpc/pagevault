@@ -33,6 +33,7 @@ account, no third-party service, no lock-in.
 | Duplicate a page (with all its blocks)                                 | ✅     |
 | Export a page as Markdown                                              | ✅     |
 | Blocks — text, headings, lists, to-dos, quotes, code, images, callouts | ✅     |
+| Code blocks — one-click copy button                                    | ✅     |
 | Toggle blocks — collapse/expand to fold away nested content            | ✅     |
 | Column layouts — 2–4 side-by-side text columns                         | ✅     |
 | Table of contents block — auto-lists headings, click to scroll         | ✅     |
