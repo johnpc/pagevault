@@ -27,6 +27,7 @@ export const SLASH_COMMANDS: SlashCommand[] = [
   { type: 'todo', label: 'To-do', icon: '☑', keywords: ['todo', 'task', 'checkbox', 'check'] },
   { type: 'quote', label: 'Quote', icon: '❝', keywords: ['quote', 'blockquote', 'cite'] },
   { type: 'code', label: 'Code', icon: '</>', keywords: ['code', 'snippet', 'mono'] },
+  { type: 'image', label: 'Image', icon: '🖼', keywords: ['image', 'picture', 'photo', 'img'] },
   {
     type: 'divider',
     label: 'Divider',

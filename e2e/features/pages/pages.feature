@@ -23,6 +23,14 @@ Feature: Pages and blocks
     And I add a block with the text "make it **bold**"
     Then the block renders "bold" in bold
 
+  Scenario: Insert an image block from a URL
+    Given I have a page titled "Gallery"
+    When I open the page "Gallery"
+    And I type "/image" into a new block
+    And I choose "Image" from the slash menu
+    And I enter the image URL "https://example.com/cat.png"
+    Then the page shows an image "https://example.com/cat.png"
+
   Scenario: Add a cover banner to a page
     Given I have a page titled "Cover me"
     When I open the page "Cover me"

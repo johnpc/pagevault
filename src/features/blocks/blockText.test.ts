@@ -21,6 +21,9 @@ describe('placeholderFor', () => {
     expect(placeholderFor('numbered')).toBe('List item');
     expect(placeholderFor('code')).toBe('Code');
   });
+  it('prompts for a URL on an image block', () => {
+    expect(placeholderFor('image')).toMatch(/image url/i);
+  });
 });
 
 describe('cycleType', () => {
@@ -31,7 +34,8 @@ describe('cycleType', () => {
   it('includes the new list + code types in the cycle', () => {
     expect(cycleType('subheading')).toBe('bullet');
     expect(cycleType('bullet')).toBe('numbered');
-    expect(cycleType('code')).toBe('divider');
+    expect(cycleType('code')).toBe('image');
+    expect(cycleType('image')).toBe('divider');
   });
 });
 

@@ -29,6 +29,7 @@ describe('blockToMarkdown', () => {
     expect(blockToMarkdown(blk('quote', 'Wise'))).toBe('> Wise');
     expect(blockToMarkdown(blk('code', 'x = 1'))).toBe('```\nx = 1\n```');
     expect(blockToMarkdown(blk('divider', ''))).toBe('---');
+    expect(blockToMarkdown(blk('image', 'https://x/i.png'))).toBe('![](https://x/i.png)');
     expect(blockToMarkdown(blk('text', 'Plain'))).toBe('Plain');
   });
 });

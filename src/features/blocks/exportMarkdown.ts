@@ -23,6 +23,8 @@ export function blockToMarkdown(
       return `> ${text}`;
     case 'code':
       return '```\n' + text + '\n```';
+    case 'image':
+      return `![](${text})`;
     case 'divider':
       return '---';
     default:

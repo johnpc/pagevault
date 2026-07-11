@@ -144,6 +144,16 @@ Then('the page footer shows {string}', async ({ page }, text: string) => {
   await expect(active(page).locator('.pv-page-info')).toContainText(text);
 });
 
+When('I enter the image URL {string}', async ({ page }, url: string) => {
+  const input = active(page).getByLabel('Image URL');
+  await input.fill(url);
+  await input.blur();
+});
+
+Then('the page shows an image {string}', async ({ page }, url: string) => {
+  await expect(active(page).locator(`img.pv-block-image[src="${url}"]`)).toBeVisible();
+});
+
 Then('the block renders {string} in bold', async ({ page }, text: string) => {
   await expect(active(page).locator('.pv-block-preview strong', { hasText: text })).toBeVisible();
 });

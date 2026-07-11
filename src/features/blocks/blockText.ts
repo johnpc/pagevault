@@ -17,6 +17,8 @@ export function placeholderFor(type: BlockType): string {
       return 'List item';
     case 'code':
       return 'Code';
+    case 'image':
+      return 'Paste an image URL…';
     case 'divider':
       return '';
     default:
@@ -34,6 +36,7 @@ export const TYPE_ORDER: BlockType[] = [
   'todo',
   'quote',
   'code',
+  'image',
   'divider',
 ];
 
