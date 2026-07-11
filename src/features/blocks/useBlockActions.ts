@@ -10,6 +10,7 @@ import { moveBlock, sortUpdates } from './reorder';
 import { indentDepth } from './indent';
 import { useImportMarkdown } from './markdownImportApi';
 import { markdownToBlocks } from './markdownImport';
+import { useEnterSplit } from './useEnterSplit';
 import type { BlockRecord } from '../../lib/pbClient';
 import type { BlockType } from '../../lib/pbTypes';
 
@@ -73,6 +74,8 @@ export function useBlockActions(pageId: string, blocks: BlockRecord[]) {
     [importMd, blocks],
   );
 
+  const splitBlock = useEnterSplit(pageId, blocks, { indentBlock, editBlock, setFocusId });
+
   return {
     addBlock,
     editBlock,
@@ -80,6 +83,7 @@ export function useBlockActions(pageId: string, blocks: BlockRecord[]) {
     cloneBlock,
     indentBlock,
     importMarkdown,
+    splitBlock,
     focusId,
     clearFocusId: () => setFocusId(null),
     removeBlock: deleteBlock.mutate,

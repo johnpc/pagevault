@@ -21,7 +21,7 @@ interface BlockRowProps {
   onDuplicate: (block: BlockRecord) => void;
   onIndent: (id: string, dir: 'in' | 'out') => void;
   onPasteMarkdown: (block: BlockRecord, text: string) => void;
-  onEnter: () => void;
+  onEnter: (caret: number, value: string) => boolean;
   autoFocus?: boolean;
   onFocused?: () => void;
   dnd: BlockDndHandlers;

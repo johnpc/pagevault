@@ -13,6 +13,7 @@ interface BlockListProps {
   onDuplicate: (block: BlockRecord) => void;
   onIndent: (id: string, dir: 'in' | 'out') => void;
   onPasteMarkdown: (block: BlockRecord, text: string) => void;
+  onSplit: (block: BlockRecord, caret: number, value: string) => boolean;
   onAddBlock: (type?: BlockType) => void;
   onSubPage: () => void;
   focusId: string | null;
@@ -29,6 +30,7 @@ export function BlockList({
   onDuplicate,
   onIndent,
   onPasteMarkdown,
+  onSplit,
   onAddBlock,
   onSubPage,
   focusId,
@@ -51,7 +53,7 @@ export function BlockList({
             onDuplicate={onDuplicate}
             onIndent={onIndent}
             onPasteMarkdown={onPasteMarkdown}
-            onEnter={() => onAddBlock('text')}
+            onEnter={(caret, value) => onSplit(block, caret, value)}
             autoFocus={block.id === focusId}
             onFocused={onFocused}
             dnd={dnd}

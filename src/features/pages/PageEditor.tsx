@@ -27,6 +27,7 @@ export function PageEditor() {
     cloneBlock,
     indentBlock,
     importMarkdown,
+    splitBlock,
     focusId,
     clearFocusId,
     removePage,
@@ -79,6 +80,7 @@ export function PageEditor() {
                   onDuplicate={cloneBlock}
                   onIndent={indentBlock}
                   onPasteMarkdown={importMarkdown}
+                  onSplit={splitBlock}
                   onAddBlock={addBlock}
                   onSubPage={onSubPage}
                   focusId={focusId}
