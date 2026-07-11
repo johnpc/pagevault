@@ -1,5 +1,6 @@
 import type { PageRecord } from '../../lib/pbClient';
 import { MovePicker } from './MovePicker';
+import { ShareButton } from './ShareButton';
 
 export interface PageActionsProps {
   page: PageRecord;
@@ -33,6 +34,7 @@ export function PageActions({
         {page.favorite ? '★ Favorited' : '☆ Favorite'}
       </button>
       <MovePicker page={page} pages={pages} onMove={onMove} />
+      <ShareButton page={page} />
       <button className="pv-page-delete pv-muted" onClick={onDuplicate}>
         Duplicate
       </button>

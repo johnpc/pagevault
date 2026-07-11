@@ -62,6 +62,8 @@ jobs:
             paths: .features-gen/e2e/features/home
           - name: help
             paths: .features-gen/e2e/features/help
+          - name: sharing
+            paths: .features-gen/e2e/features/sharing
     env:
       VITE_PB_URL: http://localhost:8090
       PB_ADMIN_EMAIL: admin@pagevault.local
