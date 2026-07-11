@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import {
   useCreateBlock,
   useUpdateBlock,
@@ -21,9 +21,15 @@ export function useBlockActions(pageId: string, blocks: BlockRecord[]) {
   const deleteBlock = useDeleteBlock(pageId);
   const reorderBlocks = useReorderBlocks(pageId);
   const duplicateBlock = useDuplicateBlock(pageId);
+  // id of the block that should grab focus next (the one just created by Enter).
+  const [focusId, setFocusId] = useState<string | null>(null);
 
   const addBlock = useCallback(
-    (type: BlockType = 'text') => createBlock.mutate({ type, content: '', siblings: blocks }),
+    (type: BlockType = 'text') =>
+      createBlock.mutate(
+        { type, content: '', siblings: blocks },
+        { onSuccess: (created) => setFocusId(created.id) },
+      ),
     [createBlock, blocks],
   );
 
@@ -62,6 +68,8 @@ export function useBlockActions(pageId: string, blocks: BlockRecord[]) {
     moveBlockTo,
     cloneBlock,
     indentBlock,
+    focusId,
+    clearFocusId: () => setFocusId(null),
     removeBlock: deleteBlock.mutate,
   };
 }

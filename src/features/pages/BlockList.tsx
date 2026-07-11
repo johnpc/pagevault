@@ -14,6 +14,8 @@ interface BlockListProps {
   onIndent: (id: string, dir: 'in' | 'out') => void;
   onAddBlock: (type?: BlockType) => void;
   onSubPage: () => void;
+  focusId: string | null;
+  onFocused: () => void;
 }
 
 /** The editable block list under the header: rows + add-block/sub-page + footer. */
@@ -27,6 +29,8 @@ export function BlockList({
   onIndent,
   onAddBlock,
   onSubPage,
+  focusId,
+  onFocused,
 }: BlockListProps) {
   return (
     <LoadState
@@ -45,6 +49,8 @@ export function BlockList({
             onDuplicate={onDuplicate}
             onIndent={onIndent}
             onEnter={() => onAddBlock('text')}
+            autoFocus={block.id === focusId}
+            onFocused={onFocused}
             dnd={dnd}
           />
         ))}
