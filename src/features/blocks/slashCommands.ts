@@ -30,6 +30,12 @@ export const SLASH_COMMANDS: SlashCommand[] = [
   { type: 'image', label: 'Image', icon: '🖼', keywords: ['image', 'picture', 'photo', 'img'] },
   { type: 'callout', label: 'Callout', icon: '💡', keywords: ['callout', 'note', 'tip', 'info'] },
   {
+    type: 'toggle',
+    label: 'Toggle list',
+    icon: '▸',
+    keywords: ['toggle', 'collapse', 'collapsible', 'fold', 'expand'],
+  },
+  {
     type: 'divider',
     label: 'Divider',
     icon: '—',

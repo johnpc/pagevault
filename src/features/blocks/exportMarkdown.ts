@@ -27,6 +27,8 @@ export function blockToMarkdown(
       return `![](${text})`;
     case 'callout':
       return `> 💡 ${text}`;
+    case 'toggle':
+      return `▸ **${text}**`;
     case 'divider':
       return '---';
     default:

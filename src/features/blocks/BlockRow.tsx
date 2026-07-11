@@ -66,6 +66,16 @@ export function BlockRow(props: BlockRowProps) {
           onChange={(e) => onEdit(block.id, { checked: e.target.checked })}
         />
       )}
+      {block.type === 'toggle' && (
+        <button
+          className="pv-toggle-chevron"
+          aria-label={block.collapsed ? 'Expand toggle' : 'Collapse toggle'}
+          aria-expanded={!block.collapsed}
+          onClick={() => onEdit(block.id, { collapsed: !block.collapsed })}
+        >
+          {block.collapsed ? '▸' : '▾'}
+        </button>
+      )}
       {handle}
       {block.type === 'callout' && (
         <span className="pv-callout-icon" aria-hidden="true">

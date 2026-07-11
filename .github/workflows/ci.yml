@@ -70,6 +70,8 @@ jobs:
             paths: .features-gen/e2e/features/paste
           - name: editing
             paths: .features-gen/e2e/features/editing
+          - name: toggle
+            paths: .features-gen/e2e/features/toggle
     env:
       VITE_PB_URL: http://localhost:8090
       PB_ADMIN_EMAIL: admin@pagevault.local

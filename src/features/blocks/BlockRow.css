@@ -61,6 +61,25 @@
   display: block;
 }
 
+/* Toggle: a clickable chevron before the summary text. */
+.pv-toggle-chevron {
+  background: none;
+  border: none;
+  color: var(--pv-text-muted);
+  cursor: pointer;
+  font-size: 11px;
+  padding: 4px 2px 0;
+  line-height: 1.55;
+  flex-shrink: 0;
+}
+.pv-toggle-chevron:hover {
+  color: var(--pv-text);
+}
+.pv-block--toggle .pv-block-input,
+.pv-block--toggle .pv-block-preview {
+  font-weight: 600;
+}
+
 /* Callout: a tinted box with a leading 💡. */
 .pv-block--callout {
   background: var(--pv-accent-soft);

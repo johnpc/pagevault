@@ -3,6 +3,7 @@ import type { BlockType } from '../../lib/pbTypes';
 import { LoadState } from '../shell/LoadState';
 import { PageInfo } from './PageInfo';
 import { BlockRow, type BlockDndHandlers } from '../blocks/BlockRow';
+import { hiddenBlockIds } from '../blocks/toggle';
 
 interface BlockListProps {
   page: PageRecord;
@@ -36,6 +37,9 @@ export function BlockList({
   focusId,
   onFocused,
 }: BlockListProps) {
+  const all = blocks.data ?? [];
+  // Children of a collapsed toggle are hidden (Notion-style) but stay in the DB.
+  const hidden = hiddenBlockIds(all);
   return (
     <LoadState
       loading={blocks.isLoading}
@@ -44,21 +48,23 @@ export function BlockList({
       onRetry={blocks.refetch}
     >
       <div className="pv-blocks">
-        {(blocks.data ?? []).map((block) => (
-          <BlockRow
-            key={block.id}
-            block={block}
-            onEdit={onEdit}
-            onRemove={onRemove}
-            onDuplicate={onDuplicate}
-            onIndent={onIndent}
-            onPasteMarkdown={onPasteMarkdown}
-            onEnter={(caret, value) => onSplit(block, caret, value)}
-            autoFocus={block.id === focusId}
-            onFocused={onFocused}
-            dnd={dnd}
-          />
-        ))}
+        {all
+          .filter((block) => !hidden.has(block.id))
+          .map((block) => (
+            <BlockRow
+              key={block.id}
+              block={block}
+              onEdit={onEdit}
+              onRemove={onRemove}
+              onDuplicate={onDuplicate}
+              onIndent={onIndent}
+              onPasteMarkdown={onPasteMarkdown}
+              onEnter={(caret, value) => onSplit(block, caret, value)}
+              autoFocus={block.id === focusId}
+              onFocused={onFocused}
+              dnd={dnd}
+            />
+          ))}
       </div>
       <button className="pv-add-block pv-muted" onClick={() => onAddBlock('text')}>
         + Add a block

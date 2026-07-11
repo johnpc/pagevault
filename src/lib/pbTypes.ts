@@ -25,7 +25,8 @@ export type BlockType =
   | 'numbered'
   | 'code'
   | 'image'
-  | 'callout';
+  | 'callout'
+  | 'toggle';
 
 export interface PagesResponse extends BaseRecord {
   title: string;
@@ -45,6 +46,7 @@ export interface BlocksResponse extends BaseRecord {
   type: BlockType;
   content: string;
   checked: boolean;
+  collapsed: boolean; // for `toggle` blocks: hide the nested (deeper-depth) children
   depth: number; // indentation level (0 = top); for nested lists
   sort: number;
   owner: string;
