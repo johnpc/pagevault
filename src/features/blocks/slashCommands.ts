@@ -28,6 +28,7 @@ export const SLASH_COMMANDS: SlashCommand[] = [
   { type: 'quote', label: 'Quote', icon: '❝', keywords: ['quote', 'blockquote', 'cite'] },
   { type: 'code', label: 'Code', icon: '</>', keywords: ['code', 'snippet', 'mono'] },
   { type: 'image', label: 'Image', icon: '🖼', keywords: ['image', 'picture', 'photo', 'img'] },
+  { type: 'callout', label: 'Callout', icon: '💡', keywords: ['callout', 'note', 'tip', 'info'] },
   {
     type: 'divider',
     label: 'Divider',

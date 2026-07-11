@@ -25,6 +25,8 @@ export function blockToMarkdown(
       return '```\n' + text + '\n```';
     case 'image':
       return `![](${text})`;
+    case 'callout':
+      return `> 💡 ${text}`;
     case 'divider':
       return '---';
     default:

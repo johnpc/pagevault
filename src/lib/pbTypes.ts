@@ -24,7 +24,8 @@ export type BlockType =
   | 'bullet'
   | 'numbered'
   | 'code'
-  | 'image';
+  | 'image'
+  | 'callout';
 
 export interface PagesResponse extends BaseRecord {
   title: string;

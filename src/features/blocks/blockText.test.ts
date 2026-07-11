@@ -24,6 +24,9 @@ describe('placeholderFor', () => {
   it('prompts for a URL on an image block', () => {
     expect(placeholderFor('image')).toMatch(/image url/i);
   });
+  it('prompts on a callout block', () => {
+    expect(placeholderFor('callout')).toMatch(/callout/i);
+  });
 });
 
 describe('cycleType', () => {

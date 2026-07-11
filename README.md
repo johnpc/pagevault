@@ -19,31 +19,31 @@ account, no third-party service, no lock-in.
 
 ## Features
 
-| Feature                                                            | Status |
-| ------------------------------------------------------------------ | ------ |
-| Email/password accounts (private, owner-scoped)                    | ✅     |
-| Home screen with recently edited pages                             | ✅     |
-| Nested pages in a collapsible sidebar tree                         | ✅     |
-| Sub-pages + breadcrumb navigation                                  | ✅     |
-| Archive to trash → restore or delete forever                       | ✅     |
-| Favorite pages (pinned Favorites section)                          | ✅     |
-| Page footer: word/block count + last edited                        | ✅     |
-| Duplicate a page (with all its blocks)                             | ✅     |
-| Export a page as Markdown                                          | ✅     |
-| Block editor — text, headings, lists, to-dos, quotes, code, images | ✅     |
-| Markdown shortcuts (`# `, `- `, `1. `, `[] `, `> `, ` ``` `)       | ✅     |
-| Slash command menu (`/` to pick a block type)                      | ✅     |
-| Page icons + cover gradient banners                                | ✅     |
-| Light / dark / system theme (Settings switcher)                    | ✅     |
-| Installable PWA                                                    | ✅     |
-| Self-hosted via `docker compose`                                   | ✅     |
-| Inline markdown — **bold**, _italic_, `code`                       | ✅     |
-| Drag-to-reorder blocks (optimistic)                                | ✅     |
-| Drag-to-reorder pages                                              | ⬜     |
-| Image blocks (embed by URL)                                        | ✅     |
-| File & image uploads                                               | ⬜     |
-| Quick-find search (⌘K, titles + block content)                     | ✅     |
-| Native iOS / Android builds (Capacitor)                            | ⬜     |
+| Feature                                                                | Status |
+| ---------------------------------------------------------------------- | ------ |
+| Email/password accounts (private, owner-scoped)                        | ✅     |
+| Home screen with recently edited pages                                 | ✅     |
+| Nested pages in a collapsible sidebar tree                             | ✅     |
+| Sub-pages + breadcrumb navigation                                      | ✅     |
+| Archive to trash → restore or delete forever                           | ✅     |
+| Favorite pages (pinned Favorites section)                              | ✅     |
+| Page footer: word/block count + last edited                            | ✅     |
+| Duplicate a page (with all its blocks)                                 | ✅     |
+| Export a page as Markdown                                              | ✅     |
+| Blocks — text, headings, lists, to-dos, quotes, code, images, callouts | ✅     |
+| Markdown shortcuts (`# `, `- `, `1. `, `[] `, `> `, ` ``` `)           | ✅     |
+| Slash command menu (`/` to pick a block type)                          | ✅     |
+| Page icons + cover gradient banners                                    | ✅     |
+| Light / dark / system theme (Settings switcher)                        | ✅     |
+| Installable PWA                                                        | ✅     |
+| Self-hosted via `docker compose`                                       | ✅     |
+| Inline markdown — **bold**, _italic_, `code`                           | ✅     |
+| Drag-to-reorder blocks (optimistic)                                    | ✅     |
+| Drag-to-reorder pages                                                  | ⬜     |
+| Image blocks (embed by URL)                                            | ✅     |
+| File & image uploads                                                   | ⬜     |
+| Quick-find search (⌘K, titles + block content)                         | ✅     |
+| Native iOS / Android builds (Capacitor)                                | ⬜     |
 
 ## Quick start (self-host in two commands)
 

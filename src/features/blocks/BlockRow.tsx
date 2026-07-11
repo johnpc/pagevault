@@ -62,6 +62,11 @@ export function BlockRow({ block, onEdit, onRemove, onEnter, dnd }: BlockRowProp
         />
       )}
       {handle}
+      {block.type === 'callout' && (
+        <span className="pv-callout-icon" aria-hidden="true">
+          💡
+        </span>
+      )}
       <TextBlockBody block={block} onEdit={onEdit} onRemove={onRemove} onEnter={onEnter} />
     </div>
   );

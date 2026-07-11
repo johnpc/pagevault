@@ -60,6 +60,17 @@
   cursor: pointer;
   display: block;
 }
+
+/* Callout: a tinted box with a leading 💡. */
+.pv-block--callout {
+  background: var(--pv-accent-soft);
+  border-radius: var(--pv-radius-sm);
+  padding: 10px 12px;
+}
+.pv-callout-icon {
+  padding: 3px 4px 0 0;
+  line-height: 1.55;
+}
 .pv-block-preview code {
   background: var(--pv-hover);
   border-radius: 4px;

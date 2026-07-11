@@ -210,6 +210,20 @@ describe('BlockRow', () => {
     expect(screen.getByLabelText('Block content')).toHaveValue('hello **world**');
   });
 
+  it('renders a callout with its icon and editable body', () => {
+    render(
+      <BlockRow
+        block={mk({ type: 'callout', content: 'Note this' })}
+        onEdit={vi.fn()}
+        onRemove={vi.fn()}
+        onEnter={vi.fn()}
+        dnd={noopDnd}
+      />,
+    );
+    expect(screen.getByText('💡')).toBeInTheDocument();
+    expect(screen.getByLabelText('Block content')).toHaveValue('Note this');
+  });
+
   it('renders a divider with a delete control', async () => {
     const onRemove = vi.fn();
     render(

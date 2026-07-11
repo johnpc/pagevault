@@ -23,6 +23,13 @@ Feature: Pages and blocks
     And I add a block with the text "make it **bold**"
     Then the block renders "bold" in bold
 
+  Scenario: Insert a callout block
+    Given I have a page titled "Tips"
+    When I open the page "Tips"
+    And I type "/callout" into a new block
+    And I choose "Callout" from the slash menu
+    Then the last block should be a "callout" block
+
   Scenario: Insert an image block from a URL
     Given I have a page titled "Gallery"
     When I open the page "Gallery"
