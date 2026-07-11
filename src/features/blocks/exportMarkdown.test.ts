@@ -34,19 +34,23 @@ describe('blockToMarkdown', () => {
     expect(blockToMarkdown(blk('text', 'Plain'))).toBe('Plain');
   });
 
-  it('renders a table block as a GFM table', () => {
+  it('renders a table block as a GFM table (checkbox cells become ✓/blank)', () => {
     const table = {
       ...blk('table', ''),
       data: {
-        columns: ['Name', 'Qty'],
+        columns: [
+          { name: 'Name', type: 'text' },
+          { name: 'Qty', type: 'number' },
+          { name: 'Done', type: 'checkbox' },
+        ],
         rows: [
-          ['Apples', '3'],
-          ['Pears', '5'],
+          ['Apples', '3', 'true'],
+          ['Pears', '5', ''],
         ],
       },
     } as BlockRecord;
     expect(blockToMarkdown(table)).toBe(
-      '| Name | Qty |\n| --- | --- |\n| Apples | 3 |\n| Pears | 5 |',
+      '| Name | Qty | Done |\n| --- | --- | --- |\n| Apples | 3 | ✓ |\n| Pears | 5 |  |',
     );
   });
 });
