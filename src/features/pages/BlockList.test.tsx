@@ -1,9 +1,24 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render as rtlRender, screen, type RenderResult } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { MemoryRouter } from 'react-router-dom';
+import type { ReactElement } from 'react';
 import { BlockList } from './BlockList';
 import type { PageRecord, BlockRecord } from '../../lib/pbClient';
 import type { BlockType } from '../../lib/pbTypes';
 import type { BlockDndHandlers } from '../blocks/BlockRow';
+
+// BlockRow's editor uses usePages() (@-mentions) + router Links.
+vi.mock('./pagesApi', () => ({ usePages: () => ({ data: [] }) }));
+
+const render = (ui: ReactElement): RenderResult =>
+  rtlRender(
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
+      <MemoryRouter>{ui}</MemoryRouter>
+    </QueryClientProvider>,
+  );
 
 const noopDnd: BlockDndHandlers = {
   draggingId: null,

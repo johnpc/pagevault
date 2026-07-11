@@ -4,7 +4,9 @@ import { placeholderFor } from './blockText';
 import { hasInlineMarkup } from './inlineMarkdown';
 import { looksLikeMarkdown } from './markdownImport';
 import { useBlockInput } from './useBlockInput';
+import { useMention } from './useMention';
 import { SlashMenu } from './SlashMenu';
+import { MentionMenu } from './MentionMenu';
 import { FormattedText } from './FormattedText';
 
 /** The editable body of a text-ish block: an idle formatted preview (when it
@@ -29,15 +31,17 @@ export function TextBlockBody({
   autoFocus?: boolean;
   onFocused?: () => void;
 }) {
-  const { value, change, keyDown, save, focus, focused, matches, active, pick } = useBlockInput(
-    block,
-    onEdit,
-    onRemove,
-    onEnter,
-    onIndent,
-  );
+  const { value, setValue, change, keyDown, save, focus, focused, matches, active, pick } =
+    useBlockInput(block, onEdit, onRemove, onEnter, onIndent);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const mention = useMention(block.page, value, setValue, inputRef);
   const showPreview = !focused && hasInlineMarkup(value);
+
+  // The @-mention picker gets first crack at Arrow/Enter/Escape; if it doesn't
+  // consume the key, the block's own handler runs.
+  const onKeyDown = (e: Parameters<typeof keyDown>[0]) => {
+    if (!mention.onKeyDown(e)) keyDown(e);
+  };
 
   // Pasting multi-line / markdown-y text into an empty block imports it as blocks.
   const onPaste = (e: ClipboardEvent<HTMLTextAreaElement>) => {
@@ -81,11 +85,15 @@ export function TextBlockBody({
           onFocus={focus}
           onChange={change}
           onBlur={save}
-          onKeyDown={keyDown}
+          onKeyDown={onKeyDown}
+          onSelect={mention.onSelect}
           onPaste={onPaste}
         />
       )}
       {matches && <SlashMenu commands={matches} active={active} onPick={pick} />}
+      {mention.open && (
+        <MentionMenu pages={mention.matches} active={mention.active} onPick={mention.pick} />
+      )}
     </>
   );
 }

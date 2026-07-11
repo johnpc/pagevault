@@ -47,6 +47,7 @@ account, no third-party service, no lock-in.
 | Public link sharing (read-only /shared/<token>, no login)              | ✅     |
 | Self-hosted via `docker compose`                                       | ✅     |
 | Inline markdown — **bold**, _italic_, `code`                           | ✅     |
+| @-mentions — type `@` to link another page inline                      | ✅     |
 | Duplicate a block (inserts below)                                      | ✅     |
 | Nested lists — Tab / Shift-Tab to indent & outdent blocks              | ✅     |
 | Drag-to-reorder blocks (optimistic)                                    | ✅     |
