@@ -37,7 +37,7 @@ account, no third-party service, no lock-in.
 | Light / dark / system theme (Settings switcher)                      | ✅     |
 | Installable PWA                                                      | ✅     |
 | Self-hosted via `docker compose`                                     | ✅     |
-| Rich text (bold/italic) inside blocks                                | ⬜     |
+| Inline markdown — **bold**, _italic_, `code`                         | ✅     |
 | Drag-to-reorder blocks (optimistic)                                  | ✅     |
 | Drag-to-reorder pages                                                | ⬜     |
 | File & image uploads                                                 | ⬜     |

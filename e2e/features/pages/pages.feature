@@ -17,6 +17,12 @@ Feature: Pages and blocks
     And I reopen the page "Meeting notes"
     Then I should see a block containing "Discuss Q3 roadmap"
 
+  Scenario: Inline markdown renders as bold when the block is idle
+    Given I have a page titled "Formatted"
+    When I open the page "Formatted"
+    And I add a block with the text "make it **bold**"
+    Then the block renders "bold" in bold
+
   Scenario: Add a cover banner to a page
     Given I have a page titled "Cover me"
     When I open the page "Cover me"

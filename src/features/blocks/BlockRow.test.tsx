@@ -192,6 +192,24 @@ describe('BlockRow', () => {
     expect(onEdit).toHaveBeenCalledWith('b1', { type: 'heading', content: '' });
   });
 
+  it('shows a formatted preview for a block with inline markup, editable on click', async () => {
+    render(
+      <BlockRow
+        block={mk({ content: 'hello **world**' })}
+        onEdit={vi.fn()}
+        onRemove={vi.fn()}
+        onEnter={vi.fn()}
+        dnd={noopDnd}
+      />,
+    );
+    // Idle block with markup renders a preview (bold span), not a raw textarea.
+    expect(screen.queryByLabelText('Block content')).not.toBeInTheDocument();
+    expect(screen.getByText('world').tagName).toBe('STRONG');
+    // Clicking the preview switches to the editable textarea.
+    await userEvent.click(screen.getByText('world'));
+    expect(screen.getByLabelText('Block content')).toHaveValue('hello **world**');
+  });
+
   it('renders a divider with a delete control', async () => {
     const onRemove = vi.fn();
     render(

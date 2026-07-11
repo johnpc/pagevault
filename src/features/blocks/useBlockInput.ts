@@ -17,6 +17,7 @@ export function useBlockInput(
 ) {
   const [value, setValue] = useState(block.content);
   const [active, setActive] = useState(0);
+  const [focused, setFocused] = useState(false);
 
   // Slash menu is available only on an empty-ish text block (Notion behavior).
   const matches = useMemo<SlashCommand[] | null>(
@@ -61,7 +62,11 @@ export function useBlockInput(
     }
   };
 
-  const save = () => onEdit(block.id, { content: value });
+  const focus = () => setFocused(true);
+  const save = () => {
+    setFocused(false);
+    onEdit(block.id, { content: value });
+  };
 
-  return { value, change, keyDown, save, matches, active, pick };
+  return { value, change, keyDown, save, focus, focused, matches, active, pick };
 }
