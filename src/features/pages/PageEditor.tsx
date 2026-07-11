@@ -15,7 +15,7 @@ export function PageEditor() {
   const { id } = useParams<{ id: string }>();
   const history = useHistory();
   const { page, blocks, allPages, ...ed } = usePageEditor(id);
-  const { setTitle, setIcon, setFavorite, setCover, setCoverImage, setParent } = ed;
+  const { setTitle, setIcon, setFavorite, setCover, setCoverImage, setParent, setFullWidth } = ed;
   const { addBlock, editBlock, removeBlock, cloneBlock, indentBlock, importMarkdown } = ed;
   const { splitBlock, uploadImage, focusId, clearFocusId, moveBlockTo } = ed;
   const { removePage, addSubPage, duplicate, exportMarkdown } = ed;
@@ -32,7 +32,7 @@ export function PageEditor() {
   return (
     <IonPage>
       <IonContent>
-        <div className="pv-page">
+        <div className={`pv-page${page.data?.fullWidth ? ' pv-page--wide' : ''}`}>
           <LoadState
             loading={page.isLoading}
             error={page.isError}
@@ -54,6 +54,7 @@ export function PageEditor() {
                   onMove={setParent}
                   onExport={exportMarkdown}
                   onDuplicate={onDuplicate}
+                  onFullWidth={setFullWidth}
                 />
                 <BlockList
                   page={page.data}

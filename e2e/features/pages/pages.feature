@@ -142,3 +142,9 @@ Feature: Pages and blocks
     Then the downloaded file is named "release-notes.md"
     And the download contains "# Release notes"
     And the download contains "Shipped the thing"
+
+  Scenario: Toggle a page to full width
+    Given I have a page titled "Wide page"
+    When I open the page "Wide page"
+    And I toggle full width on
+    Then the page is full width
