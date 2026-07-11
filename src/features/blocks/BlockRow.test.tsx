@@ -41,6 +41,7 @@ describe('BlockRow', () => {
         onDuplicate={vi.fn()}
         onIndent={vi.fn()}
         onPasteMarkdown={vi.fn()}
+        onUpload={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -63,6 +64,7 @@ describe('BlockRow', () => {
         onDuplicate={vi.fn()}
         onIndent={vi.fn()}
         onPasteMarkdown={vi.fn()}
+        onUpload={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -85,6 +87,7 @@ describe('BlockRow', () => {
         onDuplicate={vi.fn()}
         onIndent={vi.fn()}
         onPasteMarkdown={vi.fn()}
+        onUpload={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -106,6 +109,7 @@ describe('BlockRow', () => {
         onDuplicate={vi.fn()}
         onIndent={vi.fn()}
         onPasteMarkdown={vi.fn()}
+        onUpload={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -125,6 +129,7 @@ describe('BlockRow', () => {
         onDuplicate={vi.fn()}
         onIndent={vi.fn()}
         onPasteMarkdown={vi.fn()}
+        onUpload={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -143,6 +148,7 @@ describe('BlockRow', () => {
         onDuplicate={vi.fn()}
         onIndent={vi.fn()}
         onPasteMarkdown={vi.fn()}
+        onUpload={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -161,6 +167,7 @@ describe('BlockRow', () => {
         onDuplicate={vi.fn()}
         onIndent={vi.fn()}
         onPasteMarkdown={vi.fn()}
+        onUpload={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -180,6 +187,7 @@ describe('BlockRow', () => {
         onDuplicate={vi.fn()}
         onIndent={vi.fn()}
         onPasteMarkdown={vi.fn()}
+        onUpload={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -202,6 +210,7 @@ describe('BlockRow', () => {
         onDuplicate={vi.fn()}
         onIndent={vi.fn()}
         onPasteMarkdown={onPasteMarkdown}
+        onUpload={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -225,6 +234,7 @@ describe('BlockRow', () => {
         onDuplicate={vi.fn()}
         onIndent={vi.fn()}
         onPasteMarkdown={onPasteMarkdown}
+        onUpload={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -245,6 +255,7 @@ describe('BlockRow', () => {
         onDuplicate={vi.fn()}
         onIndent={onIndent}
         onPasteMarkdown={vi.fn()}
+        onUpload={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -267,6 +278,7 @@ describe('BlockRow', () => {
         onDuplicate={vi.fn()}
         onIndent={vi.fn()}
         onPasteMarkdown={vi.fn()}
+        onUpload={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -284,6 +296,7 @@ describe('BlockRow', () => {
         onDuplicate={vi.fn()}
         onIndent={vi.fn()}
         onPasteMarkdown={vi.fn()}
+        onUpload={vi.fn()}
         dnd={dnd}
       />,
     );
@@ -305,6 +318,7 @@ describe('BlockRow', () => {
         onDuplicate={vi.fn()}
         onIndent={vi.fn()}
         onPasteMarkdown={vi.fn()}
+        onUpload={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -324,6 +338,7 @@ describe('BlockRow', () => {
         onDuplicate={vi.fn()}
         onIndent={vi.fn()}
         onPasteMarkdown={vi.fn()}
+        onUpload={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -344,6 +359,7 @@ describe('BlockRow', () => {
         onDuplicate={vi.fn()}
         onIndent={vi.fn()}
         onPasteMarkdown={vi.fn()}
+        onUpload={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -365,6 +381,7 @@ describe('BlockRow', () => {
         onDuplicate={vi.fn()}
         onIndent={vi.fn()}
         onPasteMarkdown={vi.fn()}
+        onUpload={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -385,6 +402,7 @@ describe('BlockRow', () => {
         onDuplicate={vi.fn()}
         onIndent={vi.fn()}
         onPasteMarkdown={vi.fn()}
+        onUpload={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -405,6 +423,7 @@ describe('BlockRow', () => {
         onDuplicate={vi.fn()}
         onIndent={vi.fn()}
         onPasteMarkdown={vi.fn()}
+        onUpload={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -428,6 +447,7 @@ describe('BlockRow', () => {
         onDuplicate={onDuplicate}
         onIndent={vi.fn()}
         onPasteMarkdown={vi.fn()}
+        onUpload={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -445,6 +465,7 @@ describe('BlockRow', () => {
         onDuplicate={vi.fn()}
         onIndent={vi.fn()}
         onPasteMarkdown={vi.fn()}
+        onUpload={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -463,6 +484,7 @@ describe('BlockRow', () => {
         onDuplicate={vi.fn()}
         onIndent={vi.fn()}
         onPasteMarkdown={vi.fn()}
+        onUpload={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -481,6 +503,7 @@ describe('BlockRow', () => {
         onDuplicate={vi.fn()}
         onIndent={vi.fn()}
         onPasteMarkdown={vi.fn()}
+        onUpload={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -499,6 +522,7 @@ describe('BlockRow', () => {
         onDuplicate={vi.fn()}
         onIndent={vi.fn()}
         onPasteMarkdown={vi.fn()}
+        onUpload={vi.fn()}
         dnd={noopDnd}
       />,
     );

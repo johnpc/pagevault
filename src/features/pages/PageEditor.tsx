@@ -28,6 +28,7 @@ export function PageEditor() {
     indentBlock,
     importMarkdown,
     splitBlock,
+    uploadImage,
     focusId,
     clearFocusId,
     removePage,
@@ -81,6 +82,7 @@ export function PageEditor() {
                   onIndent={indentBlock}
                   onPasteMarkdown={importMarkdown}
                   onSplit={splitBlock}
+                  onUpload={uploadImage}
                   onAddBlock={addBlock}
                   onSubPage={onSubPage}
                   focusId={focusId}

@@ -61,6 +61,27 @@
   display: block;
 }
 
+/* Image editor: an Upload button above the fallback URL input. */
+.pv-image-edit {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.pv-image-upload {
+  align-self: flex-start;
+  background: var(--pv-hover);
+  border: 1px solid var(--pv-border);
+  border-radius: var(--pv-radius-sm);
+  color: var(--pv-text);
+  cursor: pointer;
+  font: inherit;
+  padding: 5px 10px;
+}
+.pv-image-upload:hover {
+  background: var(--pv-accent-soft);
+}
+
 /* Toggle: a clickable chevron before the summary text. */
 .pv-toggle-chevron {
   background: none;

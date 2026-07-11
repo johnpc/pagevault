@@ -50,7 +50,7 @@ account, no third-party service, no lock-in.
 | Drag-to-reorder blocks (optimistic)                                    | ✅     |
 | Drag-to-reorder pages                                                  | ⬜     |
 | Image blocks (embed by URL)                                            | ✅     |
-| File & image uploads                                                   | ⬜     |
+| Image uploads (stored in PocketBase, served same-origin)               | ✅     |
 | Quick-find search (⌘K, keyboard-navigable, titles + content)           | ✅     |
 | Native iOS / Android builds (Capacitor)                                | ⬜     |
 
