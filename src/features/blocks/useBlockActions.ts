@@ -8,6 +8,8 @@ import {
 } from './blocksApi';
 import { moveBlock, sortUpdates } from './reorder';
 import { indentDepth } from './indent';
+import { useImportMarkdown } from './markdownImportApi';
+import { markdownToBlocks } from './markdownImport';
 import type { BlockRecord } from '../../lib/pbClient';
 import type { BlockType } from '../../lib/pbTypes';
 
@@ -21,6 +23,7 @@ export function useBlockActions(pageId: string, blocks: BlockRecord[]) {
   const deleteBlock = useDeleteBlock(pageId);
   const reorderBlocks = useReorderBlocks(pageId);
   const duplicateBlock = useDuplicateBlock(pageId);
+  const importMd = useImportMarkdown(pageId);
   // id of the block that should grab focus next (the one just created by Enter).
   const [focusId, setFocusId] = useState<string | null>(null);
 
@@ -62,12 +65,21 @@ export function useBlockActions(pageId: string, blocks: BlockRecord[]) {
     [blocks, updateBlock],
   );
 
+  const importMarkdown = useCallback(
+    (target: BlockRecord, md: string) => {
+      const parsed = markdownToBlocks(md);
+      if (parsed.length) importMd.mutate({ target, parsed, blocks });
+    },
+    [importMd, blocks],
+  );
+
   return {
     addBlock,
     editBlock,
     moveBlockTo,
     cloneBlock,
     indentBlock,
+    importMarkdown,
     focusId,
     clearFocusId: () => setFocusId(null),
     removeBlock: deleteBlock.mutate,
