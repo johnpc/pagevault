@@ -47,6 +47,7 @@ account, no third-party service, no lock-in.
 | Slash command menu (`/` to pick a block type)                          | ✅     |
 | Page icons + cover banners (gradient or uploaded image)                | ✅     |
 | Full-width page toggle (per page)                                      | ✅     |
+| Live sync across open tabs/devices (PocketBase realtime)               | ✅     |
 | Light / dark / system theme (Settings switcher)                        | ✅     |
 | Keyboard shortcut help overlay (?)                                     | ✅     |
 | Installable PWA                                                        | ✅     |

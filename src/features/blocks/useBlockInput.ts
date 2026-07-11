@@ -5,6 +5,7 @@ import { markdownShortcut } from './blockText';
 import { slashMatches, type SlashCommand } from './slashCommands';
 import { slashNav } from './slashNav';
 import { applyFormatKey } from './wrapSelection';
+import { useReconciled } from './useReconciled';
 
 /**
  * Editing behavior for one block's textarea: local value, markdown-prefix
@@ -18,9 +19,11 @@ export function useBlockInput(
   onEnter: (caret: number, value: string) => boolean,
   onIndent: (dir: 'in' | 'out') => void,
 ) {
-  const [value, setValue] = useState(block.content);
   const [active, setActive] = useState(0);
   const [focused, setFocused] = useState(false);
+  // Adopt a realtime edit from another tab/device, but only while unfocused so
+  // the caret is never yanked mid-type. (See useReconciled.)
+  const [value, setValue] = useReconciled(block.content, focused);
 
   // Slash menu is available only on an empty-ish text block (Notion behavior).
   const matches = useMemo<SlashCommand[] | null>(
