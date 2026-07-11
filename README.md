@@ -33,6 +33,7 @@ account, no third-party service, no lock-in.
 | Duplicate a page (with all its blocks)                                 | ✅     |
 | Export a page as Markdown                                              | ✅     |
 | Blocks — text, headings, lists, to-dos, quotes, code, images, callouts | ✅     |
+| Toggle blocks — collapse/expand to fold away nested content            | ✅     |
 | Markdown shortcuts (`# `, `- `, `1. `, `[] `, `> `, ` ``` `)           | ✅     |
 | Enter splits at the caret into a block below (Notion-smooth typing)    | ✅     |
 | Enter continues a list; an empty item exits / outdents the list        | ✅     |

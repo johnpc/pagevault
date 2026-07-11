@@ -21,6 +21,8 @@ export function placeholderFor(type: BlockType): string {
       return 'Paste an image URL…';
     case 'callout':
       return 'Write a callout…';
+    case 'toggle':
+      return 'Toggle';
     case 'divider':
       return '';
     default:
@@ -38,6 +40,7 @@ export const TYPE_ORDER: BlockType[] = [
   'todo',
   'quote',
   'callout',
+  'toggle',
   'code',
   'image',
   'divider',

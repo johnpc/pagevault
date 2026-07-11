@@ -469,4 +469,40 @@ describe('BlockRow', () => {
     await userEvent.click(screen.getByLabelText('Delete block'));
     expect(onRemove).toHaveBeenCalledWith('b1');
   });
+
+  it('collapses a toggle from its chevron', async () => {
+    const onEdit = vi.fn();
+    render(
+      <BlockRow
+        block={mk({ type: 'toggle', content: 'Details', collapsed: false })}
+        onEdit={onEdit}
+        onRemove={vi.fn()}
+        onEnter={vi.fn()}
+        onDuplicate={vi.fn()}
+        onIndent={vi.fn()}
+        onPasteMarkdown={vi.fn()}
+        dnd={noopDnd}
+      />,
+    );
+    await userEvent.click(screen.getByLabelText('Collapse toggle'));
+    expect(onEdit).toHaveBeenCalledWith('b1', { collapsed: true });
+  });
+
+  it('expands a collapsed toggle from its chevron', async () => {
+    const onEdit = vi.fn();
+    render(
+      <BlockRow
+        block={mk({ type: 'toggle', content: 'Details', collapsed: true })}
+        onEdit={onEdit}
+        onRemove={vi.fn()}
+        onEnter={vi.fn()}
+        onDuplicate={vi.fn()}
+        onIndent={vi.fn()}
+        onPasteMarkdown={vi.fn()}
+        dnd={noopDnd}
+      />,
+    );
+    await userEvent.click(screen.getByLabelText('Expand toggle'));
+    expect(onEdit).toHaveBeenCalledWith('b1', { collapsed: false });
+  });
 });
