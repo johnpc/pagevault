@@ -12,6 +12,7 @@ interface BlockListProps {
   onRemove: (id: string) => void;
   onDuplicate: (block: BlockRecord) => void;
   onIndent: (id: string, dir: 'in' | 'out') => void;
+  onPasteMarkdown: (block: BlockRecord, text: string) => void;
   onAddBlock: (type?: BlockType) => void;
   onSubPage: () => void;
   focusId: string | null;
@@ -27,6 +28,7 @@ export function BlockList({
   onRemove,
   onDuplicate,
   onIndent,
+  onPasteMarkdown,
   onAddBlock,
   onSubPage,
   focusId,
@@ -48,6 +50,7 @@ export function BlockList({
             onRemove={onRemove}
             onDuplicate={onDuplicate}
             onIndent={onIndent}
+            onPasteMarkdown={onPasteMarkdown}
             onEnter={() => onAddBlock('text')}
             autoFocus={block.id === focusId}
             onFocused={onFocused}

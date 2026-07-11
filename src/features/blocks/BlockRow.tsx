@@ -20,6 +20,7 @@ interface BlockRowProps {
   onRemove: (id: string) => void;
   onDuplicate: (block: BlockRecord) => void;
   onIndent: (id: string, dir: 'in' | 'out') => void;
+  onPasteMarkdown: (block: BlockRecord, text: string) => void;
   onEnter: () => void;
   autoFocus?: boolean;
   onFocused?: () => void;
@@ -29,8 +30,8 @@ interface BlockRowProps {
 /** One block row: the drag handle + a type-specific body (divider rule, image,
  * or the editable text body). `depth` indents the row for nested lists. */
 export function BlockRow(props: BlockRowProps) {
-  const { block, onEdit, onRemove, onDuplicate, onIndent, onEnter, autoFocus, onFocused, dnd } =
-    props;
+  const { block, onEdit, onRemove, onDuplicate, onIndent, onPasteMarkdown } = props;
+  const { onEnter, autoFocus, onFocused, dnd } = props;
   const { cls, rowDrag, handle } = useBlockDrag(block, onEdit, dnd);
   const style = { marginLeft: `${(block.depth ?? 0) * 24}px` };
   const controls = <BlockControls block={block} onDuplicate={onDuplicate} onRemove={onRemove} />;
@@ -77,6 +78,7 @@ export function BlockRow(props: BlockRowProps) {
         onRemove={onRemove}
         onEnter={onEnter}
         onIndent={(dir) => onIndent(block.id, dir)}
+        onPasteMarkdown={(text) => onPasteMarkdown(block, text)}
         autoFocus={autoFocus}
         onFocused={onFocused}
       />

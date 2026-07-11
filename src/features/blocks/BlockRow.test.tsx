@@ -40,6 +40,7 @@ describe('BlockRow', () => {
         onEnter={vi.fn()}
         onDuplicate={vi.fn()}
         onIndent={vi.fn()}
+        onPasteMarkdown={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -62,6 +63,7 @@ describe('BlockRow', () => {
         onEnter={onEnter}
         onDuplicate={vi.fn()}
         onIndent={vi.fn()}
+        onPasteMarkdown={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -81,6 +83,7 @@ describe('BlockRow', () => {
         onEnter={vi.fn()}
         onDuplicate={vi.fn()}
         onIndent={vi.fn()}
+        onPasteMarkdown={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -99,6 +102,7 @@ describe('BlockRow', () => {
         onEnter={vi.fn()}
         onDuplicate={vi.fn()}
         onIndent={vi.fn()}
+        onPasteMarkdown={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -116,6 +120,7 @@ describe('BlockRow', () => {
         onEnter={vi.fn()}
         onDuplicate={vi.fn()}
         onIndent={vi.fn()}
+        onPasteMarkdown={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -133,6 +138,7 @@ describe('BlockRow', () => {
         onEnter={vi.fn()}
         onDuplicate={vi.fn()}
         onIndent={vi.fn()}
+        onPasteMarkdown={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -151,6 +157,7 @@ describe('BlockRow', () => {
         onEnter={vi.fn()}
         onDuplicate={vi.fn()}
         onIndent={vi.fn()}
+        onPasteMarkdown={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -160,6 +167,49 @@ describe('BlockRow', () => {
       'b1',
       expect.objectContaining({ type: expect.anything() }),
     );
+  });
+
+  it('imports markdown on paste into an empty block', () => {
+    const onPasteMarkdown = vi.fn();
+    render(
+      <BlockRow
+        block={mk({ content: '' })}
+        onEdit={vi.fn()}
+        onRemove={vi.fn()}
+        onEnter={vi.fn()}
+        onDuplicate={vi.fn()}
+        onIndent={vi.fn()}
+        onPasteMarkdown={onPasteMarkdown}
+        dnd={noopDnd}
+      />,
+    );
+    fireEvent.paste(screen.getByLabelText('Block content'), {
+      clipboardData: { getData: () => '# Title\n- item' },
+    });
+    expect(onPasteMarkdown).toHaveBeenCalledWith(
+      expect.objectContaining({ id: 'b1' }),
+      '# Title\n- item',
+    );
+  });
+
+  it('does not hijack a plain-text paste', () => {
+    const onPasteMarkdown = vi.fn();
+    render(
+      <BlockRow
+        block={mk({ content: '' })}
+        onEdit={vi.fn()}
+        onRemove={vi.fn()}
+        onEnter={vi.fn()}
+        onDuplicate={vi.fn()}
+        onIndent={vi.fn()}
+        onPasteMarkdown={onPasteMarkdown}
+        dnd={noopDnd}
+      />,
+    );
+    fireEvent.paste(screen.getByLabelText('Block content'), {
+      clipboardData: { getData: () => 'just a word' },
+    });
+    expect(onPasteMarkdown).not.toHaveBeenCalled();
   });
 
   it('indents on Tab and outdents on Shift-Tab', async () => {
@@ -172,6 +222,7 @@ describe('BlockRow', () => {
         onEnter={vi.fn()}
         onDuplicate={vi.fn()}
         onIndent={onIndent}
+        onPasteMarkdown={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -193,6 +244,7 @@ describe('BlockRow', () => {
         onEnter={vi.fn()}
         onDuplicate={vi.fn()}
         onIndent={vi.fn()}
+        onPasteMarkdown={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -209,6 +261,7 @@ describe('BlockRow', () => {
         onEnter={vi.fn()}
         onDuplicate={vi.fn()}
         onIndent={vi.fn()}
+        onPasteMarkdown={vi.fn()}
         dnd={dnd}
       />,
     );
@@ -229,6 +282,7 @@ describe('BlockRow', () => {
         onEnter={vi.fn()}
         onDuplicate={vi.fn()}
         onIndent={vi.fn()}
+        onPasteMarkdown={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -247,6 +301,7 @@ describe('BlockRow', () => {
         onEnter={vi.fn()}
         onDuplicate={vi.fn()}
         onIndent={vi.fn()}
+        onPasteMarkdown={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -266,6 +321,7 @@ describe('BlockRow', () => {
         onEnter={vi.fn()}
         onDuplicate={vi.fn()}
         onIndent={vi.fn()}
+        onPasteMarkdown={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -285,6 +341,7 @@ describe('BlockRow', () => {
         onEnter={vi.fn()}
         onDuplicate={vi.fn()}
         onIndent={vi.fn()}
+        onPasteMarkdown={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -307,6 +364,7 @@ describe('BlockRow', () => {
         onEnter={vi.fn()}
         onDuplicate={onDuplicate}
         onIndent={vi.fn()}
+        onPasteMarkdown={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -323,6 +381,7 @@ describe('BlockRow', () => {
         onEnter={vi.fn()}
         onDuplicate={vi.fn()}
         onIndent={vi.fn()}
+        onPasteMarkdown={vi.fn()}
         dnd={noopDnd}
       />,
     );
@@ -340,6 +399,7 @@ describe('BlockRow', () => {
         onEnter={vi.fn()}
         onDuplicate={vi.fn()}
         onIndent={vi.fn()}
+        onPasteMarkdown={vi.fn()}
         dnd={noopDnd}
       />,
     );

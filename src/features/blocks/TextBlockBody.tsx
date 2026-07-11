@@ -1,7 +1,8 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, type ClipboardEvent } from 'react';
 import type { BlockRecord } from '../../lib/pbClient';
 import { placeholderFor } from './blockText';
 import { hasInlineMarkup } from './inlineMarkdown';
+import { looksLikeMarkdown } from './markdownImport';
 import { useBlockInput } from './useBlockInput';
 import { SlashMenu } from './SlashMenu';
 import { FormattedText } from './FormattedText';
@@ -15,6 +16,7 @@ export function TextBlockBody({
   onRemove,
   onEnter,
   onIndent,
+  onPasteMarkdown,
   autoFocus,
   onFocused,
 }: {
@@ -23,6 +25,7 @@ export function TextBlockBody({
   onRemove: (id: string) => void;
   onEnter: () => void;
   onIndent: (dir: 'in' | 'out') => void;
+  onPasteMarkdown: (text: string) => void;
   autoFocus?: boolean;
   onFocused?: () => void;
 }) {
@@ -35,6 +38,15 @@ export function TextBlockBody({
   );
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const showPreview = !focused && hasInlineMarkup(value);
+
+  // Pasting multi-line / markdown-y text into an empty block imports it as blocks.
+  const onPaste = (e: ClipboardEvent<HTMLTextAreaElement>) => {
+    const text = e.clipboardData.getData('text/plain');
+    if (value === '' && looksLikeMarkdown(text)) {
+      e.preventDefault();
+      onPasteMarkdown(text);
+    }
+  };
 
   // When this block was just created by Enter, grab focus so typing flows on.
   useEffect(() => {
@@ -70,6 +82,7 @@ export function TextBlockBody({
           onChange={change}
           onBlur={save}
           onKeyDown={keyDown}
+          onPaste={onPaste}
         />
       )}
       {matches && <SlashMenu commands={matches} active={active} onPick={pick} />}
