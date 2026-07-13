@@ -7,6 +7,7 @@ import { TableHead } from './TableHead';
 import { TableBody } from './TableBody';
 import { TableBoard } from './TableBoard';
 import { TableViewToggle } from './TableViewToggle';
+import { TableFilterBar } from './TableFilterBar';
 import './TableBlock.css';
 
 /** An editable typed table/database grid. The whole grid lives in the block's
@@ -38,6 +39,7 @@ export function TableBlock({
         <TableBoard data={data} save={save} />
       ) : (
         <>
+          <TableFilterBar data={data} save={save} />
           <table className="pv-table">
             <TableHead data={data} save={save} onSort={onSort} sort={sort} />
             <TableBody data={data} save={save} />

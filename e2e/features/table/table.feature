@@ -37,3 +37,16 @@ Feature: Table (database) blocks
     And I fill table cell "2,1" with "Alpha"
     And I sort by table column 1
     Then table column 1 reads "Alpha" then "Charlie"
+
+  Scenario: Filter rows by a column value, then clear the filter
+    Given I have a page titled "Filterable"
+    When I type "/table" into a new block
+    And I choose "Table" from the slash menu
+    And I fill table cell "1,1" with "Apples"
+    And I add a table row
+    And I fill table cell "2,1" with "Bananas"
+    And I filter table column 1 by "Apple"
+    Then the table has 1 body rows
+    And the table has a cell containing "Apples"
+    When I clear the table filter
+    Then the table has 2 body rows

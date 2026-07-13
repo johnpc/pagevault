@@ -33,6 +33,11 @@ export function normalize(data: TableData | null | undefined): TableData {
   if (typeof data?.groupBy === 'number' && data.groupBy >= 0 && data.groupBy < width) {
     next.groupBy = data.groupBy;
   }
+  // Keep a filter only while it targets a real column and has a query.
+  const f = data?.filter;
+  if (f && typeof f.col === 'number' && f.col >= 0 && f.col < width && f.query?.trim()) {
+    next.filter = { col: f.col, query: f.query };
+  }
   return next;
 }
 

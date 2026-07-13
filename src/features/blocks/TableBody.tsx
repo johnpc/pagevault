@@ -2,10 +2,13 @@ import { useState, type DragEvent } from 'react';
 import type { TableData } from '../../lib/pbTypes';
 import { setCell, removeRow } from './tableData';
 import { moveRow } from './tableSort';
+import { visibleRows } from './tableFilter';
 import { TableCell } from './TableCell';
 
 /** The table body: editable cells plus a per-row drag handle for reordering.
- * Row-drag state is local; a drop commits the new order via `save`. */
+ * Rows honor the grid's non-destructive filter — each rendered row keeps its
+ * REAL index so edits/deletes/drags target the right underlying row. Row-drag
+ * state is local; a drop commits the new order via `save`. */
 export function TableBody({ data, save }: { data: TableData; save: (next: TableData) => void }) {
   const [dragRow, setDragRow] = useState<number | null>(null);
 
@@ -16,7 +19,7 @@ export function TableBody({ data, save }: { data: TableData; save: (next: TableD
 
   return (
     <tbody>
-      {data.rows.map((row, r) => (
+      {visibleRows(data).map(({ row, index: r }) => (
         <tr
           key={r}
           className={dragRow === r ? 'pv-table-row--dragging' : ''}

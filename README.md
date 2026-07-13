@@ -42,6 +42,7 @@ account, no third-party service, no lock-in.
 | Table blocks — typed columns (text/number/checkbox/select), GFM export   | ✅     |
 | Table rows — drag to reorder, click a header to sort (type-aware)        | ✅     |
 | Table board view — kanban grouped by a select column (drag cards)        | ✅     |
+| Table filter — show only rows matching a column value (non-destructive)  | ✅     |
 | Markdown shortcuts (`# `, `- `, `1. `, `[] `, `> `, ` ``` `)             | ✅     |
 | Enter splits at the caret into a block below (Notion-smooth typing)      | ✅     |
 | Enter continues a list; an empty item exits / outdents the list          | ✅     |
