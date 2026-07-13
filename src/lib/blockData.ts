@@ -7,7 +7,7 @@
 
 /** A table column's cell kind. Cells are always stored as strings; the type
  * decides how a cell renders/edits (number input, checkbox, select…). */
-export type TableColumnType = 'text' | 'number' | 'checkbox' | 'select';
+export type TableColumnType = 'text' | 'number' | 'checkbox' | 'select' | 'date';
 
 export interface TableColumn {
   name: string; // header label

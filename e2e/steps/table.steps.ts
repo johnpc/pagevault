@@ -92,3 +92,12 @@ When('I filter table column {int} by {string}', async ({ page }, col: number, qu
 When('I clear the table filter', async ({ page }) => {
   await active(page).getByLabel('Clear filter').click();
 });
+
+When(
+  'I set the table date in cell {string} to {string}',
+  async ({ page }, cell: string, iso: string) => {
+    const input = table(page).getByLabel(`Cell ${cell}`);
+    await input.fill(iso);
+    await expect(input).toHaveValue(iso);
+  },
+);

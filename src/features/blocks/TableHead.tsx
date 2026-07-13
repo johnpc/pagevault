@@ -1,7 +1,7 @@
 import type { TableData, TableColumnType } from '../../lib/pbTypes';
 import { setColumn, setColumnType, removeColumn, addColumn } from './tableData';
 
-const TYPES: TableColumnType[] = ['text', 'number', 'checkbox', 'select'];
+const TYPES: TableColumnType[] = ['text', 'number', 'checkbox', 'select', 'date'];
 
 interface SortState {
   col: number;

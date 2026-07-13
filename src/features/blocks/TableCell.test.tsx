@@ -23,6 +23,14 @@ describe('TableCell', () => {
     expect(screen.getByLabelText('cell')).toHaveProperty('type', 'number');
   });
 
+  it('renders a date input that reports the picked ISO date', () => {
+    const onChange = vi.fn();
+    render(<TableCell column={col('date')} value="2026-01-15" label="cell" onChange={onChange} />);
+    const input = screen.getByLabelText('cell');
+    expect(input).toHaveProperty('type', 'date');
+    expect(input).toHaveValue('2026-01-15');
+  });
+
   it('renders a checkbox that maps checked to "true"', async () => {
     const onChange = vi.fn();
     render(<TableCell column={col('checkbox')} value="" label="cell" onChange={onChange} />);
