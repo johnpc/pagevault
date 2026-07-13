@@ -16,6 +16,7 @@ function toColumn(c: TableColumn | string): TableColumn {
     type: c.type ?? 'text',
     ...(c.options ? { options: c.options } : {}),
     ...(c.summary ? { summary: c.summary } : {}),
+    ...(c.hidden ? { hidden: true } : {}),
   };
 }
 

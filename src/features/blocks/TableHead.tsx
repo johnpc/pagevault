@@ -1,5 +1,6 @@
 import type { TableData, TableColumnType } from '../../lib/pbTypes';
 import { setColumn, setColumnType, removeColumn, addColumn } from './tableData';
+import { visibleColumns, toggleColumnHidden } from './tableColumns';
 
 const TYPES: TableColumnType[] = ['text', 'number', 'checkbox', 'select', 'date'];
 
@@ -23,7 +24,7 @@ export function TableHead({ data, save, onSort, sort }: HeadProps) {
     <thead>
       <tr>
         <th className="pv-table-drag" aria-hidden="true" />
-        {data.columns.map((col, c) => (
+        {visibleColumns(data).map(({ column: col, index: c }) => (
           <th key={c}>
             <div className="pv-table-head">
               <button
@@ -49,6 +50,14 @@ export function TableHead({ data, save, onSort, sort }: HeadProps) {
                   </option>
                 ))}
               </select>
+              <button
+                className="pv-table-hide"
+                aria-label={`Hide column ${c + 1}`}
+                title="Hide column"
+                onClick={() => save(toggleColumnHidden(data, c, true))}
+              >
+                ⊘
+              </button>
               {data.columns.length > 1 && (
                 <button
                   className="pv-table-del"

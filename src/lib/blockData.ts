@@ -14,6 +14,7 @@ export interface TableColumn {
   type: TableColumnType;
   options?: string[]; // choices for a `select` column
   summary?: string; // footer calculation kind (see tableSummary SummaryKind); absent = none
+  hidden?: boolean; // when true the column is not rendered (data preserved); absent = shown
 }
 
 /** The grid stored in a `table` block's JSON `data` field. Cells stay as a

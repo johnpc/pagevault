@@ -44,6 +44,7 @@ account, no third-party service, no lock-in.
 | Table board view — kanban grouped by a select column (drag cards)             | ✅     |
 | Table filter — show only rows matching a column value (non-destructive)       | ✅     |
 | Table summaries — per-column footer calc (count/sum/avg/checked over visible) | ✅     |
+| Table columns — hide/show via Properties (data preserved)                     | ✅     |
 | Markdown shortcuts (`# `, `- `, `1. `, `[] `, `> `, ` ``` `)                  | ✅     |
 | Enter splits at the caret into a block below (Notion-smooth typing)           | ✅     |
 | Enter continues a list; an empty item exits / outdents the list               | ✅     |

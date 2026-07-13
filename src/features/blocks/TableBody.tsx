@@ -3,6 +3,7 @@ import type { TableData } from '../../lib/pbTypes';
 import { setCell, removeRow } from './tableData';
 import { moveRow } from './tableSort';
 import { visibleRows } from './tableFilter';
+import { visibleColumns } from './tableColumns';
 import { TableCell } from './TableCell';
 
 /** The table body: editable cells plus a per-row drag handle for reordering.
@@ -39,11 +40,11 @@ export function TableBody({ data, save }: { data: TableData; save: (next: TableD
               ⋮⋮
             </button>
           </td>
-          {row.map((cell, c) => (
+          {visibleColumns(data).map(({ column, index: c }) => (
             <td key={c}>
               <TableCell
-                column={data.columns[c]}
-                value={cell}
+                column={column}
+                value={row[c] ?? ''}
                 label={`Cell ${r + 1},${c + 1}`}
                 onChange={(v) => save(setCell(data, r, c, v))}
               />
