@@ -101,6 +101,23 @@ Feature: Table (database) blocks
     When I filter table column 2 by "10"
     Then the table summary for column 2 shows "10"
 
+  Scenario: Min, max, and median column summaries
+    Given I have a page titled "Stats"
+    When I type "/table" into a new block
+    And I choose "Table" from the slash menu
+    And I set table column 2 type to "number"
+    And I fill table cell "1,2" with "3"
+    And I add a table row
+    And I fill table cell "2,2" with "1"
+    And I add a table row
+    And I fill table cell "3,2" with "5"
+    And I set the summary for table column 2 to "min"
+    Then the table summary for column 2 shows "1"
+    When I set the summary for table column 2 to "max"
+    Then the table summary for column 2 shows "5"
+    When I set the summary for table column 2 to "median"
+    Then the table summary for column 2 shows "3"
+
   Scenario: Hide a column, then restore it from Properties
     Given I have a page titled "Roster"
     When I type "/table" into a new block
