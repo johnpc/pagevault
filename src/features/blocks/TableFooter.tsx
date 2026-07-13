@@ -2,13 +2,23 @@ import type { TableData } from '../../lib/pbTypes';
 import { setColumnSummary } from './tableData';
 import { visibleColumns } from './tableColumns';
 import { visibleRows } from './tableFilter';
+import { cellText, type TitleMap } from './cellText';
 import { summaryOptions, summaryLabel, summarize, type SummaryKind } from './tableSummary';
 
 /** The table footer: one calculation per column over the VISIBLE (filtered)
  * rows. Each cell is a compact picker showing the result, or "Calculate" when
- * unset. Mirrors the head layout (drag spacer + columns + add-col spacer). */
-export function TableFooter({ data, save }: { data: TableData; save: (next: TableData) => void }) {
-  const rows = visibleRows(data).map((v) => v.row);
+ * unset. Mirrors the head layout (drag spacer + columns + add-col spacer).
+ * `titles` resolves relation cells so count/unique summaries count by page. */
+export function TableFooter({
+  data,
+  save,
+  titles,
+}: {
+  data: TableData;
+  save: (next: TableData) => void;
+  titles?: TitleMap;
+}) {
+  const rows = visibleRows(data, titles).map((v) => v.row);
 
   return (
     <tfoot>
@@ -18,7 +28,7 @@ export function TableFooter({ data, save }: { data: TableData; save: (next: Tabl
           const kind = (col.summary ?? 'none') as SummaryKind;
           const result = summarize(
             kind,
-            rows.map((r) => r[c] ?? ''),
+            rows.map((r) => cellText(col, r[c] ?? '', titles)),
           );
           return (
             <td key={c}>

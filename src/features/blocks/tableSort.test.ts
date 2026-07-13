@@ -73,3 +73,16 @@ describe('sortByColumn', () => {
     ]);
   });
 });
+
+describe('sortByColumn with relations', () => {
+  it('sorts a relation column by the linked page title, not the raw id', () => {
+    const g: TableData = {
+      columns: [{ name: 'Page', type: 'relation' }],
+      rows: [['p2'], ['p1'], ['']],
+    };
+    const titles = { p1: 'Alpha', p2: 'Zeta' };
+    // relation sorts as text on the resolved title; a blank title sorts first
+    // (localeCompare), then Alpha(p1), then Zeta(p2).
+    expect(sortByColumn(g, 0, 'asc', titles).rows).toEqual([[''], ['p1'], ['p2']]);
+  });
+});

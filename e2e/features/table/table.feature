@@ -113,3 +113,16 @@ Feature: Table (database) blocks
     Then the table has a relation cell showing "Reading list"
     When I reopen the page "Projects DB"
     Then the table has a relation cell showing "Reading list"
+
+  Scenario: Filter a relation column by the linked page's title
+    Given I have a page titled "Linked DB"
+    When I open the page "Linked DB"
+    And I type "/table" into a new block
+    And I choose "Table" from the slash menu
+    And I set table column 2 type to "relation"
+    And I link table cell "1,2" to the page "Reading list"
+    And I add a table row
+    And I link table cell "2,2" to the page "Welcome to PageVault"
+    And I filter table column 2 by "Reading"
+    Then the table has 1 body rows
+    And the table has a relation cell showing "Reading list"
