@@ -1,5 +1,6 @@
 import type { TableData, TableColumn, TableColumnType } from '../../lib/pbTypes';
 import { migrateFilters } from './tableFilter';
+import { persistedView } from './tableViewMode';
 
 const col = (name: string, type: TableColumnType = 'text'): TableColumn => ({ name, type });
 
@@ -43,7 +44,8 @@ export function normalize(data: TableData | null | undefined): TableData {
  * mode, saved views) from the raw grid onto the normalized one, dropping any
  * that references a missing column. Mutates `next`. Pure w.r.t. `data`. */
 function applyConfig(next: TableData, data: TableData | null | undefined, width: number): void {
-  if (data?.view === 'board') next.view = 'board';
+  const view = persistedView(data?.view);
+  if (view) next.view = view;
   if (typeof data?.groupBy === 'number' && data.groupBy >= 0 && data.groupBy < width) {
     next.groupBy = data.groupBy;
   }

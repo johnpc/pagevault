@@ -214,6 +214,66 @@
   text-align: left;
 }
 
+/* Gallery view: a responsive grid of cards, one per (filtered) row. */
+.pv-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}
+.pv-gallery-card {
+  background: var(--pv-surface);
+  border: 1px solid var(--pv-border);
+  border-radius: var(--pv-radius-sm);
+  box-shadow: var(--pv-shadow);
+  padding: 10px;
+}
+.pv-gallery-title {
+  border: none;
+  background: none;
+  font: inherit;
+  font-weight: 600;
+  color: var(--pv-text);
+  width: 100%;
+  padding: 2px;
+}
+.pv-gallery-title:focus {
+  outline: 2px solid var(--pv-accent);
+  outline-offset: -2px;
+  border-radius: 4px;
+}
+.pv-gallery-fields {
+  margin: 6px 0 0;
+}
+.pv-gallery-field {
+  display: flex;
+  gap: 6px;
+  font-size: 13px;
+  padding: 2px;
+}
+.pv-gallery-field dt {
+  color: var(--pv-text-muted);
+  flex: 0 0 40%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pv-gallery-field dd {
+  margin: 0;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pv-gallery-add {
+  background: none;
+  border: 1px dashed var(--pv-border);
+  border-radius: var(--pv-radius-sm);
+  cursor: pointer;
+  font: inherit;
+  padding: 10px;
+  text-align: left;
+}
+
 /* One-column filter bar above the grid (non-destructive row filter). */
 .pv-table-filter {
   display: flex;

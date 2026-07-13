@@ -30,4 +30,13 @@ describe('TableViewToggle', () => {
     render(<TableViewToggle data={noSelect} onView={vi.fn()} />);
     expect(screen.getByRole('tab', { name: 'Board' })).toBeDisabled();
   });
+
+  it('offers a Gallery view (always enabled) and switches to it', async () => {
+    const onView = vi.fn();
+    render(<TableViewToggle data={noSelect} onView={onView} />);
+    const gallery = screen.getByRole('tab', { name: 'Gallery' });
+    expect(gallery).not.toBeDisabled();
+    await userEvent.click(gallery);
+    expect(onView).toHaveBeenCalledWith('gallery');
+  });
 });

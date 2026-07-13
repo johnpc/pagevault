@@ -1,5 +1,6 @@
 import type { TableData, TableView } from '../../lib/pbTypes';
 import { conditions } from './tableFilter';
+import { persistedView } from './tableViewMode';
 
 /** Snapshot the grid's current presentational config as a named saved view:
  * table/board mode, board grouping, active filters, and which columns are
@@ -8,7 +9,8 @@ export function captureView(data: TableData, name: string): TableView {
   const active = conditions(data).filter((f) => (f.query ?? '').trim() !== '');
   const hidden = data.columns.flatMap((c, i) => (c.hidden ? [i] : []));
   const view: TableView = { name };
-  if (data.view === 'board') view.view = 'board';
+  const mode = persistedView(data.view);
+  if (mode) view.view = mode;
   if (typeof data.groupBy === 'number') view.groupBy = data.groupBy;
   if (active.length) view.filters = active.map((f) => ({ col: f.col, query: f.query }));
   if (data.filterMatch === 'any') view.filterMatch = 'any';
@@ -32,7 +34,7 @@ export function applyView(data: TableData, view: TableView): TableData {
   delete out.filters;
   delete out.filterMatch;
   delete out.groupBy;
-  out.view = view.view === 'board' ? 'board' : 'table';
+  out.view = persistedView(view.view) ?? 'table';
   if (typeof view.groupBy === 'number') out.groupBy = view.groupBy;
   if (view.filters?.length) out.filters = view.filters.map((f) => ({ ...f }));
   if (view.filterMatch === 'any') out.filterMatch = 'any';
