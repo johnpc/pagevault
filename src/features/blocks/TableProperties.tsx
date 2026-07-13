@@ -1,6 +1,6 @@
-import { useState } from 'react';
 import type { TableData } from '../../lib/pbTypes';
 import { toggleColumnHidden } from './tableColumns';
+import { usePopover } from '../shell/usePopover';
 
 /** A "Properties" popover listing every column with a show/hide checkbox
  * (Notion's property visibility control). Lets hidden columns be brought back —
@@ -12,12 +12,13 @@ export function TableProperties({
   data: TableData;
   save: (next: TableData) => void;
 }) {
-  const [open, setOpen] = useState(false);
+  const { open, setOpen, triggerRef, menuRef, onKeyDown } = usePopover<HTMLUListElement>();
   const hiddenCount = data.columns.filter((c) => c.hidden).length;
 
   return (
-    <div className="pv-table-props">
+    <div className="pv-table-props" onKeyDown={onKeyDown}>
       <button
+        ref={triggerRef}
         className="pv-table-props-btn"
         aria-label="Table properties"
         aria-expanded={open}
@@ -26,7 +27,7 @@ export function TableProperties({
         ☰ Properties{hiddenCount ? ` (${hiddenCount} hidden)` : ''}
       </button>
       {open && (
-        <ul className="pv-table-props-menu" aria-label="Column visibility">
+        <ul ref={menuRef} className="pv-table-props-menu" aria-label="Column visibility">
           {data.columns.map((col, c) => (
             <li key={c}>
               <label>

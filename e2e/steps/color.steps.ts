@@ -20,3 +20,21 @@ Then('the block is tinted {string}', async ({ page }, token: string) => {
     .poll(() => active(page).locator(`.pv-block.pv-color--${token}`).count())
     .toBeGreaterThan(0);
 });
+
+const colorMenu = (page: Page) => active(page).getByRole('listbox', { name: 'Block color' });
+
+When('I open the block color menu', async ({ page }) => {
+  await active(page).getByLabel('Block color').first().click();
+});
+
+Then('the block color menu is open', async ({ page }) => {
+  await expect(colorMenu(page)).toBeVisible();
+});
+
+When('I press Escape in the color menu', async ({ page }) => {
+  await colorMenu(page).press('Escape');
+});
+
+Then('the block color menu is closed', async ({ page }) => {
+  await expect(colorMenu(page)).toBeHidden();
+});

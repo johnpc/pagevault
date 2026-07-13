@@ -15,3 +15,12 @@ Feature: Coloring blocks
     Then the block is tinted "yellow-bg"
     When I reopen the page "Highlights"
     Then the block is tinted "yellow-bg"
+
+  Scenario: Pressing Escape closes the color menu
+    When I open the page "Highlights"
+    And I focus the first block
+    And I type "Note"
+    And I open the block color menu
+    Then the block color menu is open
+    When I press Escape in the color menu
+    Then the block color menu is closed

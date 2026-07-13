@@ -1,5 +1,5 @@
-import { useState } from 'react';
 import { CODE_LANGS, codeLangLabel } from './codeLangs';
+import { usePopover } from '../shell/usePopover';
 
 /** A small popover on a code block that labels + picks its language. The label
  * button shows the current language; the list sets a new one. Mirrors
@@ -11,11 +11,12 @@ export function CodeLangMenu({
   current: string;
   onPick: (token: string) => void;
 }) {
-  const [open, setOpen] = useState(false);
+  const { open, setOpen, close, triggerRef, menuRef, onKeyDown } = usePopover<HTMLUListElement>();
 
   return (
-    <div className="pv-codelang">
+    <div className="pv-codelang" onKeyDown={onKeyDown}>
       <button
+        ref={triggerRef}
         className="pv-codelang-btn"
         aria-label="Code language"
         aria-expanded={open}
@@ -24,7 +25,7 @@ export function CodeLangMenu({
         {codeLangLabel(current)}
       </button>
       {open && (
-        <ul className="pv-codelang-menu" role="listbox" aria-label="Code language">
+        <ul ref={menuRef} className="pv-codelang-menu" role="listbox" aria-label="Code language">
           {CODE_LANGS.map((l) => (
             <li key={l.token || 'plain'}>
               <button
@@ -34,7 +35,7 @@ export function CodeLangMenu({
                 className={`pv-codelang-item${l.token === current ? ' pv-codelang-item--on' : ''}`}
                 onClick={() => {
                   onPick(l.token);
-                  setOpen(false);
+                  close();
                 }}
               >
                 {l.label}

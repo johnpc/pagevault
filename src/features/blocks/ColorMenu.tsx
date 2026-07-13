@@ -1,5 +1,5 @@
-import { useState } from 'react';
 import { BLOCK_COLORS } from './blockColors';
+import { usePopover } from '../shell/usePopover';
 
 /** A small color-picker popover for a block: a paint button that opens a grid of
  * text + background swatches. Choosing one sets the block's `color` token. */
@@ -10,11 +10,12 @@ export function ColorMenu({
   current: string;
   onPick: (token: string) => void;
 }) {
-  const [open, setOpen] = useState(false);
+  const { open, setOpen, close, triggerRef, menuRef, onKeyDown } = usePopover<HTMLUListElement>();
 
   return (
-    <div className="pv-color">
+    <div className="pv-color" onKeyDown={onKeyDown}>
       <button
+        ref={triggerRef}
         className="pv-block-dup"
         aria-label="Block color"
         aria-expanded={open}
@@ -23,7 +24,7 @@ export function ColorMenu({
         🎨
       </button>
       {open && (
-        <ul className="pv-color-menu" role="listbox" aria-label="Block color">
+        <ul ref={menuRef} className="pv-color-menu" role="listbox" aria-label="Block color">
           {BLOCK_COLORS.map((c) => (
             <li key={c.token || 'default'}>
               <button
@@ -35,7 +36,7 @@ export function ColorMenu({
                 }`}
                 onClick={() => {
                   onPick(c.token);
-                  setOpen(false);
+                  close();
                 }}
               >
                 <span className="pv-color-swatch" aria-hidden="true">
