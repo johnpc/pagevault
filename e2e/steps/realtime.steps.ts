@@ -1,5 +1,6 @@
 import { createBdd } from 'playwright-bdd';
-import { expect, type Page } from '@playwright/test';
+import { expect, type Page, type TestInfo } from '@playwright/test';
+import { uniqueTitle } from './uniqueTitle';
 
 const { Given, When, Then } = createBdd();
 
@@ -11,27 +12,31 @@ let secondTab: Page | undefined;
 const active = (page: Page) =>
   page.locator('.ion-page:not(.ion-page-hidden)').filter({ visible: true }).last();
 
-const sidebarRow = (page: Page, title: string) =>
-  page.locator('.pv-sidebar-tree').getByText(title, { exact: true }).first();
+const sidebarRow = (page: Page, title: string, info: TestInfo) =>
+  page.locator('.pv-sidebar-tree').getByText(uniqueTitle(title, info), { exact: true }).first();
 
 const blockInputs = (page: Page) => active(page).locator('textarea.pv-block-input');
 
 /** Open the same page in a SECOND tab of the same browser context, so it shares
  * the signed-in session — the realistic "two open views" case. */
-Given('I open the page {string} in a second tab', async ({ page, context }, title: string) => {
-  await sidebarRow(page, title).click();
-  await expect(active(page).getByLabel('Page title')).toHaveValue(title);
+Given(
+  'I open the page {string} in a second tab',
+  async ({ page, context, $testInfo }, title: string) => {
+    const unique = uniqueTitle(title, $testInfo);
+    await sidebarRow(page, title, $testInfo).click();
+    await expect(active(page).getByLabel('Page title')).toHaveValue(unique);
 
-  secondTab = await context.newPage();
-  await secondTab.goto('/');
-  await expect(secondTab.getByRole('button', { name: '+ New page' })).toBeVisible();
-  await sidebarRow(secondTab, title).click();
-  await expect(active(secondTab).getByLabel('Page title')).toHaveValue(title);
-});
+    secondTab = await context.newPage();
+    await secondTab.goto('/');
+    await expect(secondTab.getByRole('button', { name: '+ New page' })).toBeVisible();
+    await sidebarRow(secondTab, title, $testInfo).click();
+    await expect(active(secondTab).getByLabel('Page title')).toHaveValue(unique);
+  },
+);
 
-When('I rename the page to {string}', async ({ page }, title: string) => {
+When('I rename the page to {string}', async ({ page, $testInfo }, title: string) => {
   const input = active(page).getByLabel('Page title');
-  await input.fill(title);
+  await input.fill(uniqueTitle(title, $testInfo));
   await input.blur();
 });
 
@@ -58,10 +63,10 @@ Then(
 
 Then(
   'the second tab shows {string} in the sidebar without reloading',
-  async ({ page }, title: string) => {
+  async ({ page, $testInfo }, title: string) => {
     void page; // assertion targets the second tab, not the primary fixture page
     const tab = secondTab;
     if (!tab) throw new Error('second tab was not opened');
-    await expect(sidebarRow(tab, title)).toBeVisible({ timeout: 15_000 });
+    await expect(sidebarRow(tab, title, $testInfo)).toBeVisible({ timeout: 15_000 });
   },
 );
