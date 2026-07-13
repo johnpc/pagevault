@@ -61,6 +61,7 @@ account, no third-party service, no lock-in.
 | Live sync across open tabs/devices (PocketBase realtime)                      | ✅     |
 | Light / dark / system theme (Settings switcher)                               | ✅     |
 | Keyboard shortcut help overlay (?)                                            | ✅     |
+| Toggle the sidebar with ⌘\ / Ctrl+\ (floating restore button)                 | ✅     |
 | Installable PWA                                                               | ✅     |
 | Public link sharing (read-only /shared/<token>, no login)                     | ✅     |
 | Collaborate — invite another user to a page via link (view/comment/edit)      | ✅     |

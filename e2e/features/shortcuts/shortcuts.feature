@@ -13,3 +13,11 @@ Feature: Keyboard formatting shortcuts
     And I select all text in the block
     And I press the bold shortcut
     Then the block renders "make me bold" in bold
+
+  Scenario: Cmd/Ctrl+\ hides and shows the sidebar
+    When I open the page "Formatting"
+    Then the sidebar is visible
+    When I press the sidebar-toggle shortcut
+    Then the sidebar is hidden
+    When I press the sidebar-toggle shortcut
+    Then the sidebar is visible

@@ -11,6 +11,8 @@ import { useQuickFind } from '../search/useQuickFind';
 import { ShortcutHelp } from './ShortcutHelp';
 import { useShortcutHelp } from './useShortcutHelp';
 import { useRealtimeSync } from './useRealtimeSync';
+import { useSidebarToggle, workspaceClass } from './useSidebarToggle';
+import { SidebarShowButton } from './SidebarShowButton';
 import './Workspace.css';
 
 /**
@@ -21,9 +23,11 @@ import './Workspace.css';
 export function Workspace() {
   const { open, setOpen } = useQuickFind();
   const help = useShortcutHelp();
+  const sidebar = useSidebarToggle();
   useRealtimeSync();
   return (
-    <div className="pv-workspace">
+    <div className={workspaceClass(sidebar.hidden)}>
+      <SidebarShowButton hidden={sidebar.hidden} onShow={() => sidebar.setHidden(false)} />
       <Sidebar onSearch={() => setOpen(true)} onHelp={() => help.setOpen(true)} />
       <div className="pv-workspace-content">
         <IonRouterOutlet>

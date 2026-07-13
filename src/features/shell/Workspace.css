@@ -27,3 +27,26 @@
     display: none;
   }
 }
+
+/* Cmd/Ctrl+\ hides the sidebar; a floating button restores it. */
+.pv-workspace--sidebar-hidden .pv-sidebar {
+  display: none;
+}
+.pv-sidebar-show {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 30;
+  width: 32px;
+  height: 32px;
+  background: var(--pv-surface);
+  border: 1px solid var(--pv-border);
+  border-radius: var(--pv-radius-sm);
+  color: var(--pv-text-muted);
+  cursor: pointer;
+  font-size: 15px;
+}
+.pv-sidebar-show:hover {
+  color: var(--pv-text);
+  background: var(--pv-hover);
+}

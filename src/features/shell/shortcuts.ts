@@ -6,6 +6,7 @@ export interface Shortcut {
 
 export const SHORTCUTS: Shortcut[] = [
   { keys: '⌘K / Ctrl+K', action: 'Open quick find (search pages & content)' },
+  { keys: '⌘\\ / Ctrl+\\', action: 'Show or hide the sidebar' },
   { keys: '?', action: 'Show this shortcut help' },
   { keys: 'Esc', action: 'Close a dialog or menu' },
   { keys: '/', action: 'Open the block-type menu in an empty block' },
