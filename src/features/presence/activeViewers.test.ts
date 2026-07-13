@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { activeViewers, viewerLabel, ACTIVE_WINDOW_MS } from './activeViewers';
+import { activeViewers, blockCursors, viewerLabel, ACTIVE_WINDOW_MS } from './activeViewers';
 import type { PresenceRecord } from '../../lib/pbClient';
 
 const NOW = 1_000_000_000_000;
@@ -55,5 +55,26 @@ describe('activeViewers', () => {
     const v = activeViewers(rows, 'me', NOW);
     expect(v.map((x) => x.label)).toEqual(['ada', 'zoe']);
     expect(v[0].initial).toBe('A');
+  });
+});
+
+describe('blockCursors', () => {
+  it('groups active viewers by their focused block, excluding self + blockless', () => {
+    const rows = [
+      row({ user: 'u1', block: 'b1', expand: { user: { name: 'Ada' } } as never }),
+      row({ user: 'u2', block: 'b1', expand: { user: { name: 'Bo' } } as never }),
+      row({ user: 'u3', block: 'b2', expand: { user: { name: 'Cy' } } as never }),
+      row({ user: 'u4', block: '' }), // not on a block → absent
+      row({ user: 'me', block: 'b1' }), // self → excluded
+    ];
+    const map = blockCursors(rows, 'me', NOW);
+    expect(map.b1.map((v) => v.label)).toEqual(['Ada', 'Bo']);
+    expect(map.b2.map((v) => v.label)).toEqual(['Cy']);
+    expect(Object.keys(map).sort()).toEqual(['b1', 'b2']);
+  });
+
+  it('drops cursors whose heartbeat is stale', () => {
+    const rows = [row({ user: 'u1', block: 'b1', updated: at(ACTIVE_WINDOW_MS + 1) })];
+    expect(blockCursors(rows, 'me', NOW)).toEqual({});
   });
 });

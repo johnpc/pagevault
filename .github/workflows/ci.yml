@@ -112,6 +112,8 @@ jobs:
             paths: .features-gen/e2e/features/blockselect
           - name: presence
             paths: .features-gen/e2e/features/presence
+          - name: cursors
+            paths: .features-gen/e2e/features/cursors
     env:
       VITE_PB_URL: http://localhost:8090
       PB_ADMIN_EMAIL: admin@pagevault.local

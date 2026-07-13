@@ -1,4 +1,5 @@
 import type { Viewer } from './activeViewers';
+import { viewerHue } from './viewerHue';
 import './PresenceAvatars.css';
 
 const MAX_SHOWN = 4;
@@ -20,7 +21,7 @@ export function PresenceAvatars({ viewers }: { viewers: Viewer[] }) {
         <span
           key={v.id}
           className="pv-presence-avatar"
-          style={{ backgroundColor: hueFor(v.id) }}
+          style={{ backgroundColor: viewerHue(v.id) }}
           title={`${v.label} is viewing`}
         >
           {v.initial}
@@ -33,11 +34,4 @@ export function PresenceAvatars({ viewers }: { viewers: Viewer[] }) {
       )}
     </div>
   );
-}
-
-/** A stable, pleasant HSL color derived from the viewer's id. Pure. */
-function hueFor(id: string): string {
-  let h = 0;
-  for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) % 360;
-  return `hsl(${h} 55% 45%)`;
 }

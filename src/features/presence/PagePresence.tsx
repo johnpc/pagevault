@@ -1,10 +1,11 @@
-import { usePresence } from './usePresence';
+import { usePresenceViewers } from './usePresence';
 import { PresenceAvatars } from './PresenceAvatars';
 
-/** Drop-in presence indicator for a page: runs the heartbeat + realtime
- * subscription and renders the avatar stack of everyone else currently viewing.
- * Self-contained so the page header stays render-only. */
+/** The header avatar stack of everyone else viewing the page. Reads the shared
+ * PresenceProvider (which owns the heartbeat); pageId is accepted for a stable
+ * call site but the provider is what's scoped to the page. */
 export function PagePresence({ pageId }: { pageId: string }) {
-  const viewers = usePresence(pageId);
+  void pageId;
+  const viewers = usePresenceViewers();
   return <PresenceAvatars viewers={viewers} />;
 }

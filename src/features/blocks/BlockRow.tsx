@@ -5,6 +5,8 @@ import { BlockLead } from './BlockLead';
 import { TextBlockBody } from './TextBlockBody';
 import { BlockControls } from './BlockControls';
 import { blockAnchorId } from './tocData';
+import { BlockCursors } from '../presence/BlockCursors';
+import { useReportFocus } from '../presence/useReportFocus';
 import './BlockRow.css';
 
 /** Block types that render as a whole element via MediaBlockRow, not a text line. */
@@ -39,6 +41,7 @@ export function BlockRow(props: BlockRowProps) {
   const { block, onEdit, onRemove, onDuplicate, onIndent, onPasteMarkdown } = props;
   const { onEnter, autoFocus, onFocused, dnd } = props;
   const { cls, rowDrag, handle } = useBlockDrag(block, onEdit, dnd);
+  const focusReport = useReportFocus(block.id);
   const style = { marginLeft: `${(block.depth ?? 0) * 24}px` };
   const onColor = (id: string, color: string) => onEdit(id, { color });
   // Turn-into converts the block type in place, keeping its content.
@@ -70,7 +73,8 @@ export function BlockRow(props: BlockRowProps) {
   if (MEDIA_TYPES.has(block.type)) return media;
 
   return (
-    <div id={blockAnchorId(block.id)} className={cls} style={style} {...rowDrag}>
+    <div id={blockAnchorId(block.id)} className={cls} style={style} {...rowDrag} {...focusReport}>
+      <BlockCursors blockId={block.id} />
       <BlockLead block={block} onEdit={onEdit} />
       {handle}
       {block.type === 'callout' && (

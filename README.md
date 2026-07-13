@@ -57,6 +57,7 @@ account, no third-party service, no lock-in.
 | Public link sharing (read-only /shared/<token>, no login)                | ✅     |
 | Collaborate — invite another user to a page via link (view/comment/edit) | ✅     |
 | Live presence — avatars of who else is viewing a page right now          | ✅     |
+| Live cursors — see which block each collaborator is working in           | ✅     |
 | Self-hosted via `docker compose`                                         | ✅     |
 | Inline markdown — bold, italic, code, strikethrough, underline           | ✅     |
 | Formatting shortcuts — Cmd/Ctrl+B/I/E wrap the selection                 | ✅     |

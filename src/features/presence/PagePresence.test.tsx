@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 
 vi.mock('./usePresence', () => ({
-  usePresence: () => [{ id: 'u1', label: 'Ada', initial: 'A' }],
+  usePresenceViewers: () => [{ id: 'u1', label: 'Ada', initial: 'A' }],
 }));
 
 import { PagePresence } from './PagePresence';

@@ -8,6 +8,7 @@ import { BlockList } from './BlockList';
 import { Backlinks } from './Backlinks';
 import { Comments } from '../comments/Comments';
 import { useBlockDnd } from '../blocks/useBlockDnd';
+import { PresenceProvider } from '../presence/PresenceProvider';
 import { pageFontClass } from './pageFont';
 import './PageEditor.css';
 
@@ -47,7 +48,7 @@ export function PageEditor() {
             onRetry={page.refetch}
           >
             {page.data && (
-              <>
+              <PresenceProvider pageId={id}>
                 <Breadcrumbs pageId={id} />
                 <PageHeader
                   page={page.data}
@@ -83,7 +84,7 @@ export function PageEditor() {
                 />
                 <Backlinks pageId={id} />
                 <Comments pageId={id} />
-              </>
+              </PresenceProvider>
             )}
           </LoadState>
         </div>
