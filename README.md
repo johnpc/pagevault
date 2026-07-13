@@ -64,6 +64,7 @@ account, no third-party service, no lock-in.
 | Live sync across open tabs/devices (PocketBase realtime)                      | ✅     |
 | Light / dark / system theme (Settings switcher)                               | ✅     |
 | Keyboard shortcut help overlay (?)                                            | ✅     |
+| Accessible popovers — Escape/outside-click close, focus-trapped while open    | ✅     |
 | Toggle the sidebar with ⌘\ / Ctrl+\ (floating restore button)                 | ✅     |
 | Installable PWA                                                               | ✅     |
 | Public link sharing (read-only /shared/<token>, no login)                     | ✅     |
