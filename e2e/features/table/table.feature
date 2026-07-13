@@ -91,3 +91,14 @@ Feature: Table (database) blocks
     When I show table column 2 from properties
     Then the table shows 2 columns
     And the table has a cell containing "Lead"
+
+  Scenario: Reorder columns by dragging a header
+    Given I have a page titled "Columns"
+    When I type "/table" into a new block
+    And I choose "Table" from the slash menu
+    And I fill table cell "1,1" with "first-col"
+    And I fill table cell "1,2" with "second-col"
+    And I drag table column 2 before column 1
+    Then table row 1 reads "second-col" then "first-col"
+    When I reopen the page "Columns"
+    Then table row 1 reads "second-col" then "first-col"

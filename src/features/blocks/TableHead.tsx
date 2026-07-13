@@ -1,6 +1,7 @@
 import type { TableData, TableColumnType } from '../../lib/pbTypes';
 import { setColumn, setColumnType, removeColumn, addColumn } from './tableData';
 import { visibleColumns, toggleColumnHidden } from './tableColumns';
+import { useColumnDnd } from './useColumnDnd';
 
 const TYPES: TableColumnType[] = ['text', 'number', 'checkbox', 'select', 'date'];
 
@@ -20,13 +21,25 @@ interface HeadProps {
  * name input + type picker + delete, plus the add-column button. Render-only. */
 export function TableHead({ data, save, onSort, sort }: HeadProps) {
   const arrow = (c: number) => (sort?.col !== c ? '↕' : sort.dir === 'asc' ? '▲' : '▼');
+  const dnd = useColumnDnd(data, save);
   return (
     <thead>
       <tr>
         <th className="pv-table-drag" aria-hidden="true" />
         {visibleColumns(data).map(({ column: col, index: c }) => (
-          <th key={c}>
+          <th
+            key={c}
+            className={dnd.dragCol === c ? 'pv-table-col--dragging' : ''}
+            {...dnd.cellProps(c)}
+          >
             <div className="pv-table-head">
+              <button
+                className="pv-table-colgrip"
+                aria-label={`Drag column ${c + 1}`}
+                {...dnd.handleProps(c)}
+              >
+                ⠿
+              </button>
               <button
                 className="pv-table-sort"
                 aria-label={`Sort by column ${c + 1}`}

@@ -337,3 +337,19 @@
   font-size: 13px;
   cursor: pointer;
 }
+
+/* Column drag handle + dragging state on a header cell. */
+.pv-table-colgrip {
+  background: none;
+  border: none;
+  color: var(--pv-text-muted);
+  cursor: grab;
+  font-size: 11px;
+  padding: 0 2px;
+}
+.pv-table-colgrip:active {
+  cursor: grabbing;
+}
+.pv-table-col--dragging {
+  opacity: 0.5;
+}
