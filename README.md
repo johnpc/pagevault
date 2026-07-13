@@ -42,6 +42,7 @@ account, no third-party service, no lock-in.
 | Table of contents block — auto-lists headings, click to scroll                | ✅     |
 | Table blocks — typed columns (text/number/checkbox/select/date), GFM export   | ✅     |
 | Table rows — drag to reorder, click a header to sort (type-aware)             | ✅     |
+| Table rows — duplicate a row (inserts a copy below)                           | ✅     |
 | Table board view — kanban grouped by a select column (drag cards)             | ✅     |
 | Table gallery view — browse rows as a responsive grid of cards                | ✅     |
 | Table calendar view — rows on a month grid by a date column (navigate months) | ✅     |

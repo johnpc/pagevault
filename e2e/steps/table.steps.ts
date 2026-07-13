@@ -25,6 +25,12 @@ When('I add a table row', async ({ page }) => {
   await expect.poll(() => table(page).locator('tbody tr').count()).toBeGreaterThan(before);
 });
 
+When('I duplicate table row {int}', async ({ page }, r: number) => {
+  const before = await table(page).locator('tbody tr').count();
+  await table(page).getByLabel(`Duplicate row ${r}`).click();
+  await expect.poll(() => table(page).locator('tbody tr').count()).toBeGreaterThan(before);
+});
+
 Then('the table has a cell containing {string}', async ({ page }, value: string) => {
   await expect
     .poll(() =>

@@ -18,6 +18,17 @@ Feature: Table (database) blocks
     Then the table has a cell containing "Apples"
     And the table has 2 body rows
 
+  Scenario: Duplicate a row and see the copy persist
+    Given I have a page titled "Dupes"
+    When I type "/table" into a new block
+    And I choose "Table" from the slash menu
+    And I fill table cell "1,1" with "Apples"
+    And I duplicate table row 1
+    Then the table has 2 body rows
+    When I reopen the page "Dupes"
+    Then the table has 2 body rows
+    And the table has a cell containing "Apples"
+
   Scenario: A checkbox column toggles and persists across a reload
     Given I have a page titled "Checklist"
     When I type "/table" into a new block
