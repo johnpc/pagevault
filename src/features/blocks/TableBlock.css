@@ -106,13 +106,16 @@
   opacity: 0;
   padding: 2px 4px;
 }
+.pv-table-rowdel button.pv-table-rowdup {
+  right: 20px;
+}
 .pv-table th:hover .pv-table-del,
 .pv-table td:hover .pv-table-rowdel button {
   opacity: 1;
 }
 .pv-table-rowdel {
   border: none;
-  width: 24px;
+  width: 44px;
 }
 
 .pv-table-addcol button,

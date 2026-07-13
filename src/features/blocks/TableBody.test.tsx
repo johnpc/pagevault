@@ -49,6 +49,13 @@ describe('TableBody', () => {
     expect(save).toHaveBeenCalledWith({ columns: cols('A'), rows: [['a']] });
   });
 
+  it('duplicates a row via its duplicate control', async () => {
+    const save = vi.fn();
+    renderBody({ columns: cols('A'), rows: [['a'], ['b']] }, save);
+    await userEvent.click(screen.getByLabelText('Duplicate row 1'));
+    expect(save).toHaveBeenCalledWith({ columns: cols('A'), rows: [['a'], ['a'], ['b']] });
+  });
+
   it('shows no delete control when there is only one row', () => {
     renderBody({ columns: cols('A'), rows: [['only']] });
     expect(screen.queryByLabelText('Delete row 1')).not.toBeInTheDocument();

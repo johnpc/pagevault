@@ -1,6 +1,7 @@
 import { type DragEvent } from 'react';
 import type { TableData } from '../../lib/pbTypes';
 import { setCell, removeRow } from './tableData';
+import { duplicateRow } from './tableRowOps';
 import { visibleColumns } from './tableColumns';
 import { TableCell } from './TableCell';
 
@@ -56,6 +57,13 @@ export function TableRow({
         </td>
       ))}
       <td className="pv-table-rowdel">
+        <button
+          className="pv-table-rowdup"
+          aria-label={`Duplicate row ${r + 1}`}
+          onClick={() => save(duplicateRow(data, r))}
+        >
+          ⧉
+        </button>
         {data.rows.length > 1 && (
           <button aria-label={`Delete row ${r + 1}`} onClick={() => save(removeRow(data, r))}>
             ×
