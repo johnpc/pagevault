@@ -1,6 +1,7 @@
 import type { TableColumn } from '../../lib/pbTypes';
 import { RelationCell } from './RelationCell';
 import { NumberCell } from './NumberCell';
+import { DateCell } from './DateCell';
 
 /** One table body cell, rendered by its column type. Value is always a string;
  * checkbox uses 'true'/'', select holds one option, relation holds a page id.
@@ -32,14 +33,7 @@ export function TableCell({
   }
 
   if (column.type === 'date') {
-    return (
-      <input
-        type="date"
-        aria-label={label}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-      />
-    );
+    return <DateCell value={value} format={column.format} label={label} onChange={onChange} />;
   }
 
   if (column.type === 'select') {

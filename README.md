@@ -52,6 +52,7 @@ account, no third-party service, no lock-in.
 | Saved views — name & switch filter/board/visibility configs on a table        | ✅     |
 | Table summaries — count/sum/avg/min/max/median/range/checked over visible     | ✅     |
 | Number columns — display format (plain / comma / percent / $ € £)             | ✅     |
+| Date columns — display format (ISO / medium / long / relative "in 3 days")    | ✅     |
 | Table columns — hide/show via Properties (data preserved)                     | ✅     |
 | Table columns — drag a header to reorder (cells + filters follow)             | ✅     |
 | Relation column — link a table row to a page (relational databases)           | ✅     |
