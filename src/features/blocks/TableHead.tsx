@@ -1,9 +1,8 @@
-import type { TableData, TableColumnType } from '../../lib/pbTypes';
-import { setColumn, setColumnType, removeColumn, addColumn } from './tableData';
-import { visibleColumns, toggleColumnHidden } from './tableColumns';
+import type { TableData } from '../../lib/pbTypes';
+import { addColumn } from './tableData';
+import { visibleColumns } from './tableColumns';
+import { TableColumnHead } from './TableColumnHead';
 import { useColumnDnd } from './useColumnDnd';
-
-const TYPES: TableColumnType[] = ['text', 'number', 'checkbox', 'select', 'date', 'relation'];
 
 interface SortState {
   col: number;
@@ -17,8 +16,8 @@ interface HeadProps {
   sort: SortState | null;
 }
 
-/** The table header row: a drag-column spacer, then per-column sort button +
- * name input + type picker + delete, plus the add-column button. Render-only. */
+/** The table header row: a drag-column spacer, a header cell per visible column
+ * (name/type/sort + duplicate/hide/delete), and the add-column button. */
 export function TableHead({ data, save, onSort, sort }: HeadProps) {
   const arrow = (c: number) => (sort?.col !== c ? '↕' : sort.dir === 'asc' ? '▲' : '▼');
   const dnd = useColumnDnd(data, save);
@@ -27,61 +26,18 @@ export function TableHead({ data, save, onSort, sort }: HeadProps) {
       <tr>
         <th className="pv-table-drag" aria-hidden="true" />
         {visibleColumns(data).map(({ column: col, index: c }) => (
-          <th
+          <TableColumnHead
             key={c}
-            className={dnd.dragCol === c ? 'pv-table-col--dragging' : ''}
-            {...dnd.cellProps(c)}
-          >
-            <div className="pv-table-head">
-              <button
-                className="pv-table-colgrip"
-                aria-label={`Drag column ${c + 1}`}
-                {...dnd.handleProps(c)}
-              >
-                ⠿
-              </button>
-              <button
-                className="pv-table-sort"
-                aria-label={`Sort by column ${c + 1}`}
-                onClick={() => onSort(c)}
-              >
-                {arrow(c)}
-              </button>
-              <input
-                aria-label={`Column ${c + 1} name`}
-                value={col.name}
-                onChange={(e) => save(setColumn(data, c, e.target.value))}
-              />
-              <select
-                aria-label={`Column ${c + 1} type`}
-                value={col.type}
-                onChange={(e) => save(setColumnType(data, c, e.target.value as TableColumnType))}
-              >
-                {TYPES.map((t) => (
-                  <option key={t} value={t}>
-                    {t}
-                  </option>
-                ))}
-              </select>
-              <button
-                className="pv-table-hide"
-                aria-label={`Hide column ${c + 1}`}
-                title="Hide column"
-                onClick={() => save(toggleColumnHidden(data, c, true))}
-              >
-                ⊘
-              </button>
-              {data.columns.length > 1 && (
-                <button
-                  className="pv-table-del"
-                  aria-label={`Delete column ${c + 1}`}
-                  onClick={() => save(removeColumn(data, c))}
-                >
-                  ×
-                </button>
-              )}
-            </div>
-          </th>
+            data={data}
+            col={col}
+            c={c}
+            save={save}
+            onSort={onSort}
+            arrow={arrow(c)}
+            dragging={dnd.dragCol === c}
+            cellProps={dnd.cellProps(c)}
+            handleProps={dnd.handleProps(c)}
+          />
         ))}
         <th className="pv-table-addcol">
           <button aria-label="Add column" onClick={() => save(addColumn(data))}>
