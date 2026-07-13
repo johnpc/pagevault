@@ -50,20 +50,27 @@ export function visibleRows(data: TableData, titles?: TitleMap): VisibleRow[] {
   const active = activeConditions(data);
   const all = data.rows.map((row, index) => ({ row, index }));
   if (active.length === 0) return all;
-  return all.filter((e) =>
-    active.every((f) =>
-      cellMatches(
-        cellText(data.columns[f.col], e.row[f.col] ?? '', titles),
-        f.query,
-        data.columns[f.col].type,
-      ),
-    ),
-  );
+  const matches = (e: VisibleRow, f: TableCondition) =>
+    cellMatches(
+      cellText(data.columns[f.col], e.row[f.col] ?? '', titles),
+      f.query,
+      data.columns[f.col].type,
+    );
+  // 'any' = OR (row matches at least one condition); default 'all' = AND.
+  return data.filterMatch === 'any'
+    ? all.filter((e) => active.some((f) => matches(e, f)))
+    : all.filter((e) => active.every((f) => matches(e, f)));
 }
 
 // Condition-editing helpers (setConditions/add/update/removeCondition) live in
 // tableConditions.ts; re-exported so callers keep one import site.
-export { setConditions, addCondition, updateCondition, removeCondition } from './tableConditions';
+export {
+  setConditions,
+  addCondition,
+  updateCondition,
+  removeCondition,
+  setFilterMatch,
+} from './tableConditions';
 
 /** Migrate a legacy single `filter` into the canonical `filters[]` for a grid of
  * `width` columns: keep any condition targeting a real column (blank queries

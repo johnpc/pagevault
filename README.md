@@ -42,7 +42,7 @@ account, no third-party service, no lock-in.
 | Table blocks — typed columns (text/number/checkbox/select/date), GFM export   | ✅     |
 | Table rows — drag to reorder, click a header to sort (type-aware)             | ✅     |
 | Table board view — kanban grouped by a select column (drag cards)             | ✅     |
-| Table filter — multi-condition (AND) row filters, non-destructive             | ✅     |
+| Table filter — multi-condition filters, match all (AND) or any (OR)           | ✅     |
 | Saved views — name & switch filter/board/visibility configs on a table        | ✅     |
 | Table summaries — per-column footer calc (count/sum/avg/checked over visible) | ✅     |
 | Table columns — hide/show via Properties (data preserved)                     | ✅     |

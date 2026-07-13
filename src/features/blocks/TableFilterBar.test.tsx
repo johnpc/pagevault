@@ -41,6 +41,28 @@ describe('TableFilterBar', () => {
     );
   });
 
+  it('shows a match all/any toggle with 2+ conditions and switches to OR', async () => {
+    const save = vi.fn();
+    render(
+      <TableFilterBar
+        data={grid({
+          filters: [
+            { col: 0, query: 'a' },
+            { col: 1, query: 'b' },
+          ],
+        })}
+        save={save}
+      />,
+    );
+    await userEvent.selectOptions(screen.getByLabelText('Filter match mode'), 'any');
+    expect(save).toHaveBeenCalledWith(expect.objectContaining({ filterMatch: 'any' }));
+  });
+
+  it('hides the match toggle with a single condition', () => {
+    render(<TableFilterBar data={grid({ filters: [{ col: 0, query: 'a' }] })} save={vi.fn()} />);
+    expect(screen.queryByLabelText('Filter match mode')).not.toBeInTheDocument();
+  });
+
   it('shows one row per condition and removes one on ×', async () => {
     const save = vi.fn();
     render(

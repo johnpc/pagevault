@@ -98,7 +98,11 @@ When('I filter table column {int} by {string}', async ({ page }, col: number, qu
 When(
   'I add a filter on table column {int} for {string}',
   async ({ page }, col: number, query: string) => {
-    const n = await wrap(page).locator('.pv-table-filter-row').count();
+    // Count existing CONDITION rows by their query inputs (the toolbar row that
+    // holds "+ Filter"/match toggle has no query input, so it isn't counted).
+    const n = await wrap(page)
+      .getByLabel(/^Filter \d+ query$/)
+      .count();
     await wrap(page).getByLabel('Add filter').click();
     await wrap(page)
       .getByLabel(`Filter ${n + 1} column`)
@@ -213,4 +217,8 @@ When('I save the current table view as {string}', async ({ page }, name: string)
 
 When('I apply the saved table view {string}', async ({ page }, name: string) => {
   await wrap(page).getByLabel(`Apply view ${name}`).click();
+});
+
+When('I set the filter match mode to {string}', async ({ page }, mode: string) => {
+  await wrap(page).getByLabel('Filter match mode').selectOption(mode);
 });

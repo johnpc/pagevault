@@ -35,17 +35,23 @@ export function normalize(data: TableData | null | undefined): TableData {
     return cells;
   });
   const next: TableData = { columns, rows };
+  applyConfig(next, data, width);
+  return next;
+}
+
+/** Carry the presentational config (view mode, board grouping, filters + match
+ * mode, saved views) from the raw grid onto the normalized one, dropping any
+ * that references a missing column. Mutates `next`. Pure w.r.t. `data`. */
+function applyConfig(next: TableData, data: TableData | null | undefined, width: number): void {
   if (data?.view === 'board') next.view = 'board';
-  // Keep groupBy only if it points at a real column, else clamp to the default.
   if (typeof data?.groupBy === 'number' && data.groupBy >= 0 && data.groupBy < width) {
     next.groupBy = data.groupBy;
   }
   const filters = migrateFilters(data, width);
   if (filters.length) next.filters = filters;
-  // Saved views are named presentational configs; keep any with a name.
+  if (data?.filterMatch === 'any') next.filterMatch = 'any';
   const views = (data?.views ?? []).filter((v) => v && typeof v.name === 'string' && v.name);
   if (views.length) next.views = views;
-  return next;
 }
 
 /** Set one cell, returning a new grid. */

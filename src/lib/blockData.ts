@@ -26,18 +26,20 @@ export interface TableData {
   view?: 'table' | 'board'; // display mode; defaults to 'table'
   groupBy?: number; // for the board view: index of the `select` column to group by
   filter?: { col: number; query: string }; // legacy single filter; migrated to filters[]
-  filters?: { col: number; query: string }[]; // non-destructive AND row filters; absent = off
+  filters?: { col: number; query: string }[]; // non-destructive row filters; absent = off
+  filterMatch?: 'all' | 'any'; // combine filters with AND ('all', default) or OR ('any')
   views?: TableView[]; // saved presentational configs the user can switch between
 }
 
 /** A saved view: a named snapshot of the grid's presentational config (which
- * view, board grouping, filters, and which columns are hidden). Applying it
- * restores those onto the grid; row data + order are untouched. */
+ * view, board grouping, filters + match mode, and which columns are hidden).
+ * Applying it restores those onto the grid; row data + order are untouched. */
 export interface TableView {
   name: string;
   view?: 'table' | 'board';
   groupBy?: number;
   filters?: { col: number; query: string }[];
+  filterMatch?: 'all' | 'any';
   hidden?: number[]; // indices of columns hidden in this view
 }
 
