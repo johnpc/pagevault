@@ -12,7 +12,7 @@ export type TableColumnType = 'text' | 'number' | 'checkbox' | 'select' | 'date'
 
 /** How a table block is displayed: the spreadsheet grid, a kanban board grouped
  * by a select column, or a gallery of cards. Defaults to 'table'. */
-export type TableViewMode = 'table' | 'board' | 'gallery';
+export type TableViewMode = 'table' | 'board' | 'gallery' | 'calendar';
 
 export interface TableColumn {
   name: string; // header label
