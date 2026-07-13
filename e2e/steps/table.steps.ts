@@ -101,3 +101,21 @@ When(
     await expect(input).toHaveValue(iso);
   },
 );
+
+When(
+  'I set the summary for table column {int} to {string}',
+  async ({ page }, col: number, kind: string) => {
+    await table(page).getByLabel(`Summary for column ${col}`).selectOption(kind);
+    await expect(table(page).getByLabel(`Summary for column ${col}`)).toHaveValue(kind);
+  },
+);
+
+Then(
+  'the table summary for column {int} shows {string}',
+  async ({ page }, col: number, value: string) => {
+    // The footer cell for column `col` is the (col+1)th cell in the tfoot row
+    // (a leading drag-spacer cell precedes the columns).
+    const cell = table(page).locator('tfoot tr td').nth(col);
+    await expect.poll(() => cell.locator('.pv-table-summary-value').innerText()).toBe(value);
+  },
+);
