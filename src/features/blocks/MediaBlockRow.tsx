@@ -4,6 +4,7 @@ import { ImageBlock } from './ImageBlock';
 import { TableBlock } from './TableBlock';
 import { ColumnsBlock } from './ColumnsBlock';
 import { TableOfContents } from './TableOfContents';
+import { BookmarkBlock } from './BookmarkBlock';
 import { BlockControls } from './BlockControls';
 
 interface MediaProps {
@@ -79,6 +80,16 @@ export function MediaBlockRow(props: MediaProps) {
       <div className={cls} style={style} {...rowDrag}>
         {handle}
         <TableOfContents pageId={block.page} />
+        {controls}
+      </div>
+    );
+  }
+
+  if (block.type === 'bookmark') {
+    return (
+      <div className={cls} style={style} {...rowDrag}>
+        {handle}
+        <BookmarkBlock block={block} onEdit={onEdit} />
         {controls}
       </div>
     );

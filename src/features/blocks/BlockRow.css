@@ -534,3 +534,47 @@
 .pv-codelang-item--on {
   font-weight: 600;
 }
+
+/* Bookmark block: a link card showing the domain + full URL. */
+.pv-bookmark {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  border: 1px solid var(--pv-border);
+  border-radius: var(--pv-radius-sm);
+  padding: 8px 12px;
+}
+.pv-bookmark-link {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  text-decoration: none;
+  color: var(--pv-text);
+}
+.pv-bookmark-domain {
+  font-weight: 600;
+  font-size: 13px;
+}
+.pv-bookmark-url {
+  color: var(--pv-text-muted);
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pv-bookmark-edit-btn {
+  background: none;
+  border: none;
+  color: var(--pv-text-muted);
+  cursor: pointer;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.pv-bookmark-edit-btn:hover {
+  color: var(--pv-text);
+}
+.pv-bookmark-edit {
+  width: 100%;
+}

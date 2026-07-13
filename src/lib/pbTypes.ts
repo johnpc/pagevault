@@ -36,7 +36,8 @@ export type BlockType =
   | 'toggle'
   | 'table'
   | 'columns'
-  | 'toc';
+  | 'toc'
+  | 'bookmark';
 
 export interface PagesResponse extends BaseRecord {
   title: string;

@@ -29,6 +29,9 @@ describe('blockToMarkdown', () => {
     expect(blockToMarkdown(blk('quote', 'Wise'))).toBe('> Wise');
     expect(blockToMarkdown(blk('code', 'x = 1'))).toBe('```\nx = 1\n```');
     expect(blockToMarkdown(blk('divider', ''))).toBe('---');
+    expect(blockToMarkdown(blk('bookmark', 'https://x.dev'))).toBe(
+      '[https://x.dev](https://x.dev)',
+    );
     // A code block with a language emits a fenced language.
     expect(blockToMarkdown({ ...blk('code', 'x = 1'), lang: 'python' })).toBe(
       '```python\nx = 1\n```',

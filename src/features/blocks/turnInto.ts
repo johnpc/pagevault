@@ -13,6 +13,7 @@ const NON_TEXT: ReadonlySet<BlockType> = new Set<BlockType>([
   'columns',
   'toc',
   'divider',
+  'bookmark',
 ]);
 
 export const TURN_INTO_TYPES: SlashCommand[] = SLASH_COMMANDS.filter((c) => !NON_TEXT.has(c.type));

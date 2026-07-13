@@ -11,7 +11,7 @@ import { CalloutIcon } from './CalloutIcon';
 import './BlockRow.css';
 
 /** Block types that render as a whole element via MediaBlockRow, not a text line. */
-const MEDIA_TYPES = new Set(['divider', 'image', 'table', 'columns', 'toc']);
+const MEDIA_TYPES = new Set(['divider', 'image', 'table', 'columns', 'toc', 'bookmark']);
 
 export interface BlockDndHandlers {
   draggingId: string | null;
