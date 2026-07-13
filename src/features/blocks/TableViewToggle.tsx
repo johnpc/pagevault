@@ -1,8 +1,10 @@
 import type { TableData, TableViewMode } from '../../lib/pbTypes';
 import { firstSelectColumn } from './tableGroups';
+import { firstDateColumn } from './calendarGrid';
 
-/** The Table / Board / Gallery switch above a table. Board needs a `select`
- * column to group by; when there is none the Board option is disabled. */
+/** The Table / Board / Gallery / Calendar switch above a table. Board needs a
+ * `select` column to group by and Calendar needs a `date` column; when the
+ * required column is missing that option is disabled. */
 export function TableViewToggle({
   data,
   onView,
@@ -12,6 +14,7 @@ export function TableViewToggle({
 }) {
   const view = data.view ?? 'table';
   const canBoard = firstSelectColumn(data) !== -1;
+  const canCalendar = firstDateColumn(data) !== -1;
   const tabs: { mode: TableViewMode; label: string; disabled?: boolean; hint?: string }[] = [
     { mode: 'table', label: 'Table' },
     {
@@ -21,6 +24,12 @@ export function TableViewToggle({
       hint: canBoard ? '' : 'Add a Select column to group a board',
     },
     { mode: 'gallery', label: 'Gallery' },
+    {
+      mode: 'calendar',
+      label: 'Calendar',
+      disabled: !canCalendar,
+      hint: canCalendar ? '' : 'Add a Date column to use the calendar',
+    },
   ];
   return (
     <div className="pv-table-views" role="tablist" aria-label="Table view">

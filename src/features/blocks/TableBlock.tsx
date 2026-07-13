@@ -6,12 +6,8 @@ import { displayTitle } from '../pages/pageTree';
 import { normalize } from './tableData';
 import { sortByColumn } from './tableSort';
 import type { TitleMap } from './cellText';
-import { TableBoard } from './TableBoard';
-import { TableGrid } from './TableGrid';
-import { GalleryView } from './GalleryView';
+import { TableViewBody } from './TableViewBody';
 import { TableViewToggle } from './TableViewToggle';
-import { TableFilterBar } from './TableFilterBar';
-import { TableProperties } from './TableProperties';
 import { TableViews } from './TableViews';
 import './TableBlock.css';
 
@@ -47,21 +43,14 @@ export function TableBlock({
     <div className="pv-table-wrap">
       <TableViews data={data} save={save} />
       <TableViewToggle data={data} onView={(v) => save({ ...data, view: v })} />
-      {view === 'board' ? (
-        <TableBoard data={data} save={save} />
-      ) : (
-        <>
-          <div className="pv-table-toolbar">
-            <TableFilterBar data={data} save={save} />
-            <TableProperties data={data} save={save} />
-          </div>
-          {view === 'gallery' ? (
-            <GalleryView data={data} save={save} titles={titles} />
-          ) : (
-            <TableGrid data={data} save={save} titles={titles} sort={sort} onSort={onSort} />
-          )}
-        </>
-      )}
+      <TableViewBody
+        view={view}
+        data={data}
+        save={save}
+        titles={titles}
+        sort={sort}
+        onSort={onSort}
+      />
     </div>
   );
 }

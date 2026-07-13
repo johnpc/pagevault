@@ -274,6 +274,86 @@
   text-align: left;
 }
 
+/* Calendar view: a 7-column month grid with a month navigator above it. */
+.pv-calendar-empty {
+  padding: 12px;
+}
+.pv-calendar-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.pv-calendar-nav button {
+  background: var(--pv-hover);
+  border: 1px solid var(--pv-border);
+  border-radius: var(--pv-radius-sm);
+  color: var(--pv-text);
+  cursor: pointer;
+  font: inherit;
+  line-height: 1;
+  padding: 4px 10px;
+}
+.pv-calendar-title {
+  font-weight: 600;
+}
+.pv-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  background: var(--pv-border);
+  border: 1px solid var(--pv-border);
+  border-radius: var(--pv-radius-sm);
+  overflow: hidden;
+}
+.pv-calendar-weekday {
+  background: var(--pv-hover);
+  color: var(--pv-text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 6px;
+  text-align: center;
+}
+.pv-calendar-day {
+  background: var(--pv-surface);
+  min-height: 72px;
+  padding: 4px;
+}
+.pv-calendar-day--spill {
+  background: var(--pv-hover);
+  color: var(--pv-text-muted);
+}
+.pv-calendar-daynum {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+}
+.pv-calendar-add {
+  background: none;
+  border: none;
+  color: var(--pv-text-muted);
+  cursor: pointer;
+  font: inherit;
+  line-height: 1;
+  opacity: 0;
+  padding: 0 2px;
+}
+.pv-calendar-day:hover .pv-calendar-add {
+  opacity: 1;
+}
+.pv-calendar-event {
+  background: var(--pv-accent);
+  border-radius: 4px;
+  color: var(--pv-accent-contrast);
+  font-size: 12px;
+  margin-top: 3px;
+  overflow: hidden;
+  padding: 2px 5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* One-column filter bar above the grid (non-destructive row filter). */
 .pv-table-filter {
   display: flex;

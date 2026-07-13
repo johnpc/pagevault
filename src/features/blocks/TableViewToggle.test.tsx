@@ -39,4 +39,19 @@ describe('TableViewToggle', () => {
     await userEvent.click(gallery);
     expect(onView).toHaveBeenCalledWith('gallery');
   });
+
+  it('disables Calendar without a date column, enables it with one', () => {
+    render(<TableViewToggle data={noSelect} onView={vi.fn()} />);
+    expect(screen.getByRole('tab', { name: 'Calendar' })).toBeDisabled();
+  });
+
+  it('switches to the calendar view when a date column exists', async () => {
+    const onView = vi.fn();
+    const withDate: TableData = { columns: [{ name: 'D', type: 'date' }], rows: [] };
+    render(<TableViewToggle data={withDate} onView={onView} />);
+    const cal = screen.getByRole('tab', { name: 'Calendar' });
+    expect(cal).not.toBeDisabled();
+    await userEvent.click(cal);
+    expect(onView).toHaveBeenCalledWith('calendar');
+  });
 });
