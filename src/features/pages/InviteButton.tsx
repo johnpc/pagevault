@@ -3,6 +3,7 @@ import type { PageRecord } from '../../lib/pbClient';
 import type { ShareRole } from '../../lib/pbTypes';
 import { useSetInvite, useRevokeInvite } from './sharesApi';
 import { inviteUrl } from './sharing';
+import { usePopover } from '../shell/usePopover';
 
 const ROLES: { role: ShareRole; label: string }[] = [
   { role: 'view', label: 'Can view' },
@@ -15,7 +16,7 @@ const ROLES: { role: ShareRole; label: string }[] = [
 export function InviteButton({ page }: { page: PageRecord }) {
   const setInvite = useSetInvite();
   const revoke = useRevokeInvite();
-  const [open, setOpen] = useState(false);
+  const { open, setOpen, triggerRef, menuRef, onKeyDown } = usePopover<HTMLUListElement>();
   const [copied, setCopied] = useState(false);
 
   const pick = async (role: ShareRole) => {
@@ -27,8 +28,9 @@ export function InviteButton({ page }: { page: PageRecord }) {
   };
 
   return (
-    <div className="pv-invite">
+    <div className="pv-invite" onKeyDown={onKeyDown}>
       <button
+        ref={triggerRef}
         className="pv-page-delete pv-muted"
         aria-label="Invite collaborators"
         aria-expanded={open}
@@ -37,7 +39,7 @@ export function InviteButton({ page }: { page: PageRecord }) {
         {page.inviteToken ? '👥 Invite ✓' : '👥 Invite'}
       </button>
       {open && (
-        <ul className="pv-invite-menu" role="listbox" aria-label="Invite role">
+        <ul ref={menuRef} className="pv-invite-menu" role="listbox" aria-label="Invite role">
           {ROLES.map((r) => (
             <li key={r.role}>
               <button
