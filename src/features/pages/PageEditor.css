@@ -185,6 +185,69 @@
   background: var(--pv-accent-soft);
 }
 
+/* Searchable icon picker popover. */
+.pv-icon-pick {
+  position: relative;
+}
+.pv-icon-current {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 40px;
+  line-height: 1;
+  padding: 2px 4px;
+  border-radius: var(--pv-radius-sm);
+}
+.pv-icon-current:hover {
+  background: var(--pv-hover);
+}
+.pv-icon-menu {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  z-index: 20;
+  margin: 4px 0 0;
+  padding: 8px;
+  width: 260px;
+  background: var(--pv-surface);
+  border: 1px solid var(--pv-border);
+  border-radius: var(--pv-radius-sm);
+  box-shadow: var(--pv-shadow);
+}
+.pv-icon-search {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--pv-border);
+  border-radius: var(--pv-radius-sm);
+  background: var(--pv-bg);
+  color: var(--pv-text);
+  font: inherit;
+  padding: 5px 8px;
+  margin-bottom: 6px;
+}
+.pv-icon-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  max-height: 180px;
+  overflow-y: auto;
+}
+.pv-icon-none {
+  grid-column: 1 / -1;
+  padding: 8px;
+  font-size: 13px;
+}
+.pv-icon-remove {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  padding: 6px 4px 2px;
+  width: 100%;
+  text-align: left;
+}
+
 .pv-page-title {
   border: none;
   background: none;

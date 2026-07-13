@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { PageRecord } from '../../lib/pbClient';
 import { CoverPicker } from './CoverPicker';
+import { IconPicker } from './IconPicker';
 import { PageActions } from './PageActions';
 import { PagePresence } from '../presence/PagePresence';
 import { useReconciled } from '../blocks/useReconciled';
@@ -22,8 +23,6 @@ interface PageHeaderProps {
   onFont: (font: string) => void;
   collapse: CollapseAll;
 }
-
-const ICONS = ['📄', '📝', '📌', '💡', '✅', '📚', '🚀', '🗂️'];
 
 /** The page's cover + icon picker + title field + the actions row. */
 export function PageHeader({
@@ -55,16 +54,7 @@ export function PageHeader({
       </div>
       <CoverPicker page={page} onCover={onCover} onUpload={onCoverUpload} />
       <div className="pv-page-icons">
-        {ICONS.map((icon) => (
-          <button
-            key={icon}
-            className={`pv-icon-choice${page.icon === icon ? ' pv-icon-choice--on' : ''}`}
-            aria-label={`Set icon ${icon}`}
-            onClick={() => onIcon(icon)}
-          >
-            {icon}
-          </button>
-        ))}
+        <IconPicker icon={page.icon} onPick={onIcon} />
       </div>
       <input
         className="pv-page-title"

@@ -64,7 +64,8 @@ account, no third-party service, no lock-in.
 | Enter continues a list; an empty item exits / outdents the list               | ✅     |
 | Slash command menu (`/` to pick a block type)                                 | ✅     |
 | Turn into — convert an existing block to another type, keeping content        | ✅     |
-| Page icons + cover banners (gradient or uploaded image)                       | ✅     |
+| Page icons — searchable emoji picker (keyword filter + remove)                | ✅     |
+| Page cover banners (gradient or uploaded image)                               | ✅     |
 | Full-width page toggle (per page)                                             | ✅     |
 | Page font style — Default / Serif / Mono (per page)                           | ✅     |
 | Live sync across open tabs/devices (PocketBase realtime)                      | ✅     |

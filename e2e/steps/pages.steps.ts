@@ -423,3 +423,16 @@ When('I enter the embed URL {string}', async ({ page }, url: string) => {
 Then('the page shows an embedded iframe', async ({ page }) => {
   await expect(active(page).locator('iframe.pv-embed-frame').first()).toBeVisible();
 });
+
+When(
+  'I search page icons for {string} and pick {string}',
+  async ({ page }, query: string, emoji: string) => {
+    await active(page).getByLabel('Page icon').click();
+    await active(page).getByLabel('Search icons').fill(query);
+    await active(page).getByLabel(`Set icon ${emoji}`).click();
+  },
+);
+
+Then('the page icon is {string}', async ({ page }, emoji: string) => {
+  await expect.poll(() => active(page).getByLabel('Page icon').innerText()).toContain(emoji);
+});
