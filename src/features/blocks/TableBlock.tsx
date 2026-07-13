@@ -8,6 +8,7 @@ import { TableBody } from './TableBody';
 import { TableBoard } from './TableBoard';
 import { TableViewToggle } from './TableViewToggle';
 import { TableFilterBar } from './TableFilterBar';
+import { TableProperties } from './TableProperties';
 import { TableFooter } from './TableFooter';
 import './TableBlock.css';
 
@@ -40,7 +41,10 @@ export function TableBlock({
         <TableBoard data={data} save={save} />
       ) : (
         <>
-          <TableFilterBar data={data} save={save} />
+          <div className="pv-table-toolbar">
+            <TableFilterBar data={data} save={save} />
+            <TableProperties data={data} save={save} />
+          </div>
           <table className="pv-table">
             <TableHead data={data} save={save} onSort={onSort} sort={sort} />
             <TableBody data={data} save={save} />

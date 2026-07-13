@@ -78,3 +78,16 @@ Feature: Table (database) blocks
     Then the table summary for column 2 shows "15"
     When I filter table column 2 by "10"
     Then the table summary for column 2 shows "10"
+
+  Scenario: Hide a column, then restore it from Properties
+    Given I have a page titled "Roster"
+    When I type "/table" into a new block
+    And I choose "Table" from the slash menu
+    And I fill table cell "1,1" with "Ada"
+    And I fill table cell "1,2" with "Lead"
+    And I hide table column 2
+    Then the table shows 1 column
+    And the table has a cell containing "Ada"
+    When I show table column 2 from properties
+    Then the table shows 2 columns
+    And the table has a cell containing "Lead"

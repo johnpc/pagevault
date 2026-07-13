@@ -1,5 +1,6 @@
 import type { TableData } from '../../lib/pbTypes';
 import { setColumnSummary } from './tableData';
+import { visibleColumns } from './tableColumns';
 import { visibleRows } from './tableFilter';
 import { summaryOptions, summaryLabel, summarize, type SummaryKind } from './tableSummary';
 
@@ -13,7 +14,7 @@ export function TableFooter({ data, save }: { data: TableData; save: (next: Tabl
     <tfoot>
       <tr className="pv-table-foot">
         <td className="pv-table-drag" aria-hidden="true" />
-        {data.columns.map((col, c) => {
+        {visibleColumns(data).map(({ column: col, index: c }) => {
           const kind = (col.summary ?? 'none') as SummaryKind;
           const result = summarize(
             kind,

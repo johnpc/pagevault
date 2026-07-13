@@ -119,3 +119,21 @@ Then(
     await expect.poll(() => cell.locator('.pv-table-summary-value').innerText()).toBe(value);
   },
 );
+
+When('I hide table column {int}', async ({ page }, col: number) => {
+  await table(page).getByLabel(`Hide column ${col}`).click();
+});
+
+Then('the table shows {int} column', async ({ page }, n: number) => {
+  await expect(table(page).locator('thead .pv-table-head')).toHaveCount(n);
+});
+Then('the table shows {int} columns', async ({ page }, n: number) => {
+  await expect(table(page).locator('thead .pv-table-head')).toHaveCount(n);
+});
+
+When('I show table column {int} from properties', async ({ page }, col: number) => {
+  await active(page).getByLabel('Table properties').click();
+  // .click() (not .check()) — the checkbox is controlled, so its checked state
+  // updates via the re-render after save, which .check()'s post-assert can race.
+  await active(page).getByLabel(`Show column ${col}`).click();
+});
