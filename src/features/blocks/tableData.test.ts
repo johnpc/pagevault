@@ -53,6 +53,28 @@ describe('tableData', () => {
     ]);
   });
 
+  it('normalize migrates a legacy single filter into filters[]', () => {
+    const n = normalize({
+      columns: cols('A', 'B'),
+      rows: [['x', 'y']],
+      filter: { col: 1, query: 'q' },
+    });
+    expect(n.filters).toEqual([{ col: 1, query: 'q' }]);
+    expect(n.filter).toBeUndefined();
+  });
+
+  it('normalize keeps blank (editing) conditions but drops out-of-range columns', () => {
+    const n = normalize({
+      columns: cols('A', 'B'),
+      rows: [['x', 'y']],
+      filters: [
+        { col: 0, query: '' }, // blank → kept (user is editing it)
+        { col: 5, query: 'z' }, // out of range → dropped
+      ],
+    });
+    expect(n.filters).toEqual([{ col: 0, query: '' }]);
+  });
+
   it('setCell replaces just one cell immutably', () => {
     const g = grid();
     const next = setCell(g, 0, 1, 'Z');

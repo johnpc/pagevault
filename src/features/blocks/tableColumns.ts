@@ -58,6 +58,8 @@ export function moveColumn(data: TableData, from: number, to: number): TableData
   };
   const out: TableData = { ...data, columns: move(data.columns), rows: data.rows.map(move) };
   if (out.filter) out.filter = { ...out.filter, col: remapIndex(out.filter.col, from, to) };
+  if (out.filters)
+    out.filters = out.filters.map((f) => ({ ...f, col: remapIndex(f.col, from, to) }));
   if (typeof out.groupBy === 'number') out.groupBy = remapIndex(out.groupBy, from, to);
   return out;
 }
