@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { PageRecord } from '../../lib/pbClient';
 import { CoverPicker } from './CoverPicker';
 import { PageActions } from './PageActions';
+import { PagePresence } from '../presence/PagePresence';
 import { useReconciled } from '../blocks/useReconciled';
 
 interface PageHeaderProps {
@@ -46,6 +47,9 @@ export function PageHeader({
   const [title, setTitle] = useReconciled(page.title, focused);
   return (
     <header className="pv-page-header">
+      <div className="pv-page-presence-bar">
+        <PagePresence pageId={page.id} />
+      </div>
       <CoverPicker page={page} onCover={onCover} onUpload={onCoverUpload} />
       <div className="pv-page-icons">
         {ICONS.map((icon) => (

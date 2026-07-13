@@ -7,6 +7,7 @@
  * the collection-specific fields on top.
  */
 import type { TableData, ColumnsData } from './blockData';
+import type { ShareRole } from './collabTypes';
 
 // Re-export the block `data` payload shapes so existing imports from the
 // pbTypes barrel keep working after the split into blockData.ts.
@@ -82,12 +83,6 @@ export interface CommentsResponse extends BaseRecord {
   owner: string;
 }
 
-/** A collaborator's permission on a shared page (ascending capability). */
-export type ShareRole = 'view' | 'comment' | 'edit';
-
-/** One membership: a user has joined a page at a role via its invite link. */
-export interface SharesResponse extends BaseRecord {
-  page: string;
-  user: string;
-  role: ShareRole;
-}
+// Collaboration record shapes (memberships + presence) live in collabTypes.ts;
+// re-exported here so callers keep importing them from the pbTypes barrel.
+export type { ShareRole, SharesResponse, PresenceResponse } from './collabTypes';
