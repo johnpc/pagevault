@@ -13,6 +13,7 @@ import { TableViewToggle } from './TableViewToggle';
 import { TableFilterBar } from './TableFilterBar';
 import { TableProperties } from './TableProperties';
 import { TableFooter } from './TableFooter';
+import { TableViews } from './TableViews';
 import './TableBlock.css';
 
 /** An editable typed table/database grid. The whole grid lives in the block's
@@ -43,6 +44,7 @@ export function TableBlock({
 
   return (
     <div className="pv-table-wrap">
+      <TableViews data={data} save={save} />
       <TableViewToggle data={data} onView={(view) => save({ ...data, view })} />
       {data.view === 'board' ? (
         <TableBoard data={data} save={save} />

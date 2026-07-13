@@ -142,3 +142,19 @@ Feature: Table (database) blocks
     When I add a filter on table column 2 for "red"
     Then the table has 1 body rows
     And the table has a cell containing "red"
+
+  Scenario: Save a filtered view and re-apply it
+    Given I have a page titled "Saved views"
+    When I open the page "Saved views"
+    And I type "/table" into a new block
+    And I choose "Table" from the slash menu
+    And I fill table cell "1,1" with "keep"
+    And I add a table row
+    And I fill table cell "2,1" with "drop"
+    And I filter table column 1 by "keep"
+    Then the table has 1 body rows
+    And I save the current table view as "Kept"
+    When I clear the table filter
+    Then the table has 2 body rows
+    When I apply the saved table view "Kept"
+    Then the table has 1 body rows
