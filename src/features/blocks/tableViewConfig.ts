@@ -12,6 +12,7 @@ export function captureView(data: TableData, name: string): TableView {
   const mode = persistedView(data.view);
   if (mode) view.view = mode;
   if (typeof data.groupBy === 'number') view.groupBy = data.groupBy;
+  if (data.grouped === true) view.grouped = true;
   if (active.length) view.filters = active.map((f) => ({ col: f.col, query: f.query }));
   if (data.filterMatch === 'any') view.filterMatch = 'any';
   if (hidden.length) view.hidden = hidden;
@@ -34,8 +35,10 @@ export function applyView(data: TableData, view: TableView): TableData {
   delete out.filters;
   delete out.filterMatch;
   delete out.groupBy;
+  delete out.grouped;
   out.view = persistedView(view.view) ?? 'table';
   if (typeof view.groupBy === 'number') out.groupBy = view.groupBy;
+  if (view.grouped === true) out.grouped = true;
   if (view.filters?.length) out.filters = view.filters.map((f) => ({ ...f }));
   if (view.filterMatch === 'any') out.filterMatch = 'any';
   return out;

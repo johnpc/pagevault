@@ -1,16 +1,16 @@
-import { useState, type DragEvent } from 'react';
+import { useState } from 'react';
 import type { TableData } from '../../lib/pbTypes';
-import { setCell, removeRow } from './tableData';
 import { moveRow } from './tableSort';
 import { visibleRows } from './tableFilter';
 import { visibleColumns } from './tableColumns';
 import type { TitleMap } from './cellText';
-import { TableCell } from './TableCell';
+import { TableRow } from './TableRow';
+import { isGrouped, tableGroups, isCollapsed, toggleCollapsed } from './tableGrouping';
 
-/** The table body: editable cells plus a per-row drag handle for reordering.
- * Rows honor the grid's non-destructive filter — each rendered row keeps its
- * REAL index so edits/deletes/drags target the right underlying row. `titles`
- * lets a relation-column filter match by page title. Row-drag state is local. */
+/** The table body: editable rows honoring the grid's non-destructive filter,
+ * each keeping its REAL index. When grouping is on, rows render under collapsible
+ * section headers (grouped by the group-by select column). Row-drag state is
+ * local; a drop reorders the underlying rows. */
 export function TableBody({
   data,
   save,
@@ -21,53 +21,49 @@ export function TableBody({
   titles?: TitleMap;
 }) {
   const [dragRow, setDragRow] = useState<number | null>(null);
-
   const drop = (to: number) => {
     if (dragRow !== null && dragRow !== to) save(moveRow(data, dragRow, to));
     setDragRow(null);
   };
-
-  return (
-    <tbody>
-      {visibleRows(data, titles).map(({ row, index: r }) => (
-        <tr
-          key={r}
-          className={dragRow === r ? 'pv-table-row--dragging' : ''}
-          onDragOver={(e: DragEvent) => e.preventDefault()}
-          onDrop={(e: DragEvent) => {
-            e.preventDefault();
-            drop(r);
-          }}
-        >
-          <td className="pv-table-drag">
-            <button
-              aria-label={`Drag row ${r + 1}`}
-              draggable
-              onDragStart={() => setDragRow(r)}
-              onDragEnd={() => setDragRow(null)}
-            >
-              ⋮⋮
-            </button>
-          </td>
-          {visibleColumns(data).map(({ column, index: c }) => (
-            <td key={c}>
-              <TableCell
-                column={column}
-                value={row[c] ?? ''}
-                label={`Cell ${r + 1},${c + 1}`}
-                onChange={(v) => save(setCell(data, r, c, v))}
-              />
-            </td>
-          ))}
-          <td className="pv-table-rowdel">
-            {data.rows.length > 1 && (
-              <button aria-label={`Delete row ${r + 1}`} onClick={() => save(removeRow(data, r))}>
-                ×
-              </button>
-            )}
-          </td>
-        </tr>
-      ))}
-    </tbody>
+  const rowFor = (r: number) => (
+    <TableRow
+      key={r}
+      data={data}
+      save={save}
+      r={r}
+      row={data.rows[r]}
+      dragging={dragRow === r}
+      onDragStart={() => setDragRow(r)}
+      onDragEnd={() => setDragRow(null)}
+      onDrop={() => drop(r)}
+    />
   );
+
+  if (isGrouped(data)) {
+    const span = visibleColumns(data).length + 2; // + drag + delete columns
+    return (
+      <tbody>
+        {tableGroups(data, titles).map((g) => {
+          const collapsed = isCollapsed(data, g.value);
+          return [
+            <tr key={`h:${g.value}`} className="pv-table-grouphead">
+              <td colSpan={span}>
+                <button
+                  aria-expanded={!collapsed}
+                  aria-label={`Group ${g.label}`}
+                  onClick={() => save(toggleCollapsed(data, g.value))}
+                >
+                  {collapsed ? '▸' : '▾'} {g.label}{' '}
+                  <span className="pv-muted">{g.rows.length}</span>
+                </button>
+              </td>
+            </tr>,
+            ...(collapsed ? [] : g.rows.map(rowFor)),
+          ];
+        })}
+      </tbody>
+    );
+  }
+
+  return <tbody>{visibleRows(data, titles).map(({ index: r }) => rowFor(r))}</tbody>;
 }

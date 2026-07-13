@@ -45,6 +45,7 @@ account, no third-party service, no lock-in.
 | Table board view — kanban grouped by a select column (drag cards)             | ✅     |
 | Table gallery view — browse rows as a responsive grid of cards                | ✅     |
 | Table calendar view — rows on a month grid by a date column (navigate months) | ✅     |
+| Grouped table — collapsible sections grouped by a select column               | ✅     |
 | Table filter — multi-condition filters, match all (AND) or any (OR)           | ✅     |
 | Saved views — name & switch filter/board/visibility configs on a table        | ✅     |
 | Table summaries — per-column footer calc (count/sum/avg/checked over visible) | ✅     |

@@ -28,7 +28,9 @@ export interface TableData {
   columns: TableColumn[];
   rows: string[][];
   view?: TableViewMode; // display mode; defaults to 'table'
-  groupBy?: number; // for the board view: index of the `select` column to group by
+  groupBy?: number; // board/grouped-table grouping: index of the `select` column
+  grouped?: boolean; // table view: render collapsible group sections by groupBy
+  collapsedGroups?: string[]; // group values whose section is collapsed (table view)
   filter?: { col: number; query: string }; // legacy single filter; migrated to filters[]
   filters?: { col: number; query: string }[]; // non-destructive row filters; absent = off
   filterMatch?: 'all' | 'any'; // combine filters with AND ('all', default) or OR ('any')
@@ -42,6 +44,7 @@ export interface TableView {
   name: string;
   view?: TableViewMode;
   groupBy?: number;
+  grouped?: boolean;
   filters?: { col: number; query: string }[];
   filterMatch?: 'all' | 'any';
   hidden?: number[]; // indices of columns hidden in this view

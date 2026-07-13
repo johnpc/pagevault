@@ -6,6 +6,7 @@ import { GalleryView } from './GalleryView';
 import { CalendarView } from './CalendarView';
 import { TableFilterBar } from './TableFilterBar';
 import { TableProperties } from './TableProperties';
+import { TableGroupToggle } from './TableGroupToggle';
 
 /** Renders the body for the active table view. Board and Calendar carry their
  * own controls (no toolbar); Table and Gallery share the filter + Properties
@@ -31,6 +32,7 @@ export function TableViewBody({
     <>
       <div className="pv-table-toolbar">
         <TableFilterBar data={data} save={save} />
+        {view === 'table' && <TableGroupToggle data={data} save={save} />}
         <TableProperties data={data} save={save} />
       </div>
       {view === 'gallery' ? (

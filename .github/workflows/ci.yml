@@ -88,6 +88,8 @@ jobs:
             paths: .features-gen/e2e/features/gallery
           - name: calendar
             paths: .features-gen/e2e/features/calendar
+          - name: grouping
+            paths: .features-gen/e2e/features/grouping
           - name: cover
             paths: .features-gen/e2e/features/cover
           - name: backlinks
