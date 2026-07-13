@@ -57,7 +57,13 @@ export const SLASH_COMMANDS: SlashCommand[] = [
     type: 'bookmark',
     label: 'Bookmark',
     icon: '🔖',
-    keywords: ['bookmark', 'link', 'url', 'web', 'embed'],
+    keywords: ['bookmark', 'link', 'url', 'web'],
+  },
+  {
+    type: 'embed',
+    label: 'Video / audio',
+    icon: '🎬',
+    keywords: ['embed', 'video', 'audio', 'youtube', 'vimeo', 'media', 'mp4', 'mp3'],
   },
   {
     type: 'divider',

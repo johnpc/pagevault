@@ -60,6 +60,7 @@ export function blockToMarkdown(
     case 'divider':
       return '---';
     case 'bookmark':
+    case 'embed':
       return text ? `[${text}](${text})` : '';
     default:
       return text;

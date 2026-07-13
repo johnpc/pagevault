@@ -168,3 +168,13 @@ Feature: Pages and blocks
     Then the page shows a bookmark to "notion.so"
     When I reopen the page "Links"
     Then the page shows a bookmark to "notion.so"
+
+  Scenario: Insert a video embed and see the player
+    Given I have a page titled "Media"
+    When I open the page "Media"
+    And I type "/video" into a new block
+    And I choose "Video / audio" from the slash menu
+    And I enter the embed URL "https://youtu.be/dQw4w9WgXcQ"
+    Then the page shows an embedded iframe
+    When I reopen the page "Media"
+    Then the page shows an embedded iframe
