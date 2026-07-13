@@ -11,14 +11,20 @@ export function setColumn(data: TableData, c: number, name: string): TableData {
   };
 }
 
-/** Change one column's type (and seed select options from distinct cell
- * values). Type change drops any incompatible summary/options. */
+/** Distinct non-empty option values seeded from column `c`'s cells (splitting
+ * multi-select comma-joins so each tag becomes its own option). Pure. */
+function seedOptions(data: TableData, c: number): string[] {
+  const raw = data.rows.flatMap((row) => (row[c] ?? '').split(',').map((v) => v.trim()));
+  return [...new Set(raw.filter(Boolean))];
+}
+
+/** Change one column's type (and seed select/multiselect options from distinct
+ * cell values). Type change drops any incompatible summary/options. */
 export function setColumnType(data: TableData, c: number, type: TableColumnType): TableData {
   const columns = data.columns.map((col, j) => {
     if (j !== c) return col;
-    if (type !== 'select') return { name: col.name, type };
-    const options = [...new Set(data.rows.map((row) => row[c]).filter(Boolean))];
-    return { name: col.name, type, options };
+    if (type !== 'select' && type !== 'multiselect') return { name: col.name, type };
+    return { name: col.name, type, options: seedOptions(data, c) };
   });
   return { ...data, columns };
 }
@@ -74,25 +80,6 @@ export function toggleColumnHidden(data: TableData, c: number, hidden: boolean):
     const next = { ...col };
     if (hidden) next.hidden = true;
     else delete next.hidden;
-    return next;
-  });
-  return { ...data, columns };
-}
-
-/** Set column `c`'s optional string `field` to `value`, or delete it when the
- * value is falsy or equals `clearWhen`. Preserves every other field. Pure. */
-export function setColumnField(
-  data: TableData,
-  c: number,
-  field: 'summary' | 'format',
-  value: string,
-  clearWhen: string,
-): TableData {
-  const columns = data.columns.map((col, j) => {
-    if (j !== c) return col;
-    const next = { ...col };
-    if (value && value !== clearWhen) next[field] = value;
-    else delete next[field];
     return next;
   });
   return { ...data, columns };

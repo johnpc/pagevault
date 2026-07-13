@@ -98,6 +98,12 @@ describe('tableData', () => {
     expect(next.columns[0]).toEqual({ name: 'Tag', type: 'select', options: ['x', 'y'] });
   });
 
+  it('setColumnType to multiselect seeds options, splitting comma-joined cells', () => {
+    const data: TableData = { columns: cols('Tag'), rows: [['x,y'], ['y,z'], ['']] };
+    const next = setColumnType(data, 0, 'multiselect');
+    expect(next.columns[0]).toEqual({ name: 'Tag', type: 'multiselect', options: ['x', 'y', 'z'] });
+  });
+
   it('setColumnSummary sets a summary and clears it on none, preserved by normalize', () => {
     const set = setColumnSummary(grid(), 0, 'count');
     expect(set.columns[0].summary).toBe('count');

@@ -2,6 +2,7 @@ import type { TableColumn } from '../../lib/pbTypes';
 import { RelationCell } from './RelationCell';
 import { NumberCell } from './NumberCell';
 import { DateCell } from './DateCell';
+import { MultiSelectCell } from './MultiSelectCell';
 
 /** One table body cell, rendered by its column type. Value is always a string;
  * checkbox uses 'true'/'', select holds one option, relation holds a page id.
@@ -46,6 +47,17 @@ export function TableCell({
           </option>
         ))}
       </select>
+    );
+  }
+
+  if (column.type === 'multiselect') {
+    return (
+      <MultiSelectCell
+        value={value}
+        options={column.options ?? []}
+        label={label}
+        onChange={onChange}
+      />
     );
   }
 

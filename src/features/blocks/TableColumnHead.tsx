@@ -3,8 +3,7 @@ import { setColumn, setColumnType, removeColumn } from './tableData';
 import { toggleColumnHidden } from './tableColumns';
 import { duplicateColumn } from './tableColumnOps';
 import { ColumnFormatPicker } from './ColumnFormatPicker';
-
-const TYPES: TableColumnType[] = ['text', 'number', 'checkbox', 'select', 'date', 'relation'];
+import { COLUMN_TYPES } from './tableColumnTypes';
 
 interface ColumnHeadProps {
   data: TableData;
@@ -54,7 +53,7 @@ export function TableColumnHead({
           value={col.type}
           onChange={(e) => save(setColumnType(data, c, e.target.value as TableColumnType))}
         >
-          {TYPES.map((t) => (
+          {COLUMN_TYPES.map((t) => (
             <option key={t} value={t}>
               {t}
             </option>

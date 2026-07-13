@@ -55,6 +55,7 @@ account, no third-party service, no lock-in.
 | Date columns — display format (ISO / medium / long / relative "in 3 days")    | ✅     |
 | Table columns — hide/show via Properties (data preserved)                     | ✅     |
 | Table columns — drag a header to reorder (cells + filters follow)             | ✅     |
+| Multi-select column — tag a row with several options (checklist cell)         | ✅     |
 | Relation column — link a table row to a page (relational databases)           | ✅     |
 | Relation columns sort & filter by the linked page's title                     | ✅     |
 | Markdown shortcuts (`# `, `- `, `1. `, `[] `, `> `, ` ``` `)                  | ✅     |

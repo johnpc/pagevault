@@ -40,6 +40,48 @@
   margin: 8px;
 }
 
+/* Multi-select cell: a summary button that opens a checklist of the options. */
+.pv-multiselect {
+  position: relative;
+}
+.pv-multiselect-btn {
+  border: none;
+  background: none;
+  font: inherit;
+  color: var(--pv-text);
+  cursor: pointer;
+  padding: 6px 8px;
+  width: 100%;
+  min-width: 90px;
+  text-align: left;
+}
+.pv-multiselect-menu {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  z-index: 20;
+  margin: 2px 0 0;
+  padding: 4px;
+  list-style: none;
+  background: var(--pv-surface);
+  border: 1px solid var(--pv-border);
+  border-radius: var(--pv-radius-sm);
+  box-shadow: var(--pv-shadow);
+  min-width: 140px;
+}
+.pv-multiselect-menu label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px;
+  cursor: pointer;
+}
+.pv-multiselect-menu input[type='checkbox'] {
+  width: auto;
+  min-width: 0;
+  margin: 0;
+}
+
 /* Row drag handle column: narrow, faint grip that darkens on row hover. */
 .pv-table-drag {
   width: 22px;

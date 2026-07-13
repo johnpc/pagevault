@@ -259,3 +259,20 @@ When('I apply the saved table view {string}', async ({ page }, name: string) => 
 When('I set the filter match mode to {string}', async ({ page }, mode: string) => {
   await wrap(page).getByLabel('Filter match mode').selectOption(mode);
 });
+
+When(
+  'I toggle the tag {string} in table cell {string}',
+  async ({ page }, tag: string, cell: string) => {
+    await table(page).getByLabel(`Cell ${cell}`).click();
+    await table(page).getByRole('checkbox', { name: tag }).click();
+    // Close the menu so a chained assertion reads the summary button.
+    await page.keyboard.press('Escape');
+  },
+);
+
+Then(
+  'the multiselect cell {string} shows {string}',
+  async ({ page }, cell: string, text: string) => {
+    await expect.poll(() => table(page).getByLabel(`Cell ${cell}`).innerText()).toContain(text);
+  },
+);
