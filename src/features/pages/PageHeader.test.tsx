@@ -44,6 +44,7 @@ const props = {
   onMove: vi.fn(),
   onFullWidth: vi.fn(),
   onFont: vi.fn(),
+  collapse: { hasToggles: false, willCollapse: true, collapseAll: vi.fn() },
 };
 
 describe('PageHeader', () => {

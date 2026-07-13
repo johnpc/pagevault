@@ -4,6 +4,7 @@ import { CoverPicker } from './CoverPicker';
 import { PageActions } from './PageActions';
 import { PagePresence } from '../presence/PagePresence';
 import { useReconciled } from '../blocks/useReconciled';
+import type { CollapseAll } from '../blocks/useCollapseAll';
 
 interface PageHeaderProps {
   page: PageRecord;
@@ -19,6 +20,7 @@ interface PageHeaderProps {
   onMove: (parent: string) => void;
   onFullWidth: (fullWidth: boolean) => void;
   onFont: (font: string) => void;
+  collapse: CollapseAll;
 }
 
 const ICONS = ['📄', '📝', '📌', '💡', '✅', '📚', '🚀', '🗂️'];
@@ -38,6 +40,7 @@ export function PageHeader({
   onMove,
   onFullWidth,
   onFont,
+  collapse,
 }: PageHeaderProps) {
   // The header stays mounted across /page/:id changes. useReconciled adopts the
   // external title (a page switch, or a realtime edit from another tab) DURING
@@ -85,6 +88,7 @@ export function PageHeader({
         onFullWidth={onFullWidth}
         onFont={onFont}
         onDelete={onDelete}
+        collapse={collapse}
       />
     </header>
   );

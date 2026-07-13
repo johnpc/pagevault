@@ -8,6 +8,7 @@ import { BlockList } from './BlockList';
 import { Backlinks } from './Backlinks';
 import { Comments } from '../comments/Comments';
 import { useBlockDnd } from '../blocks/useBlockDnd';
+import { useCollapseAll } from '../blocks/useCollapseAll';
 import { PresenceProvider } from '../presence/PresenceProvider';
 import { pageFontClass } from './pageFont';
 import './PageEditor.css';
@@ -24,6 +25,7 @@ export function PageEditor() {
   const { splitBlock, uploadImage, focusId, clearFocusId, moveBlockTo } = ed;
   const { removePage, addSubPage, duplicate, exportMarkdown } = ed;
   const dnd = useBlockDnd(moveBlockTo);
+  const collapse = useCollapseAll(id, blocks.data ?? []);
 
   const onDelete = async () => {
     await removePage(id);
@@ -64,6 +66,7 @@ export function PageEditor() {
                   onDuplicate={onDuplicate}
                   onFullWidth={setFullWidth}
                   onFont={setFont}
+                  collapse={collapse}
                 />
                 <BlockList
                   page={page.data}

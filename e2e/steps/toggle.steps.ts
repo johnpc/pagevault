@@ -27,6 +27,12 @@ When('I expand the toggle', async ({ page }) => {
   await expect(active(page).getByLabel('Collapse toggle').first()).toBeVisible();
 });
 
+// The page-action collapse/expand-all button label carries a leading glyph, so
+// match by text substring rather than exact accessible name.
+When('I click the {string} page action', async ({ page }, label: string) => {
+  await active(page).locator('.pv-page-actions button', { hasText: label }).first().click();
+});
+
 Then('I should not see a block containing {string}', async ({ page }, text: string) => {
   await expect
     .poll(() =>

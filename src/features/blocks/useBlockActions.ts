@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
-import { useCreateBlock, useDeleteBlock, useReorderBlocks, useDuplicateBlock } from './blocksApi';
+import { useCreateBlock, useDeleteBlock, useDuplicateBlock } from './blocksApi';
+import { useReorderBlocks } from './blockBatchApi';
 import { useUpdateBlock } from './updateBlockApi';
 import { useUploadBlockFile } from './uploadBlockFileApi';
 import { moveBlock, sortUpdates } from './reorder';
