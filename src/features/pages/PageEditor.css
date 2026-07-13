@@ -113,6 +113,12 @@
   gap: 8px;
   margin-bottom: 20px;
 }
+/* Presence avatars sit at the top-right of the header, above the cover. */
+.pv-page-presence-bar {
+  display: flex;
+  justify-content: flex-end;
+  min-height: 26px;
+}
 
 .pv-cover-strip {
   height: 140px;

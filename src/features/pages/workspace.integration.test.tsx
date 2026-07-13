@@ -17,6 +17,9 @@ vi.mock('../../lib/pbClient', () => ({
 vi.mock('../auth/useAuth', () => ({
   useAuth: () => ({ user: { id: 'u1', email: 'me@x.z' }, signOut: vi.fn() }),
 }));
+// PagePresence runs a realtime heartbeat; this integration test exercises the
+// editor, not presence, so stub it.
+vi.mock('../presence/PagePresence', () => ({ PagePresence: () => null }));
 
 // Import after mocks so the components pick up the fakes.
 import { Sidebar } from './Sidebar';

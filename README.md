@@ -56,6 +56,7 @@ account, no third-party service, no lock-in.
 | Installable PWA                                                          | ✅     |
 | Public link sharing (read-only /shared/<token>, no login)                | ✅     |
 | Collaborate — invite another user to a page via link (view/comment/edit) | ✅     |
+| Live presence — avatars of who else is viewing a page right now          | ✅     |
 | Self-hosted via `docker compose`                                         | ✅     |
 | Inline markdown — bold, italic, code, strikethrough, underline           | ✅     |
 | Formatting shortcuts — Cmd/Ctrl+B/I/E wrap the selection                 | ✅     |

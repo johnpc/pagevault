@@ -16,6 +16,7 @@ import type {
   UsersResponse,
   CommentsResponse,
   SharesResponse,
+  PresenceResponse,
 } from './pbTypes';
 
 export const PB_URL = import.meta.env.VITE_PB_URL ?? 'http://localhost:8090';
@@ -33,3 +34,4 @@ export type BlockRecord = BlocksResponse;
 export type UserRecord = UsersResponse;
 export type CommentRecord = CommentsResponse;
 export type ShareRecord = SharesResponse;
+export type PresenceRecord = PresenceResponse;

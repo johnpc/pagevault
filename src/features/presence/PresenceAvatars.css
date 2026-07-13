@@ -1,0 +1,26 @@
+/* Avatar stack of who's viewing the page — overlapping circles, top-right. */
+.pv-presence {
+  display: inline-flex;
+  align-items: center;
+}
+.pv-presence-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  margin-left: -6px;
+  border-radius: 50%;
+  border: 2px solid var(--pv-surface);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: default;
+}
+.pv-presence-avatar:first-child {
+  margin-left: 0;
+}
+.pv-presence-more {
+  background: var(--pv-text-muted);
+}

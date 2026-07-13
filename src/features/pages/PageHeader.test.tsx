@@ -9,6 +9,8 @@ vi.mock('./sharesApi', () => ({
   useSetInvite: () => ({ mutate: vi.fn(), mutateAsync: vi.fn(), isPending: false }),
   useRevokeInvite: () => ({ mutate: vi.fn(), isPending: false }),
 }));
+// PagePresence runs a realtime heartbeat; stub it so PageHeader renders alone.
+vi.mock('../presence/PagePresence', () => ({ PagePresence: () => null }));
 import { PageHeader } from './PageHeader';
 import type { PageRecord } from '../../lib/pbClient';
 
