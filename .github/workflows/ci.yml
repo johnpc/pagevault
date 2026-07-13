@@ -82,6 +82,8 @@ jobs:
             paths: .features-gen/e2e/features/mention
           - name: color
             paths: .features-gen/e2e/features/color
+          - name: align
+            paths: .features-gen/e2e/features/align
           - name: board
             paths: .features-gen/e2e/features/board
           - name: gallery

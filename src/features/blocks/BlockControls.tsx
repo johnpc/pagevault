@@ -1,33 +1,36 @@
 import type { BlockRecord } from '../../lib/pbClient';
-import type { BlockType } from '../../lib/pbTypes';
 import { ColorMenu } from './ColorMenu';
+import { AlignMenu } from './AlignMenu';
 import { TurnIntoMenu } from './TurnIntoMenu';
 import { canTurnInto } from './turnInto';
 
-/** The hover controls on a block row: turn-into, color, duplicate (+ delete for
- * dividers, which have no text to backspace-delete). Kept out of BlockRow to
- * keep it small. */
+/** The hover controls on a block row: turn-into, color, align, duplicate (+
+ * delete for dividers, which have no text to backspace-delete). All edits go
+ * through `onEdit`. `align` shows the alignment picker (text blocks only). */
 export function BlockControls({
   block,
+  onEdit,
   onDuplicate,
   onRemove,
-  onColor,
-  onTurnInto,
+  align = false,
   withDelete = false,
 }: {
   block: BlockRecord;
+  onEdit: (id: string, patch: Partial<BlockRecord>) => void;
   onDuplicate: (block: BlockRecord) => void;
   onRemove: (id: string) => void;
-  onColor: (id: string, color: string) => void;
-  onTurnInto?: (id: string, type: BlockType) => void;
+  align?: boolean;
   withDelete?: boolean;
 }) {
   return (
     <>
-      {onTurnInto && canTurnInto(block.type) && (
-        <TurnIntoMenu current={block.type} onPick={(type) => onTurnInto(block.id, type)} />
+      {canTurnInto(block.type) && (
+        <TurnIntoMenu current={block.type} onPick={(type) => onEdit(block.id, { type })} />
       )}
-      <ColorMenu current={block.color ?? ''} onPick={(token) => onColor(block.id, token)} />
+      <ColorMenu current={block.color ?? ''} onPick={(color) => onEdit(block.id, { color })} />
+      {align && (
+        <AlignMenu current={block.align ?? ''} onPick={(a) => onEdit(block.id, { align: a })} />
+      )}
       <button
         className="pv-block-dup"
         aria-label="Duplicate block"

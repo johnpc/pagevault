@@ -25,7 +25,6 @@ interface MediaProps {
  * Returns null for other types so BlockRow falls through to its text body. */
 export function MediaBlockRow(props: MediaProps) {
   const { block, cls, style, rowDrag, handle, onEdit, onRemove, onDuplicate, onUpload } = props;
-  const onColor = (id: string, color: string) => onEdit(id, { color });
 
   // The block-specific body element, keyed by type (null = not a media block).
   const body: ReactNode =
@@ -53,9 +52,9 @@ export function MediaBlockRow(props: MediaProps) {
       {body}
       <BlockControls
         block={block}
+        onEdit={onEdit}
         onDuplicate={onDuplicate}
         onRemove={onRemove}
-        onColor={onColor}
         withDelete={block.type === 'divider'}
       />
     </div>

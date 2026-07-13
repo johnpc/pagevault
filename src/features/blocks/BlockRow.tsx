@@ -4,6 +4,7 @@ import { MediaBlockRow } from './MediaBlockRow';
 import { BlockLead } from './BlockLead';
 import { TextBlockBody } from './TextBlockBody';
 import { BlockControls } from './BlockControls';
+import { alignClass } from './blockAlign';
 import { blockAnchorId } from './tocData';
 import { BlockCursors } from '../presence/BlockCursors';
 import { useReportFocus } from '../presence/useReportFocus';
@@ -44,18 +45,7 @@ export function BlockRow(props: BlockRowProps) {
   const { cls, rowDrag, handle } = useBlockDrag(block, onEdit, dnd);
   const focusReport = useReportFocus(block.id);
   const style = { marginLeft: `${(block.depth ?? 0) * 24}px` };
-  const onColor = (id: string, color: string) => onEdit(id, { color });
-  // Turn-into converts the block type in place, keeping its content.
-  const onTurnInto = (id: string, type: BlockRecord['type']) => onEdit(id, { type });
-  const controls = (
-    <BlockControls
-      block={block}
-      onDuplicate={onDuplicate}
-      onRemove={onRemove}
-      onColor={onColor}
-      onTurnInto={onTurnInto}
-    />
-  );
+  const rowCls = `${cls} ${alignClass(block.align)}`.trim();
 
   // Divider / image / table render as whole elements, not an editable text line.
   const media = (
@@ -74,7 +64,13 @@ export function BlockRow(props: BlockRowProps) {
   if (MEDIA_TYPES.has(block.type)) return media;
 
   return (
-    <div id={blockAnchorId(block.id)} className={cls} style={style} {...rowDrag} {...focusReport}>
+    <div
+      id={blockAnchorId(block.id)}
+      className={rowCls}
+      style={style}
+      {...rowDrag}
+      {...focusReport}
+    >
       <BlockCursors blockId={block.id} />
       <BlockLead block={block} onEdit={onEdit} />
       {handle}
@@ -91,7 +87,13 @@ export function BlockRow(props: BlockRowProps) {
         autoFocus={autoFocus}
         onFocused={onFocused}
       />
-      {controls}
+      <BlockControls
+        block={block}
+        onEdit={onEdit}
+        onDuplicate={onDuplicate}
+        onRemove={onRemove}
+        align
+      />
     </div>
   );
 }
