@@ -78,3 +78,17 @@ Then(
       .toBe(true);
   },
 );
+
+When('I filter table column {int} by {string}', async ({ page }, col: number, query: string) => {
+  // The filter bar sits just above the grid (a sibling of .pv-table).
+  await active(page)
+    .getByLabel('Filter column')
+    .selectOption(String(col - 1));
+  await active(page).getByLabel('Filter query').fill(query);
+  // Wait for the non-destructive filter to take effect (rows re-rendered).
+  await expect.poll(() => table(page).locator('tbody tr').count()).toBeGreaterThan(0);
+});
+
+When('I clear the table filter', async ({ page }) => {
+  await active(page).getByLabel('Clear filter').click();
+});

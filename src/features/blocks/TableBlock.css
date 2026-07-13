@@ -213,3 +213,36 @@
   width: 100%;
   text-align: left;
 }
+
+/* One-column filter bar above the grid (non-destructive row filter). */
+.pv-table-filter {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+.pv-table-filter-label {
+  color: var(--pv-text-muted);
+  font-size: 13px;
+}
+.pv-table-filter select,
+.pv-table-filter input {
+  border: 1px solid var(--pv-border);
+  border-radius: var(--pv-radius-sm);
+  background: var(--pv-surface);
+  color: var(--pv-text);
+  font: inherit;
+  font-size: 13px;
+  padding: 2px 6px;
+}
+.pv-table-filter-clear {
+  background: none;
+  border: none;
+  color: var(--pv-text-muted);
+  cursor: pointer;
+  font-size: 15px;
+  line-height: 1;
+}
+.pv-table-filter-clear:hover {
+  color: var(--pv-danger);
+}
