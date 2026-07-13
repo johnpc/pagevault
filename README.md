@@ -50,7 +50,7 @@ account, no third-party service, no lock-in.
 | Grouped table — collapsible sections grouped by a select column               | ✅     |
 | Table filter — multi-condition filters, match all (AND) or any (OR)           | ✅     |
 | Saved views — name & switch filter/board/visibility configs on a table        | ✅     |
-| Table summaries — per-column footer calc (count/sum/avg/checked over visible) | ✅     |
+| Table summaries — count/sum/avg/min/max/median/range/checked over visible     | ✅     |
 | Table columns — hide/show via Properties (data preserved)                     | ✅     |
 | Table columns — drag a header to reorder (cells + filters follow)             | ✅     |
 | Relation column — link a table row to a page (relational databases)           | ✅     |

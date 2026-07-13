@@ -1,4 +1,5 @@
 import type { TableColumn } from '../../lib/pbTypes';
+import { numericSummary, type NumericKind } from './tableNumericSummary';
 
 /** The per-column footer calculation a table can show. 'none' = no summary. */
 export type SummaryKind =
@@ -6,16 +7,19 @@ export type SummaryKind =
   | 'count' // non-empty cells
   | 'empty' // empty cells
   | 'unique' // distinct non-empty values
-  | 'sum' // number columns
-  | 'avg' // number columns
+  | NumericKind // number columns: sum/avg/min/max/median/range
   | 'checked' // checkbox: number checked
   | 'percent'; // checkbox: % checked
 
-/** The summary kinds offered for a column, by its type. Number columns get
- * sum/avg; checkbox columns get checked/percent; all get the count family. */
+/** The number-column summaries (in menu order). */
+const NUMERIC: NumericKind[] = ['sum', 'avg', 'min', 'max', 'median', 'range'];
+
+/** The summary kinds offered for a column, by its type. Number columns get the
+ * numeric family; checkbox columns get checked/percent; all get the count
+ * family. */
 export function summaryOptions(type: TableColumn['type']): SummaryKind[] {
   const base: SummaryKind[] = ['none', 'count', 'empty', 'unique'];
-  if (type === 'number') return [...base, 'sum', 'avg'];
+  if (type === 'number') return [...base, ...NUMERIC];
   if (type === 'checkbox') return [...base, 'checked', 'percent'];
   return base;
 }
@@ -29,6 +33,10 @@ export function summaryLabel(kind: SummaryKind): string {
     unique: 'Unique',
     sum: 'Sum',
     avg: 'Average',
+    min: 'Min',
+    max: 'Max',
+    median: 'Median',
+    range: 'Range',
     checked: 'Checked',
     percent: 'Percent checked',
   };
@@ -36,6 +44,8 @@ export function summaryLabel(kind: SummaryKind): string {
 }
 
 const round = (n: number) => Math.round(n * 100) / 100;
+const isNumeric = (kind: SummaryKind): kind is NumericKind =>
+  (NUMERIC as SummaryKind[]).includes(kind);
 
 /** Compute a column's summary over the given cell values (already filtered to
  * the visible rows). Returns '' for 'none' or when a numeric summary has no
@@ -50,11 +60,6 @@ export function summarize(kind: SummaryKind, cells: string[]): string {
     if (cells.length === 0) return '0%';
     return `${round((cells.filter((c) => c === 'true').length / cells.length) * 100)}%`;
   }
-  if (kind === 'sum' || kind === 'avg') {
-    const nums = nonEmpty.map(parseFloat).filter((n) => !isNaN(n));
-    if (nums.length === 0) return '';
-    const total = nums.reduce((a, b) => a + b, 0);
-    return String(round(kind === 'sum' ? total : total / nums.length));
-  }
+  if (isNumeric(kind)) return numericSummary(kind, nonEmpty);
   return '';
 }
