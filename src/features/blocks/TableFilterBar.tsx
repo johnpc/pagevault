@@ -1,9 +1,16 @@
 import type { TableData } from '../../lib/pbTypes';
-import { conditions, addCondition, updateCondition, removeCondition } from './tableFilter';
+import {
+  conditions,
+  addCondition,
+  updateCondition,
+  removeCondition,
+  setFilterMatch,
+} from './tableFilter';
 
 /** Multi-condition row filter for a table: each condition picks a column + a
- * query, and ALL must match (AND). "+ Filter" adds a condition; the × removes
- * one. Non-destructive — conditions live on the grid data, not the rows. */
+ * query. Conditions combine with AND ("all") or OR ("any") via the match toggle
+ * (shown once there are 2+). "+ Filter" adds a condition; × removes one.
+ * Non-destructive — conditions live on the grid data, not the rows. */
 export function TableFilterBar({
   data,
   save,
@@ -12,6 +19,8 @@ export function TableFilterBar({
   save: (next: TableData) => void;
 }) {
   const rows = conditions(data);
+  const mode = data.filterMatch === 'any' ? 'any' : 'all';
+  const connector = mode === 'any' ? 'or' : 'and';
 
   return (
     <div className="pv-table-filter">
@@ -22,7 +31,7 @@ export function TableFilterBar({
               ⧩
             </span>
           ) : (
-            <span className="pv-table-filter-and">and</span>
+            <span className="pv-table-filter-and">{connector}</span>
           )}
           <select
             aria-label={`Filter ${i + 1} column`}
@@ -50,13 +59,28 @@ export function TableFilterBar({
           </button>
         </div>
       ))}
-      <button
-        className="pv-table-filter-add pv-muted"
-        aria-label="Add filter"
-        onClick={() => save(addCondition(data))}
-      >
-        + Filter
-      </button>
+      <div className="pv-table-filter-row">
+        <button
+          className="pv-table-filter-add pv-muted"
+          aria-label="Add filter"
+          onClick={() => save(addCondition(data))}
+        >
+          + Filter
+        </button>
+        {rows.length >= 2 && (
+          <label className="pv-table-filter-match">
+            match
+            <select
+              aria-label="Filter match mode"
+              value={mode}
+              onChange={(e) => save(setFilterMatch(data, e.target.value as 'all' | 'any'))}
+            >
+              <option value="all">all</option>
+              <option value="any">any</option>
+            </select>
+          </label>
+        )}
+      </div>
     </div>
   );
 }

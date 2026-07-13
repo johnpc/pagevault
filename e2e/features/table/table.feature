@@ -158,3 +158,18 @@ Feature: Table (database) blocks
     Then the table has 2 body rows
     When I apply the saved table view "Kept"
     Then the table has 1 body rows
+
+  Scenario: OR mode shows rows matching any condition
+    Given I have a page titled "OR filter"
+    When I open the page "OR filter"
+    And I type "/table" into a new block
+    And I choose "Table" from the slash menu
+    And I fill table cell "1,1" with "apple"
+    And I add a table row
+    And I fill table cell "2,1" with "banana"
+    And I add a table row
+    And I fill table cell "3,1" with "cherry"
+    And I filter table column 1 by "apple"
+    And I add a filter on table column 1 for "banana"
+    And I set the filter match mode to "any"
+    Then the table has 2 body rows

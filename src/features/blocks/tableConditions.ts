@@ -33,6 +33,15 @@ export function updateCondition(
   );
 }
 
+/** Set how conditions combine: 'all' (AND, the default) or 'any' (OR). Clears
+ * the field when set back to the default so data stays minimal. */
+export function setFilterMatch(data: TableData, mode: 'all' | 'any'): TableData {
+  const out = { ...data };
+  if (mode === 'any') out.filterMatch = 'any';
+  else delete out.filterMatch;
+  return out;
+}
+
 /** Remove the condition at position `i`. */
 export function removeCondition(data: TableData, i: number): TableData {
   return setConditions(

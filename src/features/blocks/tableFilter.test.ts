@@ -104,3 +104,39 @@ describe('visibleRows with relations', () => {
     expect(v[0].row[0]).toBe('p1'); // matched by title "Roadmap", keeps id
   });
 });
+
+describe('filterMatch (AND / OR)', () => {
+  const g = (over = {}) => ({
+    columns: [
+      { name: 'Name', type: 'text' as const },
+      { name: 'Age', type: 'number' as const },
+    ],
+    rows: [
+      ['Ada', '30'],
+      ['Bob', '5'],
+      ['Cy', '99'],
+    ],
+    ...over,
+  });
+
+  it("'any' matches rows meeting AT LEAST ONE condition (OR)", () => {
+    const data = g({
+      filterMatch: 'any' as const,
+      filters: [
+        { col: 0, query: 'ada' }, // Ada
+        { col: 1, query: '9' }, // Cy (99)
+      ],
+    });
+    expect(visibleRows(data).map((e) => e.row[0])).toEqual(['Ada', 'Cy']);
+  });
+
+  it("defaults to 'all' (AND) when filterMatch is absent", () => {
+    const data = g({
+      filters: [
+        { col: 0, query: 'a' },
+        { col: 1, query: '3' },
+      ],
+    });
+    expect(visibleRows(data).map((e) => e.row[0])).toEqual(['Ada']);
+  });
+});

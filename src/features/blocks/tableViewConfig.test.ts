@@ -83,3 +83,27 @@ describe('saveView / deleteView', () => {
     expect(deleteView(d, 'V').views).toBeUndefined();
   });
 });
+
+describe('captureView / applyView with filterMatch', () => {
+  const g = (over = {}) => ({
+    columns: [
+      { name: 'A', type: 'text' as const },
+      { name: 'B', type: 'text' as const },
+    ],
+    rows: [['1', '2']],
+    ...over,
+  });
+
+  it('captures and restores the OR match mode', () => {
+    const data = g({ filters: [{ col: 0, query: 'x' }], filterMatch: 'any' as const });
+    const v = captureView(data, 'ors');
+    expect(v.filterMatch).toBe('any');
+    const applied = applyView(g(), v);
+    expect(applied.filterMatch).toBe('any');
+  });
+
+  it('a plain view clears any prior match mode', () => {
+    const applied = applyView(g({ filterMatch: 'any' as const }), { name: 'reset' });
+    expect(applied.filterMatch).toBeUndefined();
+  });
+});

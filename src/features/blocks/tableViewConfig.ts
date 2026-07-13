@@ -11,6 +11,7 @@ export function captureView(data: TableData, name: string): TableView {
   if (data.view === 'board') view.view = 'board';
   if (typeof data.groupBy === 'number') view.groupBy = data.groupBy;
   if (active.length) view.filters = active.map((f) => ({ col: f.col, query: f.query }));
+  if (data.filterMatch === 'any') view.filterMatch = 'any';
   if (hidden.length) view.hidden = hidden;
   return view;
 }
@@ -29,10 +30,12 @@ export function applyView(data: TableData, view: TableView): TableData {
   const out: TableData = { ...data, columns };
   delete out.filter;
   delete out.filters;
+  delete out.filterMatch;
   delete out.groupBy;
   out.view = view.view === 'board' ? 'board' : 'table';
   if (typeof view.groupBy === 'number') out.groupBy = view.groupBy;
   if (view.filters?.length) out.filters = view.filters.map((f) => ({ ...f }));
+  if (view.filterMatch === 'any') out.filterMatch = 'any';
   return out;
 }
 

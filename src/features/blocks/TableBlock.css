@@ -488,3 +488,12 @@
 .pv-saved-view-save:hover {
   color: var(--pv-text);
 }
+
+/* Filter match-mode toggle (all / any) shown with 2+ conditions. */
+.pv-table-filter-match {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--pv-text-muted);
+  font-size: 12px;
+}
