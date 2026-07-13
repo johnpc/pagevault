@@ -353,3 +353,64 @@
 .pv-table-col--dragging {
   opacity: 0.5;
 }
+
+/* Relation cell: a button showing the linked page's title + a picker popover. */
+.pv-relation {
+  position: relative;
+}
+.pv-relation-btn {
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  padding: 4px 6px;
+}
+.pv-relation-chip {
+  display: inline-block;
+  background: var(--pv-accent-soft);
+  color: var(--pv-text);
+  border-radius: var(--pv-radius-sm);
+  padding: 1px 8px;
+  font-size: 13px;
+}
+.pv-relation-menu {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  z-index: 20;
+  margin: 2px 0 0;
+  padding: 4px;
+  list-style: none;
+  background: var(--pv-surface);
+  border: 1px solid var(--pv-border);
+  border-radius: var(--pv-radius-sm);
+  box-shadow: var(--pv-shadow);
+  min-width: 180px;
+  max-height: 260px;
+  overflow-y: auto;
+}
+.pv-relation-item {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  color: var(--pv-text);
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  padding: 5px 8px;
+  text-align: left;
+}
+.pv-relation-item:hover {
+  background: var(--pv-hover);
+}
+.pv-relation-item--on {
+  font-weight: 600;
+}
+.pv-relation-clear {
+  color: var(--pv-text-muted);
+  border-bottom: 1px solid var(--pv-border);
+}
