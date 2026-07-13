@@ -390,3 +390,14 @@ When('I toggle full width on', async ({ page }) => {
 Then('the page is full width', async ({ page }) => {
   await expect(active(page).locator('.pv-page--wide')).toBeVisible();
 });
+
+When('I set the callout icon to {string}', async ({ page }, emoji: string) => {
+  await active(page).getByLabel('Callout icon').click();
+  const menu = active(page).getByRole('listbox', { name: 'Callout icon' });
+  await expect(menu).toBeVisible();
+  await menu.getByRole('option', { name: `Icon ${emoji}` }).click();
+});
+
+Then('the callout shows the icon {string}', async ({ page }, emoji: string) => {
+  await expect(active(page).getByLabel('Callout icon')).toHaveText(emoji);
+});

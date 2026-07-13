@@ -66,6 +66,7 @@ export interface BlocksResponse extends BaseRecord {
   data: TableData | ColumnsData | null; // table grid / column layout; null otherwise
   color: string; // text/background color token (e.g. 'red', 'yellow-bg'); '' = default
   lang: string; // code block language (e.g. 'js', 'python'); '' = plain
+  emoji: string; // callout leading icon (e.g. '💡', '⚠️'); '' = default 💡
   depth: number; // indentation level (0 = top); for nested lists
   sort: number;
   owner: string;

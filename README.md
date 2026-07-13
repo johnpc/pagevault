@@ -36,6 +36,7 @@ account, no third-party service, no lock-in.
 | Blocks — text, headings, lists, to-dos, quotes, code, images, callouts        | ✅     |
 | Code blocks — one-click copy button                                           | ✅     |
 | Code blocks — language label/picker (fenced language on export)               | ✅     |
+| Callout blocks — pick the leading icon (💡 / ⚠️ / ✅ …) + background color    | ✅     |
 | Toggle blocks — collapse/expand to fold away nested content                   | ✅     |
 | Column layouts — 2–4 side-by-side text columns                                | ✅     |
 | Table of contents block — auto-lists headings, click to scroll                | ✅     |

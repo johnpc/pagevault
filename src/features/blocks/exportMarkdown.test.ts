@@ -35,6 +35,8 @@ describe('blockToMarkdown', () => {
     );
     expect(blockToMarkdown(blk('image', 'https://x/i.png'))).toBe('![](https://x/i.png)');
     expect(blockToMarkdown(blk('callout', 'Heads up'))).toBe('> 💡 Heads up');
+    // A callout with a chosen emoji exports with that icon.
+    expect(blockToMarkdown({ ...blk('callout', 'Careful'), emoji: '⚠️' })).toBe('> ⚠️ Careful');
     expect(blockToMarkdown(blk('text', 'Plain'))).toBe('Plain');
   });
 

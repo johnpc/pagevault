@@ -158,9 +158,50 @@
   border-radius: var(--pv-radius-sm);
   padding: 10px 12px;
 }
+.pv-callout-pick {
+  position: relative;
+}
 .pv-callout-icon {
   padding: 3px 4px 0 0;
   line-height: 1.55;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+}
+.pv-callout-icon:hover {
+  background: var(--pv-hover);
+  border-radius: 4px;
+}
+.pv-callout-emojis {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  z-index: 20;
+  margin: 2px 0 0;
+  padding: 6px;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 2px;
+  background: var(--pv-surface);
+  border: 1px solid var(--pv-border);
+  border-radius: var(--pv-radius-sm);
+  box-shadow: var(--pv-shadow);
+}
+.pv-callout-emoji {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 4px;
+  border-radius: 6px;
+}
+.pv-callout-emoji:hover {
+  background: var(--pv-hover);
+}
+.pv-callout-emoji--on {
+  background: var(--pv-accent-soft);
 }
 .pv-block-preview code {
   background: var(--pv-hover);

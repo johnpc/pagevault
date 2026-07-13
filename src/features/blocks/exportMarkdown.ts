@@ -30,20 +30,22 @@ const PREFIX: Partial<Record<BlockRecord['type'], (t: string) => string>> = {
   bullet: (t) => `- ${t}`,
   quote: (t) => `> ${t}`,
   image: (t) => `![](${t})`,
-  callout: (t) => `> 💡 ${t}`,
   toggle: (t) => `▸ **${t}**`,
 };
 
 /** Serialize one block to its Markdown line. `ordinal` is the 1-based position
  * among consecutive numbered blocks (for `1.`, `2.`, …). Pure. */
 export function blockToMarkdown(
-  block: Pick<BlockRecord, 'type' | 'content' | 'checked' | 'data' | 'lang'>,
+  block: Pick<BlockRecord, 'type' | 'content' | 'checked' | 'data' | 'lang' | 'emoji'>,
   ordinal = 1,
 ): string {
   const text = block.content;
   const prefix = PREFIX[block.type];
   if (prefix) return prefix(text);
   switch (block.type) {
+    case 'callout':
+      // Lead with the chosen icon (default 💡) so the intent survives export.
+      return `> ${block.emoji || '💡'} ${text}`;
     case 'code':
       // Emit the fenced language so highlighting survives the round-trip.
       return '```' + (block.lang ?? '') + '\n' + text + '\n```';
