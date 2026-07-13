@@ -50,3 +50,18 @@ Feature: Table (database) blocks
     And the table has a cell containing "Apples"
     When I clear the table filter
     Then the table has 2 body rows
+
+  Scenario: A date column stores a picked date and sorts chronologically
+    Given I have a page titled "Timeline"
+    When I type "/table" into a new block
+    And I choose "Table" from the slash menu
+    And I set table column 2 type to "date"
+    And I fill table cell "1,1" with "Later"
+    And I set the table date in cell "1,2" to "2026-03-01"
+    And I add a table row
+    And I fill table cell "2,1" with "Earlier"
+    And I set the table date in cell "2,2" to "2025-12-31"
+    And I sort by table column 2
+    Then table column 1 reads "Earlier" then "Later"
+    When I reopen the page "Timeline"
+    Then the table has a cell containing "Earlier"

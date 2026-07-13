@@ -25,6 +25,17 @@ export function TableCell({
     );
   }
 
+  if (column.type === 'date') {
+    return (
+      <input
+        type="date"
+        aria-label={label}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+      />
+    );
+  }
+
   if (column.type === 'select') {
     return (
       <select aria-label={label} value={value} onChange={(e) => onChange(e.target.value)}>

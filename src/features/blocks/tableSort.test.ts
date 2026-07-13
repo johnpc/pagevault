@@ -36,6 +36,27 @@ describe('sortByColumn', () => {
     expect(sortByColumn(g, 0, 'asc').rows).toEqual([['true'], [''], ['']]);
   });
 
+  it('sorts a date column chronologically with blanks last', () => {
+    const g: TableData = {
+      columns: [{ name: 'due', type: 'date' }],
+      rows: [['2026-03-01'], [''], ['2025-12-31'], ['2026-01-15']],
+    };
+    expect(sortByColumn(g, 0, 'asc').rows).toEqual([
+      ['2025-12-31'],
+      ['2026-01-15'],
+      ['2026-03-01'],
+      [''],
+    ]);
+    // desc flips the comparator sign (consistent with number columns), so the
+    // latest real date leads among dated rows and blanks move to the front.
+    expect(sortByColumn(g, 0, 'desc').rows).toEqual([
+      [''],
+      ['2026-03-01'],
+      ['2026-01-15'],
+      ['2025-12-31'],
+    ]);
+  });
+
   it('is stable for equal values', () => {
     const g: TableData = {
       columns: cols('A', 'B'),
