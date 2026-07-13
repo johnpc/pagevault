@@ -7,7 +7,8 @@
 
 /** A table column's cell kind. Cells are always stored as strings; the type
  * decides how a cell renders/edits (number input, checkbox, select…). */
-export type TableColumnType = 'text' | 'number' | 'checkbox' | 'select' | 'date';
+// `relation` links a row to a page (the cell stores that page's id).
+export type TableColumnType = 'text' | 'number' | 'checkbox' | 'select' | 'date' | 'relation';
 
 export interface TableColumn {
   name: string; // header label

@@ -46,6 +46,7 @@ account, no third-party service, no lock-in.
 | Table summaries — per-column footer calc (count/sum/avg/checked over visible) | ✅     |
 | Table columns — hide/show via Properties (data preserved)                     | ✅     |
 | Table columns — drag a header to reorder (cells + filters follow)             | ✅     |
+| Relation column — link a table row to a page (relational databases)           | ✅     |
 | Markdown shortcuts (`# `, `- `, `1. `, `[] `, `> `, ` ``` `)                  | ✅     |
 | Enter splits at the caret into a block below (Notion-smooth typing)           | ✅     |
 | Enter continues a list; an empty item exits / outdents the list               | ✅     |

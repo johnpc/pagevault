@@ -102,3 +102,14 @@ Feature: Table (database) blocks
     Then table row 1 reads "second-col" then "first-col"
     When I reopen the page "Columns"
     Then table row 1 reads "second-col" then "first-col"
+
+  Scenario: A relation column links a row to a page
+    Given I have a page titled "Projects DB"
+    When I open the page "Projects DB"
+    And I type "/table" into a new block
+    And I choose "Table" from the slash menu
+    And I set table column 2 type to "relation"
+    And I link table cell "1,2" to the page "Reading list"
+    Then the table has a relation cell showing "Reading list"
+    When I reopen the page "Projects DB"
+    Then the table has a relation cell showing "Reading list"

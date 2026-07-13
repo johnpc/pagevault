@@ -170,3 +170,17 @@ Then('table row 1 reads {string} then {string}', async ({ page }, a: string, b: 
     })
     .toBe(true);
 });
+
+When(
+  'I link table cell {string} to the page {string}',
+  async ({ page }, cell: string, title: string) => {
+    await table(page).getByLabel(`Cell ${cell}`).click();
+    const menu = table(page).getByRole('listbox', { name: new RegExp(`Cell ${cell}`) });
+    await expect(menu).toBeVisible();
+    await menu.getByRole('option', { name: title, exact: true }).click();
+  },
+);
+
+Then('the table has a relation cell showing {string}', async ({ page }, title: string) => {
+  await expect(table(page).locator('.pv-relation-chip', { hasText: title }).first()).toBeVisible();
+});

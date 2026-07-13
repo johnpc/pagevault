@@ -1,8 +1,9 @@
 import type { TableColumn } from '../../lib/pbTypes';
+import { RelationCell } from './RelationCell';
 
 /** One table body cell, rendered by its column type. Value is always a string;
- * checkbox uses 'true'/'', select holds one option. Render-only — edits bubble
- * up via onChange. */
+ * checkbox uses 'true'/'', select holds one option, relation holds a page id.
+ * Render-only — edits bubble up via onChange. */
 export function TableCell({
   column,
   value,
@@ -14,6 +15,10 @@ export function TableCell({
   label: string;
   onChange: (value: string) => void;
 }) {
+  if (column.type === 'relation') {
+    return <RelationCell value={value} label={label} onChange={onChange} />;
+  }
+
   if (column.type === 'checkbox') {
     return (
       <input

@@ -3,7 +3,7 @@ import { setColumn, setColumnType, removeColumn, addColumn } from './tableData';
 import { visibleColumns, toggleColumnHidden } from './tableColumns';
 import { useColumnDnd } from './useColumnDnd';
 
-const TYPES: TableColumnType[] = ['text', 'number', 'checkbox', 'select', 'date'];
+const TYPES: TableColumnType[] = ['text', 'number', 'checkbox', 'select', 'date', 'relation'];
 
 interface SortState {
   col: number;
