@@ -84,6 +84,8 @@ jobs:
             paths: .features-gen/e2e/features/color
           - name: board
             paths: .features-gen/e2e/features/board
+          - name: gallery
+            paths: .features-gen/e2e/features/gallery
           - name: cover
             paths: .features-gen/e2e/features/cover
           - name: backlinks

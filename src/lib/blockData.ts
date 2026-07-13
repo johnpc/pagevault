@@ -10,6 +10,10 @@
 // `relation` links a row to a page (the cell stores that page's id).
 export type TableColumnType = 'text' | 'number' | 'checkbox' | 'select' | 'date' | 'relation';
 
+/** How a table block is displayed: the spreadsheet grid, a kanban board grouped
+ * by a select column, or a gallery of cards. Defaults to 'table'. */
+export type TableViewMode = 'table' | 'board' | 'gallery';
+
 export interface TableColumn {
   name: string; // header label
   type: TableColumnType;
@@ -23,7 +27,7 @@ export interface TableColumn {
 export interface TableData {
   columns: TableColumn[];
   rows: string[][];
-  view?: 'table' | 'board'; // display mode; defaults to 'table'
+  view?: TableViewMode; // display mode; defaults to 'table'
   groupBy?: number; // for the board view: index of the `select` column to group by
   filter?: { col: number; query: string }; // legacy single filter; migrated to filters[]
   filters?: { col: number; query: string }[]; // non-destructive row filters; absent = off
@@ -36,7 +40,7 @@ export interface TableData {
  * Applying it restores those onto the grid; row data + order are untouched. */
 export interface TableView {
   name: string;
-  view?: 'table' | 'board';
+  view?: TableViewMode;
   groupBy?: number;
   filters?: { col: number; query: string }[];
   filterMatch?: 'all' | 'any';

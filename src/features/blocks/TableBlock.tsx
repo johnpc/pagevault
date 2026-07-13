@@ -3,22 +3,22 @@ import type { BlockRecord } from '../../lib/pbClient';
 import type { TableData } from '../../lib/pbTypes';
 import { usePages } from '../pages/pagesApi';
 import { displayTitle } from '../pages/pageTree';
-import { normalize, addRow } from './tableData';
+import { normalize } from './tableData';
 import { sortByColumn } from './tableSort';
 import type { TitleMap } from './cellText';
-import { TableHead } from './TableHead';
-import { TableBody } from './TableBody';
 import { TableBoard } from './TableBoard';
+import { TableGrid } from './TableGrid';
+import { GalleryView } from './GalleryView';
 import { TableViewToggle } from './TableViewToggle';
 import { TableFilterBar } from './TableFilterBar';
 import { TableProperties } from './TableProperties';
-import { TableFooter } from './TableFooter';
 import { TableViews } from './TableViews';
 import './TableBlock.css';
 
 /** An editable typed table/database grid. The whole grid lives in the block's
  * `data` JSON field; every edit patches it via onEdit. Render-only — grid logic
- * is in the pure tableData helpers; rows drag to reorder, headers click to sort. */
+ * is in the pure tableData helpers; rows drag to reorder, headers click to sort.
+ * The same data renders as a Table, a kanban Board, or a Gallery of cards. */
 export function TableBlock({
   block,
   onEdit,
@@ -42,11 +42,12 @@ export function TableBlock({
     save(sortByColumn(data, col, dir, titles));
   };
 
+  const view = data.view ?? 'table';
   return (
     <div className="pv-table-wrap">
       <TableViews data={data} save={save} />
-      <TableViewToggle data={data} onView={(view) => save({ ...data, view })} />
-      {data.view === 'board' ? (
+      <TableViewToggle data={data} onView={(v) => save({ ...data, view: v })} />
+      {view === 'board' ? (
         <TableBoard data={data} save={save} />
       ) : (
         <>
@@ -54,14 +55,11 @@ export function TableBlock({
             <TableFilterBar data={data} save={save} />
             <TableProperties data={data} save={save} />
           </div>
-          <table className="pv-table">
-            <TableHead data={data} save={save} onSort={onSort} sort={sort} />
-            <TableBody data={data} save={save} titles={titles} />
-            <TableFooter data={data} save={save} titles={titles} />
-          </table>
-          <button className="pv-table-addrow pv-muted" onClick={() => save(addRow(data))}>
-            + Add row
-          </button>
+          {view === 'gallery' ? (
+            <GalleryView data={data} save={save} titles={titles} />
+          ) : (
+            <TableGrid data={data} save={save} titles={titles} sort={sort} onSort={onSort} />
+          )}
         </>
       )}
     </div>
