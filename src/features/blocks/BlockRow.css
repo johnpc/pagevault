@@ -376,6 +376,13 @@
   background: var(--pv-bg-pink);
 }
 
+/* A block in an active keyboard multi-selection (Shift+Arrow). Tints the whole
+   row like a text selection so the range is obvious. */
+.pv-block-selected {
+  background: var(--pv-accent-soft);
+  border-radius: var(--pv-radius-sm);
+}
+
 /* Turn-into: a button that reveals a floating list of target block types. */
 .pv-turn {
   position: relative;

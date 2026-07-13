@@ -37,10 +37,15 @@ export function useCreateBlock(pageId: string) {
   });
 }
 
+/** Delete one block or several at once (a multi-block selection). One cache
+ * invalidation after all deletes settle. */
 export function useDeleteBlock(pageId: string) {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (id: string) => pb.collection('blocks').delete(id),
+    mutationFn: (id: string | string[]) =>
+      Promise.all(
+        (Array.isArray(id) ? id : [id]).map((one) => pb.collection('blocks').delete(one)),
+      ),
     onSuccess: () => qc.invalidateQueries({ queryKey: key(pageId) }),
   });
 }

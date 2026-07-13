@@ -108,6 +108,8 @@ jobs:
             paths: .features-gen/e2e/features/font
           - name: collab
             paths: .features-gen/e2e/features/collab
+          - name: blockselect
+            paths: .features-gen/e2e/features/blockselect
     env:
       VITE_PB_URL: http://localhost:8090
       PB_ADMIN_EMAIL: admin@pagevault.local

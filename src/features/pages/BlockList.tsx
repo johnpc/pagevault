@@ -2,8 +2,9 @@ import type { PageRecord, BlockRecord } from '../../lib/pbClient';
 import type { BlockType } from '../../lib/pbTypes';
 import { LoadState } from '../shell/LoadState';
 import { PageInfo } from './PageInfo';
-import { BlockRow, type BlockDndHandlers } from '../blocks/BlockRow';
+import type { BlockDndHandlers } from '../blocks/BlockRow';
 import { hiddenBlockIds } from '../blocks/toggle';
+import { BlockRows } from './BlockRows';
 
 interface BlockListProps {
   page: PageRecord;
@@ -11,6 +12,7 @@ interface BlockListProps {
   dnd: BlockDndHandlers;
   onEdit: (id: string, patch: Partial<BlockRecord>) => void;
   onRemove: (id: string) => void;
+  onRemoveMany: (ids: string[]) => void;
   onDuplicate: (block: BlockRecord) => void;
   onIndent: (id: string, dir: 'in' | 'out') => void;
   onPasteMarkdown: (block: BlockRecord, text: string) => void;
@@ -23,25 +25,11 @@ interface BlockListProps {
 }
 
 /** The editable block list under the header: rows + add-block/sub-page + footer. */
-export function BlockList({
-  page,
-  blocks,
-  dnd,
-  onEdit,
-  onRemove,
-  onDuplicate,
-  onIndent,
-  onPasteMarkdown,
-  onSplit,
-  onUpload,
-  onAddBlock,
-  onSubPage,
-  focusId,
-  onFocused,
-}: BlockListProps) {
+export function BlockList({ page, blocks, onAddBlock, onSubPage, ...rest }: BlockListProps) {
   const all = blocks.data ?? [];
   // Children of a collapsed toggle are hidden (Notion-style) but stay in the DB.
   const hidden = hiddenBlockIds(all);
+  const visible = all.filter((block) => !hidden.has(block.id));
   return (
     <LoadState
       loading={blocks.isLoading}
@@ -49,33 +37,14 @@ export function BlockList({
       empty={false}
       onRetry={blocks.refetch}
     >
-      <div className="pv-blocks">
-        {all
-          .filter((block) => !hidden.has(block.id))
-          .map((block) => (
-            <BlockRow
-              key={block.id}
-              block={block}
-              onEdit={onEdit}
-              onRemove={onRemove}
-              onDuplicate={onDuplicate}
-              onIndent={onIndent}
-              onPasteMarkdown={onPasteMarkdown}
-              onUpload={onUpload}
-              onEnter={(caret, value) => onSplit(block, caret, value)}
-              autoFocus={block.id === focusId}
-              onFocused={onFocused}
-              dnd={dnd}
-            />
-          ))}
-      </div>
+      <BlockRows visible={visible} {...rest} />
       <button className="pv-add-block pv-muted" onClick={() => onAddBlock('text')}>
         + Add a block
       </button>
       <button className="pv-add-block pv-muted" onClick={onSubPage}>
         + Add a sub-page
       </button>
-      <PageInfo page={page} blocks={blocks.data ?? []} />
+      <PageInfo page={page} blocks={all} />
     </LoadState>
   );
 }
