@@ -43,6 +43,7 @@ account, no third-party service, no lock-in.
 | Table rows — drag to reorder, click a header to sort (type-aware)             | ✅     |
 | Table board view — kanban grouped by a select column (drag cards)             | ✅     |
 | Table filter — multi-condition (AND) row filters, non-destructive             | ✅     |
+| Saved views — name & switch filter/board/visibility configs on a table        | ✅     |
 | Table summaries — per-column footer calc (count/sum/avg/checked over visible) | ✅     |
 | Table columns — hide/show via Properties (data preserved)                     | ✅     |
 | Table columns — drag a header to reorder (cells + filters follow)             | ✅     |

@@ -61,38 +61,20 @@ export function visibleRows(data: TableData, titles?: TitleMap): VisibleRow[] {
   );
 }
 
-/** Write the exact condition list (keeps blank rows so the user can type into
- * them); clears the filter entirely when empty. Always collapses the legacy
- * single `filter` into the canonical `filters[]`. Pure. */
-export function setConditions(data: TableData, next: TableCondition[]): TableData {
-  const out = { ...data };
-  delete out.filter;
-  if (next.length === 0) delete out.filters;
-  else out.filters = next;
-  return out;
-}
+// Condition-editing helpers (setConditions/add/update/removeCondition) live in
+// tableConditions.ts; re-exported so callers keep one import site.
+export { setConditions, addCondition, updateCondition, removeCondition } from './tableConditions';
 
-/** Add an empty condition on `col` (a new filter row for the user to fill). */
-export function addCondition(data: TableData, col = 0): TableData {
-  return setConditions(data, [...conditions(data), { col, query: '' }]);
-}
-
-/** Update the condition at position `i`. */
-export function updateCondition(
-  data: TableData,
-  i: number,
-  patch: Partial<TableCondition>,
-): TableData {
-  return setConditions(
-    data,
-    conditions(data).map((f, j) => (j === i ? { ...f, ...patch } : f)),
-  );
-}
-
-/** Remove the condition at position `i`. */
-export function removeCondition(data: TableData, i: number): TableData {
-  return setConditions(
-    data,
-    conditions(data).filter((_, j) => j !== i),
-  );
+/** Migrate a legacy single `filter` into the canonical `filters[]` for a grid of
+ * `width` columns: keep any condition targeting a real column (blank queries
+ * included — they're mid-edit and just don't constrain matching); drop
+ * out-of-range columns. Used by normalize. Pure. */
+export function migrateFilters(
+  data: TableData | null | undefined,
+  width: number,
+): TableCondition[] {
+  const raw = data?.filters ?? (data?.filter ? [data.filter] : []);
+  return raw
+    .filter((f) => f && typeof f.col === 'number' && f.col >= 0 && f.col < width)
+    .map((f) => ({ col: f.col, query: f.query ?? '' }));
 }

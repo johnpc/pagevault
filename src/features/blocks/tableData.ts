@@ -1,4 +1,5 @@
 import type { TableData, TableColumn, TableColumnType } from '../../lib/pbTypes';
+import { migrateFilters } from './tableFilter';
 
 const col = (name: string, type: TableColumnType = 'text'): TableColumn => ({ name, type });
 
@@ -41,21 +42,10 @@ export function normalize(data: TableData | null | undefined): TableData {
   }
   const filters = migrateFilters(data, width);
   if (filters.length) next.filters = filters;
+  // Saved views are named presentational configs; keep any with a name.
+  const views = (data?.views ?? []).filter((v) => v && typeof v.name === 'string' && v.name);
+  if (views.length) next.views = views;
   return next;
-}
-
-/** Migrate a legacy single `filter` into the canonical `filters[]`, keeping any
- * condition that targets a real column. A BLANK query is kept (a condition the
- * user is still editing — it just doesn't constrain matching); only out-of-range
- * columns are dropped. Pure. */
-function migrateFilters(
-  data: TableData | null | undefined,
-  width: number,
-): { col: number; query: string }[] {
-  const raw = data?.filters ?? (data?.filter ? [data.filter] : []);
-  return raw
-    .filter((f) => f && typeof f.col === 'number' && f.col >= 0 && f.col < width)
-    .map((f) => ({ col: f.col, query: f.query ?? '' }));
 }
 
 /** Set one cell, returning a new grid. */

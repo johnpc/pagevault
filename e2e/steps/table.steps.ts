@@ -5,7 +5,11 @@ const { When, Then } = createBdd();
 
 const active = (page: Page) =>
   page.locator('.ion-page:not(.ion-page-hidden)').filter({ visible: true }).last();
-const table = (page: Page) => active(page).locator('.pv-table').last();
+// The table + its toolbar/filter/views bars live in one .pv-table-wrap; scope to
+// the last visible one so controls (e.g. "Add filter") resolve to a single node
+// even if another page's table lingers in the DOM mid-transition.
+const wrap = (page: Page) => active(page).locator('.pv-table-wrap').last();
+const table = (page: Page) => wrap(page).locator('.pv-table').last();
 
 When('I fill table cell {string} with {string}', async ({ page }, cell: string, value: string) => {
   const input = table(page).getByLabel(`Cell ${cell}`);
@@ -82,11 +86,11 @@ Then(
 When('I filter table column {int} by {string}', async ({ page }, col: number, query: string) => {
   // Add the first condition row, then set its column + query. The filter bar is
   // a sibling of .pv-table, so scope to the active page.
-  await active(page).getByLabel('Add filter').click();
-  await active(page)
+  await wrap(page).getByLabel('Add filter').click();
+  await wrap(page)
     .getByLabel('Filter 1 column')
     .selectOption(String(col - 1));
-  await active(page).getByLabel('Filter 1 query').fill(query);
+  await wrap(page).getByLabel('Filter 1 query').fill(query);
   // Wait for the non-destructive filter to take effect (rows re-rendered).
   await expect.poll(() => table(page).locator('tbody tr').count()).toBeGreaterThan(0);
 });
@@ -94,19 +98,19 @@ When('I filter table column {int} by {string}', async ({ page }, col: number, qu
 When(
   'I add a filter on table column {int} for {string}',
   async ({ page }, col: number, query: string) => {
-    const n = await active(page).locator('.pv-table-filter-row').count();
-    await active(page).getByLabel('Add filter').click();
-    await active(page)
+    const n = await wrap(page).locator('.pv-table-filter-row').count();
+    await wrap(page).getByLabel('Add filter').click();
+    await wrap(page)
       .getByLabel(`Filter ${n + 1} column`)
       .selectOption(String(col - 1));
-    await active(page)
+    await wrap(page)
       .getByLabel(`Filter ${n + 1} query`)
       .fill(query);
   },
 );
 
 When('I clear the table filter', async ({ page }) => {
-  await active(page).getByLabel('Remove filter 1').click();
+  await wrap(page).getByLabel('Remove filter 1').click();
 });
 
 When(
@@ -148,10 +152,10 @@ Then('the table shows {int} columns', async ({ page }, n: number) => {
 });
 
 When('I show table column {int} from properties', async ({ page }, col: number) => {
-  await active(page).getByLabel('Table properties').click();
+  await wrap(page).getByLabel('Table properties').click();
   // .click() (not .check()) — the checkbox is controlled, so its checked state
   // updates via the re-render after save, which .check()'s post-assert can race.
-  await active(page).getByLabel(`Show column ${col}`).click();
+  await wrap(page).getByLabel(`Show column ${col}`).click();
 });
 
 When(
@@ -199,4 +203,14 @@ When(
 
 Then('the table has a relation cell showing {string}', async ({ page }, title: string) => {
   await expect(table(page).locator('.pv-relation-chip', { hasText: title }).first()).toBeVisible();
+});
+
+When('I save the current table view as {string}', async ({ page }, name: string) => {
+  await wrap(page).getByLabel('Save view name').fill(name);
+  await wrap(page).getByRole('button', { name: 'Save view', exact: true }).click();
+  await expect(wrap(page).getByLabel(`Apply view ${name}`)).toBeVisible();
+});
+
+When('I apply the saved table view {string}', async ({ page }, name: string) => {
+  await wrap(page).getByLabel(`Apply view ${name}`).click();
 });

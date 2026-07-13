@@ -11,7 +11,7 @@ import type { ShareRole } from './collabTypes';
 
 // Re-export the block `data` payload shapes so existing imports from the
 // pbTypes barrel keep working after the split into blockData.ts.
-export type { TableColumnType, TableColumn, TableData, ColumnsData } from './blockData';
+export type { TableColumnType, TableColumn, TableData, TableView, ColumnsData } from './blockData';
 
 export interface BaseRecord {
   id: string;
