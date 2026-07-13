@@ -101,6 +101,17 @@ Feature: Table (database) blocks
     When I filter table column 2 by "10"
     Then the table summary for column 2 shows "10"
 
+  Scenario: A date column displays a friendly medium format
+    Given I have a page titled "Dates"
+    When I type "/table" into a new block
+    And I choose "Table" from the slash menu
+    And I set table column 2 type to "date"
+    And I set the table date in cell "1,2" to "2026-01-05"
+    And I set table column 2 format to "medium"
+    Then the table has a cell containing "Jan 5, 2026"
+    When I reopen the page "Dates"
+    Then the table has a cell containing "Jan 5, 2026"
+
   Scenario: A number column formats its cells as currency
     Given I have a page titled "Prices"
     When I type "/table" into a new block

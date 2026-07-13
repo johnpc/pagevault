@@ -60,8 +60,8 @@ export function TableColumnHead({
             </option>
           ))}
         </select>
-        {col.type === 'number' && (
-          <ColumnFormatPicker data={data} c={c} format={col.format} save={save} />
+        {(col.type === 'number' || col.type === 'date') && (
+          <ColumnFormatPicker data={data} c={c} format={col.format} kind={col.type} save={save} />
         )}
         <button
           className="pv-table-dupcol"
