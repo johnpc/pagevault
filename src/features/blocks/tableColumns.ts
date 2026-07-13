@@ -35,6 +35,33 @@ export function visibleColumns(data: TableData): VisibleColumn[] {
   return data.columns.map((column, index) => ({ column, index })).filter((e) => !e.column.hidden);
 }
 
+/** Where an index lands after moving an item from `from` to `to`. Pure. */
+function remapIndex(i: number, from: number, to: number): number {
+  if (i === from) return to;
+  if (from < to && i > from && i <= to) return i - 1;
+  if (to < from && i >= to && i < from) return i + 1;
+  return i;
+}
+
+/** Move a column from index `from` to index `to`, carrying its header + every
+ * row's cell at that index. Stored bare-index references (filter.col, groupBy)
+ * are remapped so they still point at the same column. No-op on out-of-range /
+ * same index. Pure. */
+export function moveColumn(data: TableData, from: number, to: number): TableData {
+  const n = data.columns.length;
+  if (from === to || from < 0 || to < 0 || from >= n || to >= n) return data;
+  const move = <T>(arr: T[]): T[] => {
+    const next = arr.slice();
+    const [x] = next.splice(from, 1);
+    next.splice(to, 0, x);
+    return next;
+  };
+  const out: TableData = { ...data, columns: move(data.columns), rows: data.rows.map(move) };
+  if (out.filter) out.filter = { ...out.filter, col: remapIndex(out.filter.col, from, to) };
+  if (typeof out.groupBy === 'number') out.groupBy = remapIndex(out.groupBy, from, to);
+  return out;
+}
+
 /** Show or hide a column (data preserved either way). Never hides the last
  * visible column, so the table can't become fully blank. Pure. */
 export function toggleColumnHidden(data: TableData, c: number, hidden: boolean): TableData {

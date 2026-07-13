@@ -137,3 +137,36 @@ When('I show table column {int} from properties', async ({ page }, col: number) 
   // updates via the re-render after save, which .check()'s post-assert can race.
   await active(page).getByLabel(`Show column ${col}`).click();
 });
+
+When(
+  'I drag table column {int} before column {int}',
+  async ({ page }, from: number, to: number) => {
+    const grip = (c: number) => table(page).getByLabel(`Drag column ${c}`);
+    const headCell = (c: number) => table(page).locator('thead th').nth(c); // nth(0)=drag spacer
+    await grip(from).evaluate((el) => {
+      const dt = new DataTransfer();
+      el.dispatchEvent(new DragEvent('dragstart', { bubbles: true, dataTransfer: dt }));
+      (window as unknown as { __dt: DataTransfer }).__dt = dt;
+    });
+    await headCell(to).evaluate((el) => {
+      const dt = (window as unknown as { __dt: DataTransfer }).__dt;
+      el.dispatchEvent(new DragEvent('dragover', { bubbles: true, dataTransfer: dt }));
+      el.dispatchEvent(new DragEvent('drop', { bubbles: true, dataTransfer: dt }));
+    });
+  },
+);
+
+Then('table row 1 reads {string} then {string}', async ({ page }, a: string, b: string) => {
+  await expect
+    .poll(async () => {
+      const vals = await table(page)
+        .locator('tbody tr')
+        .first()
+        .locator('input')
+        .evaluateAll((els) => els.map((e) => (e as HTMLInputElement).value));
+      const ia = vals.indexOf(a);
+      const ib = vals.indexOf(b);
+      return ia !== -1 && ib !== -1 && ia < ib;
+    })
+    .toBe(true);
+});
