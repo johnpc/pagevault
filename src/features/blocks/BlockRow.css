@@ -615,3 +615,57 @@
 .pv-embed-edit {
   width: 100%;
 }
+
+/* Per-block text alignment (Notion-style). Applies to the editable input + idle
+   preview; the row keeps its lead/handle/controls at the start. */
+.pv-align--center .pv-block-input,
+.pv-align--center .pv-block-preview {
+  text-align: center;
+}
+.pv-align--right .pv-block-input,
+.pv-align--right .pv-block-preview {
+  text-align: right;
+}
+
+/* Alignment picker popover (mirrors the color menu). */
+.pv-align {
+  position: relative;
+  flex-shrink: 0;
+}
+.pv-align .pv-block-dup {
+  font-size: 14px;
+}
+.pv-align-menu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  z-index: 20;
+  margin: 2px 0 0;
+  padding: 4px;
+  list-style: none;
+  background: var(--pv-surface);
+  border: 1px solid var(--pv-border);
+  border-radius: var(--pv-radius-sm);
+  box-shadow: var(--pv-shadow);
+  min-width: 120px;
+}
+.pv-align-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  color: var(--pv-text);
+  cursor: pointer;
+  font: inherit;
+  padding: 5px 8px;
+  text-align: left;
+}
+.pv-align-item:hover {
+  background: var(--pv-hover);
+}
+.pv-align-item--on {
+  font-weight: 600;
+}

@@ -82,6 +82,7 @@ account, no third-party service, no lock-in.
 | Backlinks — "Linked references" of every page that mentions this one          | ✅     |
 | Page comments — timestamped notes on a page (Cmd/Ctrl+Enter to post)          | ✅     |
 | Block color & background highlight (text + `-bg` palette)                     | ✅     |
+| Block text alignment (left / center / right)                                  | ✅     |
 | Duplicate a block (inserts below)                                             | ✅     |
 | Nested lists — Tab / Shift-Tab to indent & outdent blocks                     | ✅     |
 | Drag-to-reorder blocks (optimistic)                                           | ✅     |

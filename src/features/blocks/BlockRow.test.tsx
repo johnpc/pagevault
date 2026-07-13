@@ -362,6 +362,26 @@ describe('BlockRow', () => {
     expect(onEdit).toHaveBeenCalledWith('b1', { color: 'blue' });
   });
 
+  it('sets a block alignment from the align menu', async () => {
+    const onEdit = vi.fn();
+    render(
+      <BlockRow
+        block={mk()}
+        onEdit={onEdit}
+        onRemove={vi.fn()}
+        onEnter={vi.fn()}
+        onDuplicate={vi.fn()}
+        onIndent={vi.fn()}
+        onPasteMarkdown={vi.fn()}
+        onUpload={vi.fn()}
+        dnd={noopDnd}
+      />,
+    );
+    await userEvent.click(screen.getByLabelText('Text alignment'));
+    await userEvent.click(screen.getByRole('option', { name: /Center/ }));
+    expect(onEdit).toHaveBeenCalledWith('b1', { align: 'center' });
+  });
+
   it('starts a drag from the handle and drops onto another block', () => {
     const dnd: BlockDndHandlers = { ...noopDnd, onDragStart: vi.fn(), onDrop: vi.fn() };
     render(

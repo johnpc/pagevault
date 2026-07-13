@@ -76,6 +76,7 @@ export interface BlocksResponse extends BaseRecord {
   color: string; // text/background color token (e.g. 'red', 'yellow-bg'); '' = default
   lang: string; // code block language (e.g. 'js', 'python'); '' = plain
   emoji: string; // callout leading icon (e.g. '💡', '⚠️'); '' = default 💡
+  align: string; // text alignment: 'center' | 'right'; '' = default left
   depth: number; // indentation level (0 = top); for nested lists
   sort: number;
   owner: string;
