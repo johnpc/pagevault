@@ -449,14 +449,16 @@
 .pv-table-toolbar .pv-table-filter {
   margin-bottom: 0;
 }
-.pv-table-hide {
+.pv-table-hide,
+.pv-table-dupcol {
   background: none;
   border: none;
   color: var(--pv-text-muted);
   cursor: pointer;
   font-size: 12px;
 }
-.pv-table-hide:hover {
+.pv-table-hide:hover,
+.pv-table-dupcol:hover {
   color: var(--pv-text);
 }
 /* Properties popover: per-column show/hide checkboxes. */

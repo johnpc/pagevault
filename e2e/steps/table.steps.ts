@@ -154,6 +154,32 @@ When('I hide table column {int}', async ({ page }, col: number) => {
   await table(page).getByLabel(`Hide column ${col}`).click();
 });
 
+When('I duplicate table column {int}', async ({ page }, col: number) => {
+  const before = await table(page).locator('thead .pv-table-head').count();
+  await table(page).getByLabel(`Duplicate column ${col}`).click();
+  await expect
+    .poll(() => table(page).locator('thead .pv-table-head').count())
+    .toBeGreaterThan(before);
+});
+
+Then(
+  'the table row {int} has {int} cells containing {string}',
+  async ({ page }, r: number, n: number, value: string) => {
+    const cells = table(page)
+      .locator('tbody tr')
+      .nth(r - 1)
+      .locator('input');
+    await expect
+      .poll(() =>
+        cells.evaluateAll(
+          (els, v) => els.filter((el) => (el as HTMLInputElement).value === v).length,
+          value,
+        ),
+      )
+      .toBe(n);
+  },
+);
+
 Then('the table shows {int} column', async ({ page }, n: number) => {
   await expect(table(page).locator('thead .pv-table-head')).toHaveCount(n);
 });

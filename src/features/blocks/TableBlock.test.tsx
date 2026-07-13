@@ -152,6 +152,15 @@ describe('TableBlock', () => {
     expect(onEdit).toHaveBeenCalledWith('b1', { data: { columns: cols('B'), rows: [['2']] } });
   });
 
+  it('duplicates a column', async () => {
+    const onEdit = vi.fn();
+    render(<TableBlock block={mk(grid)} onEdit={onEdit} />);
+    await userEvent.click(screen.getByLabelText('Duplicate column 1'));
+    const saved = onEdit.mock.calls.at(-1)![1] as { data: TableData };
+    expect(saved.data.columns.map((c) => c.name)).toEqual(['A', 'A', 'B']);
+    expect(saved.data.rows).toEqual([['1', '1', '2']]);
+  });
+
   it('sorts rows by a column when its header sort button is clicked', async () => {
     const onEdit = vi.fn();
     const data: TableData = { columns: cols('A'), rows: [['banana'], ['apple'], ['cherry']] };
