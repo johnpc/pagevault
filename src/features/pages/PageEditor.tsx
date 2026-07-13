@@ -18,7 +18,8 @@ export function PageEditor() {
   const { page, blocks, allPages, ...ed } = usePageEditor(id);
   const { setTitle, setIcon, setFavorite, setCover, setCoverImage, setParent, setFullWidth } = ed;
   const { setFont } = ed;
-  const { addBlock, editBlock, removeBlock, cloneBlock, indentBlock, importMarkdown } = ed;
+  const { addBlock, editBlock, removeBlock, removeBlocks, cloneBlock, indentBlock } = ed;
+  const { importMarkdown } = ed;
   const { splitBlock, uploadImage, focusId, clearFocusId, moveBlockTo } = ed;
   const { removePage, addSubPage, duplicate, exportMarkdown } = ed;
   const dnd = useBlockDnd(moveBlockTo);
@@ -69,6 +70,7 @@ export function PageEditor() {
                   dnd={dnd}
                   onEdit={editBlock}
                   onRemove={removeBlock}
+                  onRemoveMany={removeBlocks}
                   onDuplicate={cloneBlock}
                   onIndent={indentBlock}
                   onPasteMarkdown={importMarkdown}

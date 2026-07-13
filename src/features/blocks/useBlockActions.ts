@@ -90,5 +90,6 @@ export function useBlockActions(pageId: string, blocks: BlockRecord[]) {
     focusId,
     clearFocusId: () => setFocusId(null),
     removeBlock: deleteBlock.mutate,
+    removeBlocks: deleteBlock.mutate,
   };
 }
