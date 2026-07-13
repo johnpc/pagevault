@@ -1,4 +1,5 @@
 import type { TableData } from '../../lib/pbTypes';
+import { cellText, type TitleMap } from './cellText';
 
 /** A non-destructive row filter stored on the grid: show only rows whose cell in
  * column `col` matches `query`. `query` '' = filter off. Case-insensitive
@@ -29,13 +30,16 @@ function cellMatches(cell: string, query: string, type: string): boolean {
 }
 
 /** The rows to render given the grid's stored filter, each with its real index.
- * No filter (or an out-of-range column) shows every row. Pure. */
-export function visibleRows(data: TableData): VisibleRow[] {
+ * No filter (or an out-of-range column) shows every row. `titles` resolves a
+ * relation column's page-id cells to titles so the query matches by name. Pure. */
+export function visibleRows(data: TableData, titles?: TitleMap): VisibleRow[] {
   const f = data.filter;
   const all = data.rows.map((row, index) => ({ row, index }));
   if (!f || !f.query.trim() || f.col < 0 || f.col >= data.columns.length) return all;
-  const type = data.columns[f.col]?.type ?? 'text';
-  return all.filter((e) => cellMatches(e.row[f.col] ?? '', f.query, type));
+  const column = data.columns[f.col];
+  return all.filter((e) =>
+    cellMatches(cellText(column, e.row[f.col] ?? '', titles), f.query, column.type),
+  );
 }
 
 /** Set (or update) the grid's filter. A blank query clears it. Pure. */

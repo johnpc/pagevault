@@ -1,6 +1,9 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+// TableBlock reads usePages (for relation-cell titles); stub it so these
+// render tests don't need a QueryClient/pb.
+vi.mock('../pages/pagesApi', () => ({ usePages: () => ({ data: [] }) }));
 import { TableBlock } from './TableBlock';
 import type { BlockRecord } from '../../lib/pbClient';
 import type { TableData, TableColumn } from '../../lib/pbTypes';

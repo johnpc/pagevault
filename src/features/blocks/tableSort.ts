@@ -1,4 +1,5 @@
 import type { TableData, TableColumnType } from '../../lib/pbTypes';
+import { cellText, type TitleMap } from './cellText';
 
 /** Move a body row from index `from` to index `to` (drag reorder). Pure. */
 export function moveRow(data: TableData, from: number, to: number): TableData {
@@ -42,13 +43,23 @@ function compareCells(a: string, b: string, type: TableColumnType): number {
   return a.localeCompare(b, undefined, { sensitivity: 'base' });
 }
 
-/** Sort the rows by column `c` ascending or descending (stable, type-aware). */
-export function sortByColumn(data: TableData, c: number, dir: 'asc' | 'desc'): TableData {
-  const type = data.columns[c]?.type ?? 'text';
+/** Sort the rows by column `c` ascending or descending (stable, type-aware).
+ * `titles` resolves relation cells (page ids) to titles so they sort by name;
+ * for a relation column the comparison runs as text on the resolved title. */
+export function sortByColumn(
+  data: TableData,
+  c: number,
+  dir: 'asc' | 'desc',
+  titles?: TitleMap,
+): TableData {
+  const column = data.columns[c];
+  const type = column?.type ?? 'text';
+  const cmpType: TableColumnType = type === 'relation' ? 'text' : type;
+  const at = (row: string[]) => (column ? cellText(column, row[c] ?? '', titles) : (row[c] ?? ''));
   const sign = dir === 'desc' ? -1 : 1;
   const rows = data.rows
     .map((row, i) => ({ row, i }))
-    .sort((x, y) => compareCells(x.row[c] ?? '', y.row[c] ?? '', type) * sign || x.i - y.i)
+    .sort((x, y) => compareCells(at(x.row), at(y.row), cmpType) * sign || x.i - y.i)
     .map((e) => e.row);
   return { columns: data.columns, rows };
 }

@@ -4,13 +4,22 @@ import { setCell, removeRow } from './tableData';
 import { moveRow } from './tableSort';
 import { visibleRows } from './tableFilter';
 import { visibleColumns } from './tableColumns';
+import type { TitleMap } from './cellText';
 import { TableCell } from './TableCell';
 
 /** The table body: editable cells plus a per-row drag handle for reordering.
  * Rows honor the grid's non-destructive filter — each rendered row keeps its
- * REAL index so edits/deletes/drags target the right underlying row. Row-drag
- * state is local; a drop commits the new order via `save`. */
-export function TableBody({ data, save }: { data: TableData; save: (next: TableData) => void }) {
+ * REAL index so edits/deletes/drags target the right underlying row. `titles`
+ * lets a relation-column filter match by page title. Row-drag state is local. */
+export function TableBody({
+  data,
+  save,
+  titles,
+}: {
+  data: TableData;
+  save: (next: TableData) => void;
+  titles?: TitleMap;
+}) {
   const [dragRow, setDragRow] = useState<number | null>(null);
 
   const drop = (to: number) => {
@@ -20,7 +29,7 @@ export function TableBody({ data, save }: { data: TableData; save: (next: TableD
 
   return (
     <tbody>
-      {visibleRows(data).map(({ row, index: r }) => (
+      {visibleRows(data, titles).map(({ row, index: r }) => (
         <tr
           key={r}
           className={dragRow === r ? 'pv-table-row--dragging' : ''}

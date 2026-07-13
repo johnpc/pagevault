@@ -58,3 +58,17 @@ describe('setFilter', () => {
     expect(setFilter(withFilter, 0, '   ').filter).toBeUndefined();
   });
 });
+
+describe('visibleRows with relations', () => {
+  it('filters a relation column by the linked page title', () => {
+    const data = {
+      columns: [{ name: 'Page', type: 'relation' as const }],
+      rows: [['p1'], ['p2'], ['']],
+      filter: { col: 0, query: 'road' },
+    };
+    const titles = { p1: 'Roadmap', p2: 'Journal' };
+    const v = visibleRows(data, titles);
+    expect(v).toHaveLength(1);
+    expect(v[0].row[0]).toBe('p1'); // matched by title "Roadmap", keeps id
+  });
+});
