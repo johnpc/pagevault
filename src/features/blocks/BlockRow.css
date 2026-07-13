@@ -578,3 +578,40 @@
 .pv-bookmark-edit {
   width: 100%;
 }
+
+/* Video/audio embed block. */
+.pv-embed {
+  position: relative;
+  width: 100%;
+}
+.pv-embed-media,
+.pv-embed-frame {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: none;
+  border-radius: var(--pv-radius-sm);
+  background: #000;
+  display: block;
+}
+.pv-embed-audio {
+  width: 100%;
+}
+.pv-embed-edit-btn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: var(--pv-surface);
+  border: 1px solid var(--pv-border);
+  border-radius: 4px;
+  color: var(--pv-text-muted);
+  cursor: pointer;
+  font-size: 12px;
+  opacity: 0;
+  padding: 2px 6px;
+}
+.pv-embed:hover .pv-embed-edit-btn {
+  opacity: 1;
+}
+.pv-embed-edit {
+  width: 100%;
+}

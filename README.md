@@ -79,6 +79,7 @@ account, no third-party service, no lock-in.
 | Select multiple blocks with Shift+↑/↓ and delete them at once                 | ✅     |
 | Drag-to-reorder pages in the sidebar (same-parent siblings)                   | ✅     |
 | Bookmark blocks — a link card for any URL (domain + link, opens in a tab)     | ✅     |
+| Video/audio embed — native player for media files, iframe for YouTube/Vimeo   | ✅     |
 | Image blocks (embed by URL)                                                   | ✅     |
 | Image uploads (stored in PocketBase, served same-origin)                      | ✅     |
 | Quick-find search (⌘K, ranked, match-highlighted, titles + content)           | ✅     |

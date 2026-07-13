@@ -413,3 +413,13 @@ Then('the page shows a bookmark to {string}', async ({ page }, domain: string) =
     active(page).locator('.pv-bookmark-domain', { hasText: domain }).first(),
   ).toBeVisible();
 });
+
+When('I enter the embed URL {string}', async ({ page }, url: string) => {
+  const input = active(page).getByLabel('Embed URL');
+  await input.fill(url);
+  await input.blur();
+});
+
+Then('the page shows an embedded iframe', async ({ page }) => {
+  await expect(active(page).locator('iframe.pv-embed-frame').first()).toBeVisible();
+});

@@ -14,6 +14,7 @@ const NON_TEXT: ReadonlySet<BlockType> = new Set<BlockType>([
   'toc',
   'divider',
   'bookmark',
+  'embed',
 ]);
 
 export const TURN_INTO_TYPES: SlashCommand[] = SLASH_COMMANDS.filter((c) => !NON_TEXT.has(c.type));
