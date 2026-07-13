@@ -21,5 +21,6 @@ export interface SharesResponse extends BaseRecord {
 export interface PresenceResponse extends BaseRecord {
   page: string;
   user: string;
+  block: string; // id of the block this viewer is focused in; '' = none
   expand?: { user?: UsersResponse };
 }

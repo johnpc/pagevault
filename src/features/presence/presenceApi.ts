@@ -15,10 +15,11 @@ export function fetchPresence(pageId: string): Promise<PresenceRecord[]> {
 
 /**
  * Send a heartbeat: create the caller's presence row for this page, or touch it
- * if it already exists (its `updated` autodate advances on any save). Idempotent
- * — safe to call repeatedly on an interval. Returns nothing.
+ * if it already exists (its `updated` autodate advances on any save). `block` is
+ * the id of the block the viewer is focused in ('' = none) — persisted so other
+ * viewers can render a live cursor there. Idempotent — safe to call repeatedly.
  */
-export async function heartbeat(pageId: string): Promise<void> {
+export async function heartbeat(pageId: string, block = ''): Promise<void> {
   const user = currentUserId();
   if (!user) return;
   const existing = await pb
@@ -26,9 +27,9 @@ export async function heartbeat(pageId: string): Promise<void> {
     .getFirstListItem<PresenceRecord>(`page = '${pageId}' && user = '${user}'`)
     .catch(() => null);
   if (existing) {
-    await pb.collection('presence').update(existing.id, { user });
+    await pb.collection('presence').update(existing.id, { user, block });
   } else {
-    await pb.collection('presence').create({ page: pageId, user });
+    await pb.collection('presence').create({ page: pageId, user, block });
   }
 }
 

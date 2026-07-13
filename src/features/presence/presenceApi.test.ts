@@ -35,17 +35,17 @@ describe('fetchPresence', () => {
 });
 
 describe('heartbeat', () => {
-  it('creates a row when none exists', async () => {
+  it('creates a row (with focused block) when none exists', async () => {
     presence.getFirstListItem.mockRejectedValue(new Error('404'));
-    await heartbeat('pg');
-    expect(presence.create).toHaveBeenCalledWith({ page: 'pg', user: 'me' });
+    await heartbeat('pg', 'b1');
+    expect(presence.create).toHaveBeenCalledWith({ page: 'pg', user: 'me', block: 'b1' });
     expect(presence.update).not.toHaveBeenCalled();
   });
 
-  it('touches the existing row when present', async () => {
+  it('touches the existing row with the current block (defaults to none)', async () => {
     presence.getFirstListItem.mockResolvedValue({ id: 'row1' });
     await heartbeat('pg');
-    expect(presence.update).toHaveBeenCalledWith('row1', { user: 'me' });
+    expect(presence.update).toHaveBeenCalledWith('row1', { user: 'me', block: '' });
     expect(presence.create).not.toHaveBeenCalled();
   });
 

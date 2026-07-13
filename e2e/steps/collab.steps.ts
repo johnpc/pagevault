@@ -47,6 +47,13 @@ When('the second user joins the page', async () => {
   await expect(active(tab).getByLabel('Page title')).toBeVisible();
 });
 
+When('the second user focuses the first block', async () => {
+  const tab = collabTab;
+  if (!tab) throw new Error('second user tab was not opened');
+  await blockInputs(tab).first().click();
+  await expect(active(tab).locator('textarea.pv-block-input:focus')).toBeVisible();
+});
+
 Then('the second user sees a block containing {string}', async ({ page }, text: string) => {
   void page; // the assertion targets the second user's tab, not the fixture page
   const tab = collabTab;
