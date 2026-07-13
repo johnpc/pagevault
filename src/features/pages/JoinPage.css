@@ -1,0 +1,47 @@
+.pv-join {
+  display: flex;
+  justify-content: center;
+  padding: 96px 24px;
+}
+.pv-join-card {
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  background: var(--pv-surface);
+  border: 1px solid var(--pv-border);
+  border-radius: var(--pv-radius);
+  box-shadow: var(--pv-shadow);
+  padding: 40px 32px;
+}
+.pv-join-eyebrow {
+  color: var(--pv-text-muted);
+  font-size: 13px;
+  margin: 0 0 4px;
+}
+.pv-join-title {
+  font-size: 28px;
+  font-weight: 800;
+  margin: 0 0 16px;
+  color: var(--pv-text);
+}
+.pv-join-role {
+  color: var(--pv-text-muted);
+  margin: 0 0 24px;
+}
+.pv-join-btn {
+  background: var(--pv-accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--pv-radius-sm);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  padding: 10px 24px;
+}
+.pv-join-btn:hover {
+  background: var(--pv-accent-strong);
+}
+.pv-join-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}

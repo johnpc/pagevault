@@ -9,7 +9,13 @@
  * come from the workflow env. Run: `npm run seed`.
  */
 import { existsSync, readFileSync } from 'node:fs';
-import { authAdmin, ensureTestUser, clearWorkspace, adminClient } from './seedClient';
+import {
+  authAdmin,
+  ensureTestUser,
+  ensureCollaboratorUser,
+  clearWorkspace,
+  adminClient,
+} from './seedClient';
 import { seedWorkspace } from './seedWorkspace';
 
 if (existsSync('.env.local')) {
@@ -23,6 +29,7 @@ async function main() {
   const pb = adminClient();
   await authAdmin(pb);
   const owner = await ensureTestUser(pb);
+  await ensureCollaboratorUser(pb); // second account for collaboration flows
   await clearWorkspace(pb, owner);
   const pages = await seedWorkspace(pb, owner);
   console.log(`✓ Seeded ${pages} starter pages for the test user.`);

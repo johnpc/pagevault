@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { makeShareToken, shareUrl } from './sharing';
+import { makeShareToken, shareUrl, inviteUrl } from './sharing';
 
 describe('makeShareToken', () => {
   it('produces a slug of the requested length from the alphabet', () => {
@@ -19,5 +19,12 @@ describe('shareUrl', () => {
   it('builds a /shared/<token> URL and trims a trailing slash', () => {
     expect(shareUrl('https://pv.example.com/', 'tok')).toBe('https://pv.example.com/shared/tok');
     expect(shareUrl('http://localhost:5173', 'abc')).toBe('http://localhost:5173/shared/abc');
+  });
+});
+
+describe('inviteUrl', () => {
+  it('builds a /join/<token> URL and trims a trailing slash', () => {
+    expect(inviteUrl('https://pv.example.com/', 'tok')).toBe('https://pv.example.com/join/tok');
+    expect(inviteUrl('http://localhost:5173', 'abc')).toBe('http://localhost:5173/join/abc');
   });
 });

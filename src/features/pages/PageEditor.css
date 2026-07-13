@@ -3,6 +3,56 @@
   margin: 0 auto;
   padding: 64px 56px 120px;
 }
+
+/* Invite popover: role list to create/copy/revoke a page's invite link. */
+.pv-invite {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.pv-invite-menu {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  z-index: 20;
+  margin: 2px 0 0;
+  padding: 4px;
+  list-style: none;
+  background: var(--pv-surface);
+  border: 1px solid var(--pv-border);
+  border-radius: var(--pv-radius-sm);
+  box-shadow: var(--pv-shadow);
+  min-width: 148px;
+}
+.pv-invite-item {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  color: var(--pv-text);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 6px 8px;
+  text-align: left;
+}
+.pv-invite-item:hover {
+  background: var(--pv-hover);
+}
+.pv-invite-item--on {
+  font-weight: 600;
+}
+.pv-invite-revoke {
+  color: var(--pv-danger);
+  border-top: 1px solid var(--pv-border);
+  margin-top: 2px;
+}
+.pv-invite-copied {
+  font-size: 12px;
+  color: var(--pv-text-muted);
+}
+
 /* Full-width pages use (almost) the whole content column. */
 .pv-page--wide {
   max-width: 1100px;

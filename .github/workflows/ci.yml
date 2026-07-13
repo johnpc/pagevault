@@ -106,12 +106,16 @@ jobs:
             paths: .features-gen/e2e/features/codelang
           - name: font
             paths: .features-gen/e2e/features/font
+          - name: collab
+            paths: .features-gen/e2e/features/collab
     env:
       VITE_PB_URL: http://localhost:8090
       PB_ADMIN_EMAIL: admin@pagevault.local
       PB_ADMIN_PASSWORD: AdminPass123!
       TEST_USERNAME: test@example.com
       TEST_PASSWORD: TestPassw0rd!
+      COLLAB_USERNAME: collab@example.com
+      COLLAB_PASSWORD: TestPassw0rd!
     steps:
       - uses: actions/checkout@v4
       - name: Setup Node

@@ -1,6 +1,7 @@
 import type { PageRecord } from '../../lib/pbClient';
 import { MovePicker } from './MovePicker';
 import { ShareButton } from './ShareButton';
+import { InviteButton } from './InviteButton';
 import { FontPicker } from './FontPicker';
 
 export interface PageActionsProps {
@@ -40,6 +41,7 @@ export function PageActions({
       </button>
       <MovePicker page={page} pages={pages} onMove={onMove} />
       <ShareButton page={page} />
+      <InviteButton page={page} />
       <button
         className={`pv-page-delete pv-muted${page.fullWidth ? ' pv-page-width--on' : ''}`}
         aria-label="Toggle full width"
