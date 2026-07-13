@@ -65,3 +65,16 @@ Feature: Table (database) blocks
     Then table column 1 reads "Earlier" then "Later"
     When I reopen the page "Timeline"
     Then the table has a cell containing "Earlier"
+
+  Scenario: A column summary totals the visible rows
+    Given I have a page titled "Budget"
+    When I type "/table" into a new block
+    And I choose "Table" from the slash menu
+    And I set table column 2 type to "number"
+    And I fill table cell "1,2" with "10"
+    And I add a table row
+    And I fill table cell "2,2" with "5"
+    And I set the summary for table column 2 to "sum"
+    Then the table summary for column 2 shows "15"
+    When I filter table column 2 by "10"
+    Then the table summary for column 2 shows "10"

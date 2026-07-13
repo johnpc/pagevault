@@ -11,7 +11,12 @@ export function emptyTable(): TableData {
  * table) into a typed TableColumn. */
 function toColumn(c: TableColumn | string): TableColumn {
   if (typeof c === 'string') return col(c);
-  return { name: c.name, type: c.type ?? 'text', ...(c.options ? { options: c.options } : {}) };
+  return {
+    name: c.name,
+    type: c.type ?? 'text',
+    ...(c.options ? { options: c.options } : {}),
+    ...(c.summary ? { summary: c.summary } : {}),
+  };
 }
 
 /** Normalize possibly-missing/ragged/legacy data into a valid typed grid (≥1
@@ -49,24 +54,9 @@ export function setCell(data: TableData, r: number, c: number, value: string): T
   return { columns: data.columns, rows };
 }
 
-/** Rename one column header. */
-export function setColumn(data: TableData, c: number, name: string): TableData {
-  return {
-    columns: data.columns.map((col, j) => (j === c ? { ...col, name } : col)),
-    rows: data.rows,
-  };
-}
-
-/** Change one column's type (and seed select options from distinct cell values). */
-export function setColumnType(data: TableData, c: number, type: TableColumnType): TableData {
-  const columns = data.columns.map((col, j) => {
-    if (j !== c) return col;
-    if (type !== 'select') return { name: col.name, type };
-    const options = [...new Set(data.rows.map((row) => row[c]).filter(Boolean))];
-    return { name: col.name, type, options };
-  });
-  return { columns, rows: data.rows };
-}
+// Column-property mutators (setColumn / setColumnType / setColumnSummary) live
+// in tableColumns.ts; re-exported so callers keep importing them from here.
+export { setColumn, setColumnType, setColumnSummary } from './tableColumns';
 
 /** Append an empty row. */
 export function addRow(data: TableData): TableData {

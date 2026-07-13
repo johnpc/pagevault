@@ -246,3 +246,32 @@
 .pv-table-filter-clear:hover {
   color: var(--pv-danger);
 }
+
+/* Footer calculation row: a compact per-column summary picker + result. */
+.pv-table-foot td {
+  background: var(--pv-hover);
+}
+.pv-table-summary {
+  display: block;
+  position: relative;
+  cursor: pointer;
+}
+.pv-table-summary-value {
+  display: block;
+  padding: 3px 6px;
+  font-size: 12px;
+  color: var(--pv-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* The picker overlays the cell invisibly so clicking anywhere opens it. */
+.pv-table-summary select {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  border: none;
+}

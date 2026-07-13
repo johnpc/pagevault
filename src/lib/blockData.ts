@@ -13,6 +13,7 @@ export interface TableColumn {
   name: string; // header label
   type: TableColumnType;
   options?: string[]; // choices for a `select` column
+  summary?: string; // footer calculation kind (see tableSummary SummaryKind); absent = none
 }
 
 /** The grid stored in a `table` block's JSON `data` field. Cells stay as a

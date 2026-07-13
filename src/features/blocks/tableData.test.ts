@@ -5,6 +5,7 @@ import {
   setCell,
   setColumn,
   setColumnType,
+  setColumnSummary,
   addRow,
   addColumn,
   removeRow,
@@ -73,6 +74,13 @@ describe('tableData', () => {
     const data: TableData = { columns: cols('Tag'), rows: [['x'], ['y'], ['x'], ['']] };
     const next = setColumnType(data, 0, 'select');
     expect(next.columns[0]).toEqual({ name: 'Tag', type: 'select', options: ['x', 'y'] });
+  });
+
+  it('setColumnSummary sets a summary and clears it on none, preserved by normalize', () => {
+    const set = setColumnSummary(grid(), 0, 'count');
+    expect(set.columns[0].summary).toBe('count');
+    expect(normalize(set).columns[0].summary).toBe('count'); // survives normalize
+    expect(setColumnSummary(set, 0, 'none').columns[0].summary).toBeUndefined();
   });
 
   it('addRow appends an empty row matching the width', () => {
