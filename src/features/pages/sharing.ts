@@ -16,3 +16,8 @@ export function makeShareToken(len = 16, rand: () => number = Math.random): stri
 export function shareUrl(origin: string, token: string): string {
   return `${origin.replace(/\/$/, '')}/shared/${token}`;
 }
+
+/** The absolute invite URL (a signed-in user joins here), given the origin. */
+export function inviteUrl(origin: string, token: string): string {
+  return `${origin.replace(/\/$/, '')}/join/${token}`;
+}

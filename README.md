@@ -19,57 +19,58 @@ account, no third-party service, no lock-in.
 
 ## Features
 
-| Feature                                                                | Status |
-| ---------------------------------------------------------------------- | ------ |
-| Email/password accounts (private, owner-scoped)                        | ✅     |
-| Page templates (Meeting notes, To-do, Blank)                           | ✅     |
-| Home screen with recently edited pages                                 | ✅     |
-| Nested pages in a collapsible sidebar tree                             | ✅     |
-| Move / reparent a page (cycle-safe picker)                             | ✅     |
-| Sub-pages + breadcrumb navigation                                      | ✅     |
-| Archive to trash → restore or delete forever                           | ✅     |
-| Favorite pages (pinned Favorites section)                              | ✅     |
-| Page footer: word/block count + last edited                            | ✅     |
-| Duplicate a page (with all its blocks)                                 | ✅     |
-| Export a page as Markdown                                              | ✅     |
-| Export the whole workspace as one Markdown file (Settings)             | ✅     |
-| Blocks — text, headings, lists, to-dos, quotes, code, images, callouts | ✅     |
-| Code blocks — one-click copy button                                    | ✅     |
-| Code blocks — language label/picker (fenced language on export)        | ✅     |
-| Toggle blocks — collapse/expand to fold away nested content            | ✅     |
-| Column layouts — 2–4 side-by-side text columns                         | ✅     |
-| Table of contents block — auto-lists headings, click to scroll         | ✅     |
-| Table blocks — typed columns (text/number/checkbox/select), GFM export | ✅     |
-| Table rows — drag to reorder, click a header to sort (type-aware)      | ✅     |
-| Table board view — kanban grouped by a select column (drag cards)      | ✅     |
-| Markdown shortcuts (`# `, `- `, `1. `, `[] `, `> `, ` ``` `)           | ✅     |
-| Enter splits at the caret into a block below (Notion-smooth typing)    | ✅     |
-| Enter continues a list; an empty item exits / outdents the list        | ✅     |
-| Slash command menu (`/` to pick a block type)                          | ✅     |
-| Turn into — convert an existing block to another type, keeping content | ✅     |
-| Page icons + cover banners (gradient or uploaded image)                | ✅     |
-| Full-width page toggle (per page)                                      | ✅     |
-| Page font style — Default / Serif / Mono (per page)                    | ✅     |
-| Live sync across open tabs/devices (PocketBase realtime)               | ✅     |
-| Light / dark / system theme (Settings switcher)                        | ✅     |
-| Keyboard shortcut help overlay (?)                                     | ✅     |
-| Installable PWA                                                        | ✅     |
-| Public link sharing (read-only /shared/<token>, no login)              | ✅     |
-| Self-hosted via `docker compose`                                       | ✅     |
-| Inline markdown — bold, italic, code, strikethrough, underline         | ✅     |
-| Formatting shortcuts — Cmd/Ctrl+B/I/E wrap the selection               | ✅     |
-| @-mentions — type `@` to link another page inline                      | ✅     |
-| Backlinks — "Linked references" of every page that mentions this one   | ✅     |
-| Page comments — timestamped notes on a page (Cmd/Ctrl+Enter to post)   | ✅     |
-| Block color & background highlight (text + `-bg` palette)              | ✅     |
-| Duplicate a block (inserts below)                                      | ✅     |
-| Nested lists — Tab / Shift-Tab to indent & outdent blocks              | ✅     |
-| Drag-to-reorder blocks (optimistic)                                    | ✅     |
-| Drag-to-reorder pages in the sidebar (same-parent siblings)            | ✅     |
-| Image blocks (embed by URL)                                            | ✅     |
-| Image uploads (stored in PocketBase, served same-origin)               | ✅     |
-| Quick-find search (⌘K, ranked, match-highlighted, titles + content)    | ✅     |
-| Native iOS / Android builds (Capacitor)                                | ⬜     |
+| Feature                                                                  | Status |
+| ------------------------------------------------------------------------ | ------ |
+| Email/password accounts (private, owner-scoped)                          | ✅     |
+| Page templates (Meeting notes, To-do, Blank)                             | ✅     |
+| Home screen with recently edited pages                                   | ✅     |
+| Nested pages in a collapsible sidebar tree                               | ✅     |
+| Move / reparent a page (cycle-safe picker)                               | ✅     |
+| Sub-pages + breadcrumb navigation                                        | ✅     |
+| Archive to trash → restore or delete forever                             | ✅     |
+| Favorite pages (pinned Favorites section)                                | ✅     |
+| Page footer: word/block count + last edited                              | ✅     |
+| Duplicate a page (with all its blocks)                                   | ✅     |
+| Export a page as Markdown                                                | ✅     |
+| Export the whole workspace as one Markdown file (Settings)               | ✅     |
+| Blocks — text, headings, lists, to-dos, quotes, code, images, callouts   | ✅     |
+| Code blocks — one-click copy button                                      | ✅     |
+| Code blocks — language label/picker (fenced language on export)          | ✅     |
+| Toggle blocks — collapse/expand to fold away nested content              | ✅     |
+| Column layouts — 2–4 side-by-side text columns                           | ✅     |
+| Table of contents block — auto-lists headings, click to scroll           | ✅     |
+| Table blocks — typed columns (text/number/checkbox/select), GFM export   | ✅     |
+| Table rows — drag to reorder, click a header to sort (type-aware)        | ✅     |
+| Table board view — kanban grouped by a select column (drag cards)        | ✅     |
+| Markdown shortcuts (`# `, `- `, `1. `, `[] `, `> `, ` ``` `)             | ✅     |
+| Enter splits at the caret into a block below (Notion-smooth typing)      | ✅     |
+| Enter continues a list; an empty item exits / outdents the list          | ✅     |
+| Slash command menu (`/` to pick a block type)                            | ✅     |
+| Turn into — convert an existing block to another type, keeping content   | ✅     |
+| Page icons + cover banners (gradient or uploaded image)                  | ✅     |
+| Full-width page toggle (per page)                                        | ✅     |
+| Page font style — Default / Serif / Mono (per page)                      | ✅     |
+| Live sync across open tabs/devices (PocketBase realtime)                 | ✅     |
+| Light / dark / system theme (Settings switcher)                          | ✅     |
+| Keyboard shortcut help overlay (?)                                       | ✅     |
+| Installable PWA                                                          | ✅     |
+| Public link sharing (read-only /shared/<token>, no login)                | ✅     |
+| Collaborate — invite another user to a page via link (view/comment/edit) | ✅     |
+| Self-hosted via `docker compose`                                         | ✅     |
+| Inline markdown — bold, italic, code, strikethrough, underline           | ✅     |
+| Formatting shortcuts — Cmd/Ctrl+B/I/E wrap the selection                 | ✅     |
+| @-mentions — type `@` to link another page inline                        | ✅     |
+| Backlinks — "Linked references" of every page that mentions this one     | ✅     |
+| Page comments — timestamped notes on a page (Cmd/Ctrl+Enter to post)     | ✅     |
+| Block color & background highlight (text + `-bg` palette)                | ✅     |
+| Duplicate a block (inserts below)                                        | ✅     |
+| Nested lists — Tab / Shift-Tab to indent & outdent blocks                | ✅     |
+| Drag-to-reorder blocks (optimistic)                                      | ✅     |
+| Drag-to-reorder pages in the sidebar (same-parent siblings)              | ✅     |
+| Image blocks (embed by URL)                                              | ✅     |
+| Image uploads (stored in PocketBase, served same-origin)                 | ✅     |
+| Quick-find search (⌘K, ranked, match-highlighted, titles + content)      | ✅     |
+| Native iOS / Android builds (Capacitor)                                  | ⬜     |
 
 ## Quick start (self-host in two commands)
 

@@ -1,9 +1,13 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-// ShareButton pulls in sharing server-state; stub it so PageHeader renders alone.
+// ShareButton + InviteButton pull in server-state; stub so PageHeader renders alone.
 vi.mock('./sharingApi', () => ({
   useSetShared: () => ({ mutate: vi.fn(), mutateAsync: vi.fn(), isPending: false }),
+}));
+vi.mock('./sharesApi', () => ({
+  useSetInvite: () => ({ mutate: vi.fn(), mutateAsync: vi.fn(), isPending: false }),
+  useRevokeInvite: () => ({ mutate: vi.fn(), isPending: false }),
 }));
 import { PageHeader } from './PageHeader';
 import type { PageRecord } from '../../lib/pbClient';

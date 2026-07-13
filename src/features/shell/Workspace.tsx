@@ -3,6 +3,7 @@ import { Route, Redirect } from 'react-router-dom';
 import { Sidebar } from '../pages/Sidebar';
 import { HomeScreen } from './HomeScreen';
 import { PageEditor } from '../pages/PageEditor';
+import { JoinPage } from '../pages/JoinPage';
 import { Trash } from '../pages/Trash';
 import { Settings } from './Settings';
 import { QuickFind } from '../search/QuickFind';
@@ -30,6 +31,7 @@ export function Workspace() {
           <Route exact path="/trash" component={Trash} />
           <Route exact path="/settings" component={Settings} />
           <Route exact path="/page/:id" component={PageEditor} />
+          <Route exact path="/join/:token" component={JoinPage} />
           <Redirect to="/" />
         </IonRouterOutlet>
       </div>

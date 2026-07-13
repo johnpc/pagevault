@@ -48,6 +48,8 @@ export interface PagesResponse extends BaseRecord {
   shareToken: string; // random slug for the /shared/<token> link, '' when private
   fullWidth: boolean; // widen the content area beyond the reading column
   font: string; // per-page typeface: '' | 'default' (sans), 'serif', 'mono'
+  inviteToken: string; // random slug for the /join/<token> invite link, '' when none
+  inviteRole: ShareRole | ''; // the role the invite link grants
   sort: number;
   parent: string; // '' when top-level
   owner: string;
@@ -78,4 +80,14 @@ export interface CommentsResponse extends BaseRecord {
   page: string;
   body: string;
   owner: string;
+}
+
+/** A collaborator's permission on a shared page (ascending capability). */
+export type ShareRole = 'view' | 'comment' | 'edit';
+
+/** One membership: a user has joined a page at a role via its invite link. */
+export interface SharesResponse extends BaseRecord {
+  page: string;
+  user: string;
+  role: ShareRole;
 }
