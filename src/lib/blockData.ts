@@ -25,7 +25,8 @@ export interface TableData {
   rows: string[][];
   view?: 'table' | 'board'; // display mode; defaults to 'table'
   groupBy?: number; // for the board view: index of the `select` column to group by
-  filter?: { col: number; query: string }; // non-destructive row filter; absent = off
+  filter?: { col: number; query: string }; // legacy single filter; migrated to filters[]
+  filters?: { col: number; query: string }[]; // non-destructive AND row filters; absent = off
 }
 
 /** The layout stored in a `columns` block's JSON `data` field: side-by-side

@@ -80,17 +80,33 @@ Then(
 );
 
 When('I filter table column {int} by {string}', async ({ page }, col: number, query: string) => {
-  // The filter bar sits just above the grid (a sibling of .pv-table).
+  // Add the first condition row, then set its column + query. The filter bar is
+  // a sibling of .pv-table, so scope to the active page.
+  await active(page).getByLabel('Add filter').click();
   await active(page)
-    .getByLabel('Filter column')
+    .getByLabel('Filter 1 column')
     .selectOption(String(col - 1));
-  await active(page).getByLabel('Filter query').fill(query);
+  await active(page).getByLabel('Filter 1 query').fill(query);
   // Wait for the non-destructive filter to take effect (rows re-rendered).
   await expect.poll(() => table(page).locator('tbody tr').count()).toBeGreaterThan(0);
 });
 
+When(
+  'I add a filter on table column {int} for {string}',
+  async ({ page }, col: number, query: string) => {
+    const n = await active(page).locator('.pv-table-filter-row').count();
+    await active(page).getByLabel('Add filter').click();
+    await active(page)
+      .getByLabel(`Filter ${n + 1} column`)
+      .selectOption(String(col - 1));
+    await active(page)
+      .getByLabel(`Filter ${n + 1} query`)
+      .fill(query);
+  },
+);
+
 When('I clear the table filter', async ({ page }) => {
-  await active(page).getByLabel('Clear filter').click();
+  await active(page).getByLabel('Remove filter 1').click();
 });
 
 When(

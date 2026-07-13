@@ -126,3 +126,19 @@ Feature: Table (database) blocks
     And I filter table column 2 by "Reading"
     Then the table has 1 body rows
     And the table has a relation cell showing "Reading list"
+
+  Scenario: Two filter conditions narrow rows with AND
+    Given I have a page titled "AND filter"
+    When I open the page "AND filter"
+    And I type "/table" into a new block
+    And I choose "Table" from the slash menu
+    And I fill table cell "1,1" with "apple"
+    And I fill table cell "1,2" with "red"
+    And I add a table row
+    And I fill table cell "2,1" with "apple"
+    And I fill table cell "2,2" with "green"
+    And I filter table column 1 by "apple"
+    Then the table has 2 body rows
+    When I add a filter on table column 2 for "red"
+    Then the table has 1 body rows
+    And the table has a cell containing "red"

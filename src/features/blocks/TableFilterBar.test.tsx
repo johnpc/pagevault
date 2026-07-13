@@ -14,28 +14,51 @@ const grid = (over: Partial<TableData> = {}): TableData => ({
 });
 
 describe('TableFilterBar', () => {
-  it('typing a query stores a filter on the chosen column', async () => {
+  it('adds a condition row when there are none', async () => {
     const save = vi.fn();
     render(<TableFilterBar data={grid()} save={save} />);
-    await userEvent.type(screen.getByLabelText('Filter query'), 'a');
-    expect(save).toHaveBeenLastCalledWith(
-      expect.objectContaining({ filter: { col: 0, query: 'a' } }),
+    await userEvent.click(screen.getByLabelText('Add filter'));
+    expect(save).toHaveBeenCalledWith(
+      expect.objectContaining({ filters: [{ col: 0, query: '' }] }),
     );
   });
 
-  it('changing the column keeps the current query', async () => {
+  it('typing a query updates that condition', async () => {
     const save = vi.fn();
-    render(<TableFilterBar data={grid({ filter: { col: 0, query: 'x' } })} save={save} />);
-    await userEvent.selectOptions(screen.getByLabelText('Filter column'), '1');
-    expect(save).toHaveBeenCalledWith(expect.objectContaining({ filter: { col: 1, query: 'x' } }));
+    render(<TableFilterBar data={grid({ filters: [{ col: 0, query: '' }] })} save={save} />);
+    await userEvent.type(screen.getByLabelText('Filter 1 query'), 'a');
+    expect(save).toHaveBeenLastCalledWith(
+      expect.objectContaining({ filters: [{ col: 0, query: 'a' }] }),
+    );
   });
 
-  it('shows a clear button only when a query is active, and clearing removes the filter', async () => {
+  it('changing a condition column keeps its query', async () => {
     const save = vi.fn();
-    const { rerender } = render(<TableFilterBar data={grid()} save={save} />);
-    expect(screen.queryByLabelText('Clear filter')).not.toBeInTheDocument();
-    rerender(<TableFilterBar data={grid({ filter: { col: 0, query: 'x' } })} save={save} />);
-    await userEvent.click(screen.getByLabelText('Clear filter'));
-    expect(save).toHaveBeenCalledWith(expect.not.objectContaining({ filter: expect.anything() }));
+    render(<TableFilterBar data={grid({ filters: [{ col: 0, query: 'x' }] })} save={save} />);
+    await userEvent.selectOptions(screen.getByLabelText('Filter 1 column'), '1');
+    expect(save).toHaveBeenCalledWith(
+      expect.objectContaining({ filters: [{ col: 1, query: 'x' }] }),
+    );
+  });
+
+  it('shows one row per condition and removes one on ×', async () => {
+    const save = vi.fn();
+    render(
+      <TableFilterBar
+        data={grid({
+          filters: [
+            { col: 0, query: 'a' },
+            { col: 1, query: 'b' },
+          ],
+        })}
+        save={save}
+      />,
+    );
+    expect(screen.getByLabelText('Filter 1 query')).toBeInTheDocument();
+    expect(screen.getByLabelText('Filter 2 query')).toBeInTheDocument();
+    await userEvent.click(screen.getByLabelText('Remove filter 2'));
+    expect(save).toHaveBeenCalledWith(
+      expect.objectContaining({ filters: [{ col: 0, query: 'a' }] }),
+    );
   });
 });

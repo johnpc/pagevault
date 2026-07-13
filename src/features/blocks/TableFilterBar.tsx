@@ -1,11 +1,9 @@
-import { useState } from 'react';
 import type { TableData } from '../../lib/pbTypes';
-import { setFilter } from './tableFilter';
+import { conditions, addCondition, updateCondition, removeCondition } from './tableFilter';
 
-/** A one-column filter control for a table: pick a column + type a query to show
- * only matching rows (non-destructive — the underlying data is untouched). A
- * blank query clears the stored filter, but the CHOSEN column is kept in local
- * state so selecting a column before typing doesn't get forgotten. */
+/** Multi-condition row filter for a table: each condition picks a column + a
+ * query, and ALL must match (AND). "+ Filter" adds a condition; the × removes
+ * one. Non-destructive — conditions live on the grid data, not the rows. */
 export function TableFilterBar({
   data,
   save,
@@ -13,47 +11,52 @@ export function TableFilterBar({
   data: TableData;
   save: (next: TableData) => void;
 }) {
-  // The active filter's column wins; otherwise remember the last picked column
-  // locally so an empty query (which clears data.filter) doesn't reset it.
-  const [pickedCol, setPickedCol] = useState(0);
-  const col = data.filter?.col ?? pickedCol;
-  const query = data.filter?.query ?? '';
+  const rows = conditions(data);
 
   return (
     <div className="pv-table-filter">
-      <span className="pv-table-filter-label" aria-hidden="true">
-        ⧩
-      </span>
-      <select
-        aria-label="Filter column"
-        value={col}
-        onChange={(e) => {
-          const next = Number(e.target.value);
-          setPickedCol(next);
-          save(setFilter(data, next, query));
-        }}
+      {rows.map((f, i) => (
+        <div className="pv-table-filter-row" key={i}>
+          {i === 0 ? (
+            <span className="pv-table-filter-label" aria-hidden="true">
+              ⧩
+            </span>
+          ) : (
+            <span className="pv-table-filter-and">and</span>
+          )}
+          <select
+            aria-label={`Filter ${i + 1} column`}
+            value={f.col}
+            onChange={(e) => save(updateCondition(data, i, { col: Number(e.target.value) }))}
+          >
+            {data.columns.map((c, j) => (
+              <option key={j} value={j}>
+                {c.name || `Column ${j + 1}`}
+              </option>
+            ))}
+          </select>
+          <input
+            aria-label={`Filter ${i + 1} query`}
+            placeholder="contains…"
+            value={f.query}
+            onChange={(e) => save(updateCondition(data, i, { query: e.target.value }))}
+          />
+          <button
+            className="pv-table-filter-clear"
+            aria-label={`Remove filter ${i + 1}`}
+            onClick={() => save(removeCondition(data, i))}
+          >
+            ×
+          </button>
+        </div>
+      ))}
+      <button
+        className="pv-table-filter-add pv-muted"
+        aria-label="Add filter"
+        onClick={() => save(addCondition(data))}
       >
-        {data.columns.map((c, i) => (
-          <option key={i} value={i}>
-            {c.name || `Column ${i + 1}`}
-          </option>
-        ))}
-      </select>
-      <input
-        aria-label="Filter query"
-        placeholder="Filter…"
-        value={query}
-        onChange={(e) => save(setFilter(data, col, e.target.value))}
-      />
-      {query && (
-        <button
-          className="pv-table-filter-clear"
-          aria-label="Clear filter"
-          onClick={() => save(setFilter(data, col, ''))}
-        >
-          ×
-        </button>
-      )}
+        + Filter
+      </button>
     </div>
   );
 }

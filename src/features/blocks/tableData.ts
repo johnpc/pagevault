@@ -39,12 +39,23 @@ export function normalize(data: TableData | null | undefined): TableData {
   if (typeof data?.groupBy === 'number' && data.groupBy >= 0 && data.groupBy < width) {
     next.groupBy = data.groupBy;
   }
-  // Keep a filter only while it targets a real column and has a query.
-  const f = data?.filter;
-  if (f && typeof f.col === 'number' && f.col >= 0 && f.col < width && f.query?.trim()) {
-    next.filter = { col: f.col, query: f.query };
-  }
+  const filters = migrateFilters(data, width);
+  if (filters.length) next.filters = filters;
   return next;
+}
+
+/** Migrate a legacy single `filter` into the canonical `filters[]`, keeping any
+ * condition that targets a real column. A BLANK query is kept (a condition the
+ * user is still editing — it just doesn't constrain matching); only out-of-range
+ * columns are dropped. Pure. */
+function migrateFilters(
+  data: TableData | null | undefined,
+  width: number,
+): { col: number; query: string }[] {
+  const raw = data?.filters ?? (data?.filter ? [data.filter] : []);
+  return raw
+    .filter((f) => f && typeof f.col === 'number' && f.col >= 0 && f.col < width)
+    .map((f) => ({ col: f.col, query: f.query ?? '' }));
 }
 
 /** Set one cell, returning a new grid. */

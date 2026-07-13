@@ -217,13 +217,32 @@
 /* One-column filter bar above the grid (non-destructive row filter). */
 .pv-table-filter {
   display: flex;
-  align-items: center;
-  gap: 6px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
   margin-bottom: 6px;
 }
-.pv-table-filter-label {
+.pv-table-filter-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.pv-table-filter-label,
+.pv-table-filter-and {
   color: var(--pv-text-muted);
-  font-size: 13px;
+  font-size: 12px;
+  min-width: 22px;
+}
+.pv-table-filter-add {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  padding: 2px 0;
+}
+.pv-table-filter-add:hover {
+  color: var(--pv-text);
 }
 .pv-table-filter select,
 .pv-table-filter input {
