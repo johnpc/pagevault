@@ -1,7 +1,7 @@
 import { createBdd } from 'playwright-bdd';
 import { expect, type Page } from '@playwright/test';
 
-const { When } = createBdd();
+const { When, Then } = createBdd();
 
 const active = (page: Page) =>
   page.locator('.ion-page:not(.ion-page-hidden)').filter({ visible: true }).last();
@@ -21,4 +21,17 @@ When('I press the bold shortcut', async ({ page }) => {
   await active(page)
     .locator('.pv-page')
     .click({ position: { x: 5, y: 5 } });
+});
+
+When('I press the sidebar-toggle shortcut', async ({ page }) => {
+  await page.keyboard.press('ControlOrMeta+\\');
+});
+
+Then('the sidebar is visible', async ({ page }) => {
+  await expect(page.locator('.pv-sidebar')).toBeVisible();
+});
+
+Then('the sidebar is hidden', async ({ page }) => {
+  await expect(page.locator('.pv-sidebar')).toBeHidden();
+  await expect(page.getByLabel('Show sidebar')).toBeVisible();
 });
