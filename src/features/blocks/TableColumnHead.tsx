@@ -2,6 +2,7 @@ import type { TableColumn, TableColumnType, TableData } from '../../lib/pbTypes'
 import { setColumn, setColumnType, removeColumn } from './tableData';
 import { toggleColumnHidden } from './tableColumns';
 import { duplicateColumn } from './tableColumnOps';
+import { ColumnFormatPicker } from './ColumnFormatPicker';
 
 const TYPES: TableColumnType[] = ['text', 'number', 'checkbox', 'select', 'date', 'relation'];
 
@@ -59,6 +60,9 @@ export function TableColumnHead({
             </option>
           ))}
         </select>
+        {col.type === 'number' && (
+          <ColumnFormatPicker data={data} c={c} format={col.format} save={save} />
+        )}
         <button
           className="pv-table-dupcol"
           aria-label={`Duplicate column ${c + 1}`}

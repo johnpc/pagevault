@@ -19,6 +19,7 @@ export interface TableColumn {
   type: TableColumnType;
   options?: string[]; // choices for a `select` column
   summary?: string; // footer calculation kind (see tableSummary SummaryKind); absent = none
+  format?: string; // number display format (see numberFormat NumberFormat); absent = plain
   hidden?: boolean; // when true the column is not rendered (data preserved); absent = shown
 }
 
