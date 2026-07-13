@@ -20,3 +20,15 @@ Feature: Collapsible toggle blocks
     Then I should not see a block containing "Passport"
     When I expand the toggle
     Then the document has a "text" block containing "Passport"
+
+  Scenario: Collapse all toggles on the page from the header action
+    When I type "/toggle" into a new block
+    And I choose "Toggle list" from the slash menu
+    And I type "Errands" then Enter
+    And I indent the current block
+    And I type "Groceries"
+    Then the document has a "text" block containing "Groceries"
+    When I click the "Collapse all" page action
+    Then I should not see a block containing "Groceries"
+    When I click the "Expand all" page action
+    Then the document has a "text" block containing "Groceries"

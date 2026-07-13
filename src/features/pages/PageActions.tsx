@@ -3,6 +3,7 @@ import { MovePicker } from './MovePicker';
 import { ShareButton } from './ShareButton';
 import { InviteButton } from './InviteButton';
 import { FontPicker } from './FontPicker';
+import type { CollapseAll } from '../blocks/useCollapseAll';
 
 export interface PageActionsProps {
   page: PageRecord;
@@ -14,6 +15,7 @@ export interface PageActionsProps {
   onFullWidth: (fullWidth: boolean) => void;
   onFont: (font: string) => void;
   onDelete: () => void;
+  collapse: CollapseAll;
 }
 
 /** The row of page-level actions under the title: favorite, move, width, font,
@@ -28,6 +30,7 @@ export function PageActions({
   onFullWidth,
   onFont,
   onDelete,
+  collapse,
 }: PageActionsProps) {
   return (
     <div className="pv-page-actions">
@@ -51,6 +54,11 @@ export function PageActions({
         {page.fullWidth ? '↔ Full width ✓' : '↔ Full width'}
       </button>
       <FontPicker current={page.font ?? ''} onPick={onFont} />
+      {collapse.hasToggles && (
+        <button className="pv-page-delete pv-muted" onClick={collapse.collapseAll}>
+          {collapse.willCollapse ? '▸ Collapse all' : '▾ Expand all'}
+        </button>
+      )}
       <button className="pv-page-delete pv-muted" onClick={onDuplicate}>
         Duplicate
       </button>

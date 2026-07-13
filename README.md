@@ -38,6 +38,7 @@ account, no third-party service, no lock-in.
 | Code blocks — language label/picker (fenced language on export)               | ✅     |
 | Callout blocks — pick the leading icon (💡 / ⚠️ / ✅ …) + background color    | ✅     |
 | Toggle blocks — collapse/expand to fold away nested content                   | ✅     |
+| Collapse all / expand all toggles on a page (one header action)               | ✅     |
 | Column layouts — 2–4 side-by-side text columns                                | ✅     |
 | Table of contents block — auto-lists headings, click to scroll                | ✅     |
 | Table blocks — typed columns (text/number/checkbox/select/date), GFM export   | ✅     |
