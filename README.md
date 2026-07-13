@@ -78,6 +78,7 @@ account, no third-party service, no lock-in.
 | Drag-to-reorder blocks (optimistic)                                           | ✅     |
 | Select multiple blocks with Shift+↑/↓ and delete them at once                 | ✅     |
 | Drag-to-reorder pages in the sidebar (same-parent siblings)                   | ✅     |
+| Bookmark blocks — a link card for any URL (domain + link, opens in a tab)     | ✅     |
 | Image blocks (embed by URL)                                                   | ✅     |
 | Image uploads (stored in PocketBase, served same-origin)                      | ✅     |
 | Quick-find search (⌘K, ranked, match-highlighted, titles + content)           | ✅     |

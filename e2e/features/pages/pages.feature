@@ -158,3 +158,13 @@ Feature: Pages and blocks
     When I open the page "Wide page"
     And I toggle full width on
     Then the page is full width
+
+  Scenario: Insert a bookmark block and see the link card
+    Given I have a page titled "Links"
+    When I open the page "Links"
+    And I type "/bookmark" into a new block
+    And I choose "Bookmark" from the slash menu
+    And I enter the bookmark URL "notion.so"
+    Then the page shows a bookmark to "notion.so"
+    When I reopen the page "Links"
+    Then the page shows a bookmark to "notion.so"

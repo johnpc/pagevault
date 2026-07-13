@@ -54,6 +54,12 @@ export const SLASH_COMMANDS: SlashCommand[] = [
     keywords: ['toc', 'table of contents', 'outline', 'contents', 'headings'],
   },
   {
+    type: 'bookmark',
+    label: 'Bookmark',
+    icon: '🔖',
+    keywords: ['bookmark', 'link', 'url', 'web', 'embed'],
+  },
+  {
     type: 'divider',
     label: 'Divider',
     icon: '—',

@@ -59,6 +59,8 @@ export function blockToMarkdown(
       return columnsToMarkdown(block.data as ColumnsData | null);
     case 'divider':
       return '---';
+    case 'bookmark':
+      return text ? `[${text}](${text})` : '';
     default:
       return text;
   }

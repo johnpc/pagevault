@@ -401,3 +401,15 @@ When('I set the callout icon to {string}', async ({ page }, emoji: string) => {
 Then('the callout shows the icon {string}', async ({ page }, emoji: string) => {
   await expect(active(page).getByLabel('Callout icon')).toHaveText(emoji);
 });
+
+When('I enter the bookmark URL {string}', async ({ page }, url: string) => {
+  const input = active(page).getByLabel('Bookmark URL');
+  await input.fill(url);
+  await input.blur();
+});
+
+Then('the page shows a bookmark to {string}', async ({ page }, domain: string) => {
+  await expect(
+    active(page).locator('.pv-bookmark-domain', { hasText: domain }).first(),
+  ).toBeVisible();
+});
