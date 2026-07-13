@@ -7,6 +7,7 @@ import { BlockControls } from './BlockControls';
 import { blockAnchorId } from './tocData';
 import { BlockCursors } from '../presence/BlockCursors';
 import { useReportFocus } from '../presence/useReportFocus';
+import { CalloutIcon } from './CalloutIcon';
 import './BlockRow.css';
 
 /** Block types that render as a whole element via MediaBlockRow, not a text line. */
@@ -78,9 +79,7 @@ export function BlockRow(props: BlockRowProps) {
       <BlockLead block={block} onEdit={onEdit} />
       {handle}
       {block.type === 'callout' && (
-        <span className="pv-callout-icon" aria-hidden="true">
-          💡
-        </span>
+        <CalloutIcon value={block.emoji ?? ''} onPick={(emoji) => onEdit(block.id, { emoji })} />
       )}
       <TextBlockBody
         block={block}

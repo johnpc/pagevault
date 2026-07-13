@@ -42,6 +42,16 @@ Feature: Pages and blocks
     And I choose "Callout" from the slash menu
     Then the last block should be a "callout" block
 
+  Scenario: Change a callout's icon and see it persist
+    Given I have a page titled "Warnings"
+    When I open the page "Warnings"
+    And I type "/callout" into a new block
+    And I choose "Callout" from the slash menu
+    And I set the callout icon to "⚠️"
+    Then the callout shows the icon "⚠️"
+    When I reopen the page "Warnings"
+    Then the callout shows the icon "⚠️"
+
   Scenario: Insert an image block from a URL
     Given I have a page titled "Gallery"
     When I open the page "Gallery"
