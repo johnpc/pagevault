@@ -101,6 +101,17 @@ Feature: Table (database) blocks
     When I filter table column 2 by "10"
     Then the table summary for column 2 shows "10"
 
+  Scenario: A multi-select column holds several tags that persist
+    Given I have a page titled "Tags"
+    When I type "/table" into a new block
+    And I choose "Table" from the slash menu
+    And I fill table cell "1,2" with "red,blue"
+    And I set table column 2 type to "multiselect"
+    And I toggle the tag "red" in table cell "1,2"
+    Then the multiselect cell "1,2" shows "blue"
+    When I reopen the page "Tags"
+    Then the multiselect cell "1,2" shows "blue"
+
   Scenario: A date column displays a friendly medium format
     Given I have a page titled "Dates"
     When I type "/table" into a new block

@@ -53,4 +53,19 @@ describe('TableCell', () => {
     await userEvent.selectOptions(screen.getByLabelText('cell'), 'b');
     expect(onChange).toHaveBeenCalledWith('b');
   });
+
+  it('renders a multiselect that toggles tags into a comma-joined value', async () => {
+    const onChange = vi.fn();
+    render(
+      <TableCell
+        column={col('multiselect', ['a', 'b'])}
+        value="b"
+        label="cell"
+        onChange={onChange}
+      />,
+    );
+    await userEvent.click(screen.getByLabelText('cell'));
+    await userEvent.click(screen.getByLabelText('a'));
+    expect(onChange).toHaveBeenCalledWith('a,b');
+  });
 });

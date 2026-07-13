@@ -8,7 +8,8 @@
 /** A table column's cell kind. Cells are always stored as strings; the type
  * decides how a cell renders/edits (number input, checkbox, select…). */
 // `relation` links a row to a page (the cell stores that page's id).
-export type TableColumnType = 'text' | 'number' | 'checkbox' | 'select' | 'date' | 'relation';
+export type TableColumnType =
+  'text' | 'number' | 'checkbox' | 'select' | 'multiselect' | 'date' | 'relation';
 
 /** How a table block is displayed: the spreadsheet grid, a kanban board grouped
  * by a select column, or a gallery of cards. Defaults to 'table'. */
@@ -17,7 +18,7 @@ export type TableViewMode = 'table' | 'board' | 'gallery' | 'calendar';
 export interface TableColumn {
   name: string; // header label
   type: TableColumnType;
-  options?: string[]; // choices for a `select` column
+  options?: string[]; // choices for a `select` / `multiselect` column
   summary?: string; // footer calculation kind (see tableSummary SummaryKind); absent = none
   format?: string; // number display format (see numberFormat NumberFormat); absent = plain
   hidden?: boolean; // when true the column is not rendered (data preserved); absent = shown
