@@ -101,6 +101,17 @@ Feature: Table (database) blocks
     When I filter table column 2 by "10"
     Then the table summary for column 2 shows "10"
 
+  Scenario: A number column formats its cells as currency
+    Given I have a page titled "Prices"
+    When I type "/table" into a new block
+    And I choose "Table" from the slash menu
+    And I set table column 2 type to "number"
+    And I fill table cell "1,2" with "1000"
+    And I set table column 2 format to "usd"
+    Then the table has a cell containing "$1,000.00"
+    When I reopen the page "Prices"
+    Then the table has a cell containing "$1,000.00"
+
   Scenario: Min, max, and median column summaries
     Given I have a page titled "Stats"
     When I type "/table" into a new block

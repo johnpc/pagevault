@@ -19,6 +19,7 @@ function toColumn(c: TableColumn | string): TableColumn {
     type: c.type ?? 'text',
     ...(c.options ? { options: c.options } : {}),
     ...(c.summary ? { summary: c.summary } : {}),
+    ...(c.format ? { format: c.format } : {}),
     ...(c.hidden ? { hidden: true } : {}),
   };
 }
@@ -65,7 +66,8 @@ export function setCell(data: TableData, r: number, c: number, value: string): T
 
 // Column-property mutators (setColumn / setColumnType / setColumnSummary) live
 // in tableColumns.ts; re-exported so callers keep importing them from here.
-export { setColumn, setColumnType, setColumnSummary } from './tableColumns';
+export { setColumn, setColumnType } from './tableColumns';
+export { setColumnSummary } from './tableColumnFields';
 
 /** Append an empty row. */
 export function addRow(data: TableData): TableData {

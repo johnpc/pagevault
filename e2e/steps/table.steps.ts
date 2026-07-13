@@ -50,6 +50,11 @@ When('I set table column {int} type to {string}', async ({ page }, col: number, 
   await expect(table(page).getByLabel(`Column ${col} type`)).toHaveValue(type);
 });
 
+When('I set table column {int} format to {string}', async ({ page }, col: number, fmt: string) => {
+  await table(page).getByLabel(`Column ${col} format`).selectOption(fmt);
+  await expect(table(page).getByLabel(`Column ${col} format`)).toHaveValue(fmt);
+});
+
 const checkbox = (page: Page, r: number, c: number) => table(page).getByLabel(`Cell ${r},${c}`);
 
 When(

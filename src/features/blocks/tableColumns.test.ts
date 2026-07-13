@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { visibleColumns, toggleColumnHidden, moveColumn } from './tableColumns';
+import { setColumnFormat, setColumnSummary } from './tableColumnFields';
 import type { TableData } from '../../lib/pbTypes';
 
 const grid = (over: Partial<TableData> = {}): TableData => ({
@@ -81,5 +82,47 @@ describe('toggleColumnHidden', () => {
     const data = grid({ view: 'table', filter: { col: 0, query: 'x' } });
     const next = toggleColumnHidden(data, 1, true);
     expect(next.filter).toEqual({ col: 0, query: 'x' });
+  });
+});
+
+describe('setColumnFormat', () => {
+  it('sets a number format and clears it for plain/empty', () => {
+    expect(setColumnFormat(grid(), 1, 'usd').columns[1].format).toBe('usd');
+    const withFmt = setColumnFormat(grid(), 1, 'comma');
+    expect(setColumnFormat(withFmt, 1, 'plain').columns[1].format).toBeUndefined();
+    expect(setColumnFormat(withFmt, 1, '').columns[1].format).toBeUndefined();
+  });
+
+  it('preserves other column fields (name, hidden, summary)', () => {
+    const data = grid();
+    data.columns[1] = { name: 'B', type: 'number', hidden: true, summary: 'sum' };
+    const next = setColumnFormat(data, 1, 'eur');
+    expect(next.columns[1]).toEqual({
+      name: 'B',
+      type: 'number',
+      hidden: true,
+      summary: 'sum',
+      format: 'eur',
+    });
+  });
+});
+
+describe('setColumnSummary', () => {
+  it('sets a summary and preserves format/hidden', () => {
+    const data = grid();
+    data.columns[1] = { name: 'B', type: 'number', format: 'usd', hidden: true };
+    const next = setColumnSummary(data, 1, 'sum');
+    expect(next.columns[1]).toEqual({
+      name: 'B',
+      type: 'number',
+      format: 'usd',
+      hidden: true,
+      summary: 'sum',
+    });
+  });
+
+  it('clears the summary for none', () => {
+    const data = setColumnSummary(grid(), 1, 'sum');
+    expect(setColumnSummary(data, 1, 'none').columns[1].summary).toBeUndefined();
   });
 });

@@ -1,5 +1,6 @@
 import type { TableColumn } from '../../lib/pbTypes';
 import { RelationCell } from './RelationCell';
+import { NumberCell } from './NumberCell';
 
 /** One table body cell, rendered by its column type. Value is always a string;
  * checkbox uses 'true'/'', select holds one option, relation holds a page id.
@@ -54,10 +55,13 @@ export function TableCell({
     );
   }
 
+  if (column.type === 'number') {
+    return <NumberCell value={value} format={column.format} label={label} onChange={onChange} />;
+  }
+
   return (
     <input
-      type={column.type === 'number' ? 'number' : 'text'}
-      inputMode={column.type === 'number' ? 'decimal' : undefined}
+      type="text"
       aria-label={label}
       value={value}
       onChange={(e) => onChange(e.target.value)}
