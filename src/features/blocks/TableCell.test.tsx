@@ -54,6 +54,16 @@ describe('TableCell', () => {
     expect(onChange).toHaveBeenCalledWith('b');
   });
 
+  it('renders a wrapping textarea for a text column with wrap on', async () => {
+    const onChange = vi.fn();
+    const wrapCol = { name: 'Notes', type: 'text' as const, wrap: true };
+    render(<TableCell column={wrapCol} value="hi" label="cell" onChange={onChange} />);
+    const el = screen.getByLabelText('cell');
+    expect(el.tagName).toBe('TEXTAREA');
+    await userEvent.type(el, '!');
+    expect(onChange).toHaveBeenCalledWith('hi!');
+  });
+
   it('renders a multiselect that toggles tags into a comma-joined value', async () => {
     const onChange = vi.fn();
     render(

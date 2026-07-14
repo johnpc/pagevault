@@ -40,6 +40,40 @@
   margin: 8px;
 }
 
+/* Wrap-text cell: a textarea that wraps long content over multiple lines
+   (field-sizing grows it to fit where supported; else it scrolls). */
+.pv-table-wrapcell {
+  border: none;
+  background: none;
+  font: inherit;
+  color: var(--pv-text);
+  padding: 6px 8px;
+  width: 100%;
+  min-width: 90px;
+  resize: none;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  field-sizing: content;
+}
+.pv-table-wrapcell:focus {
+  outline: 2px solid var(--pv-accent);
+  outline-offset: -2px;
+}
+/* Wrap-toggle button in the header (on = accent-tinted). */
+.pv-table-wrap-btn {
+  background: none;
+  border: none;
+  color: var(--pv-text-muted);
+  cursor: pointer;
+  font-size: 12px;
+}
+.pv-table-wrap-btn:hover {
+  color: var(--pv-text);
+}
+.pv-table-wrap-btn--on {
+  color: var(--pv-accent);
+}
+
 /* Multi-select cell: a summary button that opens a checklist of the options. */
 .pv-multiselect {
   position: relative;
