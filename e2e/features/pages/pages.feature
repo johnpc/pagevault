@@ -183,6 +183,14 @@ Feature: Pages and blocks
     When I reopen the page "Links"
     Then the page shows a bookmark to "notion.so"
 
+  Scenario: A bookmark shows a scraped preview title
+    Given I have a page titled "Preview"
+    When I open the page "Preview"
+    And I type "/bookmark" into a new block
+    And I choose "Bookmark" from the slash menu
+    And I enter the bookmark URL "https://example.com"
+    Then the bookmark card title reads "Example Domain"
+
   Scenario: Insert a video embed and see the player
     Given I have a page titled "Media"
     When I open the page "Media"
