@@ -44,6 +44,15 @@ describe('blockToMarkdown', () => {
     expect(blockToMarkdown(blk('text', 'Plain'))).toBe('Plain');
   });
 
+  it('indents nested list items by depth (2 spaces per level)', () => {
+    expect(blockToMarkdown({ ...blk('bullet', 'Sub'), depth: 1 })).toBe('  - Sub');
+    expect(blockToMarkdown({ ...blk('numbered', 'Deep'), depth: 2 }, 3)).toBe('    3. Deep');
+    expect(blockToMarkdown({ ...blk('todo', 'Sub-task'), depth: 1 })).toBe('  - [ ] Sub-task');
+    // Non-list blocks ignore depth (no meaningful Markdown nesting).
+    expect(blockToMarkdown({ ...blk('quote', 'Q'), depth: 2 })).toBe('> Q');
+    expect(blockToMarkdown({ ...blk('heading', 'H'), depth: 1 })).toBe('# H');
+  });
+
   it('renders a table block as a GFM table (checkbox cells become ✓/blank)', () => {
     const table = {
       ...blk('table', ''),
