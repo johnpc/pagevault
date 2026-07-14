@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { parseInline, hasInlineMarkup } from './inlineMarkdown';
+import { mentionToken } from './mention';
 
 describe('parseInline', () => {
   it('returns nothing for empty and a single plain segment for plain text', () => {
@@ -96,6 +97,12 @@ describe('parseInline', () => {
 
   it('prefers a mention over a same-position link', () => {
     expect(parseInline('@[Page](p1)')).toEqual([{ text: 'Page', mentionId: 'p1' }]);
+  });
+
+  it('round-trips a mention whose page title has square brackets', () => {
+    // The generated token must parse back to a mention (not broken literal text).
+    const token = mentionToken({ id: 'p9', title: 'Notes [v2]' });
+    expect(parseInline(token)).toEqual([{ text: 'Notes (v2)', mentionId: 'p9' }]);
   });
 
   it('keeps balanced parens inside a [text](url) link (e.g. Wikipedia)', () => {
