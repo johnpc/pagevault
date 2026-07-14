@@ -13,6 +13,19 @@ describe('parseInline', () => {
     expect(parseInline('`c`')).toEqual([{ text: 'c', code: true }]);
   });
 
+  it('treats both *word* and _word_ as italic', () => {
+    expect(parseInline('_i_')).toEqual([{ text: 'i', italic: true }]);
+    expect(parseInline('a _mid_ b')).toEqual([
+      { text: 'a ' },
+      { text: 'mid', italic: true },
+      { text: ' b' },
+    ]);
+  });
+
+  it('keeps __word__ as underline (not double-italic) despite the new _ rule', () => {
+    expect(parseInline('__u__')).toEqual([{ text: 'u', underline: true }]);
+  });
+
   it('keeps surrounding plain text', () => {
     expect(parseInline('a **b** c')).toEqual([
       { text: 'a ' },

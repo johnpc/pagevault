@@ -18,14 +18,17 @@ type Mark = 'bold' | 'italic' | 'code' | 'strike' | 'underline';
 const MENTION_RE = /@\[([^\]]+)\]\(([^)]+)\)/;
 
 // Order matters: code first (its contents are literal), then the double-char
-// marks (**, ~~, __) before the single-char italic (*). Each captures the inner
-// text. Earliest match across all rules wins, so ordering only breaks ties.
+// marks (**, ~~, __) before the single-char italics (*, _). Each captures the
+// inner text. Earliest match across all rules wins, so ordering only breaks
+// ties — a double marker at index i beats a single one that can only start at
+// i+1 (e.g. __x__ is underline, not italic). Both *word* and _word_ are italic.
 const RULES: { re: RegExp; mark: Mark }[] = [
   { re: /`([^`]+)`/, mark: 'code' },
   { re: /\*\*([^*]+)\*\*/, mark: 'bold' },
   { re: /~~([^~]+)~~/, mark: 'strike' },
   { re: /__([^_]+)__/, mark: 'underline' },
   { re: /\*([^*]+)\*/, mark: 'italic' },
+  { re: /_([^_]+)_/, mark: 'italic' },
 ];
 
 interface Match {
