@@ -6,16 +6,26 @@ import './Comments.css';
 /** The page comments panel: existing comments (oldest first) + a compose box.
  * Comments are owner-scoped, so this is your own private thread on the page. */
 export function Comments({ pageId }: { pageId: string }) {
-  const { data } = useComments(pageId);
+  const { data, isLoading, isError } = useComments(pageId);
   const del = useDeleteComment(pageId);
   const { draft, setDraft, submit, pending } = useCommentInput(pageId);
   const comments = data ?? [];
+  // A one-line status under the header for the non-content outcomes; the compose
+  // box below always stays available so you can post regardless.
+  const status = isError
+    ? 'Couldn’t load comments.'
+    : isLoading
+      ? 'Loading…'
+      : comments.length === 0
+        ? 'No comments yet — start the thread below.'
+        : null;
 
   return (
     <section className="pv-comments" aria-label="Comments">
       <h2 className="pv-comments-head pv-muted">
         {comments.length > 0 ? `Comments (${comments.length})` : 'Comments'}
       </h2>
+      {status && <p className="pv-comments-status pv-muted">{status}</p>}
       {comments.map((c) => (
         <div key={c.id} className="pv-comment">
           <p className="pv-comment-body">{c.body}</p>
