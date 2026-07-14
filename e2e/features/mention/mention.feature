@@ -16,3 +16,9 @@ Feature: Mentioning (linking) pages with @
     Then the block shows a mention link to "Mention target"
     When I click the mention link "Mention target"
     Then I should see the open page titled "Mention target"
+
+  Scenario: Insert today's date with @today
+    When I open the page "Mention source"
+    And I focus the first block
+    And I insert the "today" date mention
+    Then the block contains a date like "\w{3} \d{1,2}, \d{4}"

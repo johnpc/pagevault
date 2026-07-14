@@ -46,6 +46,17 @@ export function applyMention(
   return { value: next, caret: q.start + token.length };
 }
 
+/** Replace the active @-query with literal `text` (used for a date mention like
+ * "@today" → "Jul 14, 2026"), returning the new value + caret after it. Pure. */
+export function applyText(
+  value: string,
+  q: MentionQuery,
+  text: string,
+): { value: string; caret: number } {
+  const next = value.slice(0, q.start) + text + value.slice(q.end);
+  return { value: next, caret: q.start + text.length };
+}
+
 /** The pages matching a mention query (case-insensitive title prefix/substring),
  * excluding the current page, capped at `limit`. Pure. */
 export function mentionMatches(
