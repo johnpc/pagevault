@@ -101,6 +101,16 @@ Feature: Table (database) blocks
     When I filter table column 2 by "10"
     Then the table summary for column 2 shows "10"
 
+  Scenario: Toggle wrap-text on a column and it persists
+    Given I have a page titled "Wrapped"
+    When I type "/table" into a new block
+    And I choose "Table" from the slash menu
+    And I fill table cell "1,1" with "a long note"
+    And I toggle wrap text on table column 1
+    Then table column 1 wraps its text
+    When I reopen the page "Wrapped"
+    Then table column 1 wraps its text
+
   Scenario: A multi-select column holds several tags that persist
     Given I have a page titled "Tags"
     When I type "/table" into a new block

@@ -20,6 +20,7 @@ function toColumn(c: TableColumn | string): TableColumn {
     ...(c.options ? { options: c.options } : {}),
     ...(c.summary ? { summary: c.summary } : {}),
     ...(c.format ? { format: c.format } : {}),
+    ...(c.wrap ? { wrap: true } : {}),
     ...(c.hidden ? { hidden: true } : {}),
   };
 }

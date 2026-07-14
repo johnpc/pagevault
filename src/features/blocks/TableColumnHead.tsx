@@ -1,8 +1,8 @@
 import type { TableColumn, TableColumnType, TableData } from '../../lib/pbTypes';
-import { setColumn, setColumnType, removeColumn } from './tableData';
-import { toggleColumnHidden } from './tableColumns';
-import { duplicateColumn } from './tableColumnOps';
+import { setColumn, setColumnType } from './tableData';
+import { setColumnWrap } from './tableColumnFields';
 import { ColumnFormatPicker } from './ColumnFormatPicker';
+import { TableColumnActions } from './TableColumnActions';
 import { COLUMN_TYPES } from './tableColumnTypes';
 
 interface ColumnHeadProps {
@@ -62,31 +62,18 @@ export function TableColumnHead({
         {(col.type === 'number' || col.type === 'date') && (
           <ColumnFormatPicker data={data} c={c} format={col.format} kind={col.type} save={save} />
         )}
-        <button
-          className="pv-table-dupcol"
-          aria-label={`Duplicate column ${c + 1}`}
-          title="Duplicate column"
-          onClick={() => save(duplicateColumn(data, c))}
-        >
-          ⧉
-        </button>
-        <button
-          className="pv-table-hide"
-          aria-label={`Hide column ${c + 1}`}
-          title="Hide column"
-          onClick={() => save(toggleColumnHidden(data, c, true))}
-        >
-          ⊘
-        </button>
-        {data.columns.length > 1 && (
+        {col.type === 'text' && (
           <button
-            className="pv-table-del"
-            aria-label={`Delete column ${c + 1}`}
-            onClick={() => save(removeColumn(data, c))}
+            className={`pv-table-wrap-btn${col.wrap ? ' pv-table-wrap-btn--on' : ''}`}
+            aria-label={`Wrap text in column ${c + 1}`}
+            aria-pressed={!!col.wrap}
+            title="Wrap text"
+            onClick={() => save(setColumnWrap(data, c, !col.wrap))}
           >
-            ×
+            ↵
           </button>
         )}
+        <TableColumnActions data={data} c={c} save={save} />
       </div>
     </th>
   );

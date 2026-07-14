@@ -21,6 +21,7 @@ export interface TableColumn {
   options?: string[]; // choices for a `select` / `multiselect` column
   summary?: string; // footer calculation kind (see tableSummary SummaryKind); absent = none
   format?: string; // number display format (see numberFormat NumberFormat); absent = plain
+  wrap?: boolean; // when true a text cell wraps long content (multi-line); absent = single-line
   hidden?: boolean; // when true the column is not rendered (data preserved); absent = shown
 }
 

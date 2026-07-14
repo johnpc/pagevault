@@ -276,3 +276,18 @@ Then(
     await expect.poll(() => table(page).getByLabel(`Cell ${cell}`).innerText()).toContain(text);
   },
 );
+
+When('I toggle wrap text on table column {int}', async ({ page }, col: number) => {
+  const btn = table(page).getByLabel(`Wrap text in column ${col}`);
+  await btn.click();
+  await expect(btn).toHaveAttribute('aria-pressed', 'true');
+});
+
+Then('table column {int} wraps its text', async ({ page }, col: number) => {
+  // The wrap-on cell renders as a .pv-table-wrapcell textarea in that column.
+  await expect(
+    table(page)
+      .locator(`tbody tr td:nth-child(${col + 1}) .pv-table-wrapcell`)
+      .first(),
+  ).toBeVisible();
+});

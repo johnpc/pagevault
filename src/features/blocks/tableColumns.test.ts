@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { visibleColumns, toggleColumnHidden, moveColumn } from './tableColumns';
-import { setColumnFormat, setColumnSummary } from './tableColumnFields';
+import { setColumnFormat, setColumnSummary, setColumnWrap } from './tableColumnFields';
 import type { TableData } from '../../lib/pbTypes';
 
 const grid = (over: Partial<TableData> = {}): TableData => ({
@@ -124,5 +124,21 @@ describe('setColumnSummary', () => {
   it('clears the summary for none', () => {
     const data = setColumnSummary(grid(), 1, 'sum');
     expect(setColumnSummary(data, 1, 'none').columns[1].summary).toBeUndefined();
+  });
+});
+
+describe('setColumnWrap', () => {
+  it('sets and clears the wrap flag, preserving other fields', () => {
+    const data = grid();
+    data.columns[0] = { name: 'A', type: 'text', hidden: false, summary: 'count' };
+    const on = setColumnWrap(data, 0, true);
+    expect(on.columns[0]).toEqual({
+      name: 'A',
+      type: 'text',
+      hidden: false,
+      summary: 'count',
+      wrap: true,
+    });
+    expect(setColumnWrap(on, 0, false).columns[0].wrap).toBeUndefined();
   });
 });

@@ -28,3 +28,15 @@ export function setColumnSummary(data: TableData, c: number, summary: string): T
 export function setColumnFormat(data: TableData, c: number, format: string): TableData {
   return setColumnField(data, c, 'format', format, 'plain');
 }
+
+/** Toggle a column's text-wrap flag (multi-line cells). Pure. */
+export function setColumnWrap(data: TableData, c: number, wrap: boolean): TableData {
+  const columns = data.columns.map((col, j) => {
+    if (j !== c) return col;
+    const next = { ...col };
+    if (wrap) next.wrap = true;
+    else delete next.wrap;
+    return next;
+  });
+  return { ...data, columns };
+}

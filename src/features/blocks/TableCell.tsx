@@ -65,6 +65,18 @@ export function TableCell({
     return <NumberCell value={value} format={column.format} label={label} onChange={onChange} />;
   }
 
+  if (column.wrap) {
+    return (
+      <textarea
+        className="pv-table-wrapcell"
+        rows={1}
+        aria-label={label}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+      />
+    );
+  }
+
   return (
     <input
       type="text"
