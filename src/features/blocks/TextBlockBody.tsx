@@ -1,6 +1,5 @@
 import { useRef, type ClipboardEvent } from 'react';
 import type { BlockRecord } from '../../lib/pbClient';
-import { placeholderFor } from './blockText';
 import { hasInlineMarkup } from './inlineMarkdown';
 import { looksLikeMarkdown } from './markdownImport';
 import { useBlockInput } from './useBlockInput';
@@ -9,6 +8,7 @@ import { useAutoFocus } from './useAutoFocus';
 import { useSeedValue } from './useSeedValue';
 import { BlockMenus } from './BlockMenus';
 import { BlockPreview } from './BlockPreview';
+import { BlockTextarea } from './BlockTextarea';
 import { CodeBlockChrome } from './CodeBlockChrome';
 
 /** The editable body of a text-ish block: an idle formatted preview (when it
@@ -72,13 +72,10 @@ export function TextBlockBody({
       {showPreview ? (
         <BlockPreview value={value} onEdit={focus} inputRef={inputRef} />
       ) : (
-        <textarea
-          ref={inputRef}
-          className="pv-block-input"
-          aria-label="Block content"
-          rows={1}
+        <BlockTextarea
+          block={block}
           value={value}
-          placeholder={placeholderFor(block.type)}
+          inputRef={inputRef}
           onFocus={focus}
           onChange={change}
           onBlur={save}

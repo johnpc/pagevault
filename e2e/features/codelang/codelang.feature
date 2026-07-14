@@ -22,3 +22,12 @@ Feature: Code block language
     And I focus the first block
     And I type "```"
     Then the document has a "code" block that is empty
+
+  Scenario: A code block with a language is syntax-highlighted
+    Given I have a page titled "Highlighted"
+    When I open the page "Highlighted"
+    And I focus the first block
+    And I type "```"
+    And I set the code language to "JavaScript"
+    And I type "const answer = 42" into the code block
+    Then the code block is syntax-highlighted

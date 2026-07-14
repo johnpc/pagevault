@@ -300,6 +300,81 @@
   font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   font-size: 13.5px;
 }
+
+/* Syntax highlighting: a read-only colored <pre> layer sits behind the textarea,
+   which is made transparent-text (caret stays visible) so the coloring shows
+   through. Both share identical font/size/line-height/padding/whitespace so the
+   text lines up exactly under the caret. */
+.pv-code-wrap {
+  position: relative;
+  flex: 1;
+  display: flex;
+}
+.pv-code-wrap .pv-block-input {
+  position: relative;
+  z-index: 1;
+  color: transparent;
+  caret-color: var(--pv-text);
+}
+.pv-code-highlight {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 3px 2px;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 13.5px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  color: var(--pv-text);
+}
+.pv-code-highlight code {
+  font: inherit;
+}
+/* Map highlight.js token classes to the --pv-c-* palette so colors adapt to
+   light/dark automatically (the tokens are redefined under the dark theme). */
+.pv-code-highlight .hljs-keyword,
+.pv-code-highlight .hljs-selector-tag,
+.pv-code-highlight .hljs-built_in,
+.pv-code-highlight .hljs-literal {
+  color: var(--pv-c-purple);
+}
+.pv-code-highlight .hljs-string,
+.pv-code-highlight .hljs-regexp,
+.pv-code-highlight .hljs-meta .hljs-string {
+  color: var(--pv-c-green);
+}
+.pv-code-highlight .hljs-number,
+.pv-code-highlight .hljs-symbol,
+.pv-code-highlight .hljs-bullet {
+  color: var(--pv-c-orange);
+}
+.pv-code-highlight .hljs-title,
+.pv-code-highlight .hljs-title.function_,
+.pv-code-highlight .hljs-section,
+.pv-code-highlight .hljs-name {
+  color: var(--pv-c-blue);
+}
+.pv-code-highlight .hljs-attr,
+.pv-code-highlight .hljs-attribute,
+.pv-code-highlight .hljs-variable,
+.pv-code-highlight .hljs-template-variable {
+  color: var(--pv-c-red);
+}
+.pv-code-highlight .hljs-comment,
+.pv-code-highlight .hljs-quote,
+.pv-code-highlight .hljs-meta {
+  color: var(--pv-text-muted);
+  font-style: italic;
+}
+/* When highlighting is active the textarea's own selection background would
+   double up with the colored text; keep the native selection subtle. */
+.pv-code-wrap .pv-block-input::selection {
+  background: var(--pv-accent-soft);
+}
 /* Copy button on a code block: appears on hover in the top-right corner. */
 .pv-code-copy {
   position: absolute;
