@@ -1,58 +1,64 @@
-import { type DragEvent } from 'react';
-import type { TableData } from '../../lib/pbTypes';
-import { setCell, removeRow } from './tableData';
-import { duplicateRow } from './tableRowOps';
-import { visibleColumns } from './tableColumns';
+import { memo, type DragEvent } from 'react';
+import type { VisibleColumn } from './tableColumns';
 import { TableCell } from './TableCell';
 
-/** One body row: a drag handle, an editable cell per visible column, and a
- * delete button. `r` is the REAL row index so edits/deletes/drags target the
- * right underlying row. Drag state is owned by the parent body. Render-only. */
-export function TableRow({
-  data,
-  save,
+interface TableRowProps {
+  columns: VisibleColumn[]; // the visible columns (stable unless columns change)
+  r: number; // REAL row index into data.rows
+  row: string[]; // this row's cells (a stable ref while unedited — see setCell)
+  canDelete: boolean; // false when it's the only row (keep at least one)
+  dragging: boolean;
+  onCell: (r: number, c: number, value: string) => void;
+  onDelete: (r: number) => void;
+  onDuplicate: (r: number) => void;
+  onDragStart: (r: number) => void;
+  onDragEnd: () => void;
+  onDrop: (r: number) => void;
+}
+
+/** One body row: a drag handle, an editable cell per visible column, and
+ * duplicate/delete. Takes only its own row + stable callbacks (never the whole
+ * grid), so it's memoized below — editing one cell re-renders just that row, not
+ * the whole table. `r` is the REAL row index so ops target the right row. */
+function TableRowInner({
+  columns,
   r,
   row,
+  canDelete,
   dragging,
+  onCell,
+  onDelete,
+  onDuplicate,
   onDragStart,
   onDragEnd,
   onDrop,
-}: {
-  data: TableData;
-  save: (next: TableData) => void;
-  r: number;
-  row: string[];
-  dragging: boolean;
-  onDragStart: () => void;
-  onDragEnd: () => void;
-  onDrop: () => void;
-}) {
+}: TableRowProps) {
   return (
     <tr
       className={dragging ? 'pv-table-row--dragging' : ''}
       onDragOver={(e: DragEvent) => e.preventDefault()}
       onDrop={(e: DragEvent) => {
         e.preventDefault();
-        onDrop();
+        onDrop(r);
       }}
     >
       <td className="pv-table-drag">
         <button
           aria-label={`Drag row ${r + 1}`}
           draggable
-          onDragStart={onDragStart}
+          onDragStart={() => onDragStart(r)}
           onDragEnd={onDragEnd}
         >
           ⋮⋮
         </button>
       </td>
-      {visibleColumns(data).map(({ column, index: c }) => (
+      {columns.map(({ column, index: c }) => (
         <td key={c}>
           <TableCell
             column={column}
             value={row[c] ?? ''}
             label={`Cell ${r + 1},${c + 1}`}
-            onChange={(v) => save(setCell(data, r, c, v))}
+            onChange={(v) => onCell(r, c, v)}
           />
         </td>
       ))}
@@ -60,12 +66,12 @@ export function TableRow({
         <button
           className="pv-table-rowdup"
           aria-label={`Duplicate row ${r + 1}`}
-          onClick={() => save(duplicateRow(data, r))}
+          onClick={() => onDuplicate(r)}
         >
           ⧉
         </button>
-        {data.rows.length > 1 && (
-          <button aria-label={`Delete row ${r + 1}`} onClick={() => save(removeRow(data, r))}>
+        {canDelete && (
+          <button aria-label={`Delete row ${r + 1}`} onClick={() => onDelete(r)}>
             ×
           </button>
         )}
@@ -73,3 +79,7 @@ export function TableRow({
     </tr>
   );
 }
+
+/** Memoized: with stable callbacks + a stable `row`/`columns` from TableBody, a
+ * row only re-renders when its own cells, index, or drag state change. */
+export const TableRow = memo(TableRowInner);
