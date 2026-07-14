@@ -29,6 +29,13 @@ function withCommas(n: string): string {
   return `${neg ? '-' : ''}${grouped}${dec !== undefined ? `.${dec}` : ''}`;
 }
 
+/** Strip binary-float noise from a computed value (e.g. 0.07*100 = 7.0000…1 →
+ * 7) by rounding to 15 significant digits — within double precision, so real
+ * values are preserved. Pure. */
+function cleanFloat(n: number): number {
+  return parseFloat(n.toPrecision(15));
+}
+
 /**
  * Format a stored numeric cell string for display. Non-numeric or empty values
  * pass through unchanged (so a half-typed cell isn't mangled). Pure — no locale
@@ -40,7 +47,7 @@ export function formatNumber(value: string, fmt: string | undefined): string {
   if (trimmed === '') return value;
   const num = Number(trimmed);
   if (!Number.isFinite(num)) return value;
-  if (fmt === 'percent') return `${withCommas(String(num * 100))}%`;
+  if (fmt === 'percent') return `${withCommas(String(cleanFloat(num * 100)))}%`;
   const symbol = CURRENCY[fmt as NumberFormat];
   if (symbol) {
     const fixed = withCommas(Math.abs(num).toFixed(2));
