@@ -92,10 +92,16 @@ serializer we mostly already have in `inlineMarkdown` + `inlineToMarkdown`).
   bold/italic/underline/strike/code, reusing `wrapSelection`. Anchored at the textarea's
   top-center (no fragile per-glyph mirror measurement). Buttons use mousedown+preventDefault
   so the selection survives the click. Follow-ups: link button, turn-into, per-glyph rect.
-- **Stage 3 — WYSIWYG spike.** ONE block type (paragraph) on ProseMirror behind a flag
-  (`VITE_PM_EDITOR`), reading/writing the same `content` string. Prove: markdown input rules,
-  caret parity, mention + slash + selection toolbar as PM plugins, undo via PM history.
-  Measure bundle + perf on a 250-block page.
+- **Stage 3 — WYSIWYG spike. 🚧 IN PROGRESS (flag-gated, off by default).** Instead of pulling
+  in ProseMirror up front, spiked a dependency-free `contentEditable` surface (`WysiwygInput`)
+  behind `VITE_WYSIWYG`, reading/writing the same `content` string via the proven pure bridges
+  (`contentToEditableHtml` ← seed, `domToContent` → read-back; both round-trip-tested). Verified
+  in a real browser: under the flag the surface replaces the textarea, typing renders + persists,
+  and the DOM is NOT reseeded while focused (caret-safe). STILL TODO before default-on: markdown
+  input rules (bold-as-you-type), mention/slash pickers on the surface, selection-toolbar
+  integration, IME/paste sanitization, and a perf check on a 250-block page. If hand-rolled
+  contentEditable proves too costly for these, revisit ProseMirror/TipTap (Option A) — the
+  content-string bridge is reusable either way.
 - **Stage 4 — Migrate remaining text-ish blocks** to PM; delete the textarea path; fold
   Stage-1 undo into PM history if the spike proves it cleaner.
 - **Stage 5 — Richness on the new base:** richer block gutter menu (color/turn-into/copy-link/

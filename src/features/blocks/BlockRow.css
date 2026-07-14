@@ -859,3 +859,25 @@
 .pv-seltoolbar-btn--code {
   font-family: ui-monospace, monospace;
 }
+
+/* WYSIWYG contentEditable surface (flag-gated). Matches the textarea's box; a
+ * data-placeholder shows when empty. Inline marks render via their native tags. */
+.pv-wysiwyg {
+  outline: none;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.pv-wysiwyg:empty::before {
+  content: attr(data-placeholder);
+  color: var(--pv-text-muted);
+  pointer-events: none;
+}
+.pv-wysiwyg .pv-w-mention {
+  color: var(--pv-accent);
+  font-weight: 500;
+}
+.pv-wysiwyg .pv-w-link {
+  color: var(--pv-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}

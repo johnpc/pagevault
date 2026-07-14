@@ -9,7 +9,7 @@ import { useAutoFocus } from './useAutoFocus';
 import { useSeedValue } from './useSeedValue';
 import { BlockMenus } from './BlockMenus';
 import { BlockPreview } from './BlockPreview';
-import { BlockTextarea } from './BlockTextarea';
+import { BlockEditable } from './BlockEditable';
 import { SelectionToolbar } from './SelectionToolbar';
 import { CodeBlockChrome } from './CodeBlockChrome';
 
@@ -78,7 +78,7 @@ export function TextBlockBody({
       {showPreview ? (
         <BlockPreview value={value} onEdit={focus} inputRef={inputRef} />
       ) : (
-        <BlockTextarea
+        <BlockEditable
           block={block}
           value={value}
           inputRef={inputRef}
