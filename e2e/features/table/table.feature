@@ -18,6 +18,17 @@ Feature: Table (database) blocks
     Then the table has a cell containing "Apples"
     And the table has 2 body rows
 
+  Scenario: Move between table cells with Enter and Shift+Enter
+    Given I have a page titled "Grid nav"
+    When I type "/table" into a new block
+    And I choose "Table" from the slash menu
+    And I add a table row
+    And I focus table cell "1,1"
+    And I press Enter in the table
+    Then table cell "2,1" is focused
+    When I press Shift+Enter in the table
+    Then table cell "1,1" is focused
+
   Scenario: Duplicate a row and see the copy persist
     Given I have a page titled "Dupes"
     When I type "/table" into a new block

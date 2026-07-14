@@ -19,6 +19,17 @@ When('I fill table cell {string} with {string}', async ({ page }, cell: string, 
   await expect(input).toHaveValue(value);
 });
 
+When('I focus table cell {string}', async ({ page }, cell: string) => {
+  await table(page).getByLabel(`Cell ${cell}`).click();
+});
+
+When('I press Enter in the table', ({ page }) => page.keyboard.press('Enter'));
+When('I press Shift+Enter in the table', ({ page }) => page.keyboard.press('Shift+Enter'));
+
+Then('table cell {string} is focused', async ({ page }, cell: string) => {
+  await expect(table(page).getByLabel(`Cell ${cell}`)).toBeFocused();
+});
+
 When('I add a table row', async ({ page }) => {
   const before = await table(page).locator('tbody tr').count();
   await active(page).getByRole('button', { name: '+ Add row' }).last().click();
