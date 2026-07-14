@@ -1,6 +1,8 @@
 import type { BlockRecord } from '../../lib/pbClient';
+import type { TableData } from '../../lib/pbTypes';
 import { FormattedText } from '../blocks/FormattedText';
 import { safeHref } from '../blocks/safeHref';
+import { SharedTable } from './SharedTable';
 
 /** One block in the read-only public share view, rendered per type so code,
  * to-dos, and images keep their meaning (not everything flattened to inline
@@ -29,6 +31,20 @@ export function SharedBlock({ block }: { block: BlockRecord }) {
       // a shared page is not honored.
       const src = safeHref(block.content);
       return src ? <img className="pv-shared-img" src={src} alt="" loading="lazy" /> : null;
+    }
+    case 'table':
+      // Table/board/gallery/calendar all read the same grid data.
+      return <SharedTable data={(block.data as TableData | null) ?? null} />;
+    case 'bookmark':
+    case 'embed': {
+      // A URL lives in content; show it as a plain link (a safe scheme only)
+      // rather than the raw string. Rich card/player is editor-only.
+      const href = safeHref(block.content);
+      return href ? (
+        <a className="pv-link" href={href} target="_blank" rel="noopener noreferrer">
+          {block.content}
+        </a>
+      ) : null;
     }
     default:
       return <FormattedText text={block.content} />;

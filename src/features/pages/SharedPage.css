@@ -56,6 +56,25 @@
   border-radius: var(--pv-radius-sm);
 }
 
+/* Static read-only database table. */
+.pv-shared-table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 4px 0;
+  font-size: 14px;
+}
+.pv-shared-table th,
+.pv-shared-table td {
+  border: 1px solid var(--pv-border);
+  padding: 6px 10px;
+  text-align: left;
+  color: var(--pv-text);
+}
+.pv-shared-table th {
+  background: var(--pv-surface);
+  font-weight: 600;
+}
+
 .pv-shared-foot {
   margin-top: 48px;
   padding-top: 16px;

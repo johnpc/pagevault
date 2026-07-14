@@ -53,4 +53,30 @@ describe('SharedBlock', () => {
     const { container: txt } = renderBlock(blk('text', 'plain **bold**'));
     expect(txt.querySelector('strong')?.textContent).toBe('bold');
   });
+
+  it('renders a table block as a static HTML table (checkbox → ✓)', () => {
+    const data = {
+      columns: [
+        { name: 'Task', type: 'text' },
+        { name: 'Done', type: 'checkbox' },
+      ],
+      rows: [
+        ['Ship', 'true'],
+        ['Rest', ''],
+      ],
+    };
+    const { container } = renderBlock(blk('table', '', { data } as Partial<BlockRecord>));
+    const table = container.querySelector('table.pv-shared-table');
+    expect(table).not.toBeNull();
+    expect(screen.getByText('Task')).toBeInTheDocument();
+    expect(screen.getByText('Ship')).toBeInTheDocument();
+    expect(screen.getByText('✓')).toBeInTheDocument(); // checked cell
+  });
+
+  it('renders a bookmark/embed URL as a safe link', () => {
+    const { container } = renderBlock(blk('bookmark', 'https://ex.com'));
+    const link = container.querySelector('a.pv-link') as HTMLAnchorElement;
+    expect(link.getAttribute('href')).toBe('https://ex.com');
+    expect(link.getAttribute('target')).toBe('_blank');
+  });
 });
