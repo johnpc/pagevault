@@ -1,16 +1,21 @@
 import { useCallback, useState, type RefObject } from 'react';
 import { wrapSelection } from './wrapSelection';
+import { linkSelection } from './linkSelection';
 import { shouldShowToolbar, toolbarAnchor } from './selectionFormat';
 
 /** The floating selection-toolbar state for one block's textarea. `anchor` is
  * the viewport point to position above (null = hidden). `apply(marker)` wraps the
- * current selection and keeps it selected so the user can stack formats. */
+ * current selection and keeps it selected so the user can stack formats;
+ * `applyLink(url)` wraps it as a [text](url) link. */
 export interface SelectionToolbar {
   anchor: { top: number; left: number } | null;
   apply: (marker: string) => void;
+  applyLink: (url: string) => void;
   /** Call on the textarea's select/blur/scroll to recompute visibility. */
   sync: () => void;
   hide: () => void;
+  /** Hide on blur unless focus moved into the toolbar (its link prompt). */
+  hideUnlessInToolbar: () => void;
 }
 
 export function useSelectionToolbar(
@@ -32,6 +37,14 @@ export function useSelectionToolbar(
 
   const hide = useCallback(() => setAnchor(null), []);
 
+  // Hide on the next frame UNLESS focus moved into the toolbar (its link prompt),
+  // so typing a URL doesn't dismiss the toolbar before the link is applied.
+  const hideUnlessInToolbar = useCallback(() => {
+    requestAnimationFrame(() => {
+      if (!document.activeElement?.closest('.pv-seltoolbar')) setAnchor(null);
+    });
+  }, []);
+
   const apply = useCallback(
     (marker: string) => {
       const el = inputRef.current;
@@ -48,5 +61,20 @@ export function useSelectionToolbar(
     [inputRef, value, setValue, sync],
   );
 
-  return { anchor, apply, sync, hide };
+  const applyLink = useCallback(
+    (url: string) => {
+      const el = inputRef.current;
+      if (!el || url.trim() === '') return;
+      const next = linkSelection(value, el.selectionStart, el.selectionEnd, url);
+      setValue(next.value);
+      setAnchor(null); // the link is placed; dismiss the toolbar
+      requestAnimationFrame(() => {
+        el.focus();
+        el.setSelectionRange(next.caret, next.caret);
+      });
+    },
+    [inputRef, value, setValue],
+  );
+
+  return { anchor, apply, applyLink, sync, hide, hideUnlessInToolbar };
 }

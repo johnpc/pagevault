@@ -895,3 +895,20 @@
   animation: pv-block-flash-kf 1.6s ease-out;
   border-radius: var(--pv-radius-sm);
 }
+
+/* Inline URL prompt inside the selection toolbar (link action). */
+.pv-seltoolbar-link {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.pv-seltoolbar-linkinput {
+  border: none;
+  background: var(--pv-hover);
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-size: 13px;
+  color: var(--pv-text);
+  width: 200px;
+  outline: none;
+}

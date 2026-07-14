@@ -50,6 +50,24 @@ describe('useSelectionToolbar', () => {
     expect(setValue).toHaveBeenCalledWith('hi **there**');
   });
 
+  it('applyLink(url) wraps the selection as a markdown link (normalized)', () => {
+    const ref = createRef<HTMLTextAreaElement>();
+    (ref as { current: HTMLTextAreaElement }).current = fakeTextarea('see docs ok', 4, 8); // "docs"
+    const setValue = vi.fn();
+    const { result } = renderHook(() => useSelectionToolbar(ref, 'see docs ok', setValue, false));
+    act(() => result.current.applyLink('example.com'));
+    expect(setValue).toHaveBeenCalledWith('see [docs](https://example.com) ok');
+  });
+
+  it('applyLink ignores an empty url', () => {
+    const ref = createRef<HTMLTextAreaElement>();
+    (ref as { current: HTMLTextAreaElement }).current = fakeTextarea('x', 0, 1);
+    const setValue = vi.fn();
+    const { result } = renderHook(() => useSelectionToolbar(ref, 'x', setValue, false));
+    act(() => result.current.applyLink('  '));
+    expect(setValue).not.toHaveBeenCalled();
+  });
+
   it('hide() clears the anchor', () => {
     const ref = createRef<HTMLTextAreaElement>();
     (ref as { current: HTMLTextAreaElement }).current = fakeTextarea('abc', 0, 3);
