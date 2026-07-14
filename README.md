@@ -101,8 +101,9 @@ account, no third-party service, no lock-in.
 | Backspace at a block start merges it into the block above (caret at the join)    | ✅     |
 | Delete at a block end pulls the next block up into it (caret at the join)        | ✅     |
 | Drag-to-reorder pages in the sidebar (same-parent siblings; mouse + touch)       | ✅     |
-| Bookmark blocks — a link card for any URL (domain + link, opens in a tab)        | ✅     |
-| Video/audio embed — native player for media files, iframe for YouTube/Vimeo      | ✅     |
+| Bookmark blocks — rich link cards (title, blurb, thumbnail, favicon; scraped)    | ✅     |
+| Video/audio embed — media files + YouTube, Vimeo, Spotify, Loom, CodePen, Figma  | ✅     |
+| Inline links — `[text](url)` and bare URLs render as clickable links             | ✅     |
 | Image blocks (embed by URL)                                                      | ✅     |
 | Image uploads (stored in PocketBase, served same-origin)                         | ✅     |
 | Quick-find search (⌘K, ranked, match-highlighted, titles + content)              | ✅     |

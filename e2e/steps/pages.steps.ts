@@ -414,6 +414,14 @@ Then('the page shows a bookmark to {string}', async ({ page }, domain: string) =
   ).toBeVisible();
 });
 
+Then('the bookmark card title reads {string}', async ({ page }, title: string) => {
+  // The title is scraped server-side (link-preview hook); poll until it resolves
+  // past the domain fallback to the real page title.
+  await expect(
+    active(page).locator('.pv-bookmark-title', { hasText: title }).first(),
+  ).toBeVisible();
+});
+
 When('I enter the embed URL {string}', async ({ page }, url: string) => {
   const input = active(page).getByLabel('Embed URL');
   await input.fill(url);

@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import type { BlockRecord } from '../../lib/pbClient';
-import { normalizeUrl, urlDomain } from './bookmarkUrl';
+import { normalizeUrl } from './bookmarkUrl';
+import { BookmarkCard } from './BookmarkCard';
 
-/** A bookmark block: a link card for a URL (stored in `content`). Empty or when
- * editing, it shows a URL input; otherwise a card with the domain + full link
- * that opens in a new tab. Clicking the card's edit affordance re-opens the
- * input. (No server-side metadata fetch — honest domain/URL card.) */
+/** A bookmark block: a rich link card for a URL (stored in `content`). Empty or
+ * when editing, it shows a URL input; otherwise a preview card (title, blurb,
+ * thumbnail, favicon — scraped server-side, with a graceful domain fallback)
+ * that opens in a new tab. Clicking the edit affordance re-opens the input. */
 export function BookmarkBlock({
   block,
   onEdit,
@@ -41,10 +42,7 @@ export function BookmarkBlock({
   const href = normalizeUrl(block.content);
   return (
     <div className="pv-bookmark">
-      <a className="pv-bookmark-link" href={href} target="_blank" rel="noopener noreferrer">
-        <span className="pv-bookmark-domain">{urlDomain(block.content)}</span>
-        <span className="pv-bookmark-url">{href}</span>
-      </a>
+      <BookmarkCard href={href} />
       <button
         className="pv-bookmark-edit-btn"
         aria-label="Edit bookmark"
