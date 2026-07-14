@@ -20,6 +20,7 @@ export function useBlockInput(
   onEnter: (caret: number, value: string) => boolean,
   onIndent: (dir: 'in' | 'out') => void,
   onMerge: (value: string) => boolean,
+  onMergeForward: (value: string) => boolean,
 ) {
   const [active, setActive] = useState(0);
   const [focused, setFocused] = useState(false);
@@ -62,6 +63,7 @@ export function useBlockInput(
     onEnter,
     onRemove: () => onRemove(block.id),
     onMerge: () => onMerge(value),
+    onMergeForward: () => onMergeForward(value),
     setValue,
   });
 

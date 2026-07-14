@@ -90,6 +90,7 @@ When('I put the caret at the end of the block containing {string}', ({ page }, t
 When('I press ArrowUp in the block', ({ page }) => page.keyboard.press('ArrowUp'));
 When('I press ArrowDown in the block', ({ page }) => page.keyboard.press('ArrowDown'));
 When('I press Backspace in the block', ({ page }) => page.keyboard.press('Backspace'));
+When('I press Delete in the block', ({ page }) => page.keyboard.press('Delete'));
 
 Then('the block containing {string} is focused', async ({ page }, text: string) => {
   await expect

@@ -32,7 +32,7 @@ describe('useMergeBlock', () => {
         <QueryClientProvider client={w.qc}>{children}</QueryClientProvider>
       ),
     });
-    await result.current.mutateAsync({ prevId: 'a', sourceId: 'b', content: 'HelloWorld' });
+    await result.current.mutateAsync({ keepId: 'a', removeId: 'b', content: 'HelloWorld' });
     expect(blocks.update).toHaveBeenCalledWith('a', { content: 'HelloWorld' });
     expect(blocks.delete).toHaveBeenCalledWith('b');
   });
@@ -44,7 +44,7 @@ describe('useMergeBlock', () => {
         <QueryClientProvider client={w.qc}>{children}</QueryClientProvider>
       ),
     });
-    result.current.mutate({ prevId: 'a', sourceId: 'b', content: 'HelloWorld' });
+    result.current.mutate({ keepId: 'a', removeId: 'b', content: 'HelloWorld' });
     await waitFor(() => {
       const cache = w.qc.getQueryData<BlockRecord[]>(['blocks', 'p1'])!;
       expect(cache).toHaveLength(1);
@@ -60,7 +60,7 @@ describe('useMergeBlock', () => {
         <QueryClientProvider client={w.qc}>{children}</QueryClientProvider>
       ),
     });
-    result.current.mutate({ prevId: 'a', sourceId: 'b', content: 'HelloWorld' });
+    result.current.mutate({ keepId: 'a', removeId: 'b', content: 'HelloWorld' });
     await waitFor(() => expect(result.current.isError).toBe(true));
     const cache = w.qc.getQueryData<BlockRecord[]>(['blocks', 'p1'])!;
     expect(cache).toHaveLength(2);

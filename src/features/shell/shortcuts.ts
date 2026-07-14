@@ -20,6 +20,7 @@ export const SHORTCUTS: Shortcut[] = [
     keys: 'Backspace',
     action: 'Delete an empty block, or merge into the block above (at its start)',
   },
+  { keys: 'Delete', action: 'Merge the next block up into this one (at its end)' },
 ];
 
 /** True when a keypress originated in an editable field (so global single-key

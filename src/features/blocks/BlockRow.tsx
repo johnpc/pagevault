@@ -30,6 +30,7 @@ interface BlockRowProps {
   onUpload: (id: string, file: File) => void;
   onSplit: (block: BlockRecord, caret: number, value: string) => boolean;
   onMerge: (id: string, value: string) => boolean;
+  onMergeForward: (id: string, value: string) => boolean;
   autoFocus?: boolean;
   autoFocusCaret?: number;
   autoFocusValue?: string;
@@ -42,7 +43,8 @@ interface BlockRowProps {
  * re-render every row — only rows whose own props change. */
 function BlockRowInner(props: BlockRowProps) {
   const { block, onEdit, onRemove, onDuplicate, onIndent, onPasteMarkdown } = props;
-  const { onSplit, onMerge, autoFocus, autoFocusCaret, autoFocusValue, onFocused, dnd } = props;
+  const { onSplit, onMerge, onMergeForward, autoFocus, autoFocusCaret } = props;
+  const { autoFocusValue, onFocused, dnd } = props;
   const { cls, rowDrag, handle } = useBlockDrag(block, onEdit, dnd);
   const focusReport = useReportFocus(block.id);
   const style = { marginLeft: `${(block.depth ?? 0) * 24}px` };
@@ -83,6 +85,7 @@ function BlockRowInner(props: BlockRowProps) {
         onPasteMarkdown={onPasteMarkdown}
         onSplit={onSplit}
         onMerge={onMerge}
+        onMergeForward={onMergeForward}
         autoFocus={autoFocus}
         autoFocusCaret={autoFocusCaret}
         autoFocusValue={autoFocusValue}

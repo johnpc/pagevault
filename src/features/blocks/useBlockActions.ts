@@ -9,7 +9,7 @@ import { indentUpdates } from './indent';
 import { useImportMarkdown } from './markdownImportApi';
 import { markdownToBlocks } from './markdownImport';
 import { useEnterSplit } from './useEnterSplit';
-import { useBackspaceMerge } from './useBackspaceMerge';
+import { useBlockMerge } from './useBlockMerge';
 import { useFocusTarget } from './useFocusTarget';
 import type { BlockRecord } from '../../lib/pbClient';
 import type { BlockType } from '../../lib/pbTypes';
@@ -28,7 +28,7 @@ export function useBlockActions(pageId: string, blocks: BlockRecord[]) {
   const uploadFile = useUploadBlockFile(pageId);
   const importMd = useImportMarkdown(pageId);
   const { focusId, focusCaret, focusValue, setFocusId, focusAt, clearFocusId } = useFocusTarget();
-  const mergeBlock = useBackspaceMerge(pageId, blocks, { focusAt });
+  const { mergeUp, mergeDown } = useBlockMerge(pageId, blocks, { focusAt });
 
   const addBlock = useCallback(
     (type: BlockType = 'text') =>
@@ -86,7 +86,8 @@ export function useBlockActions(pageId: string, blocks: BlockRecord[]) {
     indentMany,
     importMarkdown,
     splitBlock,
-    mergeBlock,
+    mergeBlock: mergeUp,
+    mergeForward: mergeDown,
     uploadImage,
     focusId,
     focusCaret,

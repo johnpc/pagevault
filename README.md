@@ -96,6 +96,7 @@ account, no third-party service, no lock-in.
 | Undo a block deletion — an Undo action on the delete toast restores them       | ✅     |
 | Arrow-key block navigation — ↑/↓ at a block edge move the caret between blocks | ✅     |
 | Backspace at a block start merges it into the block above (caret at the join)  | ✅     |
+| Delete at a block end pulls the next block up into it (caret at the join)      | ✅     |
 | Drag-to-reorder pages in the sidebar (same-parent siblings)                    | ✅     |
 | Bookmark blocks — a link card for any URL (domain + link, opens in a tab)      | ✅     |
 | Video/audio embed — native player for media files, iframe for YouTube/Vimeo    | ✅     |

@@ -19,6 +19,7 @@ export function TextBlockRow({
   onPasteMarkdown,
   onSplit,
   onMerge,
+  onMergeForward,
   autoFocus,
   autoFocusCaret,
   autoFocusValue,
@@ -33,6 +34,7 @@ export function TextBlockRow({
   onPasteMarkdown: (block: BlockRecord, text: string) => void;
   onSplit: (block: BlockRecord, caret: number, value: string) => boolean;
   onMerge: (id: string, value: string) => boolean;
+  onMergeForward: (id: string, value: string) => boolean;
   autoFocus?: boolean;
   autoFocusCaret?: number;
   autoFocusValue?: string;
@@ -53,6 +55,7 @@ export function TextBlockRow({
         onEnter={(caret, value) => onSplit(block, caret, value)}
         onIndent={(dir) => onIndent(block.id, dir)}
         onMerge={(value) => onMerge(block.id, value)}
+        onMergeForward={(value) => onMergeForward(block.id, value)}
         onPasteMarkdown={(text) => onPasteMarkdown(block, text)}
         autoFocus={autoFocus}
         autoFocusCaret={autoFocusCaret}
