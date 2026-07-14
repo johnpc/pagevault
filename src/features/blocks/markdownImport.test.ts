@@ -48,8 +48,18 @@ describe('markdownToBlocks', () => {
     const md = 'intro\n\n```\nline1\nline2\n```\n\noutro';
     expect(markdownToBlocks(md)).toEqual([
       { type: 'text', content: 'intro' },
-      { type: 'code', content: 'line1\nline2' },
+      { type: 'code', content: 'line1\nline2', lang: '' },
       { type: 'text', content: 'outro' },
+    ]);
+  });
+
+  it('captures the fence language (round-trips with export), ignoring unknown ones', () => {
+    expect(markdownToBlocks('```python\nx = 1\n```')).toEqual([
+      { type: 'code', content: 'x = 1', lang: 'python' },
+    ]);
+    // An unsupported language falls back to plain (no highlight), not junk.
+    expect(markdownToBlocks('```brainfuck\n+++\n```')).toEqual([
+      { type: 'code', content: '+++', lang: '' },
     ]);
   });
 
@@ -62,7 +72,9 @@ describe('markdownToBlocks', () => {
   });
 
   it('closes an unterminated code fence at end of input', () => {
-    expect(markdownToBlocks('```\ncode here')).toEqual([{ type: 'code', content: 'code here' }]);
+    expect(markdownToBlocks('```\ncode here')).toEqual([
+      { type: 'code', content: 'code here', lang: '' },
+    ]);
   });
 
   it('handles CRLF line endings', () => {

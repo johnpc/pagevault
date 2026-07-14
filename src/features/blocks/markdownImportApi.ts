@@ -29,6 +29,7 @@ export function useImportMarkdown(pageId: string) {
           content: p.content,
           checked: false,
           depth: p.depth ?? 0,
+          lang: p.lang ?? '',
           sort: sort++,
           owner,
         });
