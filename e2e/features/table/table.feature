@@ -227,6 +227,20 @@ Feature: Table (database) blocks
     When I reopen the page "Projects DB"
     Then the table has a relation cell showing "Reading list"
 
+  Scenario: A relation to a deleted page shows a broken-link indicator
+    Given I have a page titled "Disposable target"
+    And I have a page titled "Links DB"
+    When I open the page "Links DB"
+    And I type "/table" into a new block
+    And I choose "Table" from the slash menu
+    And I set table column 2 type to "relation"
+    And I link table cell "1,2" to the created page "Disposable target"
+    Then the table has a relation cell showing "Disposable target"
+    When I open the page "Disposable target"
+    And I move the page to trash
+    And I open the page "Links DB"
+    Then the table shows a broken relation link
+
   Scenario: Filter a relation column by the linked page's title
     Given I have a page titled "Linked DB"
     When I open the page "Linked DB"

@@ -25,6 +25,22 @@ describe('RelationCell', () => {
     expect(screen.getByLabelText('rel')).toHaveTextContent('Roadmap');
   });
 
+  it('shows a broken-link indicator (not a blank dash) when the target is gone', () => {
+    // value points at a page id not in the list (deleted/archived).
+    render(<RelationCell value="ghost" label="rel" onChange={vi.fn()} />);
+    const btn = screen.getByLabelText('rel');
+    expect(btn).toHaveTextContent('Broken link');
+    expect(btn).not.toHaveTextContent('—');
+  });
+
+  it('lets you clear a broken link', async () => {
+    const onChange = vi.fn();
+    render(<RelationCell value="ghost" label="rel" onChange={onChange} />);
+    await userEvent.click(screen.getByLabelText('rel'));
+    await userEvent.click(screen.getByText('Clear'));
+    expect(onChange).toHaveBeenCalledWith('');
+  });
+
   it('opens a picker and links a page by id', async () => {
     const onChange = vi.fn();
     render(<RelationCell value="" label="rel" onChange={onChange} />);
