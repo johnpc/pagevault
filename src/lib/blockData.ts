@@ -15,6 +15,27 @@ export type TableColumnType =
  * by a select column, or a gallery of cards. Defaults to 'table'. */
 export type TableViewMode = 'table' | 'board' | 'gallery' | 'calendar';
 
+/** Every kind of content block a page can hold. */
+export type BlockType =
+  | 'text'
+  | 'heading'
+  | 'subheading'
+  | 'subsubheading'
+  | 'todo'
+  | 'quote'
+  | 'divider'
+  | 'bullet'
+  | 'numbered'
+  | 'code'
+  | 'image'
+  | 'callout'
+  | 'toggle'
+  | 'table'
+  | 'columns'
+  | 'toc'
+  | 'bookmark'
+  | 'embed';
+
 export interface TableColumn {
   name: string; // header label
   type: TableColumnType;

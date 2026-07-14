@@ -14,16 +14,18 @@ describe('blockAnchorId', () => {
 });
 
 describe('tableOfContents', () => {
-  it('lists headings (level 1) and subheadings (level 2) in order', () => {
+  it('lists headings (l1), subheadings (l2), and sub-subheadings (l3) in order', () => {
     const toc = tableOfContents([
       b('heading', 'Intro'),
       b('text', 'body'),
       b('subheading', 'Details'),
+      b('subsubheading', 'Fine print'),
       b('heading', 'End'),
     ]);
     expect(toc.map((e) => [e.text, e.level])).toEqual([
       ['Intro', 1],
       ['Details', 2],
+      ['Fine print', 3],
       ['End', 1],
     ]);
   });

@@ -6,12 +6,13 @@
  * Every base record carries PocketBase's system fields (id + autodates); we add
  * the collection-specific fields on top.
  */
-import type { TableData, ColumnsData } from './blockData';
+import type { BlockType, TableData, ColumnsData } from './blockData';
 import type { ShareRole } from './collabTypes';
 
 // Re-export the block `data` payload shapes so existing imports from the
 // pbTypes barrel keep working after the split into blockData.ts.
 export type {
+  BlockType,
   TableColumnType,
   TableViewMode,
   TableColumn,
@@ -27,25 +28,6 @@ export interface BaseRecord {
   collectionId: string;
   collectionName: string;
 }
-
-export type BlockType =
-  | 'text'
-  | 'heading'
-  | 'subheading'
-  | 'todo'
-  | 'quote'
-  | 'divider'
-  | 'bullet'
-  | 'numbered'
-  | 'code'
-  | 'image'
-  | 'callout'
-  | 'toggle'
-  | 'table'
-  | 'columns'
-  | 'toc'
-  | 'bookmark'
-  | 'embed';
 
 export interface PagesResponse extends BaseRecord {
   title: string;

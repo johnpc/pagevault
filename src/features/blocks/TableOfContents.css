@@ -27,6 +27,10 @@
   padding-left: 20px;
   font-size: 0.94em;
 }
+.pv-toc-item--l3 {
+  padding-left: 40px;
+  font-size: 0.9em;
+}
 .pv-toc-empty {
   font-style: italic;
   padding: 2px 4px;

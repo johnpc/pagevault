@@ -14,6 +14,7 @@ describe('placeholderFor', () => {
   });
   it('labels subheading and quote', () => {
     expect(placeholderFor('subheading')).toBe('Subheading');
+    expect(placeholderFor('subsubheading')).toBe('Sub-subheading');
     expect(placeholderFor('quote')).toBe('Quote');
   });
   it('labels list and code blocks', () => {
@@ -35,7 +36,8 @@ describe('cycleType', () => {
     expect(cycleType('divider')).toBe('text');
   });
   it('includes the new list + code types in the cycle', () => {
-    expect(cycleType('subheading')).toBe('bullet');
+    expect(cycleType('subheading')).toBe('subsubheading');
+    expect(cycleType('subsubheading')).toBe('bullet');
     expect(cycleType('bullet')).toBe('numbered');
     expect(cycleType('code')).toBe('image');
     expect(cycleType('image')).toBe('table');
@@ -49,7 +51,7 @@ describe('markdownShortcut', () => {
   it('maps heading prefixes', () => {
     expect(markdownShortcut('# ')).toEqual({ type: 'heading', content: '' });
     expect(markdownShortcut('## ')).toEqual({ type: 'subheading', content: '' });
-    expect(markdownShortcut('### ')).toEqual({ type: 'subheading', content: '' });
+    expect(markdownShortcut('### ')).toEqual({ type: 'subsubheading', content: '' });
   });
   it('maps list prefixes', () => {
     expect(markdownShortcut('- ')?.type).toBe('bullet');

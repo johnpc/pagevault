@@ -1,11 +1,11 @@
 import type { BlockRecord } from '../../lib/pbClient';
 
 /** One entry in a table of contents: a heading block's id, its text, and a
- * level (1 = heading, 2 = subheading) for indentation. */
+ * level (1 = heading, 2 = subheading, 3 = sub-subheading) for indentation. */
 export interface TocEntry {
   id: string;
   text: string;
-  level: 1 | 2;
+  level: 1 | 2 | 3;
 }
 
 /** The DOM id an anchor uses for a block row, so a TOC link can scroll to it. */
@@ -20,11 +20,12 @@ export function blockAnchorId(blockId: string): string {
 export function tableOfContents(blocks: BlockRecord[]): TocEntry[] {
   const entries: TocEntry[] = [];
   for (const b of blocks) {
-    const level = b.type === 'heading' ? 1 : b.type === 'subheading' ? 2 : 0;
+    const level =
+      b.type === 'heading' ? 1 : b.type === 'subheading' ? 2 : b.type === 'subsubheading' ? 3 : 0;
     if (level === 0) continue;
     const text = b.content.trim();
     if (text === '') continue;
-    entries.push({ id: b.id, text, level: level as 1 | 2 });
+    entries.push({ id: b.id, text, level: level as 1 | 2 | 3 });
   }
   return entries;
 }

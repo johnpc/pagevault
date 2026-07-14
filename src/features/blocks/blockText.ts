@@ -7,6 +7,8 @@ export function placeholderFor(type: BlockType): string {
       return 'Heading';
     case 'subheading':
       return 'Subheading';
+    case 'subsubheading':
+      return 'Sub-subheading';
     case 'todo':
       return 'To-do';
     case 'quote':
@@ -35,6 +37,7 @@ export const TYPE_ORDER: BlockType[] = [
   'text',
   'heading',
   'subheading',
+  'subsubheading',
   'bullet',
   'numbered',
   'todo',
@@ -58,7 +61,7 @@ export function cycleType(type: BlockType): BlockType {
 const SHORTCUTS: { prefix: RegExp; type: BlockType }[] = [
   { prefix: /^# $/, type: 'heading' },
   { prefix: /^## $/, type: 'subheading' },
-  { prefix: /^### $/, type: 'subheading' },
+  { prefix: /^### $/, type: 'subsubheading' },
   { prefix: /^[-*] $/, type: 'bullet' },
   { prefix: /^1\. $/, type: 'numbered' },
   { prefix: /^\[\] $/, type: 'todo' },

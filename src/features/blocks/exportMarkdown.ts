@@ -27,6 +27,7 @@ function columnsToMarkdown(data: ColumnsData | null): string {
 const PREFIX: Partial<Record<BlockRecord['type'], (t: string) => string>> = {
   heading: (t) => `# ${t}`,
   subheading: (t) => `## ${t}`,
+  subsubheading: (t) => `### ${t}`,
   bullet: (t) => `- ${t}`,
   quote: (t) => `> ${t}`,
   image: (t) => `![](${t})`,

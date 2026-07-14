@@ -21,6 +21,7 @@ describe('blockToMarkdown', () => {
   it('renders headings, lists, todos, quote, code, divider, text', () => {
     expect(blockToMarkdown(blk('heading', 'Title'))).toBe('# Title');
     expect(blockToMarkdown(blk('subheading', 'Sub'))).toBe('## Sub');
+    expect(blockToMarkdown(blk('subsubheading', 'Sub3'))).toBe('### Sub3');
     expect(blockToMarkdown(blk('bullet', 'Item'))).toBe('- Item');
     expect(blockToMarkdown(blk('numbered', 'First'), 1)).toBe('1. First');
     expect(blockToMarkdown(blk('numbered', 'Third'), 3)).toBe('3. Third');
