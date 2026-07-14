@@ -1,5 +1,5 @@
 import { createBdd } from 'playwright-bdd';
-import { expect } from '@playwright/test';
+import { expect, type Page } from '@playwright/test';
 
 const { Given, When, Then } = createBdd();
 
@@ -45,4 +45,51 @@ Then('the block editor is shown', async ({ page }) => {
   const title = page.locator('.ion-page:not(.ion-page-hidden)').getByLabel('Page title');
   await expect(title).toBeVisible();
   await expect(title).toHaveValue('');
+});
+
+const active = (page: Page) => page.locator('.ion-page:not(.ion-page-hidden)').last();
+
+// Drive the Pointer Events path (pointerType touch) the native HTML5 drag can't:
+// press the row's drag handle, move over the target row, release.
+When('I touch-drag block {int} onto block {int}', async ({ page }, from: number, to: number) => {
+  const handle = active(page)
+    .locator('.pv-block-style')
+    .nth(from - 1);
+  const target = active(page)
+    .locator('.pv-block')
+    .nth(to - 1);
+  const hb = await handle.boundingBox();
+  const tb = await target.boundingBox();
+  if (!hb || !tb) throw new Error('missing drag handle or target row');
+  await handle.dispatchEvent('pointerdown', {
+    pointerType: 'touch',
+    pointerId: 1,
+    clientX: hb.x + hb.width / 2,
+    clientY: hb.y + hb.height / 2,
+    bubbles: true,
+  });
+  const cx = tb.x + tb.width / 2;
+  const cy = tb.y + tb.height / 2;
+  for (const t of ['pointermove', 'pointerup']) {
+    await page.evaluate(
+      ({ t, cx, cy }) => {
+        const e = new Event(t, { bubbles: true }) as Event & { clientX: number; clientY: number };
+        e.clientX = cx;
+        e.clientY = cy;
+        document.dispatchEvent(e);
+      },
+      { t, cx, cy },
+    );
+  }
+});
+
+Then('block {int} contains {string}', async ({ page }, n: number, text: string) => {
+  await expect
+    .poll(() =>
+      active(page)
+        .locator('textarea.pv-block-input')
+        .nth(n - 1)
+        .inputValue(),
+    )
+    .toBe(text);
 });

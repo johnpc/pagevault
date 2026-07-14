@@ -17,3 +17,14 @@ Feature: Mobile sidebar drawer
     And I create a page from the drawer
     Then the block editor is shown
     And the sidebar drawer is closed
+
+  Scenario: Reorder blocks by touch-dragging the handle
+    Given I am signed in on a phone-sized screen
+    When I open the sidebar drawer
+    And I create a page from the drawer
+    And I focus the first block
+    And I type "First" then Enter
+    And I type "Second"
+    Then the page has 2 blocks
+    When I touch-drag block 1 onto block 2
+    Then block 1 contains "Second"
