@@ -1,8 +1,8 @@
-import { useRef, type ClipboardEvent } from 'react';
+import { useRef } from 'react';
 import type { BlockRecord } from '../../lib/pbClient';
 import { hasInlineMarkup } from './inlineMarkdown';
-import { looksLikeMarkdown } from './markdownImport';
 import { useBlockInput } from './useBlockInput';
+import { useBlockPaste } from './useBlockPaste';
 import { useMention } from './useMention';
 import { useAutoFocus } from './useAutoFocus';
 import { useSeedValue } from './useSeedValue';
@@ -53,14 +53,7 @@ export function TextBlockBody({
     if (!mention.onKeyDown(e)) keyDown(e);
   };
 
-  // Pasting multi-line / markdown-y text into an empty block imports it as blocks.
-  const onPaste = (e: ClipboardEvent<HTMLTextAreaElement>) => {
-    const text = e.clipboardData.getData('text/plain');
-    if (value === '' && looksLikeMarkdown(text)) {
-      e.preventDefault();
-      onPasteMarkdown(text);
-    }
-  };
+  const onPaste = useBlockPaste(block.type === 'code', value, setValue, onPasteMarkdown);
 
   // A Backspace-merge seeds the absorbing block's value (see useSeedValue), then
   // we focus it with the caret at the join (or the end, for an Enter-created one).

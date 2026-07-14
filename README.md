@@ -104,6 +104,7 @@ account, no third-party service, no lock-in.
 | Bookmark blocks — rich link cards (title, blurb, thumbnail, favicon; scraped)    | ✅     |
 | Video/audio embed — media files + YouTube, Vimeo, Spotify, Loom, CodePen, Figma  | ✅     |
 | Inline links — `[text](url)` and bare URLs render as clickable links             | ✅     |
+| Link on paste — select text, paste a URL → it becomes a `[text](url)` link       | ✅     |
 | Image blocks (embed by URL)                                                      | ✅     |
 | Image uploads (stored in PocketBase, served same-origin)                         | ✅     |
 | Quick-find search (⌘K, ranked, match-highlighted, titles + content)              | ✅     |

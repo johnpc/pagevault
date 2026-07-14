@@ -1,7 +1,7 @@
 import { createBdd } from 'playwright-bdd';
 import { expect, type Page } from '@playwright/test';
 
-const { When } = createBdd();
+const { When, Then } = createBdd();
 
 const active = (page: Page) =>
   page.locator('.ion-page:not(.ion-page-hidden)').filter({ visible: true }).last();
@@ -43,3 +43,29 @@ When('I paste the markdown:', async ({ page, context }, markdown: string) => {
     })
     .toBeGreaterThan(before);
 });
+
+// Type into a fresh block, then select all of it and paste a URL — exercising
+// the "paste a URL over a selection → markdown link" gesture.
+When(
+  'I select all and paste the url {string} onto {string}',
+  async ({ page, context }, url: string, text: string) => {
+    await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+    await active(page).getByRole('button', { name: '+ Add a block' }).click();
+    const input = blockInputs(page).last();
+    await input.click();
+    await input.pressSequentially(text);
+    await input.press('ControlOrMeta+a');
+    await page.evaluate((u) => navigator.clipboard.writeText(u), url);
+    await input.press('ControlOrMeta+v');
+    await input.blur();
+  },
+);
+
+Then(
+  'the block renders a link {string} to {string}',
+  async ({ page }, text: string, href: string) => {
+    const link = active(page).locator('.pv-block-preview a.pv-link', { hasText: text }).first();
+    await expect(link).toBeVisible();
+    await expect(link).toHaveAttribute('href', href);
+  },
+);
