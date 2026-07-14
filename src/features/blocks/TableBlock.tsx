@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import type { BlockRecord } from '../../lib/pbClient';
 import type { TableData } from '../../lib/pbTypes';
 import { usePages } from '../pages/pagesApi';
@@ -22,21 +22,34 @@ export function TableBlock({
   block: BlockRecord;
   onEdit: (id: string, patch: Partial<BlockRecord>) => void;
 }) {
-  const data = normalize(block.data as TableData | null);
-  const save = (next: TableData) => onEdit(block.id, { data: next });
-  // Map page id → title so relation cells sort/filter/summarize by name.
+  // Normalize only when the stored data actually changes — a presence heartbeat
+  // or sibling edit re-renders this block, and rebuilding every row/column array
+  // each time would churn the whole grid.
+  const data = useMemo(() => normalize(block.data as TableData | null), [block.data]);
+  const save = useCallback(
+    (next: TableData) => onEdit(block.id, { data: next }),
+    [onEdit, block.id],
+  );
+  // Map page id → title so relation cells sort/filter/summarize by name. Memoized
+  // on the page list so a stable object flows into the grid between edits.
   const pages = usePages();
-  const titles: TitleMap = {};
-  for (const p of pages.data ?? []) titles[p.id] = displayTitle(p);
+  const titles: TitleMap = useMemo(() => {
+    const map: TitleMap = {};
+    for (const p of pages.data ?? []) map[p.id] = displayTitle(p);
+    return map;
+  }, [pages.data]);
   // Which column is sorted, and which way — transient (not persisted); a click
   // cycles asc → desc and rewrites the stored row order.
   const [sort, setSort] = useState<{ col: number; dir: 'asc' | 'desc' } | null>(null);
 
-  const onSort = (col: number) => {
-    const dir = sort?.col === col && sort.dir === 'asc' ? 'desc' : 'asc';
-    setSort({ col, dir });
-    save(sortByColumn(data, col, dir, titles));
-  };
+  const onSort = useCallback(
+    (col: number) => {
+      const dir = sort?.col === col && sort.dir === 'asc' ? 'desc' : 'asc';
+      setSort({ col, dir });
+      save(sortByColumn(data, col, dir, titles));
+    },
+    [sort, save, data, titles],
+  );
 
   const view = data.view ?? 'table';
   return (
