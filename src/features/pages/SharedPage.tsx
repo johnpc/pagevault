@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { usePublicPage, usePublicBlocks } from './sharingApi';
 import { displayTitle } from './pageTree';
 import { coverBackground } from './coverSource';
-import { FormattedText } from '../blocks/FormattedText';
+import { SharedBlock } from './SharedBlock';
 import { LoadState } from '../shell/LoadState';
 import './SharedPage.css';
 
@@ -35,7 +35,7 @@ export function SharedPage() {
                 </h1>
                 {(blocks.data ?? []).map((b) => (
                   <div key={b.id} className={`pv-block pv-block--${b.type}`}>
-                    {b.type === 'divider' ? <hr /> : <FormattedText text={b.content} />}
+                    <SharedBlock block={b} />
                   </div>
                 ))}
                 <footer className="pv-shared-foot pv-muted">Shared with PageVault</footer>
