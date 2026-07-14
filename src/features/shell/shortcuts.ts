@@ -19,6 +19,7 @@ export const SHORTCUTS: Shortcut[] = [
     action: 'Wrap selection: bold / italic / code / underline ( ⇧⌘S strikethrough )',
   },
   { keys: '⌘D / Ctrl+D', action: 'Duplicate the current block' },
+  { keys: '⌘⇧↑ / ↓', action: 'Move the current block up / down' },
   { keys: 'Enter', action: 'Add a new block below' },
   { keys: '↑ / ↓', action: 'Move the caret to the block above / below (at a block edge)' },
   {

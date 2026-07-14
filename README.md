@@ -95,6 +95,7 @@ account, no third-party service, no lock-in.
 | Duplicate a block (inserts below; ⌘D / Ctrl+D or the block menu)                 | ✅     |
 | Nested lists — Tab / Shift-Tab to indent & outdent blocks                        | ✅     |
 | Drag-to-reorder blocks (optimistic; mouse drag + touch/pen pointer drag)         | ✅     |
+| Move a block up/down with the keyboard (⌘/Ctrl+⇧+↑/↓)                            | ✅     |
 | Select multiple blocks — Shift+↑/↓, Shift+Click, or Cmd/Ctrl+A — delete/indent   | ✅     |
 | Undo a block deletion — an Undo action on the delete toast restores them         | ✅     |
 | Arrow-key block navigation — ↑/↓ at a block edge move the caret between blocks   | ✅     |

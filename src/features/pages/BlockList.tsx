@@ -21,6 +21,7 @@ interface BlockListProps {
   onMerge: (id: string, value: string) => boolean;
   onMergeForward: (id: string, value: string) => boolean;
   onUpload: (id: string, file: File) => void;
+  onMoveBlock: (fromId: string, toId: string) => void;
   onAddBlock: (type?: BlockType) => void;
   onSubPage: () => void;
   focusId: string | null;

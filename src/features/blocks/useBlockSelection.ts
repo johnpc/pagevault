@@ -7,6 +7,7 @@ import {
 } from './blockSelection';
 import { handoffSelection, isSelectAllBlocks } from './selectionHandoff';
 import { useActiveSelectionKeys } from './useActiveSelectionKeys';
+import { handleMoveBlockKey } from './moveBlockKey';
 
 /**
  * Keyboard multi-block selection for the block list (Notion-style).
@@ -29,6 +30,8 @@ import { useActiveSelectionKeys } from './useActiveSelectionKeys';
 interface SelectionActions {
   onDeleteMany: (ids: string[]) => void;
   onIndentMany: (ids: string[], dir: 'in' | 'out') => void;
+  /** Move a single block before/after its neighbor (Cmd/Ctrl+Shift+↑/↓). */
+  onMoveBlock?: (fromId: string, toId: string) => void;
 }
 
 export function useBlockSelection(ids: string[], actions: SelectionActions) {
@@ -55,12 +58,13 @@ export function useBlockSelection(ids: string[], actions: SelectionActions) {
     (document.activeElement as HTMLElement | null)?.blur();
   }, [ids.length]);
 
-  // Container keydown: the textarea→selection handoff (Shift+Arrow) and the
-  // Cmd/Ctrl+A "select all blocks" escalation live here.
+  // Container keydown from a block textarea: block-move (Cmd/Ctrl+Shift+↑/↓),
+  // select-all escalation (Cmd/Ctrl+A), and the Shift+Arrow selection handoff.
   const onKeyDown = useCallback(
     (e: KeyboardEvent) => {
       const el = e.target;
       if (sel || !(el instanceof HTMLTextAreaElement)) return;
+      if (handleMoveBlockKey(e, el, ids, actions.onMoveBlock)) return;
       if (isSelectAllBlocks(e, el.value, el.selectionStart, el.selectionEnd)) {
         e.preventDefault();
         e.nativeEvent.stopImmediatePropagation();
@@ -77,7 +81,7 @@ export function useBlockSelection(ids: string[], actions: SelectionActions) {
       el.blur();
       setSel(next);
     },
-    [sel, ids, selectAll],
+    [sel, ids, selectAll, actions],
   );
 
   // While active, own the nav/delete/indent/select-all keys at the document level.

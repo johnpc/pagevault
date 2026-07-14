@@ -345,6 +345,21 @@ When(
   },
 );
 
+When('I move the block {string} up with the keyboard', async ({ page }, text: string) => {
+  // A textarea's value isn't matched by hasText, so find it by evaluating each,
+  // then focus it and press Cmd/Ctrl+Shift+↑ to move it up.
+  const inputs = active(page).locator('textarea.pv-block-input');
+  const count = await inputs.count();
+  for (let i = 0; i < count; i++) {
+    const val = await inputs.nth(i).evaluate((el) => (el as HTMLTextAreaElement).value);
+    if (val.includes(text)) {
+      await inputs.nth(i).click();
+      await inputs.nth(i).press('ControlOrMeta+Shift+ArrowUp');
+      return;
+    }
+  }
+});
+
 Then('the first block should contain {string}', async ({ page }, text: string) => {
   await expect
     .poll(() =>
