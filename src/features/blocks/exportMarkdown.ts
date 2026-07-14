@@ -1,21 +1,8 @@
 import type { BlockRecord, PageRecord } from '../../lib/pbClient';
 import type { TableData, ColumnsData } from '../../lib/pbTypes';
 import { displayTitle } from '../pages/pageTree';
-import { normalize } from './tableData';
+import { tableToMarkdown } from './tableMarkdown';
 import { normalizeColumns } from './columnsData';
-
-/** A GFM table from a block's grid data. Checkbox cells render as ✓ / blank.
- * Pure. */
-function tableToMarkdown(data: TableData | null): string {
-  const { columns, rows } = normalize(data);
-  const line = (cells: string[]) => `| ${cells.join(' | ')} |`;
-  const header = line(columns.map((c) => c.name));
-  const divider = `| ${columns.map(() => '---').join(' | ')} |`;
-  const cell = (value: string, colIdx: number) =>
-    columns[colIdx]?.type === 'checkbox' ? (value === 'true' ? '✓' : '') : value;
-  const body = rows.map((r) => line(r.map(cell)));
-  return [header, divider, ...body].join('\n');
-}
 
 /** Columns flatten to their contents separated by a rule — Markdown has no
  * native side-by-side layout. Pure. */
