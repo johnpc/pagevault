@@ -102,6 +102,33 @@ Then('the block containing {string} is focused', async ({ page }, text: string) 
     .toBe(text);
 });
 
+When('I edit the first block to say {string}', async ({ page }, text: string) => {
+  const input = inputs(page).first();
+  await input.click();
+  await expect(focused(page)).toBeVisible(); // ensure the field is focused before editing
+  await input.fill(text);
+  await expect(input).toHaveValue(text);
+  // Blur so the edit commits + is recorded in history (undo works on committed
+  // edits); wait until focus has actually left before the next action.
+  await active(page)
+    .locator('.pv-page')
+    .click({ position: { x: 5, y: 5 } });
+  await expect(focused(page)).toHaveCount(0);
+});
+
+When('I press undo', ({ page }) => page.keyboard.press('ControlOrMeta+z'));
+When('I press redo', ({ page }) => page.keyboard.press('ControlOrMeta+Shift+z'));
+
+Then('the first block eventually says {string}', async ({ page }, text: string) => {
+  await expect
+    .poll(() =>
+      inputs(page)
+        .first()
+        .evaluate((el) => (el as HTMLTextAreaElement).value),
+    )
+    .toBe(text);
+});
+
 Then('the document has a {string} block that is empty', async ({ page }, type: string) => {
   await expect
     .poll(() =>

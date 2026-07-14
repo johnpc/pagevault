@@ -63,3 +63,14 @@ Feature: Smooth keyboard editing
     And the document has a "bullet" block containing "Eggs"
     When I press Enter on the empty list item
     Then the document has a "text" block that is empty
+
+  Scenario: Undo and redo a block edit with Cmd/Ctrl+Z
+    Given I have a page titled "Undo feel"
+    When I open the page "Undo feel"
+    And I focus the first block
+    And I edit the first block to say "first version"
+    And I edit the first block to say "second version"
+    And I press undo
+    Then the first block eventually says "first version"
+    When I press redo
+    Then the first block eventually says "second version"
