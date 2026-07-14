@@ -3,6 +3,8 @@ import { edgeArrowDir, focusAdjacentBlock } from './arrowNav';
 
 interface EditKeyDeps {
   value: string;
+  /** True for a code block, where Tab inserts spaces instead of indenting. */
+  isCode: boolean;
   onIndent: (dir: 'in' | 'out') => void;
   onEnter: (caret: number, value: string) => boolean;
   onRemove: () => void;
@@ -47,6 +49,19 @@ function enterKey(e: Evt, d: EditKeyDeps) {
   d.setValue(d.value.slice(0, caret));
 }
 
+// Tab inside a code block inserts two spaces at the caret (real code indent),
+// replacing any selection, and restores the caret after them. Shift+Tab is left
+// to the browser (a code block has no block-outdent meaning).
+function tabInCode(e: Evt, d: EditKeyDeps) {
+  if (e.shiftKey) return;
+  e.preventDefault();
+  const el = e.currentTarget;
+  const { selectionStart: s, selectionEnd: en } = el;
+  const next = d.value.slice(0, s) + '  ' + d.value.slice(en);
+  d.setValue(next);
+  requestAnimationFrame(() => el.setSelectionRange(s + 2, s + 2));
+}
+
 // A plain arrow at a block edge moves the caret to the adjacent block.
 function arrowKey(e: Evt) {
   const el = e.currentTarget;
@@ -61,6 +76,7 @@ function arrowKey(e: Evt) {
 export function makeEditKey(deps: EditKeyDeps) {
   return (e: Evt) => {
     if (e.key === 'Tab') {
+      if (deps.isCode) return tabInCode(e, deps);
       e.preventDefault();
       deps.onIndent(e.shiftKey ? 'out' : 'in');
     } else if (e.key === 'Enter' && !e.shiftKey) enterKey(e, deps);

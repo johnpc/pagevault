@@ -60,6 +60,7 @@ export function useBlockInput(
   // Tab/Enter/Backspace/edge-arrow handling (see makeEditKey).
   const editKey = makeEditKey({
     value,
+    isCode: block.type === 'code',
     onIndent,
     onEnter,
     onRemove: () => onRemove(block.id),

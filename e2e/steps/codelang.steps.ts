@@ -32,3 +32,17 @@ Then('the code block is syntax-highlighted', async ({ page }) => {
     })
     .toBeGreaterThan(0);
 });
+
+When('I press Tab in the code block', async ({ page }) => {
+  await codeBlock(page).locator('textarea.pv-block-input').press('Tab');
+});
+
+Then('the code block starts with two spaces', async ({ page }) => {
+  await expect
+    .poll(() =>
+      codeBlock(page)
+        .locator('textarea.pv-block-input')
+        .evaluate((el) => (el as HTMLTextAreaElement).value),
+    )
+    .toMatch(/^ {2}/);
+});
