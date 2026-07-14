@@ -72,6 +72,7 @@ account, no third-party service, no lock-in.
 | Live sync across open tabs/devices (PocketBase realtime)                       | ✅     |
 | Light / dark / system theme (Settings switcher)                                | ✅     |
 | Skeleton loading placeholders on list screens (sidebar, trash)                 | ✅     |
+| Save-failure toast — a failed change tells you instead of silently reverting   | ✅     |
 | Keyboard shortcut help overlay (?)                                             | ✅     |
 | Accessible popovers — Escape/outside-click close, focus-trapped while open     | ✅     |
 | Toggle the sidebar with ⌘\ / Ctrl+\ (floating restore button)                  | ✅     |
