@@ -34,3 +34,23 @@ Feature: Collaborate on a page via an invite link
     And the second user joins the page
     And the second user appends " hacked" to the first block
     Then the second user's first block still reads "Locked" after reload
+
+  Scenario: A comment-role collaborator reads the thread and can post
+    Given I have a page titled "Discussion"
+    When I open the page "Discussion"
+    And I add the comment "owner kicks off"
+    And I create an invite link that can "comment"
+    When a second user opens the invite link
+    And the second user joins the page
+    Then the second user sees the comment "owner kicks off"
+    When the second user posts the comment "collaborator replies"
+    Then the second user sees the comment "collaborator replies" after reload
+
+  Scenario: A view-role collaborator cannot post comments
+    Given I have a page titled "No comments"
+    When I open the page "No comments"
+    And I create an invite link that can "view"
+    When a second user opens the invite link
+    And the second user joins the page
+    And the second user posts the comment "sneaky note"
+    Then the second user does not see the comment "sneaky note" after reload

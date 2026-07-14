@@ -77,6 +77,47 @@ Then(
   },
 );
 
+const collabPanel = (tab: Page) => active(tab).locator('.pv-comments');
+
+Then('the second user sees the comment {string}', async ({ page }, body: string) => {
+  void page;
+  const tab = collabTab;
+  if (!tab) throw new Error('second user tab was not opened');
+  await expect(collabPanel(tab).locator('.pv-comment', { hasText: body }).first()).toBeVisible();
+});
+
+When('the second user posts the comment {string}', async ({ page }, body: string) => {
+  void page;
+  const tab = collabTab;
+  if (!tab) throw new Error('second user tab was not opened');
+  const box = collabPanel(tab).getByLabel('Add a comment');
+  await box.fill(body);
+  await active(tab).getByRole('button', { name: 'Comment', exact: true }).click();
+  await tab.waitForTimeout(800);
+});
+
+Then('the second user sees the comment {string} after reload', async ({ page }, body: string) => {
+  void page;
+  const tab = collabTab;
+  if (!tab) throw new Error('second user tab was not opened');
+  await tab.reload();
+  await expect(collabPanel(tab).locator('.pv-comment', { hasText: body }).first()).toBeVisible({
+    timeout: 15_000,
+  });
+});
+
+Then(
+  'the second user does not see the comment {string} after reload',
+  async ({ page }, body: string) => {
+    void page;
+    const tab = collabTab;
+    if (!tab) throw new Error('second user tab was not opened');
+    await tab.reload();
+    await tab.waitForTimeout(2000);
+    await expect(collabPanel(tab).locator('.pv-comment', { hasText: body })).toHaveCount(0);
+  },
+);
+
 Then('the second user sees a block containing {string}', async ({ page }, text: string) => {
   void page; // the assertion targets the second user's tab, not the fixture page
   const tab = collabTab;
