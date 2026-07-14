@@ -17,7 +17,7 @@ beforeEach(() => {
   }
 });
 
-// Mock matchMedia (Ionic + theme code query it).
+// Mock matchMedia (Ionic + theme code + useIsMobile query it).
 window.matchMedia =
   window.matchMedia ||
   function () {
@@ -25,5 +25,7 @@ window.matchMedia =
       matches: false,
       addListener: function () {},
       removeListener: function () {},
+      addEventListener: function () {},
+      removeEventListener: function () {},
     };
   };
