@@ -29,6 +29,17 @@ Feature: Table (database) blocks
     When I press Shift+Enter in the table
     Then table cell "1,1" is focused
 
+  Scenario: Reorder rows by touch-dragging the row handle
+    Given I have a page titled "Row order"
+    When I type "/table" into a new block
+    And I choose "Table" from the slash menu
+    And I fill table cell "1,1" with "Alpha"
+    And I add a table row
+    And I fill table cell "2,1" with "Beta"
+    Then table cell "1,1" contains "Alpha"
+    When I touch-drag table row 1 onto row 2
+    Then table cell "1,1" contains "Beta"
+
   Scenario: Duplicate a row and see the copy persist
     Given I have a page titled "Dupes"
     When I type "/table" into a new block
