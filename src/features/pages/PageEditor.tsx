@@ -20,7 +20,8 @@ export function PageEditor() {
   const { page, blocks, allPages, ...ed } = usePageEditor(id);
   const { setTitle, setIcon, setFavorite, setCover, setCoverImage, setParent, setFullWidth } = ed;
   const { setFont } = ed;
-  const { addBlock, editBlock, removeBlock, removeBlocks, cloneBlock, indentBlock } = ed;
+  const { addBlock, editBlock, removeBlock, removeBlocks, cloneBlock, indentBlock, indentMany } =
+    ed;
   const { importMarkdown } = ed;
   const { splitBlock, uploadImage, focusId, clearFocusId, moveBlockTo } = ed;
   const { removePage, addSubPage, duplicate, exportMarkdown } = ed;
@@ -75,6 +76,7 @@ export function PageEditor() {
                   onEdit={editBlock}
                   onRemove={removeBlock}
                   onRemoveMany={removeBlocks}
+                  onIndentMany={indentMany}
                   onDuplicate={cloneBlock}
                   onIndent={indentBlock}
                   onPasteMarkdown={importMarkdown}

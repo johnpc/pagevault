@@ -42,3 +42,16 @@ Feature: Select and delete multiple blocks
     When I select all blocks with the select-all shortcut
     And I press Backspace to delete the selection
     Then the page has 0 blocks
+
+  Scenario: Tab indents a whole block selection
+    Given I have a page titled "Indent many"
+    When I open the page "Indent many"
+    And I focus the first block
+    And I type "Parent" then Enter
+    And I type "Child A" then Enter
+    And I type "Child B"
+    Then the page has 3 blocks
+    When I click into block 2
+    And I shift-click block 3
+    And I press Tab to indent the selection
+    Then blocks 2 and 3 are indented

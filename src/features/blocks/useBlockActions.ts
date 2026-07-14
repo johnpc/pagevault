@@ -1,10 +1,10 @@
 import { useCallback, useState } from 'react';
 import { useCreateBlock, useDeleteBlock, useDuplicateBlock } from './blocksApi';
-import { useReorderBlocks } from './blockBatchApi';
+import { useSetDepths } from './blockBatchApi';
 import { useUpdateBlock } from './updateBlockApi';
 import { useUploadBlockFile } from './uploadBlockFileApi';
-import { moveBlock, sortUpdates } from './reorder';
-import { indentDepth } from './indent';
+import { useMoveBlock } from './useMoveBlock';
+import { indentUpdates } from './indent';
 import { useImportMarkdown } from './markdownImportApi';
 import { markdownToBlocks } from './markdownImport';
 import { useEnterSplit } from './useEnterSplit';
@@ -19,8 +19,9 @@ export function useBlockActions(pageId: string, blocks: BlockRecord[]) {
   const createBlock = useCreateBlock(pageId);
   const updateBlock = useUpdateBlock(pageId);
   const deleteBlock = useDeleteBlock(pageId);
-  const reorderBlocks = useReorderBlocks(pageId);
+  const setDepths = useSetDepths(pageId);
   const duplicateBlock = useDuplicateBlock(pageId);
+  const moveBlockTo = useMoveBlock(pageId, blocks);
   const uploadFile = useUploadBlockFile(pageId);
   const importMd = useImportMarkdown(pageId);
   // id of the block that should grab focus next (the one just created by Enter).
@@ -40,28 +41,22 @@ export function useBlockActions(pageId: string, blocks: BlockRecord[]) {
     [updateBlock],
   );
 
-  const moveBlockTo = useCallback(
-    (fromId: string, toId: string) => {
-      const reordered = moveBlock(blocks, fromId, toId);
-      const updates = sortUpdates(reordered);
-      if (updates.length) reorderBlocks.mutate({ reordered, updates });
-    },
-    [blocks, reorderBlocks],
-  );
-
   const cloneBlock = useCallback(
     (source: BlockRecord) => duplicateBlock.mutate({ source, blocks }),
     [duplicateBlock, blocks],
   );
 
-  const indentBlock = useCallback(
-    (id: string, dir: 'in' | 'out') => {
-      const index = blocks.findIndex((b) => b.id === id);
-      if (index === -1) return;
-      const depth = indentDepth(blocks, index, dir);
-      if (depth !== (blocks[index].depth ?? 0)) updateBlock.mutate({ id, patch: { depth } });
+  const indentMany = useCallback(
+    (ids: string[], dir: 'in' | 'out') => {
+      const updates = indentUpdates(blocks, ids, dir);
+      if (updates.length) setDepths.mutate(updates);
     },
-    [blocks, updateBlock],
+    [blocks, setDepths],
+  );
+  // Single-block indent is just a one-id batch (same maxDepthAt cap logic).
+  const indentBlock = useCallback(
+    (id: string, dir: 'in' | 'out') => indentMany([id], dir),
+    [indentMany],
   );
 
   const importMarkdown = useCallback(
@@ -85,6 +80,7 @@ export function useBlockActions(pageId: string, blocks: BlockRecord[]) {
     moveBlockTo,
     cloneBlock,
     indentBlock,
+    indentMany,
     importMarkdown,
     splitBlock,
     uploadImage,

@@ -8,6 +8,7 @@ interface BlockRowsProps {
   onEdit: (id: string, patch: Partial<BlockRecord>) => void;
   onRemove: (id: string) => void;
   onRemoveMany: (ids: string[]) => void;
+  onIndentMany: (ids: string[], dir: 'in' | 'out') => void;
   onDuplicate: (block: BlockRecord) => void;
   onIndent: (id: string, dir: 'in' | 'out') => void;
   onPasteMarkdown: (block: BlockRecord, text: string) => void;
@@ -22,9 +23,12 @@ interface BlockRowsProps {
  * Delete to remove the range); a click anywhere clears it. Rows carry
  * data-block-index so a textarea handoff knows its position. */
 export function BlockRows(props: BlockRowsProps) {
-  const { visible, onRemoveMany, ...row } = props;
+  const { visible, onRemoveMany, onIndentMany, ...row } = props;
   const ids = visible.map((b) => b.id);
-  const selection = useBlockSelection(ids, onRemoveMany);
+  const selection = useBlockSelection(ids, {
+    onDeleteMany: onRemoveMany,
+    onIndentMany,
+  });
 
   // A plain mousedown clears an active selection; a Shift+mousedown extends the
   // block selection to the clicked row (and suppresses the browser's text

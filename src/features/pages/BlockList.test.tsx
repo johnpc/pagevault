@@ -53,6 +53,7 @@ const renderList = (data: BlockRecord[]) =>
       onEdit={vi.fn()}
       onRemove={vi.fn()}
       onRemoveMany={vi.fn()}
+      onIndentMany={vi.fn()}
       onDuplicate={vi.fn()}
       onIndent={vi.fn()}
       onPasteMarkdown={vi.fn()}
