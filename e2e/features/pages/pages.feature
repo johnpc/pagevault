@@ -99,6 +99,13 @@ Feature: Pages and blocks
     And I duplicate the first block
     Then I should see 2 blocks containing "repeat me"
 
+  Scenario: Duplicate a block with Cmd/Ctrl+D
+    Given I have a page titled "KeyDupes"
+    When I open the page "KeyDupes"
+    And I add a block with the text "clone me"
+    And I duplicate the focused block with the keyboard
+    Then I should see 2 blocks containing "clone me"
+
   Scenario: Reorder blocks by dragging
     Given I have a page titled "Agenda"
     When I open the page "Agenda"

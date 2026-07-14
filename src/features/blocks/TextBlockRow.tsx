@@ -52,6 +52,7 @@ export function TextBlockRow({
         block={block}
         onEdit={onEdit}
         onRemove={onRemove}
+        onDuplicate={() => onDuplicate(block)}
         onEnter={(caret, value) => onSplit(block, caret, value)}
         onIndent={(dir) => onIndent(block.id, dir)}
         onMerge={(value) => onMerge(block.id, value)}

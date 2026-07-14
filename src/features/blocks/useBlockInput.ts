@@ -21,6 +21,7 @@ export function useBlockInput(
   onIndent: (dir: 'in' | 'out') => void,
   onMerge: (value: string) => boolean,
   onMergeForward: (value: string) => boolean,
+  onDuplicate?: () => void,
 ) {
   const [active, setActive] = useState(0);
   const [focused, setFocused] = useState(false);
@@ -69,7 +70,13 @@ export function useBlockInput(
 
   const keyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (slashKey(e)) return;
-    // Cmd/Ctrl+B/I/E wraps the selection in the matching markdown marker.
+    // Cmd/Ctrl+D duplicates the whole block (Notion parity), before format keys.
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'd' && onDuplicate) {
+      e.preventDefault();
+      onDuplicate();
+      return;
+    }
+    // Cmd/Ctrl+B/I/E/U + Shift+S wraps the selection in the matching marker.
     if (applyFormatKey(e, value, block.type === 'code', setValue)) return;
     editKey(e);
   };

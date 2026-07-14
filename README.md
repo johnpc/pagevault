@@ -92,7 +92,7 @@ account, no third-party service, no lock-in.
 | Page comments — timestamped notes on a page (Cmd/Ctrl+Enter to post)             | ✅     |
 | Block color & background highlight (text + `-bg` palette)                        | ✅     |
 | Block text alignment (left / center / right)                                     | ✅     |
-| Duplicate a block (inserts below)                                                | ✅     |
+| Duplicate a block (inserts below; ⌘D / Ctrl+D or the block menu)                 | ✅     |
 | Nested lists — Tab / Shift-Tab to indent & outdent blocks                        | ✅     |
 | Drag-to-reorder blocks (optimistic; mouse drag + touch/pen pointer drag)         | ✅     |
 | Select multiple blocks — Shift+↑/↓, Shift+Click, or Cmd/Ctrl+A — delete/indent   | ✅     |
