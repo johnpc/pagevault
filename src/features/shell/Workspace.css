@@ -11,9 +11,11 @@
   overflow: hidden;
 }
 
-/* On a phone the sidebar would crowd the editor; collapse it to a slim rail.
-   (A full drawer toggle is a follow-up slice — the desktop/PWA layout is the
-   primary target per the project charter.) */
+/* On a phone the sidebar would crowd the editor; collapse it to a slim icon
+   rail. Every action stays reachable — we hide only the text *labels* (and the
+   ⌘K hint), not the buttons, so New page / Search / Trash / Settings / Sign out
+   remain tappable as icons. (A full slide-over drawer is a follow-up slice; the
+   desktop/PWA layout is the primary target per the project charter.) */
 @media (max-width: 640px) {
   .pv-sidebar {
     width: 56px;
@@ -22,9 +24,18 @@
   .pv-sidebar-title,
   .pv-sidebar-user,
   .pv-heading,
+  .pv-label,
+  .pv-kbd {
+    display: none;
+  }
+  /* Center the surviving icons in the narrow rail. */
+  .pv-search,
   .pv-new-page,
   .pv-signout {
-    display: none;
+    justify-content: center;
+    text-align: center;
+    padding-left: 0;
+    padding-right: 0;
   }
 }
 

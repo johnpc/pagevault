@@ -8,13 +8,14 @@ import { LoadState } from '../shell/LoadState';
 import { SidebarRow } from './SidebarRow';
 import { usePageDnd } from './usePageDnd';
 import { useAuth } from '../auth/useAuth';
+import { SidebarFooter } from './SidebarFooter';
 import './Sidebar.css';
 
 /** The left rail: workspace title, search, the page tree, "New page", sign-out. */
 export function Sidebar({ onSearch, onHelp }: { onSearch: () => void; onHelp: () => void }) {
   const history = useHistory();
   const { id } = useParams<{ id?: string }>();
-  const { signOut, user } = useAuth();
+  const { user } = useAuth();
   const { data: pages, isLoading, isError, refetch } = usePages();
   const create = useCreatePage();
   const dnd = usePageDnd(pages ?? []);
@@ -41,13 +42,20 @@ export function Sidebar({ onSearch, onHelp }: { onSearch: () => void; onHelp: ()
         <span className="pv-muted pv-sidebar-user">{user?.email}</span>
       </div>
 
-      <button className="pv-search" onClick={onSearch}>
-        <span>🔍 Search</span>
+      <button className="pv-search" onClick={onSearch} aria-label="Search">
+        <span>
+          🔍 <span className="pv-label">Search</span>
+        </span>
         <kbd className="pv-kbd">⌘K</kbd>
       </button>
 
-      <button className="pv-new-page" onClick={newPage} disabled={create.isPending}>
-        + New page
+      <button
+        className="pv-new-page"
+        onClick={newPage}
+        disabled={create.isPending}
+        aria-label="New page"
+      >
+        + <span className="pv-label">New page</span>
       </button>
 
       <FavoritesSection pages={pages ?? []} activeId={id} />
@@ -75,18 +83,7 @@ export function Sidebar({ onSearch, onHelp }: { onSearch: () => void; onHelp: ()
         </LoadState>
       </nav>
 
-      <button className="pv-signout pv-muted" onClick={() => history.push('/trash')}>
-        🗑 Trash
-      </button>
-      <button className="pv-signout pv-muted" onClick={() => history.push('/settings')}>
-        ⚙ Settings
-      </button>
-      <button className="pv-signout pv-muted" onClick={onHelp}>
-        ⌨ Shortcuts
-      </button>
-      <button className="pv-signout pv-muted" onClick={signOut}>
-        Sign out
-      </button>
+      <SidebarFooter onHelp={onHelp} />
     </aside>
   );
 }

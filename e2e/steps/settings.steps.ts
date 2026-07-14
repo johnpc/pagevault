@@ -4,7 +4,7 @@ import { expect } from '@playwright/test';
 const { When, Then } = createBdd();
 
 When('I open settings', async ({ page }) => {
-  await page.getByRole('button', { name: '⚙ Settings' }).click();
+  await page.getByRole('button', { name: 'Settings' }).click();
   await expect(page.getByRole('radiogroup', { name: 'Theme' })).toBeVisible();
 });
 

@@ -4,7 +4,7 @@ import { expect } from '@playwright/test';
 const { When, Then } = createBdd();
 
 When('I open the shortcut help', async ({ page }) => {
-  await page.getByRole('button', { name: '⌨ Shortcuts' }).click();
+  await page.getByRole('button', { name: 'Shortcuts' }).click();
 });
 
 Then('I should see the quick-find shortcut listed', async ({ page }) => {
