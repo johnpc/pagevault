@@ -1,14 +1,8 @@
 import type { BlockRecord, PageRecord } from '../../lib/pbClient';
 import type { TableData, ColumnsData } from '../../lib/pbTypes';
 import { displayTitle } from '../pages/pageTree';
-import { tableToMarkdown } from './tableMarkdown';
-import { normalizeColumns } from './columnsData';
-
-/** Columns flatten to their contents separated by a rule — Markdown has no
- * native side-by-side layout. Pure. */
-function columnsToMarkdown(data: ColumnsData | null): string {
-  return normalizeColumns(data).cols.filter(Boolean).join('\n\n---\n\n');
-}
+import { tableToMarkdown, columnsToMarkdown } from './tableMarkdown';
+import { inlineToMarkdown } from './inlineToMarkdown';
 
 /** The simple prefix-style renderers, keyed by block type. */
 const PREFIX: Partial<Record<BlockRecord['type'], (t: string) => string>> = {
@@ -60,11 +54,16 @@ function renderComplex(block: ExportBlock, pad: string, ordinal: number): string
 
 /** Serialize one block to its Markdown line. `ordinal` is the 1-based position
  * among consecutive numbered blocks (for `1.`, `2.`, …). List items indent by
- * their `depth` so nested lists survive the round-trip. Pure. */
+ * their `depth` so nested lists survive the round-trip. Page-mention tokens are
+ * rewritten to portable Markdown links (except in code, which stays literal).
+ * Pure. */
 export function blockToMarkdown(block: ExportBlock, ordinal = 1): string {
   const pad = NESTS.has(block.type) ? '  '.repeat(Math.max(0, block.depth ?? 0)) : '';
-  const prefix = PREFIX[block.type];
-  return prefix ? pad + prefix(block.content) : renderComplex(block, pad, ordinal);
+  // Code content is literal; other blocks get @-mention tokens → Markdown links.
+  const src =
+    block.type === 'code' ? block : { ...block, content: inlineToMarkdown(block.content) };
+  const prefix = PREFIX[src.type];
+  return prefix ? pad + prefix(src.content) : renderComplex(src, pad, ordinal);
 }
 
 /**
