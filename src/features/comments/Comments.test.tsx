@@ -4,10 +4,11 @@ import userEvent from '@testing-library/user-event';
 import type { CommentRecord } from '../../lib/pbClient';
 
 let list: CommentRecord[] = [];
+let query = { data: [] as CommentRecord[], isLoading: false, isError: false };
 const addMutate = vi.fn();
 const delMutate = vi.fn();
 vi.mock('./commentsApi', () => ({
-  useComments: () => ({ data: list }),
+  useComments: () => ({ ...query, data: list }),
   useAddComment: () => ({ mutate: addMutate, isPending: false }),
   useDeleteComment: () => ({ mutate: delMutate }),
 }));
@@ -21,12 +22,25 @@ describe('Comments', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     list = [];
+    query = { data: [], isLoading: false, isError: false };
   });
 
   it('shows the empty heading and a disabled post button with no draft', () => {
     render(<Comments pageId="p1" />);
     expect(screen.getByText('Comments')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Comment' })).toBeDisabled();
+  });
+
+  it('shows an empty hint when there are no comments', () => {
+    render(<Comments pageId="p1" />);
+    expect(screen.getByText(/No comments yet/)).toBeInTheDocument();
+  });
+
+  it('surfaces a load error (compose box stays available)', () => {
+    query = { data: [], isLoading: false, isError: true };
+    render(<Comments pageId="p1" />);
+    expect(screen.getByText(/Couldn’t load comments/)).toBeInTheDocument();
+    expect(screen.getByLabelText('Add a comment')).toBeInTheDocument();
   });
 
   it('lists comments with a count', () => {

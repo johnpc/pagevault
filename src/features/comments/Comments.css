@@ -8,6 +8,10 @@
   font-weight: 600;
   margin: 0 0 8px;
 }
+.pv-comments-status {
+  font-size: 13px;
+  margin: 0 0 10px;
+}
 .pv-comment {
   border: 1px solid var(--pv-border);
   border-radius: var(--pv-radius-sm);
