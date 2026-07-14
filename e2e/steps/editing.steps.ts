@@ -61,6 +61,45 @@ Then('the block below {string} contains {string}', async ({ page }, head: string
     .toBe(true);
 });
 
+// Focus the block whose textarea value equals `text` and put the caret at one
+// end. (Content is a textarea value, not a text node, so match on inputValue.)
+async function caretAt(page: Page, text: string, where: 'start' | 'end') {
+  const ta = inputs(page);
+  const count = await ta.count();
+  for (let i = 0; i < count; i++) {
+    const el = ta.nth(i);
+    if ((await el.inputValue()) === text) {
+      await el.click();
+      await el.evaluate((node, w) => {
+        const t = node as HTMLTextAreaElement;
+        const pos = w === 'start' ? 0 : t.value.length;
+        t.setSelectionRange(pos, pos);
+      }, where);
+      return;
+    }
+  }
+  throw new Error(`no block with value "${text}"`);
+}
+
+When('I put the caret at the start of the block containing {string}', ({ page }, text: string) =>
+  caretAt(page, text, 'start'),
+);
+When('I put the caret at the end of the block containing {string}', ({ page }, text: string) =>
+  caretAt(page, text, 'end'),
+);
+When('I press ArrowUp in the block', ({ page }) => page.keyboard.press('ArrowUp'));
+When('I press ArrowDown in the block', ({ page }) => page.keyboard.press('ArrowDown'));
+
+Then('the block containing {string} is focused', async ({ page }, text: string) => {
+  await expect
+    .poll(() =>
+      focused(page)
+        .inputValue()
+        .catch(() => null),
+    )
+    .toBe(text);
+});
+
 Then('the document has a {string} block that is empty', async ({ page }, type: string) => {
   await expect
     .poll(() =>
