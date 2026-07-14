@@ -31,6 +31,13 @@ Feature: Typing a full document
     And the document has a "quote" block containing "travel insurance"
     And the document has an indented block containing "USB-C cable"
 
+  Scenario: Any "N. " prefix (not just "1.") starts a numbered list
+    Given I have a page titled "Numbered"
+    When I open the page "Numbered"
+    And I focus the first block
+    And I type "3. Third item" then Enter
+    Then the document has a "numbered" block containing "Third item"
+
   Scenario: Share the typed document via link, readable signed out
     Given I have a page titled "Shared notes"
     When I open the page "Shared notes"

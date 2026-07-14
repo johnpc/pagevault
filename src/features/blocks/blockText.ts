@@ -63,7 +63,7 @@ const SHORTCUTS: { prefix: RegExp; type: BlockType }[] = [
   { prefix: /^## $/, type: 'subheading' },
   { prefix: /^### $/, type: 'subsubheading' },
   { prefix: /^[-*] $/, type: 'bullet' },
-  { prefix: /^1\. $/, type: 'numbered' },
+  { prefix: /^\d+\. $/, type: 'numbered' }, // any "N. " starts a numbered list
   { prefix: /^\[\] $/, type: 'todo' },
   { prefix: /^\[ \] $/, type: 'todo' },
   { prefix: /^> $/, type: 'quote' },
