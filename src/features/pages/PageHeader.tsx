@@ -47,8 +47,10 @@ export function PageHeader({
   // the previous page, and a live update lands without yanking the caret.
   const [focused, setFocused] = useState(false);
   const [title, setTitle] = useReconciled(page.title, focused);
+  // A div, not <header>: this is the document's title area, not the app's banner
+  // landmark — a nested banner landmark is an a11y violation (axe).
   return (
-    <header className="pv-page-header">
+    <div className="pv-page-header">
       <div className="pv-page-presence-bar">
         <PagePresence pageId={page.id} />
       </div>
@@ -80,6 +82,6 @@ export function PageHeader({
         onDelete={onDelete}
         collapse={collapse}
       />
-    </header>
+    </div>
   );
 }

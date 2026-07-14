@@ -9,7 +9,9 @@ export function PageInfo({ page, blocks }: { page: PageRecord; blocks: BlockReco
   const todos = todoProgress(blocks);
   const edited = relativeTime(page.updated, Date.now());
   return (
-    <footer className="pv-page-info pv-muted">
+    // A div, not <footer>: this is a per-document stats line, not the app's
+    // contentinfo landmark — a nested contentinfo landmark is an a11y violation.
+    <div className="pv-page-info pv-muted">
       <span>
         {words} word{words === 1 ? '' : 's'}
       </span>
@@ -31,6 +33,6 @@ export function PageInfo({ page, blocks }: { page: PageRecord; blocks: BlockReco
           <span>Edited {edited}</span>
         </>
       )}
-    </footer>
+    </div>
   );
 }
