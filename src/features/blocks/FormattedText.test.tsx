@@ -31,4 +31,18 @@ describe('FormattedText', () => {
     const link = screen.getByRole('link', { name: '@Trip' });
     expect(link).toHaveAttribute('href', '/page/p1');
   });
+
+  it('renders a [text](url) link opening in a new tab', () => {
+    render(<FormattedText text="see [docs](https://ex.com)" />);
+    const link = screen.getByRole('link', { name: 'docs' });
+    expect(link).toHaveAttribute('href', 'https://ex.com');
+    expect(link).toHaveAttribute('target', '_blank');
+    expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+  });
+
+  it('autolinks a bare URL', () => {
+    render(<FormattedText text="go https://ex.com/x now" />);
+    const link = screen.getByRole('link', { name: 'https://ex.com/x' });
+    expect(link).toHaveAttribute('href', 'https://ex.com/x');
+  });
 });
