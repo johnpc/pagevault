@@ -38,6 +38,9 @@ function lineToBlock(line: string): ParsedBlock {
     [/^>\s+(.*)/, 'quote'],
   ];
   if (/^(---|\*\*\*|___)\s*$/.test(body)) return { type: 'divider', content: '' };
+  // A standalone image ![alt](url) becomes an image block (content = url).
+  const image = /^!\[[^\]]*\]\(([^)]+)\)$/.exec(body);
+  if (image) return { type: 'image', content: image[1] };
   const todo = /^[-*]\s+\[( |x)\]\s+(.*)/.exec(body);
   if (todo) return { type: 'todo', content: todo[2], depth };
   for (const [re, type] of rules) {

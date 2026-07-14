@@ -63,6 +63,19 @@ describe('markdownToBlocks', () => {
     ]);
   });
 
+  it('parses a standalone ![alt](url) image into an image block', () => {
+    expect(markdownToBlocks('![](https://x/i.png)')).toEqual([
+      { type: 'image', content: 'https://x/i.png' },
+    ]);
+    expect(markdownToBlocks('![a photo](https://x/p.jpg)')).toEqual([
+      { type: 'image', content: 'https://x/p.jpg' },
+    ]);
+    // An image amid other text stays a paragraph (not a lone image block).
+    expect(markdownToBlocks('see ![](x) here')).toEqual([
+      { type: 'text', content: 'see ![](x) here' },
+    ]);
+  });
+
   it('parses a horizontal rule as a divider', () => {
     expect(markdownToBlocks('a\n---\nb')).toEqual([
       { type: 'text', content: 'a' },
