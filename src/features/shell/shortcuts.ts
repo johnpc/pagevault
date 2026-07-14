@@ -20,6 +20,7 @@ export const SHORTCUTS: Shortcut[] = [
   },
   { keys: '⌘D / Ctrl+D', action: 'Duplicate the current block' },
   { keys: '⌘⇧↑ / ↓', action: 'Move the current block up / down' },
+  { keys: '⌘Z / ⌘⇧Z', action: 'Undo / redo a block edit' },
   { keys: 'Enter', action: 'Add a new block below' },
   { keys: '↑ / ↓', action: 'Move the caret to the block above / below (at a block edge)' },
   {

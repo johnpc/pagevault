@@ -82,7 +82,11 @@ serializer we mostly already have in `inlineMarkdown` + `inlineToMarkdown`).
 ## 4. Staged plan (each stage ships independently, gated by CI + quality)
 
 - **Stage 0 (this RFC).** Agree the direction; no code.
-- **Stage 1 — Undo/redo.** `usePageHistory` + Cmd+Z/⇧Z + edit coalescing + e2e. No arch change.
+- **Stage 1 — Undo/redo. ✅ SHIPPED.** `usePageHistory` wraps `editBlock`, records content
+  edits (reading `before` from the live query cache to avoid render-lag staleness), and binds
+  Cmd/Ctrl+Z / ⇧Z / Ctrl+Y. Edits commit on blur (one undo step each; no per-keystroke
+  coalescing needed). Undo/redo reissue the mutation so collaborators converge. No arch change.
+  Follow-ups: extend history to add/remove/move/indent + type changes (content-only for now).
 - **Stage 2 — Selection toolbar.** Float on select; reuse `wrapSelection`/`turnInto`; e2e.
 - **Stage 3 — WYSIWYG spike.** ONE block type (paragraph) on ProseMirror behind a flag
   (`VITE_PM_EDITOR`), reading/writing the same `content` string. Prove: markdown input rules,

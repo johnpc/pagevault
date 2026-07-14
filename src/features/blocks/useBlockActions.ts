@@ -11,6 +11,7 @@ import { markdownToBlocks } from './markdownImport';
 import { useEnterSplit } from './useEnterSplit';
 import { useBlockMerge } from './useBlockMerge';
 import { useFocusTarget } from './useFocusTarget';
+import { usePageHistory } from './usePageHistory';
 import type { BlockRecord } from '../../lib/pbClient';
 import type { BlockType } from '../../lib/pbTypes';
 
@@ -44,10 +45,13 @@ export function useBlockActions(pageId: string, blocks: BlockRecord[]) {
     [createMutate, blocksRef, setFocusId],
   );
 
-  const editBlock = useCallback(
+  const editBlockRaw = useCallback(
     (id: string, patch: Partial<BlockRecord>) => updateMutate({ id, patch }),
     [updateMutate],
   );
+  // Wrap edits with document-level undo/redo (Cmd/Ctrl+Z). Records content
+  // changes and binds the keyboard; passes non-content patches straight through.
+  const editBlock = usePageHistory(editBlockRaw, pageId);
 
   const cloneBlock = useCallback(
     (source: BlockRecord) => duplicateMutate({ source, blocks: blocksRef.current }),
