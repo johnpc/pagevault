@@ -29,3 +29,15 @@ Feature: Pasting markdown into a document
     When I open the page "Imported notes"
     And I select all and paste the url "https://example.com" onto "the docs"
     Then the block renders a link "the docs" to "https://example.com"
+
+  Scenario: Pasting an indented list keeps the nesting
+    When I open the page "Imported notes"
+    And I focus a fresh empty block
+    And I paste the markdown:
+      """
+      - Groceries
+        - Milk
+        - Eggs
+      """
+    Then the document has a "bullet" block containing "Groceries"
+    And the document has an indented block containing "Milk"

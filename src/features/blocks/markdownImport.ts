@@ -1,13 +1,23 @@
 import type { BlockType } from '../../lib/pbTypes';
 
-/** A parsed block from pasted markdown: a type + its text content. */
+/** A parsed block from pasted markdown: a type, its text content, and (for list
+ * items) an indentation depth derived from leading spaces. */
 export interface ParsedBlock {
   type: BlockType;
   content: string;
+  depth?: number;
 }
 
-/** Map a single markdown line to a block (type + stripped content). Pure. */
+/** List types whose leading indentation maps to a nesting `depth`. */
+const NESTS = new Set<BlockType>(['bullet', 'numbered', 'todo']);
+
+/** Map a single markdown line to a block (type + stripped content). Leading
+ * whitespace is tolerated: for list items it becomes a nesting depth (2 spaces
+ * per level, matching the exporter), so indented lists round-trip. Pure. */
 function lineToBlock(line: string): ParsedBlock {
+  const indent = line.length - line.trimStart().length;
+  const body = line.trimStart();
+  const depth = Math.floor(indent / 2);
   const rules: [RegExp, BlockType][] = [
     [/^#\s+(.*)/, 'heading'],
     [/^###\s+(.*)/, 'subsubheading'],
@@ -16,13 +26,14 @@ function lineToBlock(line: string): ParsedBlock {
     [/^\d+\.\s+(.*)/, 'numbered'],
     [/^>\s+(.*)/, 'quote'],
   ];
-  if (/^\s*(---|\*\*\*|___)\s*$/.test(line)) return { type: 'divider', content: '' };
-  const todo = /^[-*]\s+\[( |x)\]\s+(.*)/.exec(line);
-  if (todo) return { type: 'todo', content: todo[2] };
+  if (/^(---|\*\*\*|___)\s*$/.test(body)) return { type: 'divider', content: '' };
+  const todo = /^[-*]\s+\[( |x)\]\s+(.*)/.exec(body);
+  if (todo) return { type: 'todo', content: todo[2], depth };
   for (const [re, type] of rules) {
-    const m = re.exec(line);
-    if (m) return { type, content: m[1] };
+    const m = re.exec(body);
+    if (m) return NESTS.has(type) ? { type, content: m[1], depth } : { type, content: m[1] };
   }
+  // A non-list line keeps its original text (leading spaces and all).
   return { type: 'text', content: line };
 }
 
