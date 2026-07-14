@@ -21,6 +21,7 @@ export function TextBlockBody({
   onEnter,
   onIndent,
   onMerge,
+  onMergeForward,
   onPasteMarkdown,
   autoFocus,
   autoFocusCaret,
@@ -33,6 +34,7 @@ export function TextBlockBody({
   onEnter: (caret: number, value: string) => boolean;
   onIndent: (dir: 'in' | 'out') => void;
   onMerge: (value: string) => boolean;
+  onMergeForward: (value: string) => boolean;
   onPasteMarkdown: (text: string) => void;
   autoFocus?: boolean;
   autoFocusCaret?: number;
@@ -40,7 +42,7 @@ export function TextBlockBody({
   onFocused?: () => void;
 }) {
   const { value, setValue, change, keyDown, save, focus, focused, matches, active, pick } =
-    useBlockInput(block, onEdit, onRemove, onEnter, onIndent, onMerge);
+    useBlockInput(block, onEdit, onRemove, onEnter, onIndent, onMerge, onMergeForward);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const mention = useMention(block.page, value, setValue, inputRef);
   const showPreview = !focused && hasInlineMarkup(value);

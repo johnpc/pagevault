@@ -59,6 +59,7 @@ const renderList = (data: BlockRecord[]) =>
       onPasteMarkdown={vi.fn()}
       onSplit={vi.fn()}
       onMerge={vi.fn()}
+      onMergeForward={vi.fn()}
       onUpload={vi.fn()}
       onAddBlock={vi.fn()}
       onSubPage={vi.fn()}

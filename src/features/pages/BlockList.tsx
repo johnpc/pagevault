@@ -19,6 +19,7 @@ interface BlockListProps {
   onPasteMarkdown: (block: BlockRecord, text: string) => void;
   onSplit: (block: BlockRecord, caret: number, value: string) => boolean;
   onMerge: (id: string, value: string) => boolean;
+  onMergeForward: (id: string, value: string) => boolean;
   onUpload: (id: string, file: File) => void;
   onAddBlock: (type?: BlockType) => void;
   onSubPage: () => void;

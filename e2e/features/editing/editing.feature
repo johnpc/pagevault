@@ -41,6 +41,18 @@ Feature: Smooth keyboard editing
     Then the page has 1 block
     And the block containing "HelloWorld" is focused
 
+  Scenario: Delete at the end of a block pulls the next block up
+    Given I have a page titled "Forward merge"
+    When I open the page "Forward merge"
+    And I focus the first block
+    And I type "Hello" then Enter
+    And I type "World"
+    Then the page has 2 blocks
+    When I put the caret at the end of the block containing "Hello"
+    And I press Delete in the block
+    Then the page has 1 block
+    And the block containing "HelloWorld" is focused
+
   Scenario: Enter continues a bulleted list, and an empty item exits the list
     Given I have a page titled "List feel"
     When I open the page "List feel"

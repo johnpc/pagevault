@@ -35,6 +35,7 @@ export function PageBlocks({
       onPasteMarkdown={ed.importMarkdown}
       onSplit={ed.splitBlock}
       onMerge={ed.mergeBlock}
+      onMergeForward={ed.mergeForward}
       onUpload={ed.uploadImage}
       onAddBlock={ed.addBlock}
       onSubPage={onSubPage}
