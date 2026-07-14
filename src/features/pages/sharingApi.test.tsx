@@ -55,6 +55,20 @@ describe('usePublicPage / usePublicBlocks', () => {
     expect(pages.getFirstListItem).toHaveBeenCalledWith('shareToken = "tok" && isPublic = true');
   });
 
+  it('resolves an unknown/revoked token to null (404 is not an error)', async () => {
+    pages.getFirstListItem.mockRejectedValue({ status: 404 });
+    const { result } = renderHook(() => usePublicPage('gone'), { wrapper });
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(result.current.data).toBeNull();
+    expect(result.current.isError).toBe(false);
+  });
+
+  it('still surfaces a real network error (non-404)', async () => {
+    pages.getFirstListItem.mockRejectedValue({ status: 500 });
+    const { result } = renderHook(() => usePublicPage('boom'), { wrapper });
+    await waitFor(() => expect(result.current.isError).toBe(true));
+  });
+
   it('fetches public blocks for a page id', async () => {
     blocks.getFullList.mockResolvedValue([{ id: 'b1' }]);
     const { result } = renderHook(() => usePublicBlocks('p9'), { wrapper });

@@ -13,3 +13,8 @@ Feature: Public link sharing
     And I visit the shared link
     Then I should see the shared title "Shared roadmap"
     And I should see the shared content "Q3 goals"
+
+  Scenario: An invalid or revoked share link shows a clear "not shared" message
+    When I visit a made-up share link
+    Then I should see the "not shared" message
+    And I should not see a connection error
