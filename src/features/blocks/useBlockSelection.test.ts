@@ -5,6 +5,12 @@ import { useBlockSelection } from './useBlockSelection';
 
 const ids = ['a', 'b', 'c', 'd'];
 
+/** The selection actions bag; pass a delete/indent spy to assert on it. */
+const actions = (onDeleteMany = vi.fn(), onIndentMany = vi.fn()) => ({
+  onDeleteMany,
+  onIndentMany,
+});
+
 type KE = KeyboardEvent;
 const preventDefault = vi.fn();
 
@@ -31,12 +37,12 @@ const docKey = (key: string, shiftKey = false, metaKey = false) =>
 
 describe('useBlockSelection', () => {
   it('starts inactive', () => {
-    const { result } = renderHook(() => useBlockSelection(ids, vi.fn()));
+    const { result } = renderHook(() => useBlockSelection(ids, actions()));
     expect(result.current.active).toBe(false);
   });
 
   it('hands off from a textarea Shift+Down at the caret end', () => {
-    const { result } = renderHook(() => useBlockSelection(ids, vi.fn()));
+    const { result } = renderHook(() => useBlockSelection(ids, actions()));
     act(() => result.current.onKeyDown(textareaKey('ArrowDown', 'hi', 2, 1)));
     expect(result.current.active).toBe(true);
     expect(result.current.selectedAt(1)).toBe(true);
@@ -45,7 +51,7 @@ describe('useBlockSelection', () => {
   });
 
   it('extends and collapses with arrows once active', () => {
-    const { result } = renderHook(() => useBlockSelection(ids, vi.fn()));
+    const { result } = renderHook(() => useBlockSelection(ids, actions()));
     act(() => result.current.onKeyDown(textareaKey('ArrowDown', '', 0, 0))); // select 0..1
     act(() => docKey('ArrowDown', true)); // extend to 0..2
     expect(result.current.selectedAt(2)).toBe(true);
@@ -55,7 +61,7 @@ describe('useBlockSelection', () => {
 
   it('deletes the selected range on Backspace and clears', () => {
     const onDelete = vi.fn();
-    const { result } = renderHook(() => useBlockSelection(ids, onDelete));
+    const { result } = renderHook(() => useBlockSelection(ids, actions(onDelete)));
     act(() => result.current.onKeyDown(textareaKey('ArrowDown', '', 0, 0))); // 0..1
     act(() => docKey('Backspace'));
     expect(onDelete).toHaveBeenCalledWith(['a', 'b']);
@@ -63,14 +69,14 @@ describe('useBlockSelection', () => {
   });
 
   it('clears on Escape', () => {
-    const { result } = renderHook(() => useBlockSelection(ids, vi.fn()));
+    const { result } = renderHook(() => useBlockSelection(ids, actions()));
     act(() => result.current.onKeyDown(textareaKey('ArrowDown', '', 0, 0)));
     act(() => docKey('Escape'));
     expect(result.current.active).toBe(false);
   });
 
   it('shift-clicks to select the range from the focused block to the clicked one', () => {
-    const { result } = renderHook(() => useBlockSelection(ids, vi.fn()));
+    const { result } = renderHook(() => useBlockSelection(ids, actions()));
     act(() => result.current.noteFocus(0));
     act(() => result.current.shiftClick(2));
     expect(result.current.active).toBe(true);
@@ -81,7 +87,7 @@ describe('useBlockSelection', () => {
 
   it('shift-click extends an existing selection, then Backspace deletes the range', () => {
     const onDelete = vi.fn();
-    const { result } = renderHook(() => useBlockSelection(ids, onDelete));
+    const { result } = renderHook(() => useBlockSelection(ids, actions(onDelete)));
     act(() => result.current.noteFocus(1));
     act(() => result.current.shiftClick(2)); // 1..2
     act(() => result.current.shiftClick(3)); // extend to 1..3
@@ -90,7 +96,7 @@ describe('useBlockSelection', () => {
   });
 
   it('Cmd/Ctrl+A in a fully-selected field selects every block', () => {
-    const { result } = renderHook(() => useBlockSelection(ids, vi.fn()));
+    const { result } = renderHook(() => useBlockSelection(ids, actions()));
     // A textarea keydown with the whole value selected → escalate to all blocks.
     const el = document.createElement('textarea');
     el.value = 'hi';
@@ -113,11 +119,22 @@ describe('useBlockSelection', () => {
   });
 
   it('Cmd/Ctrl+A while already selecting grows to all blocks', () => {
-    const { result } = renderHook(() => useBlockSelection(ids, vi.fn()));
+    const { result } = renderHook(() => useBlockSelection(ids, actions()));
     act(() => result.current.noteFocus(1));
     act(() => result.current.shiftClick(2)); // 1..2 active
     act(() => docKey('a', false, true)); // Cmd+A at document level
     expect(result.current.selectedAt(0)).toBe(true);
     expect(result.current.selectedAt(3)).toBe(true);
+  });
+
+  it('Tab indents the whole selection; Shift+Tab outdents it', () => {
+    const onIndent = vi.fn();
+    const { result } = renderHook(() => useBlockSelection(ids, actions(vi.fn(), onIndent)));
+    act(() => result.current.noteFocus(1));
+    act(() => result.current.shiftClick(2)); // select b..c
+    act(() => docKey('Tab'));
+    expect(onIndent).toHaveBeenLastCalledWith(['b', 'c'], 'in');
+    act(() => docKey('Tab', true)); // Shift+Tab
+    expect(onIndent).toHaveBeenLastCalledWith(['b', 'c'], 'out');
   });
 });

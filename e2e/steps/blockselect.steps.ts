@@ -49,6 +49,22 @@ When('I press Backspace to delete the selection', async ({ page }) => {
   await page.keyboard.press('Backspace');
 });
 
+When('I press Tab to indent the selection', async ({ page }) => {
+  await page.keyboard.press('Tab');
+});
+
+// Blocks 2 and 3 (1-based) carry a non-zero left margin (indented via depth).
+Then('blocks {int} and {int} are indented', async ({ page }, a: number, b: number) => {
+  const rows = active(page).locator('.pv-block');
+  await expect
+    .poll(async () => {
+      const margin = (n: number) =>
+        rows.nth(n - 1).evaluate((el) => parseFloat((el as HTMLElement).style.marginLeft) || 0);
+      return (await margin(a)) > 0 && (await margin(b)) > 0;
+    })
+    .toBe(true);
+});
+
 Then('the page has {int} blocks', async ({ page }, n: number) => {
   await expect.poll(() => inputs(page).count()).toBe(n);
 });

@@ -60,3 +60,28 @@ export function useSetToggles(pageId: string) {
     onSettled: () => qc.invalidateQueries({ queryKey: key(pageId) }),
   });
 }
+
+/**
+ * Set many blocks' `depth` in one batch (indent/outdent a multi-block
+ * selection). Same field-only, id-keyed optimistic shape as useSetToggles.
+ */
+export function useSetDepths(pageId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (updates: { id: string; depth: number }[]) =>
+      Promise.all(updates.map((u) => pb.collection('blocks').update(u.id, { depth: u.depth }))),
+    onMutate: async (updates) => {
+      await qc.cancelQueries({ queryKey: key(pageId) });
+      const previous = qc.getQueryData<BlockRecord[]>(key(pageId));
+      const byId = new Map(updates.map((u) => [u.id, u.depth]));
+      qc.setQueryData<BlockRecord[]>(key(pageId), (old) =>
+        old?.map((b) => (byId.has(b.id) ? { ...b, depth: byId.get(b.id)! } : b)),
+      );
+      return { previous };
+    },
+    onError: (_e, _v, ctx) => {
+      if (ctx?.previous) qc.setQueryData(key(pageId), ctx.previous);
+    },
+    onSettled: () => qc.invalidateQueries({ queryKey: key(pageId) }),
+  });
+}

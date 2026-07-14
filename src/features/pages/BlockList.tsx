@@ -13,6 +13,7 @@ interface BlockListProps {
   onEdit: (id: string, patch: Partial<BlockRecord>) => void;
   onRemove: (id: string) => void;
   onRemoveMany: (ids: string[]) => void;
+  onIndentMany: (ids: string[], dir: 'in' | 'out') => void;
   onDuplicate: (block: BlockRecord) => void;
   onIndent: (id: string, dir: 'in' | 'out') => void;
   onPasteMarkdown: (block: BlockRecord, text: string) => void;

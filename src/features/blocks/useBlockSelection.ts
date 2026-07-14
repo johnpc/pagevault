@@ -26,7 +26,12 @@ import { useActiveSelectionKeys } from './useActiveSelectionKeys';
  * `ids` is the visible block ids in order; each row is marked data-block-index
  * so a handoff knows its position.
  */
-export function useBlockSelection(ids: string[], onDeleteMany: (ids: string[]) => void) {
+interface SelectionActions {
+  onDeleteMany: (ids: string[]) => void;
+  onIndentMany: (ids: string[], dir: 'in' | 'out') => void;
+}
+
+export function useBlockSelection(ids: string[], actions: SelectionActions) {
   const [sel, setSel] = useState<BlockSelection | null>(null);
   const clear = useCallback(() => setSel(null), []);
   // The block index most recently focused (a textarea got focus) — the anchor a
@@ -75,8 +80,8 @@ export function useBlockSelection(ids: string[], onDeleteMany: (ids: string[]) =
     [sel, ids, selectAll],
   );
 
-  // While active, own the nav/delete/select-all keys at the document level.
-  useActiveSelectionKeys(sel, ids, setSel, onDeleteMany);
+  // While active, own the nav/delete/indent/select-all keys at the document level.
+  useActiveSelectionKeys(sel, ids, setSel, actions);
 
   return {
     active: sel !== null,
