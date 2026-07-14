@@ -23,9 +23,13 @@ export function mentionQuery(value: string, caret: number): MentionQuery | null 
   return { query, start: at, end: caret };
 }
 
-/** The mention token that links `page`, e.g. "@[Trip plan](abc123)". Pure. */
+/** The mention token that links `page`, e.g. "@[Trip plan](abc123)". A `]` in
+ * the title would prematurely close the token's `[...]` label (so a page titled
+ * "Notes [v2]" rendered broken), so square brackets in the title are swapped for
+ * round ones — the link is driven by the id, the label is display-only. Pure. */
 export function mentionToken(page: Pick<PageRecord, 'id' | 'title'>): string {
-  return `@[${displayTitle(page)}](${page.id})`;
+  const label = displayTitle(page).replace(/\[/g, '(').replace(/\]/g, ')');
+  return `@[${label}](${page.id})`;
 }
 
 /**

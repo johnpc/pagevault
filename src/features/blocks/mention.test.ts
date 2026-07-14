@@ -32,6 +32,11 @@ describe('mentionToken', () => {
     expect(mentionToken(pg('a1', 'Trip'))).toBe('@[Trip](a1)');
     expect(mentionToken(pg('a2', ''))).toBe('@[Untitled](a2)');
   });
+  it('swaps square brackets in the title so the token stays parseable', () => {
+    // A literal ] would close the token's [...] label early → broken mention.
+    expect(mentionToken(pg('a3', 'Notes [v2]'))).toBe('@[Notes (v2)](a3)');
+    expect(mentionToken(pg('a4', '[draft]'))).toBe('@[(draft)](a4)');
+  });
 });
 
 describe('applyMention', () => {
