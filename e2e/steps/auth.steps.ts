@@ -12,7 +12,7 @@ Given('I am signed in as the test user', async ({ page }) => {
   await page.getByLabel('Email').fill(EMAIL);
   await page.getByLabel('Password').fill(PASSWORD);
   await page.getByRole('button', { name: 'Sign in' }).click();
-  await expect(page.getByRole('button', { name: '+ New page' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'New page' })).toBeVisible();
 });
 
 Given('I open PageVault while signed out', async ({ page }) => {
@@ -24,5 +24,5 @@ Then('I should see the sign-in screen', async ({ page }) => {
 });
 
 Then('I should see my workspace', async ({ page }) => {
-  await expect(page.getByRole('button', { name: '+ New page' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'New page' })).toBeVisible();
 });

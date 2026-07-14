@@ -52,7 +52,7 @@ describe('workspace integration', () => {
     seed([]);
     renderAt(<Sidebar onSearch={() => {}} onHelp={() => {}} />);
     await waitFor(() => expect(screen.getByText('No pages yet')).toBeInTheDocument());
-    await userEvent.click(screen.getByText('+ New page'));
+    await userEvent.click(screen.getByRole('button', { name: 'New page' }));
     await waitFor(() => expect(cols.pages.create).toHaveBeenCalled());
   });
 

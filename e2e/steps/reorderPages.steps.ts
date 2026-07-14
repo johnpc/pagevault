@@ -43,7 +43,7 @@ When(
 When('I reload the app', async ({ page }) => {
   await page.reload();
   // Wait for the signed-in shell before reading the tree again.
-  await expect(page.getByRole('button', { name: '+ New page' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'New page' })).toBeVisible();
 });
 
 Then(

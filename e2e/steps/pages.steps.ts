@@ -14,7 +14,7 @@ const sidebarRow = (page: Page, title: string, info: TestInfo) =>
 /** Create a page via the sidebar and rename it by typing into the title. */
 async function createPageTitled(page: Page, title: string, info: TestInfo) {
   const unique = uniqueTitle(title, info);
-  await page.getByRole('button', { name: '+ New page' }).click();
+  await page.getByRole('button', { name: 'New page' }).click();
   const titleInput = active(page).getByLabel('Page title');
   await expect(titleInput).toBeVisible();
   // Wait until the NEW (empty) page is actually on screen — Ionic keeps the
@@ -297,7 +297,7 @@ Then('I should not see {string} in the sidebar', async ({ page, $testInfo }, tit
 });
 
 When('I restore {string} from the trash', async ({ page, $testInfo }, title: string) => {
-  await page.getByRole('button', { name: '🗑 Trash' }).click();
+  await page.getByRole('button', { name: 'Trash', exact: true }).click();
   const row = active(page)
     .locator('.pv-trash-row')
     .filter({ hasText: uniqueTitle(title, $testInfo) })

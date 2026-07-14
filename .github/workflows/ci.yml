@@ -54,6 +54,8 @@ jobs:
         area:
           - name: auth
             paths: .features-gen/e2e/features/auth
+          - name: mobile
+            paths: .features-gen/e2e/features/mobile
           - name: pages
             paths: .features-gen/e2e/features/pages
           - name: settings

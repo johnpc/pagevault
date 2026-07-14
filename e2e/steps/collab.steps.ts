@@ -35,7 +35,7 @@ When('a second user opens the invite link', async ({ browser }) => {
   await collabTab.getByLabel('Email').fill(COLLAB_EMAIL);
   await collabTab.getByLabel('Password').fill(COLLAB_PASSWORD);
   await collabTab.getByRole('button', { name: 'Sign in' }).click();
-  await expect(collabTab.getByRole('button', { name: '+ New page' })).toBeVisible();
+  await expect(collabTab.getByRole('button', { name: 'New page' })).toBeVisible();
   await collabTab.goto(inviteLink);
 });
 

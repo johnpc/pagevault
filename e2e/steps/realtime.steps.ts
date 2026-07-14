@@ -28,7 +28,7 @@ Given(
 
     secondTab = await context.newPage();
     await secondTab.goto('/');
-    await expect(secondTab.getByRole('button', { name: '+ New page' })).toBeVisible();
+    await expect(secondTab.getByRole('button', { name: 'New page' })).toBeVisible();
     await sidebarRow(secondTab, title, $testInfo).click();
     await expect(active(secondTab).getByLabel('Page title')).toHaveValue(unique);
   },
