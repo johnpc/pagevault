@@ -424,6 +424,15 @@ Then('the page shows an embedded iframe', async ({ page }) => {
   await expect(active(page).locator('iframe.pv-embed-frame').first()).toBeVisible();
 });
 
+Then('the embedded iframe src contains {string}', async ({ page }, fragment: string) => {
+  const frame = active(page).locator('iframe.pv-embed-frame').first();
+  await expect(frame).toBeVisible();
+  await expect(frame).toHaveAttribute(
+    'src',
+    new RegExp(fragment.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')),
+  );
+});
+
 When(
   'I search page icons for {string} and pick {string}',
   async ({ page }, query: string, emoji: string) => {

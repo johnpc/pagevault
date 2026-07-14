@@ -192,3 +192,11 @@ Feature: Pages and blocks
     Then the page shows an embedded iframe
     When I reopen the page "Media"
     Then the page shows an embedded iframe
+
+  Scenario: Embed a Spotify track and see its player
+    Given I have a page titled "Tunes"
+    When I open the page "Tunes"
+    And I type "/embed" into a new block
+    And I choose "Video / audio" from the slash menu
+    And I enter the embed URL "https://open.spotify.com/track/4cOdK2wGLETKBW3PvgPWqT"
+    Then the embedded iframe src contains "open.spotify.com/embed/track/4cOdK2wGLETKBW3PvgPWqT"

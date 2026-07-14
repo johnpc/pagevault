@@ -3,9 +3,10 @@ import type { BlockRecord } from '../../lib/pbClient';
 import { embedFor } from './embedSource';
 
 /** A video/audio embed block: renders a native <video>/<audio> for a direct
- * media file, or an <iframe> for a YouTube/Vimeo link. When empty or the URL
- * isn't a recognized media/embed link, it shows a URL input; the rendered media
- * has an edit affordance to change it. The URL lives in `content`. */
+ * media file, or an <iframe> for a known provider (YouTube, Vimeo, Spotify,
+ * Loom, CodePen, Figma, SoundCloud). When empty or the URL isn't a recognized
+ * media/embed link, it shows a URL input; the rendered media has an edit
+ * affordance to change it. The URL lives in `content`. */
 export function EmbedBlock({
   block,
   onEdit,
@@ -28,7 +29,7 @@ export function EmbedBlock({
         <input
           className="pv-block-input"
           aria-label="Embed URL"
-          placeholder="Paste a video/audio or YouTube/Vimeo link…"
+          placeholder="Paste a video/audio, YouTube, Vimeo, Spotify, Loom, CodePen, Figma or SoundCloud link…"
           value={url}
           onChange={(e) => setUrl(e.target.value)}
           onBlur={save}
