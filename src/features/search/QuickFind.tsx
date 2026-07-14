@@ -1,8 +1,9 @@
 import { useState, type KeyboardEvent } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useSearch } from './searchApi';
+import { useDebounced } from './useDebounced';
 import { nextActiveIndex } from './searchResults';
-import { Highlighted } from './Highlighted';
+import { QuickFindResult } from './QuickFindResult';
 import { LoadState } from '../shell/LoadState';
 import './QuickFind.css';
 
@@ -16,7 +17,10 @@ export function QuickFind({ onClose }: QuickFindProps) {
   const history = useHistory();
   const [query, setQuery] = useState('');
   const [active, setActive] = useState(0);
-  const { data, isLoading, isError, refetch } = useSearch(query);
+  // Debounce the backend search so typing "hello" fires one query, not five —
+  // the input stays bound to `query` (instant), the fetch waits for it to settle.
+  const debounced = useDebounced(query);
+  const { data, isLoading, isError, refetch } = useSearch(debounced);
   const results = data ?? [];
 
   const go = (pageId: string) => {
@@ -66,26 +70,13 @@ export function QuickFind({ onClose }: QuickFindProps) {
             >
               <ul role="listbox" aria-label="Search results">
                 {results.map((r, i) => (
-                  <li key={`${r.pageId}-${r.kind}`}>
-                    <button
-                      className={`pv-qf-item${i === active ? ' pv-qf-item--active' : ''}`}
-                      role="option"
-                      aria-selected={i === active}
-                      onClick={() => go(r.pageId)}
-                    >
-                      <span className="pv-qf-icon">{r.icon}</span>
-                      <span className="pv-qf-text">
-                        <span className="pv-qf-title">
-                          <Highlighted text={r.title} query={query} />
-                        </span>
-                        {r.snippet && (
-                          <span className="pv-qf-snippet pv-muted">
-                            <Highlighted text={r.snippet} query={query} />
-                          </span>
-                        )}
-                      </span>
-                    </button>
-                  </li>
+                  <QuickFindResult
+                    key={`${r.pageId}-${r.kind}`}
+                    result={r}
+                    query={query}
+                    active={i === active}
+                    onOpen={go}
+                  />
                 ))}
               </ul>
             </LoadState>
