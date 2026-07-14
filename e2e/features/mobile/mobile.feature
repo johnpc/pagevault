@@ -1,15 +1,19 @@
-Feature: Mobile sidebar rail
+Feature: Mobile sidebar drawer
   As a signed-in user on a phone
-  I want the sidebar's primary actions to stay reachable in the slim rail
-  So that I can still create pages and navigate on a small screen
+  I want the sidebar as a slide-over drawer opened by a hamburger
+  So that it never squeezes the reading column, yet every action stays reachable
 
-  Scenario: Primary actions are reachable on a phone-sized screen
+  Scenario: The sidebar is a drawer opened by the hamburger
     Given I am signed in on a phone-sized screen
+    Then the sidebar drawer is closed
+    When I open the sidebar drawer
     Then I can reach the "New page" action
     And I can reach the "Sign out" action
     And I can reach the "Settings" action
 
-  Scenario: Creating a page works from the phone rail
+  Scenario: Opening a page from the drawer closes it and shows the editor
     Given I am signed in on a phone-sized screen
-    When I create a page from the rail
+    When I open the sidebar drawer
+    And I create a page from the drawer
     Then the block editor is shown
+    And the sidebar drawer is closed

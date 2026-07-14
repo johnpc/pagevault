@@ -1,15 +1,13 @@
 import { lazy, Suspense, type ComponentType } from 'react';
 import { IonRouterOutlet } from '@ionic/react';
 import { Route, Redirect } from 'react-router-dom';
-import { Sidebar } from '../pages/Sidebar';
 import { HomeScreen } from './HomeScreen';
 import { QuickFind } from '../search/QuickFind';
 import { useQuickFind } from '../search/useQuickFind';
 import { ShortcutHelp } from './ShortcutHelp';
 import { useShortcutHelp } from './useShortcutHelp';
 import { useRealtimeSync } from './useRealtimeSync';
-import { useSidebarToggle, workspaceClass } from './useSidebarToggle';
-import { SidebarShowButton } from './SidebarShowButton';
+import { WorkspaceShell } from './WorkspaceShell';
 import { RouteFallback } from './RouteFallback';
 import './Workspace.css';
 
@@ -47,24 +45,19 @@ const JoinPage = suspended(JoinPageLazy);
 export function Workspace() {
   const { open, setOpen } = useQuickFind();
   const help = useShortcutHelp();
-  const sidebar = useSidebarToggle();
   useRealtimeSync();
   return (
-    <div className={workspaceClass(sidebar.hidden)}>
-      <SidebarShowButton hidden={sidebar.hidden} onShow={() => sidebar.setHidden(false)} />
-      <Sidebar onSearch={() => setOpen(true)} onHelp={() => help.setOpen(true)} />
-      <div className="pv-workspace-content">
-        <IonRouterOutlet>
-          <Route exact path="/" component={HomeScreen} />
-          <Route exact path="/trash" component={Trash} />
-          <Route exact path="/settings" component={Settings} />
-          <Route exact path="/page/:id" component={PageEditor} />
-          <Route exact path="/join/:token" component={JoinPage} />
-          <Redirect to="/" />
-        </IonRouterOutlet>
-      </div>
+    <WorkspaceShell onSearch={() => setOpen(true)} onHelp={() => help.setOpen(true)}>
+      <IonRouterOutlet>
+        <Route exact path="/" component={HomeScreen} />
+        <Route exact path="/trash" component={Trash} />
+        <Route exact path="/settings" component={Settings} />
+        <Route exact path="/page/:id" component={PageEditor} />
+        <Route exact path="/join/:token" component={JoinPage} />
+        <Redirect to="/" />
+      </IonRouterOutlet>
       {open && <QuickFind onClose={() => setOpen(false)} />}
       {help.open && <ShortcutHelp onClose={() => help.setOpen(false)} />}
-    </div>
+    </WorkspaceShell>
   );
 }

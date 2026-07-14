@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { forwardRef, useMemo, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { usePages, useCreatePage } from './pagesApi';
 import { buildTree } from './pageTree';
@@ -11,8 +11,17 @@ import { useAuth } from '../auth/useAuth';
 import { SidebarFooter } from './SidebarFooter';
 import './Sidebar.css';
 
-/** The left rail: workspace title, search, the page tree, "New page", sign-out. */
-export function Sidebar({ onSearch, onHelp }: { onSearch: () => void; onHelp: () => void }) {
+interface SidebarProps {
+  onSearch: () => void;
+  onHelp: () => void;
+}
+
+/** The left rail: workspace title, search, the page tree, "New page", sign-out.
+ * Ref-forwarded to its <aside> so the mobile drawer can focus-trap it. */
+export const Sidebar = forwardRef<HTMLElement, SidebarProps>(function Sidebar(
+  { onSearch, onHelp },
+  ref,
+) {
   const history = useHistory();
   const { id } = useParams<{ id?: string }>();
   const { user } = useAuth();
@@ -36,7 +45,7 @@ export function Sidebar({ onSearch, onHelp }: { onSearch: () => void; onHelp: ()
   };
 
   return (
-    <aside className="pv-sidebar">
+    <aside className="pv-sidebar" ref={ref}>
       <div className="pv-sidebar-head">
         <span className="pv-heading">PageVault</span>
         <span className="pv-muted pv-sidebar-user">{user?.email}</span>
@@ -86,4 +95,4 @@ export function Sidebar({ onSearch, onHelp }: { onSearch: () => void; onHelp: ()
       <SidebarFooter onHelp={onHelp} />
     </aside>
   );
-}
+});
