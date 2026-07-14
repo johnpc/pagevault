@@ -61,6 +61,7 @@ const renderList = (data: BlockRecord[]) =>
       onMerge={vi.fn()}
       onMergeForward={vi.fn()}
       onUpload={vi.fn()}
+      onMoveBlock={vi.fn()}
       onAddBlock={vi.fn()}
       onSubPage={vi.fn()}
       focusId={null}

@@ -37,6 +37,7 @@ export function PageBlocks({
       onMerge={ed.mergeBlock}
       onMergeForward={ed.mergeForward}
       onUpload={ed.uploadImage}
+      onMoveBlock={ed.moveBlockTo}
       onAddBlock={ed.addBlock}
       onSubPage={onSubPage}
       focusId={ed.focusId}
