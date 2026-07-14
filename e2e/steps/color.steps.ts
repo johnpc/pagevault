@@ -21,6 +21,27 @@ Then('the block is tinted {string}', async ({ page }, token: string) => {
     .toBeGreaterThan(0);
 });
 
+// Guards the callout-bg fix: a callout has its own default background, so a
+// picked bg color must actually REPAINT it (not just add a class that loses on
+// CSS source order). The default callout tint is --pv-accent-soft.
+Then("the block's background is not the default callout tint", async ({ page }) => {
+  const callout = active(page).locator('.pv-block--callout').first();
+  const [bg, accentSoft] = await callout.evaluate((el) => {
+    const style = getComputedStyle(el);
+    const soft = getComputedStyle(document.documentElement)
+      .getPropertyValue('--pv-accent-soft')
+      .trim();
+    // Resolve the token to an rgb by painting it on a throwaway element.
+    const probe = document.createElement('div');
+    probe.style.color = soft;
+    document.body.appendChild(probe);
+    const softRgb = getComputedStyle(probe).color;
+    probe.remove();
+    return [style.backgroundColor, softRgb];
+  });
+  expect(bg).not.toBe(accentSoft);
+});
+
 const colorMenu = (page: Page) => active(page).getByRole('listbox', { name: 'Block color' });
 
 When('I open the block color menu', async ({ page }) => {

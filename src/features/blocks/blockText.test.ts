@@ -65,6 +65,12 @@ describe('markdownShortcut', () => {
     expect(markdownShortcut('``` ')?.type).toBe('code');
     expect(markdownShortcut('--- ')?.type).toBe('divider');
   });
+  it('converts three backticks to code immediately (no trailing space, Notion-style)', () => {
+    expect(markdownShortcut('```')?.type).toBe('code');
+    // one or two backticks are ordinary text (inline code uses single backticks)
+    expect(markdownShortcut('`')).toBeNull();
+    expect(markdownShortcut('``')).toBeNull();
+  });
   it('returns null for ordinary text (including a partial prefix)', () => {
     expect(markdownShortcut('hello')).toBeNull();
     expect(markdownShortcut('#heading')).toBeNull();

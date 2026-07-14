@@ -16,6 +16,13 @@ Feature: Coloring blocks
     When I reopen the page "Highlights"
     Then the block is tinted "yellow-bg"
 
+  Scenario: A background color actually paints a callout (not just the class)
+    When I open the page "Highlights"
+    And I type "/callout" into a new block
+    And I choose "Callout" from the slash menu
+    And I set the block color to "Yellow background"
+    Then the block's background is not the default callout tint
+
   Scenario: Pressing Escape closes the color menu
     When I open the page "Highlights"
     And I focus the first block

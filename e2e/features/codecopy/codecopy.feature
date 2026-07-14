@@ -9,7 +9,7 @@ Feature: Copy button on code blocks
 
   Scenario: A code block offers a copy button that copies its contents
     When I open the page "Snippets"
-    And I add a block with the text "``` "
+    And I add a block with the text "```"
     And I type "npm run build" into the code block
     And I click the code copy button
     Then the code copy button reads "Copied!"
