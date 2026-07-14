@@ -241,6 +241,16 @@
   background: var(--pv-accent-soft);
 }
 
+/* External link: an inline [text](url) or bare URL, opens in a new tab. */
+.pv-link {
+  color: var(--pv-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.pv-link:hover {
+  text-decoration-thickness: 2px;
+}
+
 .pv-block--heading .pv-block-input,
 .pv-block--heading .pv-block-preview {
   font-size: 24px;

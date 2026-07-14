@@ -1,6 +1,7 @@
-/** An inline text segment with optional emphasis or a page mention. Pure output
- * of parseInline. A mention carries the linked page id in `mentionId` and the
- * page title as its `text`. */
+/** An inline text segment with optional emphasis, a page mention, or an external
+ * link. Pure output of parseInline. A mention carries the linked page id in
+ * `mentionId`; an external link carries its destination in `href` — both with the
+ * page title / link text as `text`. */
 export interface Segment {
   text: string;
   bold?: boolean;
@@ -9,13 +10,24 @@ export interface Segment {
   strike?: boolean;
   underline?: boolean;
   mentionId?: string;
+  href?: string;
 }
 
 type Mark = 'bold' | 'italic' | 'code' | 'strike' | 'underline';
 
-// A mention token: @[Page Title](pageId). Highest priority so its inner text
-// (which may contain * or `) isn't re-parsed as emphasis.
+// Tokens whose whole match is consumed literally (inner text isn't re-parsed as
+// emphasis), each mapping its captures to a segment. Order only breaks index
+// ties: a mention @[t](id) starts one char before the [t](url) link would, so it
+// wins. A bare-URL autolink is last — a real [t](url) link starts at its '[',
+// earlier than the http:// inside it, so the explicit link always wins.
 const MENTION_RE = /@\[([^\]]+)\]\(([^)]+)\)/;
+const LINK_RE = /\[([^\]]+)\]\(([^)]+)\)/;
+const AUTOLINK_RE = /https?:\/\/[^\s<>()]+/;
+const SPECIALS: { re: RegExp; seg: (m: RegExpExecArray) => Segment }[] = [
+  { re: MENTION_RE, seg: (m) => ({ text: m[1], mentionId: m[2] }) },
+  { re: LINK_RE, seg: (m) => ({ text: m[1], href: m[2] }) },
+  { re: AUTOLINK_RE, seg: (m) => ({ text: m[0], href: m[0] }) },
+];
 
 // Order matters: code first (its contents are literal), then the double-char
 // marks (**, ~~, __) before the single-char italics (*, _). Each captures the
@@ -43,13 +55,9 @@ function firstMatch(text: string): Match | null {
   const consider = (m: Match | null) => {
     if (m && (best === null || m.index < best.index)) best = m;
   };
-  const mention = MENTION_RE.exec(text);
-  if (mention) {
-    consider({
-      index: mention.index,
-      length: mention[0].length,
-      segment: { text: mention[1], mentionId: mention[2] },
-    });
+  for (const { re, seg } of SPECIALS) {
+    const m = re.exec(text);
+    if (m) consider({ index: m.index, length: m[0].length, segment: seg(m) });
   }
   for (const { re, mark } of RULES) {
     const m = re.exec(text);
@@ -80,6 +88,6 @@ export function parseInline(text: string): Segment[] {
  * mention) — i.e. the idle preview should show formatted, not raw. */
 export function hasInlineMarkup(text: string): boolean {
   return parseInline(text).some(
-    (s) => s.bold || s.italic || s.code || s.strike || s.underline || s.mentionId,
+    (s) => s.bold || s.italic || s.code || s.strike || s.underline || s.mentionId || s.href,
   );
 }

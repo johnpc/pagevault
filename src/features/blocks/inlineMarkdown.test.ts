@@ -71,6 +71,32 @@ describe('parseInline', () => {
   it('does not re-parse emphasis inside a mention title', () => {
     expect(parseInline('@[a*b*c](p1)')).toEqual([{ text: 'a*b*c', mentionId: 'p1' }]);
   });
+
+  it('parses a [text](url) link into an href segment', () => {
+    expect(parseInline('see [docs](https://ex.com) now')).toEqual([
+      { text: 'see ' },
+      { text: 'docs', href: 'https://ex.com' },
+      { text: ' now' },
+    ]);
+  });
+
+  it('autolinks a bare http(s) URL', () => {
+    expect(parseInline('go to https://ex.com/a?b=1 ok')).toEqual([
+      { text: 'go to ' },
+      { text: 'https://ex.com/a?b=1', href: 'https://ex.com/a?b=1' },
+      { text: ' ok' },
+    ]);
+  });
+
+  it('prefers an explicit [text](url) link over autolinking the URL inside it', () => {
+    expect(parseInline('[site](https://ex.com)')).toEqual([
+      { text: 'site', href: 'https://ex.com' },
+    ]);
+  });
+
+  it('prefers a mention over a same-position link', () => {
+    expect(parseInline('@[Page](p1)')).toEqual([{ text: 'Page', mentionId: 'p1' }]);
+  });
 });
 
 describe('hasInlineMarkup', () => {
@@ -81,5 +107,7 @@ describe('hasInlineMarkup', () => {
     expect(hasInlineMarkup('has @[Page](p1)')).toBe(true);
     expect(hasInlineMarkup('has ~~strike~~')).toBe(true);
     expect(hasInlineMarkup('has __underline__')).toBe(true);
+    expect(hasInlineMarkup('has [a](https://ex.com)')).toBe(true);
+    expect(hasInlineMarkup('has https://ex.com')).toBe(true);
   });
 });

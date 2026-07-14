@@ -118,6 +118,8 @@ jobs:
             paths: .features-gen/e2e/features/turn-into
           - name: codelang
             paths: .features-gen/e2e/features/codelang
+          - name: links
+            paths: .features-gen/e2e/features/links
           - name: font
             paths: .features-gen/e2e/features/font
           - name: collab
