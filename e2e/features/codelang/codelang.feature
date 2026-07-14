@@ -31,3 +31,11 @@ Feature: Code block language
     And I set the code language to "JavaScript"
     And I type "const answer = 42" into the code block
     Then the code block is syntax-highlighted
+
+  Scenario: Tab inside a code block inserts spaces instead of outdenting
+    Given I have a page titled "Indent code"
+    When I open the page "Indent code"
+    And I focus the first block
+    And I type "```"
+    And I press Tab in the code block
+    Then the code block starts with two spaces
