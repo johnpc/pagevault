@@ -25,15 +25,25 @@ export function useSetShared() {
   });
 }
 
-/** The public page for a share token (anonymous-readable). */
+/** The public page for a share token (anonymous-readable), or null when the
+ * token matches no shared page. A missing/revoked token is NOT an error — the
+ * backend 404s when getFirstListItem finds nothing, so we translate that to null
+ * and let the caller show the "not shared" empty state (rather than a spurious
+ * connection-error + Retry). Real network failures still reject. */
 export function usePublicPage(token: string | undefined) {
   return useQuery({
     queryKey: ['shared', token],
     enabled: !!token,
-    queryFn: () =>
-      pb
-        .collection('pages')
-        .getFirstListItem<PageRecord>(`shareToken = "${token}" && isPublic = true`),
+    queryFn: async () => {
+      try {
+        return await pb
+          .collection('pages')
+          .getFirstListItem<PageRecord>(`shareToken = "${token}" && isPublic = true`);
+      } catch (e) {
+        if ((e as { status?: number }).status === 404) return null;
+        throw e;
+      }
+    },
   });
 }
 

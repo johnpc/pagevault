@@ -48,3 +48,18 @@ Then('I should see the shared title {string}', async ({ page }, title: string) =
 Then('I should see the shared content {string}', async ({ page }, text: string) => {
   await expect(page.locator('.pv-shared-doc')).toContainText(text);
 });
+
+When('I visit a made-up share link', async ({ page }) => {
+  await page.goto('/shared/nonexistent-token-xyz');
+});
+
+Then('I should see the {string} message', async ({ page }, msg: string) => {
+  // "not shared" → the empty-state copy; matches "This page isn't shared".
+  if (msg === 'not shared') {
+    await expect(page.locator('.pv-shared')).toContainText(/isn.?t shared/i);
+  }
+});
+
+Then('I should not see a connection error', async ({ page }) => {
+  await expect(page.locator('.pv-shared')).not.toContainText(/connection/i);
+});
