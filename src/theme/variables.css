@@ -121,6 +121,7 @@ button:focus-visible,
 [role='button']:focus-visible,
 ion-button:focus-visible,
 input:focus-visible,
+select:focus-visible,
 textarea:focus-visible {
   outline: var(--pv-focus-ring);
   outline-offset: var(--pv-focus-offset);
