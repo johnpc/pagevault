@@ -5,6 +5,7 @@ import { visibleColumns } from './tableColumns';
 import type { TitleMap } from './cellText';
 import { TableRow } from './TableRow';
 import { useTableRowActions } from './useTableRowActions';
+import { useTableGridNav } from './useTableGridNav';
 import { isGrouped, tableGroups, isCollapsed, toggleCollapsed } from './tableGrouping';
 
 /** The table body: editable rows honoring the grid's non-destructive filter,
@@ -29,6 +30,8 @@ export function TableBody({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const columns = useMemo(() => visibleColumns(data), [data.columns]);
   const canDelete = data.rows.length > 1;
+  // Spreadsheet keyboard nav (Enter/↑/↓ between rows, ←/→ at the text edge).
+  const onKeyDown = useTableGridNav({ rows: data.rows.length, cols: data.columns.length });
 
   const onDragStart = useCallback((r: number) => setDragRow(r), []);
   const onDragEnd = useCallback(() => setDragRow(null), []);
@@ -62,7 +65,7 @@ export function TableBody({
   if (isGrouped(data)) {
     const span = columns.length + 2; // + drag + delete columns
     return (
-      <tbody>
+      <tbody onKeyDown={onKeyDown}>
         {tableGroups(data, titles).map((g) => {
           const collapsed = isCollapsed(data, g.value);
           return [
@@ -85,5 +88,9 @@ export function TableBody({
     );
   }
 
-  return <tbody>{visibleRows(data, titles).map(({ index: r }) => rowFor(r))}</tbody>;
+  return (
+    <tbody onKeyDown={onKeyDown}>
+      {visibleRows(data, titles).map(({ index: r }) => rowFor(r))}
+    </tbody>
+  );
 }

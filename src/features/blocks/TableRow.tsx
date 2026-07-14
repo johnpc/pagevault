@@ -53,7 +53,7 @@ function TableRowInner({
         </button>
       </td>
       {columns.map(({ column, index: c }) => (
-        <td key={c}>
+        <td key={c} data-cell={`${r}-${c}`}>
           <TableCell
             column={column}
             value={row[c] ?? ''}
