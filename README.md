@@ -36,6 +36,7 @@ account, no third-party service, no lock-in.
 | Blocks — text, 3 heading levels, lists, to-dos, quotes, code, images, callouts   | ✅     |
 | Code blocks — one-click copy button                                              | ✅     |
 | Code blocks — language label/picker (fenced language on export)                  | ✅     |
+| Code blocks — syntax highlighting (highlight.js, lazy-loaded, light/dark themed) | ✅     |
 | Callout blocks — pick the leading icon (💡 / ⚠️ / ✅ …) + background color       | ✅     |
 | Toggle blocks — collapse/expand to fold away nested content                      | ✅     |
 | Collapse all / expand all toggles on a page (one header action)                  | ✅     |

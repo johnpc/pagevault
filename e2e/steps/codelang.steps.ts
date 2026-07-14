@@ -22,3 +22,13 @@ When('I set the code language to {string}', async ({ page }, label: string) => {
 Then('the code block is labelled {string}', async ({ page }, label: string) => {
   await expect(codeBlock(page).getByLabel('Code language')).toHaveText(label);
 });
+
+// The highlight layer (dynamically-loaded highlight.js) paints hljs-* spans over
+// the code — assert at least one appears once it resolves.
+Then('the code block is syntax-highlighted', async ({ page }) => {
+  await expect
+    .poll(() => codeBlock(page).locator('.pv-code-highlight span[class^="hljs-"]').count(), {
+      timeout: 15_000,
+    })
+    .toBeGreaterThan(0);
+});
