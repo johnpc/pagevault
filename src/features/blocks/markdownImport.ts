@@ -1,11 +1,22 @@
 import type { BlockType } from '../../lib/pbTypes';
+import { CODE_LANGS } from './codeLangs';
 
-/** A parsed block from pasted markdown: a type, its text content, and (for list
- * items) an indentation depth derived from leading spaces. */
+/** A parsed block from pasted markdown: a type, its text content, an optional
+ * list-nesting depth (from leading spaces), and an optional code-fence language. */
 export interface ParsedBlock {
   type: BlockType;
   content: string;
   depth?: number;
+  lang?: string;
+}
+
+const CODE_TOKENS = new Set(CODE_LANGS.map((l) => l.token).filter(Boolean));
+
+/** The language token from a ``` fence's info string, kept only when it's a
+ * language the app supports (else ''). e.g. "```python" → "python". Pure. */
+function fenceLang(line: string): string {
+  const token = line.trim().replace(/^`+/, '').trim().toLowerCase();
+  return CODE_TOKENS.has(token) ? token : '';
 }
 
 /** List types whose leading indentation maps to a nesting `depth`. */
@@ -45,26 +56,26 @@ function lineToBlock(line: string): ParsedBlock {
 export function markdownToBlocks(md: string): ParsedBlock[] {
   const out: ParsedBlock[] = [];
   const lines = md.replace(/\r\n/g, '\n').split('\n');
-  let fence: string[] | null = null;
+  let fence: { lines: string[]; lang: string } | null = null;
+  const flush = () => {
+    if (fence) out.push({ type: 'code', content: fence.lines.join('\n'), lang: fence.lang });
+    fence = null;
+  };
 
   for (const line of lines) {
     if (/^```/.test(line.trim())) {
-      if (fence) {
-        out.push({ type: 'code', content: fence.join('\n') });
-        fence = null;
-      } else {
-        fence = [];
-      }
+      if (fence) flush();
+      else fence = { lines: [], lang: fenceLang(line) }; // capture ```lang
       continue;
     }
     if (fence) {
-      fence.push(line);
+      fence.lines.push(line);
       continue;
     }
     if (line.trim() === '') continue;
     out.push(lineToBlock(line));
   }
-  if (fence) out.push({ type: 'code', content: fence.join('\n') });
+  flush();
   return out;
 }
 
