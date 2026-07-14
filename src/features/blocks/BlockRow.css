@@ -40,19 +40,29 @@
   border-radius: var(--pv-radius-sm);
   padding: 2px 6px;
 }
-.pv-color--gray-bg {
+/* Each bg token is doubled with `.pv-block--callout` so a chosen background wins
+ * on a callout too. A callout has its own `background` (`.pv-block--callout`,
+ * defined later in this file); a single `.pv-color--*-bg` class ties on
+ * specificity and loses to it on source order — so the picked color was stuck.
+ * The `.pv-block--callout.pv-color--*` selector (0-2-0) overrides it cleanly. */
+.pv-color--gray-bg,
+.pv-block--callout.pv-color--gray-bg {
   background: var(--pv-bg-gray);
 }
-.pv-color--yellow-bg {
+.pv-color--yellow-bg,
+.pv-block--callout.pv-color--yellow-bg {
   background: var(--pv-bg-yellow);
 }
-.pv-color--green-bg {
+.pv-color--green-bg,
+.pv-block--callout.pv-color--green-bg {
   background: var(--pv-bg-green);
 }
-.pv-color--blue-bg {
+.pv-color--blue-bg,
+.pv-block--callout.pv-color--blue-bg {
   background: var(--pv-bg-blue);
 }
-.pv-color--pink-bg {
+.pv-color--pink-bg,
+.pv-block--callout.pv-color--pink-bg {
   background: var(--pv-bg-pink);
 }
 

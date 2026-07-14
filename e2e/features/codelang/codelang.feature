@@ -15,3 +15,10 @@ Feature: Code block language
     Then the code block is labelled "Python"
     When I reopen the page "Snippets"
     Then the code block is labelled "Python"
+
+  Scenario: Three backticks alone (no trailing space) make a code block
+    Given I have a page titled "Quick code"
+    When I open the page "Quick code"
+    And I focus the first block
+    And I type "```"
+    Then the document has a "code" block that is empty

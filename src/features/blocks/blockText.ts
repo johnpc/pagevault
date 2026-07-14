@@ -67,6 +67,9 @@ const SHORTCUTS: { prefix: RegExp; type: BlockType }[] = [
   { prefix: /^\[\] $/, type: 'todo' },
   { prefix: /^\[ \] $/, type: 'todo' },
   { prefix: /^> $/, type: 'quote' },
+  // Three backticks convert to a code block immediately (Notion behavior) — no
+  // trailing space needed. The space variant also works for muscle memory.
+  { prefix: /^```$/, type: 'code' },
   { prefix: /^``` $/, type: 'code' },
   { prefix: /^--- $/, type: 'divider' },
 ];
