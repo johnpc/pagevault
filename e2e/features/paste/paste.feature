@@ -24,3 +24,8 @@ Feature: Pasting markdown into a document
     And the document has a "bullet" block containing "Ship the beta"
     And the document has a "numbered" block containing "Draft the plan"
     And the document has a "quote" block containing "Keep it simple"
+
+  Scenario: Paste a URL over selected text to make a link
+    When I open the page "Imported notes"
+    And I select all and paste the url "https://example.com" onto "the docs"
+    Then the block renders a link "the docs" to "https://example.com"
