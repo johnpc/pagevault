@@ -24,8 +24,10 @@ const textareaKey = (key: string, value: string, caret: number, index: number): 
 
 /** Dispatch a real document-level keydown (how the active selection is driven
  * once the textarea has blurred). */
-const docKey = (key: string, shiftKey = false) =>
-  document.dispatchEvent(new KeyboardEvent('keydown', { key, shiftKey, cancelable: true }));
+const docKey = (key: string, shiftKey = false, metaKey = false) =>
+  document.dispatchEvent(
+    new KeyboardEvent('keydown', { key, shiftKey, metaKey, cancelable: true }),
+  );
 
 describe('useBlockSelection', () => {
   it('starts inactive', () => {
@@ -65,5 +67,57 @@ describe('useBlockSelection', () => {
     act(() => result.current.onKeyDown(textareaKey('ArrowDown', '', 0, 0)));
     act(() => docKey('Escape'));
     expect(result.current.active).toBe(false);
+  });
+
+  it('shift-clicks to select the range from the focused block to the clicked one', () => {
+    const { result } = renderHook(() => useBlockSelection(ids, vi.fn()));
+    act(() => result.current.noteFocus(0));
+    act(() => result.current.shiftClick(2));
+    expect(result.current.active).toBe(true);
+    expect(result.current.selectedAt(0)).toBe(true);
+    expect(result.current.selectedAt(2)).toBe(true);
+    expect(result.current.selectedAt(3)).toBe(false);
+  });
+
+  it('shift-click extends an existing selection, then Backspace deletes the range', () => {
+    const onDelete = vi.fn();
+    const { result } = renderHook(() => useBlockSelection(ids, onDelete));
+    act(() => result.current.noteFocus(1));
+    act(() => result.current.shiftClick(2)); // 1..2
+    act(() => result.current.shiftClick(3)); // extend to 1..3
+    act(() => docKey('Backspace'));
+    expect(onDelete).toHaveBeenCalledWith(['b', 'c', 'd']);
+  });
+
+  it('Cmd/Ctrl+A in a fully-selected field selects every block', () => {
+    const { result } = renderHook(() => useBlockSelection(ids, vi.fn()));
+    // A textarea keydown with the whole value selected → escalate to all blocks.
+    const el = document.createElement('textarea');
+    el.value = 'hi';
+    Object.defineProperty(el, 'selectionStart', { value: 0 });
+    Object.defineProperty(el, 'selectionEnd', { value: 2 });
+    const nativeEvent = { stopImmediatePropagation: vi.fn() };
+    act(() =>
+      result.current.onKeyDown({
+        key: 'a',
+        metaKey: true,
+        ctrlKey: false,
+        preventDefault: vi.fn(),
+        target: el,
+        nativeEvent,
+      } as unknown as KE),
+    );
+    expect(result.current.active).toBe(true);
+    expect(result.current.selectedAt(0)).toBe(true);
+    expect(result.current.selectedAt(3)).toBe(true);
+  });
+
+  it('Cmd/Ctrl+A while already selecting grows to all blocks', () => {
+    const { result } = renderHook(() => useBlockSelection(ids, vi.fn()));
+    act(() => result.current.noteFocus(1));
+    act(() => result.current.shiftClick(2)); // 1..2 active
+    act(() => docKey('a', false, true)); // Cmd+A at document level
+    expect(result.current.selectedAt(0)).toBe(true);
+    expect(result.current.selectedAt(3)).toBe(true);
   });
 });

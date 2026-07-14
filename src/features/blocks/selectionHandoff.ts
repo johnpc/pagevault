@@ -43,3 +43,19 @@ export function handoffSelection(
   if (index < 0) return null;
   return { anchor: index, focus: Math.max(0, Math.min(count - 1, index + dir)) };
 }
+
+/**
+ * Whether a Cmd/Ctrl+A in a block's textarea should escalate to selecting ALL
+ * blocks (vs. selecting the field's text). Notion's rule: the first Cmd+A
+ * selects the block's text; a second one — pressed when the text is already
+ * fully selected (or the block is empty) — selects every block. Pure.
+ */
+export function isSelectAllBlocks(
+  e: Pick<KeyboardEvent, 'key' | 'metaKey' | 'ctrlKey'>,
+  value: string,
+  start: number,
+  end: number,
+): boolean {
+  if (!(e.metaKey || e.ctrlKey) || e.key.toLowerCase() !== 'a') return false;
+  return start === 0 && end === value.length;
+}

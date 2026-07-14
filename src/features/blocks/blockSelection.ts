@@ -53,3 +53,19 @@ export function indexAfterDelete(sel: BlockSelection): number {
   const [lo] = selectionBounds(sel);
   return Math.max(0, lo - 1);
 }
+
+/**
+ * The selection after a Shift+Click on block `index`. With no current selection,
+ * the anchor is the currently-focused block (`focusedIndex`, or `index` when
+ * nothing is focused) and the focus moves to the clicked block — selecting the
+ * range between. With an existing selection, keep the anchor and only move the
+ * focus to the clicked block (extend). Pure.
+ */
+export function selectionFromShiftClick(
+  sel: BlockSelection | null,
+  index: number,
+  focusedIndex: number | null,
+): BlockSelection {
+  if (sel) return { anchor: sel.anchor, focus: index };
+  return { anchor: focusedIndex ?? index, focus: index };
+}
