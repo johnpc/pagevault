@@ -45,4 +45,11 @@ describe('FormattedText', () => {
     const link = screen.getByRole('link', { name: 'https://ex.com/x' });
     expect(link).toHaveAttribute('href', 'https://ex.com/x');
   });
+
+  it('does NOT render a javascript: link as an anchor (XSS guard)', () => {
+    render(<FormattedText text="[click me](javascript:alert(1))" />);
+    // The text is still shown, but not as a clickable/executable link.
+    expect(screen.queryByRole('link')).not.toBeInTheDocument();
+    expect(screen.getByText('click me')).toBeInTheDocument();
+  });
 });

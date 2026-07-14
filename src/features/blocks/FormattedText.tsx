@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { parseInline } from './inlineMarkdown';
+import { safeHref } from './safeHref';
 
 /** Renders inline markdown (bold / italic / code / strikethrough / underline),
  * page mentions, and external links as styled spans. A mention becomes a link to
@@ -15,18 +16,18 @@ export function FormattedText({ text }: { text: string }) {
               @{seg.text}
             </Link>
           );
-        if (seg.href)
-          return (
-            <a
-              key={i}
-              className="pv-link"
-              href={seg.href}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {seg.text}
-            </a>
-          );
+        if (seg.href) {
+          // Only render an anchor for a safe scheme; a javascript:/data: href
+          // would be an XSS vector, so fall through to plain text.
+          const href = safeHref(seg.href);
+          if (href)
+            return (
+              <a key={i} className="pv-link" href={href} target="_blank" rel="noopener noreferrer">
+                {seg.text}
+              </a>
+            );
+          return <span key={i}>{seg.text}</span>;
+        }
         if (seg.code) return <code key={i}>{seg.text}</code>;
         if (seg.bold) return <strong key={i}>{seg.text}</strong>;
         if (seg.italic) return <em key={i}>{seg.text}</em>;
