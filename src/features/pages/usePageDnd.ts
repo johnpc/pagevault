@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import type { PageRecord } from '../../lib/pbClient';
 import { reorderSiblings } from './reorderPages';
 import { useReorderPages } from './reorderPagesApi';
@@ -40,5 +40,10 @@ export function usePageDnd(pages: PageRecord[]): PageDndHandlers {
     [draggingId, pages, reorder, reset],
   );
 
-  return { draggingId, overId, onDragStart, onDragOver, onDrop, onDragEnd: reset };
+  // Memoize the handlers bag so it's stable across renders (only changing with
+  // drag state) — lets Sidebar reuse work when only the route/collapse changed.
+  return useMemo(
+    () => ({ draggingId, overId, onDragStart, onDragOver, onDrop, onDragEnd: reset }),
+    [draggingId, overId, onDragStart, onDragOver, onDrop, reset],
+  );
 }
