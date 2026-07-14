@@ -23,6 +23,16 @@ describe('LoadState', () => {
     expect(screen.queryByText('content')).not.toBeInTheDocument();
   });
 
+  it('shows skeleton rows while loading when skeletonRows is set', () => {
+    const { container } = render(
+      <LoadState loading error={false} empty={false} skeletonRows={4}>
+        <p>content</p>
+      </LoadState>,
+    );
+    expect(container.querySelectorAll('.pv-skeleton-row')).toHaveLength(4);
+    expect(screen.queryByText('content')).not.toBeInTheDocument();
+  });
+
   it('shows a titled empty state', () => {
     render(
       <LoadState loading={false} error={false} empty emptyTitle="No pages">

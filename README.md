@@ -71,6 +71,7 @@ account, no third-party service, no lock-in.
 | Page font style — Default / Serif / Mono (per page)                            | ✅     |
 | Live sync across open tabs/devices (PocketBase realtime)                       | ✅     |
 | Light / dark / system theme (Settings switcher)                                | ✅     |
+| Skeleton loading placeholders on list screens (sidebar, trash)                 | ✅     |
 | Keyboard shortcut help overlay (?)                                             | ✅     |
 | Accessible popovers — Escape/outside-click close, focus-trapped while open     | ✅     |
 | Toggle the sidebar with ⌘\ / Ctrl+\ (floating restore button)                  | ✅     |

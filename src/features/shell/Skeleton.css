@@ -1,0 +1,39 @@
+.pv-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+}
+.pv-skeleton-row {
+  height: 16px;
+  border-radius: var(--pv-radius-sm);
+  background: linear-gradient(
+    90deg,
+    var(--pv-hover) 25%,
+    var(--pv-border) 50%,
+    var(--pv-hover) 75%
+  );
+  background-size: 200% 100%;
+  animation: pv-skeleton-shimmer 1.3s ease-in-out infinite;
+}
+/* Vary the widths so it reads as text lines, not a solid block. */
+.pv-skeleton-row:nth-child(3n) {
+  width: 70%;
+}
+.pv-skeleton-row:nth-child(3n + 1) {
+  width: 90%;
+}
+
+@keyframes pv-skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pv-skeleton-row {
+    animation: none;
+  }
+}
