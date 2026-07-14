@@ -1,16 +1,16 @@
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import type { TableData } from '../../lib/pbTypes';
-import { moveRow } from './tableSort';
 import { visibleRows } from './tableFilter';
 import { visibleColumns } from './tableColumns';
 import type { TitleMap } from './cellText';
 import { TableRow } from './TableRow';
+import { useTableRowActions } from './useTableRowActions';
 import { isGrouped, tableGroups, isCollapsed, toggleCollapsed } from './tableGrouping';
 
 /** The table body: editable rows honoring the grid's non-destructive filter,
  * each keeping its REAL index. When grouping is on, rows render under collapsible
- * section headers (grouped by the group-by select column). Row-drag state is
- * local; a drop reorders the underlying rows. */
+ * section headers. Rows are memoized and fed stable callbacks (see
+ * useTableRowActions), so editing one cell re-renders only that row. */
 export function TableBody({
   data,
   save,
@@ -21,26 +21,46 @@ export function TableBody({
   titles?: TitleMap;
 }) {
   const [dragRow, setDragRow] = useState<number | null>(null);
-  const drop = (to: number) => {
-    if (dragRow !== null && dragRow !== to) save(moveRow(data, dragRow, to));
-    setDragRow(null);
-  };
+  const { onCell, onDelete, onDuplicate, moveTo } = useTableRowActions(data, save);
+  // Memo on data.columns (not data): setCell preserves the columns array ref, so
+  // `columns` stays referentially stable across cell edits — keeping the memoized
+  // rows from busting when only a sibling cell changed. visibleColumns reads only
+  // data.columns, so this dep is complete despite the lint heuristic.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const columns = useMemo(() => visibleColumns(data), [data.columns]);
+  const canDelete = data.rows.length > 1;
+
+  const onDragStart = useCallback((r: number) => setDragRow(r), []);
+  const onDragEnd = useCallback(() => setDragRow(null), []);
+  const onDrop = useCallback(
+    (to: number) => {
+      setDragRow((from) => {
+        if (from !== null) moveTo(from, to);
+        return null;
+      });
+    },
+    [moveTo],
+  );
+
   const rowFor = (r: number) => (
     <TableRow
       key={r}
-      data={data}
-      save={save}
+      columns={columns}
       r={r}
       row={data.rows[r]}
+      canDelete={canDelete}
       dragging={dragRow === r}
-      onDragStart={() => setDragRow(r)}
-      onDragEnd={() => setDragRow(null)}
-      onDrop={() => drop(r)}
+      onCell={onCell}
+      onDelete={onDelete}
+      onDuplicate={onDuplicate}
+      onDragStart={onDragStart}
+      onDragEnd={onDragEnd}
+      onDrop={onDrop}
     />
   );
 
   if (isGrouped(data)) {
-    const span = visibleColumns(data).length + 2; // + drag + delete columns
+    const span = columns.length + 2; // + drag + delete columns
     return (
       <tbody>
         {tableGroups(data, titles).map((g) => {
