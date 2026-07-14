@@ -54,6 +54,15 @@ describe('heartbeat', () => {
     await heartbeat('pg');
     expect(presence.getFirstListItem).not.toHaveBeenCalled();
   });
+
+  it('recovers from a concurrent-create conflict by touching the winning row', async () => {
+    // First find → none (so we create); create races and rejects (unique); re-find
+    // now sees the row a concurrent heartbeat created → we update it, not throw.
+    presence.getFirstListItem.mockResolvedValueOnce(null).mockResolvedValueOnce({ id: 'won' });
+    presence.create.mockRejectedValueOnce(new Error('validation_not_unique'));
+    await expect(heartbeat('pg', 'b2')).resolves.toBeUndefined();
+    expect(presence.update).toHaveBeenCalledWith('won', { user: 'me', block: 'b2' });
+  });
 });
 
 describe('clearPresence', () => {

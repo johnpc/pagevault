@@ -23,6 +23,13 @@ export const PB_URL = import.meta.env.VITE_PB_URL ?? 'http://localhost:8090';
 
 export const pb = new PocketBase(PB_URL);
 
+// Disable PocketBase's per-request-key auto-cancellation. react-query already
+// owns request lifecycle + dedup, and PB's cancellation was surfacing as
+// unhandled rejections AND could fire a superseded mutation's onError — which
+// rolls back a still-valid optimistic update. Letting every request run to
+// completion (latest write wins) is correct here and quieter.
+pb.autoCancellation(false);
+
 // A signed-in visitor is one whose persisted auth token is still valid.
 export const isSignedIn = (): boolean => pb.authStore.isValid;
 

@@ -22,14 +22,30 @@ export function fetchPresence(pageId: string): Promise<PresenceRecord[]> {
 export async function heartbeat(pageId: string, block = ''): Promise<void> {
   const user = currentUserId();
   if (!user) return;
-  const existing = await pb
-    .collection('presence')
-    .getFirstListItem<PresenceRecord>(`page = '${pageId}' && user = '${user}'`)
-    .catch(() => null);
+  const find = () =>
+    pb
+      .collection('presence')
+      .getFirstListItem<PresenceRecord>(`page = '${pageId}' && user = '${user}'`)
+      .catch(() => null);
+  const existing = await find();
   if (existing) {
-    await pb.collection('presence').update(existing.id, { user, block });
-  } else {
+    await pb
+      .collection('presence')
+      .update(existing.id, { user, block })
+      .catch(() => undefined);
+    return;
+  }
+  try {
     await pb.collection('presence').create({ page: pageId, user, block });
+  } catch {
+    // A concurrent heartbeat may have created the row first (unique page+user) —
+    // re-find and touch it instead of surfacing the create's 400.
+    const row = await find();
+    if (row)
+      await pb
+        .collection('presence')
+        .update(row.id, { user, block })
+        .catch(() => undefined);
   }
 }
 

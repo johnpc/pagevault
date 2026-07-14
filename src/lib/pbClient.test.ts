@@ -5,6 +5,10 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 vi.mock('pocketbase', () => ({
   default: class {
     authStore = { isValid: false, record: null as { id: string } | null };
+    // The client disables auto-cancellation at load; the mock just accepts it.
+    autoCancellation() {
+      return this;
+    }
   },
 }));
 
