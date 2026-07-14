@@ -3,13 +3,14 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { SidebarRow } from './SidebarRow';
+import { sidebarRowEqual, type SidebarRowProps } from './sidebarRowEqual';
 import type { PageNode } from './pageTree';
 import type { PageDndHandlers } from './usePageDnd';
 import type { PageRecord } from '../../lib/pbClient';
 
-const noopDnd: PageDndHandlers = {
-  draggingId: null,
-  overId: null,
+const noop = () => {};
+
+const noopHandlers: PageDndHandlers = {
   onDragStart: () => {},
   onDragOver: () => {},
   onDrop: () => {},
@@ -42,7 +43,7 @@ const renderRow = (
   n: PageNode,
   collapsed = new Set<string>(),
   onToggle = vi.fn(),
-  dnd: PageDndHandlers = noopDnd,
+  handlers: PageDndHandlers = noopHandlers,
 ) => {
   let location = '';
   render(
@@ -53,7 +54,9 @@ const renderRow = (
         activeId="parent"
         collapsed={collapsed}
         onToggle={onToggle}
-        dnd={dnd}
+        handlers={handlers}
+        draggingId={null}
+        overId={null}
       />
       <Route
         path="*"
@@ -96,27 +99,62 @@ describe('SidebarRow', () => {
   });
 
   it('wires drag reordering: grip starts the drag, the row is the drop target', () => {
-    const dnd: PageDndHandlers = {
-      ...noopDnd,
+    const handlers: PageDndHandlers = {
       onDragStart: vi.fn(),
       onDragOver: vi.fn(),
       onDrop: vi.fn(),
       onDragEnd: vi.fn(),
       onPointerDown: vi.fn(() => vi.fn()),
     };
-    renderRow({ page: mk('solo', { title: 'Solo' }), children: [] }, new Set(), vi.fn(), dnd);
+    renderRow({ page: mk('solo', { title: 'Solo' }), children: [] }, new Set(), vi.fn(), handlers);
     const grip = screen.getByRole('button', { name: /Drag Solo/ });
     // Native drag starts from the grip; the row is the drop target.
     fireEvent.dragStart(grip);
-    expect(dnd.onDragStart).toHaveBeenCalledWith('solo');
+    expect(handlers.onDragStart).toHaveBeenCalledWith('solo');
     fireEvent.pointerDown(grip);
-    expect(dnd.onPointerDown).toHaveBeenCalledWith('solo');
+    expect(handlers.onPointerDown).toHaveBeenCalledWith('solo');
     const row = grip.closest('.pv-sidebar-row')!;
     fireEvent.dragOver(row);
-    expect(dnd.onDragOver).toHaveBeenCalledWith('solo');
+    expect(handlers.onDragOver).toHaveBeenCalledWith('solo');
     fireEvent.drop(row);
-    expect(dnd.onDrop).toHaveBeenCalledWith('solo');
+    expect(handlers.onDrop).toHaveBeenCalledWith('solo');
     fireEvent.dragEnd(row);
-    expect(dnd.onDragEnd).toHaveBeenCalled();
+    expect(handlers.onDragEnd).toHaveBeenCalled();
+  });
+});
+
+describe('sidebarRowEqual (memo comparator)', () => {
+  const base = (): SidebarRowProps => ({
+    node: { page: mk('a', { title: 'A' }), children: [] },
+    depth: 0,
+    activeId: undefined,
+    collapsed: new Set<string>(),
+    onToggle: noop,
+    handlers: noopHandlers,
+    draggingId: null,
+    overId: null,
+  });
+
+  it('skips re-render when drag state changes for OTHER rows', () => {
+    // draggingId/overId point at a different row ("b") → this row ("a") is equal.
+    const a = base();
+    expect(sidebarRowEqual(a, { ...a, draggingId: 'b', overId: 'b' })).toBe(true);
+  });
+
+  it('re-renders when THIS row becomes the dragged row', () => {
+    const a = base();
+    expect(sidebarRowEqual(a, { ...a, draggingId: 'a' })).toBe(false);
+  });
+
+  it('re-renders when THIS row becomes the drop-hover target', () => {
+    const a = base();
+    expect(sidebarRowEqual(a, { ...a, draggingId: 'b', overId: 'a' })).toBe(false);
+  });
+
+  it('re-renders when a non-drag prop changes (active, depth, collapsed)', () => {
+    const a = base();
+    expect(sidebarRowEqual(a, { ...a, activeId: 'a' })).toBe(false);
+    expect(sidebarRowEqual(a, { ...a, depth: 1 })).toBe(false);
+    expect(sidebarRowEqual(a, { ...a, collapsed: new Set(['a']) })).toBe(false);
   });
 });
