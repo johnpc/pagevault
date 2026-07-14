@@ -46,7 +46,7 @@ export function BlockRows(props: BlockRowsProps) {
             onIndent={row.onIndent}
             onPasteMarkdown={row.onPasteMarkdown}
             onUpload={row.onUpload}
-            onEnter={(caret, value) => row.onSplit(block, caret, value)}
+            onSplit={row.onSplit}
             autoFocus={block.id === props.focusId}
             onFocused={row.onFocused}
             dnd={row.dnd}

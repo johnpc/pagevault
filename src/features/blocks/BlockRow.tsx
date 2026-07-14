@@ -1,14 +1,11 @@
+import { memo } from 'react';
 import type { BlockRecord } from '../../lib/pbClient';
 import { useBlockDrag } from './useBlockDrag';
 import { MediaBlockRow } from './MediaBlockRow';
-import { BlockLead } from './BlockLead';
-import { TextBlockBody } from './TextBlockBody';
-import { BlockControls } from './BlockControls';
+import { TextBlockRow } from './TextBlockRow';
 import { alignClass } from './blockAlign';
 import { blockAnchorId } from './tocData';
-import { BlockCursors } from '../presence/BlockCursors';
 import { useReportFocus } from '../presence/useReportFocus';
-import { CalloutIcon } from './CalloutIcon';
 import './BlockRow.css';
 
 /** Block types that render as a whole element via MediaBlockRow, not a text line. */
@@ -31,37 +28,39 @@ interface BlockRowProps {
   onIndent: (id: string, dir: 'in' | 'out') => void;
   onPasteMarkdown: (block: BlockRecord, text: string) => void;
   onUpload: (id: string, file: File) => void;
-  onEnter: (caret: number, value: string) => boolean;
+  onSplit: (block: BlockRecord, caret: number, value: string) => boolean;
   autoFocus?: boolean;
   onFocused?: () => void;
   dnd: BlockDndHandlers;
 }
 
-/** One block row: the drag handle + a type-specific body (divider rule, image,
- * or the editable text body). `depth` indents the row for nested lists. */
-export function BlockRow(props: BlockRowProps) {
+/** One block row: drag handle + a type-specific body (divider/image/media or the
+ * editable text body). Memoized below so a sibling's edit/selection/drag doesn't
+ * re-render every row — only rows whose own props change. */
+function BlockRowInner(props: BlockRowProps) {
   const { block, onEdit, onRemove, onDuplicate, onIndent, onPasteMarkdown } = props;
-  const { onEnter, autoFocus, onFocused, dnd } = props;
+  const { onSplit, autoFocus, onFocused, dnd } = props;
   const { cls, rowDrag, handle } = useBlockDrag(block, onEdit, dnd);
   const focusReport = useReportFocus(block.id);
   const style = { marginLeft: `${(block.depth ?? 0) * 24}px` };
   const rowCls = `${cls} ${alignClass(block.align)}`.trim();
 
   // Divider / image / table render as whole elements, not an editable text line.
-  const media = (
-    <MediaBlockRow
-      block={block}
-      cls={cls}
-      style={style}
-      rowDrag={rowDrag}
-      handle={handle}
-      onEdit={onEdit}
-      onRemove={onRemove}
-      onDuplicate={onDuplicate}
-      onUpload={props.onUpload}
-    />
-  );
-  if (MEDIA_TYPES.has(block.type)) return media;
+  if (MEDIA_TYPES.has(block.type)) {
+    return (
+      <MediaBlockRow
+        block={block}
+        cls={cls}
+        style={style}
+        rowDrag={rowDrag}
+        handle={handle}
+        onEdit={onEdit}
+        onRemove={onRemove}
+        onDuplicate={onDuplicate}
+        onUpload={props.onUpload}
+      />
+    );
+  }
 
   return (
     <div
@@ -71,29 +70,20 @@ export function BlockRow(props: BlockRowProps) {
       {...rowDrag}
       {...focusReport}
     >
-      <BlockCursors blockId={block.id} />
-      <BlockLead block={block} onEdit={onEdit} />
-      {handle}
-      {block.type === 'callout' && (
-        <CalloutIcon value={block.emoji ?? ''} onPick={(emoji) => onEdit(block.id, { emoji })} />
-      )}
-      <TextBlockBody
+      <TextBlockRow
         block={block}
+        handle={handle}
         onEdit={onEdit}
         onRemove={onRemove}
-        onEnter={onEnter}
-        onIndent={(dir) => onIndent(block.id, dir)}
-        onPasteMarkdown={(text) => onPasteMarkdown(block, text)}
+        onDuplicate={onDuplicate}
+        onIndent={onIndent}
+        onPasteMarkdown={onPasteMarkdown}
+        onSplit={onSplit}
         autoFocus={autoFocus}
         onFocused={onFocused}
-      />
-      <BlockControls
-        block={block}
-        onEdit={onEdit}
-        onDuplicate={onDuplicate}
-        onRemove={onRemove}
-        align
       />
     </div>
   );
 }
+
+export const BlockRow = memo(BlockRowInner);

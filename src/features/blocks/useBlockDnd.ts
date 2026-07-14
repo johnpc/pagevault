@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 /**
  * Minimal drag-and-drop state for reordering blocks. Tracks which block id is
@@ -26,5 +26,11 @@ export function useBlockDnd(onMove: (fromId: string, toId: string) => void) {
     setOverId(null);
   }, []);
 
-  return { draggingId, overId, onDragStart, onDragOver, onDrop, onDragEnd };
+  // Memoize the handlers bag so it's referentially stable across renders (only
+  // changing when drag state does) — lets a memoized BlockRow skip re-rendering
+  // rows that aren't the one being dragged/hovered.
+  return useMemo(
+    () => ({ draggingId, overId, onDragStart, onDragOver, onDrop, onDragEnd }),
+    [draggingId, overId, onDragStart, onDragOver, onDrop, onDragEnd],
+  );
 }
