@@ -104,7 +104,12 @@ describe('looksLikeMarkdown', () => {
     expect(looksLikeMarkdown('# heading')).toBe(true);
     expect(looksLikeMarkdown('- item')).toBe(true);
   });
-  it('is false for a plain single line', () => {
+  it('is true for a lone standalone image (matches the parser)', () => {
+    expect(looksLikeMarkdown('![](https://x/i.png)')).toBe(true);
+    expect(looksLikeMarkdown('![alt](https://x/p.jpg)')).toBe(true);
+  });
+  it('is false for a plain single line or an inline/embedded image', () => {
     expect(looksLikeMarkdown('just some words')).toBe(false);
+    expect(looksLikeMarkdown('see ![](x) here')).toBe(false);
   });
 });
