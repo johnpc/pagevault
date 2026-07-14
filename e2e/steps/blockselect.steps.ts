@@ -23,6 +23,28 @@ When('I select the last {int} blocks upward', async ({ page }, n: number) => {
   }
 });
 
+When('I click into block {int}', async ({ page }, n: number) => {
+  await inputs(page)
+    .nth(n - 1)
+    .click();
+});
+
+When('I shift-click block {int}', async ({ page }, n: number) => {
+  await inputs(page)
+    .nth(n - 1)
+    .click({ modifiers: ['Shift'] });
+  await expect(active(page).locator('.pv-block-selected').first()).toBeVisible();
+});
+
+When('I select all blocks with the select-all shortcut', async ({ page }) => {
+  // Cmd/Ctrl+A once selects the focused block's text; a second press escalates
+  // to selecting every block (Notion behavior). Press twice, then confirm.
+  await inputs(page).last().click();
+  await page.keyboard.press('ControlOrMeta+a');
+  await page.keyboard.press('ControlOrMeta+a');
+  await expect.poll(() => active(page).locator('.pv-block-selected').count()).toBeGreaterThan(1);
+});
+
 When('I press Backspace to delete the selection', async ({ page }) => {
   await page.keyboard.press('Backspace');
 });

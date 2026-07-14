@@ -26,17 +26,27 @@ export function BlockRows(props: BlockRowsProps) {
   const ids = visible.map((b) => b.id);
   const selection = useBlockSelection(ids, onRemoveMany);
 
+  // A plain mousedown clears an active selection; a Shift+mousedown extends the
+  // block selection to the clicked row (and suppresses the browser's text
+  // selection) instead of clearing.
+  const onRowMouseDown = (e: React.MouseEvent, index: number) => {
+    if (e.shiftKey) {
+      e.preventDefault();
+      selection.shiftClick(index);
+    } else if (selection.active) {
+      selection.clear();
+    }
+  };
+
   return (
-    <div
-      className="pv-blocks"
-      onKeyDown={selection.onKeyDown}
-      onMouseDown={() => selection.active && selection.clear()}
-    >
+    <div className="pv-blocks" onKeyDown={selection.onKeyDown}>
       {visible.map((block, index) => (
         <div
           key={block.id}
           data-block-index={index}
           className={selection.selectedAt(index) ? 'pv-block-selected' : undefined}
+          onMouseDown={(e) => onRowMouseDown(e, index)}
+          onFocus={() => selection.noteFocus(index)}
         >
           <BlockRow
             block={block}

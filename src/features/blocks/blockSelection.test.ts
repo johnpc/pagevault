@@ -5,6 +5,7 @@ import {
   isSelected,
   moveSelection,
   indexAfterDelete,
+  selectionFromShiftClick,
 } from './blockSelection';
 
 const ids = ['a', 'b', 'c', 'd', 'e'];
@@ -58,5 +59,19 @@ describe('indexAfterDelete', () => {
   it('returns the block just above the selection (min 0)', () => {
     expect(indexAfterDelete({ anchor: 2, focus: 4 })).toBe(1);
     expect(indexAfterDelete({ anchor: 0, focus: 2 })).toBe(0);
+  });
+});
+
+describe('selectionFromShiftClick', () => {
+  it('with no selection, anchors at the focused block and focuses the clicked one', () => {
+    expect(selectionFromShiftClick(null, 3, 0)).toEqual({ anchor: 0, focus: 3 });
+  });
+
+  it('with no selection and no focused block, anchors at the clicked block', () => {
+    expect(selectionFromShiftClick(null, 3, null)).toEqual({ anchor: 3, focus: 3 });
+  });
+
+  it('with an existing selection, keeps the anchor and moves the focus (extend)', () => {
+    expect(selectionFromShiftClick({ anchor: 1, focus: 2 }, 4, 0)).toEqual({ anchor: 1, focus: 4 });
   });
 });

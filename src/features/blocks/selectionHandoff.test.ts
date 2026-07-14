@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { selectionHandoffDir, handoffSelection } from './selectionHandoff';
+import { selectionHandoffDir, handoffSelection, isSelectAllBlocks } from './selectionHandoff';
 
 const key = (k: string, shift = true) => ({ key: k, shiftKey: shift });
 
@@ -59,5 +59,25 @@ describe('handoffSelection', () => {
 
   it('returns null when the textarea is not inside a block row', () => {
     expect(handoffSelection(key('ArrowDown'), makeEl('hi', 2, -1), 4)).toBeNull();
+  });
+});
+
+describe('isSelectAllBlocks', () => {
+  const cmdA = (over = {}) => ({ key: 'a', metaKey: true, ctrlKey: false, ...over });
+
+  it('escalates when Cmd/Ctrl+A is pressed with the field text already fully selected', () => {
+    expect(isSelectAllBlocks(cmdA(), 'hello', 0, 5)).toBe(true);
+    expect(isSelectAllBlocks(cmdA({ metaKey: false, ctrlKey: true }), 'hi', 0, 2)).toBe(true);
+    expect(isSelectAllBlocks(cmdA(), '', 0, 0)).toBe(true); // empty block
+  });
+
+  it('does not escalate on the first Cmd+A (text not yet fully selected)', () => {
+    expect(isSelectAllBlocks(cmdA(), 'hello', 2, 2)).toBe(false);
+    expect(isSelectAllBlocks(cmdA(), 'hello', 0, 3)).toBe(false);
+  });
+
+  it('ignores plain A and other modified keys', () => {
+    expect(isSelectAllBlocks({ key: 'a', metaKey: false, ctrlKey: false }, 'x', 0, 1)).toBe(false);
+    expect(isSelectAllBlocks(cmdA({ key: 'b' }), 'x', 0, 1)).toBe(false);
   });
 });
