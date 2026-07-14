@@ -58,6 +58,13 @@ describe('markdownShortcut', () => {
     expect(markdownShortcut('* ')?.type).toBe('bullet');
     expect(markdownShortcut('1. ')?.type).toBe('numbered');
   });
+  it('starts a numbered list from ANY "N. " prefix, not just "1. "', () => {
+    expect(markdownShortcut('2. ')?.type).toBe('numbered');
+    expect(markdownShortcut('10. ')?.type).toBe('numbered');
+    // Malformed variants stay plain text.
+    expect(markdownShortcut('1.x ')).toBeNull();
+    expect(markdownShortcut('. ')).toBeNull();
+  });
   it('maps todo, quote, code and divider prefixes', () => {
     expect(markdownShortcut('[] ')?.type).toBe('todo');
     expect(markdownShortcut('[ ] ')?.type).toBe('todo');
