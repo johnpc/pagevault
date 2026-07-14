@@ -12,15 +12,6 @@ export function moveRow(data: TableData, from: number, to: number): TableData {
   return { columns: data.columns, rows };
 }
 
-/** Order two "missing-last" values: blanks sort after non-blanks; otherwise
- * defer to `cmp`. Shared by number + date columns. Pure. */
-function blanksLast(a: string, b: string, cmp: (a: string, b: string) => number): number {
-  if (!a && !b) return 0;
-  if (!a) return 1;
-  if (!b) return -1;
-  return cmp(a, b);
-}
-
 /** Numeric comparison that treats an unparseable value as "greater" (sorts
  * after real numbers), so junk in a number column doesn't sort chaotically. */
 function cmpNumeric(a: string, b: string): number {
@@ -32,14 +23,19 @@ function cmpNumeric(a: string, b: string): number {
   return na - nb;
 }
 
+/** Column types whose empty cells always sort to the bottom — regardless of
+ * asc/desc — matching Notion/Airtable/Excel (an empty date/number isn't "less
+ * than" or "greater than" real values, it's just absent). */
+const BLANKS_LAST_TYPES = new Set<TableColumnType>(['number', 'date']);
+
 /** Compare two cell values for a column, respecting its type: numbers sort
- * numerically (blanks last), checkboxes checked-first, dates chronologically
- * (ISO, blanks last), else case-insensitively. */
+ * numerically, checkboxes checked-first, dates chronologically (ISO), else
+ * case-insensitively. Blank handling for number/date is applied separately (see
+ * sortByColumn) so blanks stay last in BOTH directions. */
 function compareCells(a: string, b: string, type: TableColumnType): number {
-  if (type === 'number') return blanksLast(a, b, cmpNumeric);
+  if (type === 'number') return cmpNumeric(a, b);
   if (type === 'checkbox') return (b === 'true' ? 1 : 0) - (a === 'true' ? 1 : 0);
-  // ISO YYYY-MM-DD sorts lexicographically; empty dates sort last.
-  if (type === 'date') return blanksLast(a, b, (x, y) => (x < y ? -1 : x > y ? 1 : 0));
+  if (type === 'date') return a < b ? -1 : a > b ? 1 : 0; // ISO sorts lexicographically
   return a.localeCompare(b, undefined, { sensitivity: 'base' });
 }
 
@@ -57,9 +53,19 @@ export function sortByColumn(
   const cmpType: TableColumnType = type === 'relation' ? 'text' : type;
   const at = (row: string[]) => (column ? cellText(column, row[c] ?? '', titles) : (row[c] ?? ''));
   const sign = dir === 'desc' ? -1 : 1;
+  // For number/date columns, an empty cell always sorts last — in BOTH
+  // directions — so it's placed before applying the direction sign.
+  const blanksLast = BLANKS_LAST_TYPES.has(cmpType);
+  const cmp = (av: string, bv: string) => {
+    if (blanksLast && (!av || !bv)) {
+      if (!av && !bv) return 0;
+      return !av ? 1 : -1; // direction-independent: blank goes to the bottom
+    }
+    return compareCells(av, bv, cmpType) * sign;
+  };
   const rows = data.rows
     .map((row, i) => ({ row, i }))
-    .sort((x, y) => compareCells(at(x.row), at(y.row), cmpType) * sign || x.i - y.i)
+    .sort((x, y) => cmp(at(x.row), at(y.row)) || x.i - y.i)
     .map((e) => e.row);
   return { columns: data.columns, rows };
 }
