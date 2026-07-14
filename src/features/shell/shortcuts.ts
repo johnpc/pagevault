@@ -15,6 +15,7 @@ export const SHORTCUTS: Shortcut[] = [
   { keys: '> ', action: 'Quote block ( ``` for code, --- for divider )' },
   { keys: '**text**', action: 'Bold (  *text* italic,  `text` inline code )' },
   { keys: 'Enter', action: 'Add a new block below' },
+  { keys: '↑ / ↓', action: 'Move the caret to the block above / below (at a block edge)' },
   { keys: 'Backspace', action: 'Delete an empty block' },
 ];
 

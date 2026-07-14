@@ -5,6 +5,7 @@ import { markdownShortcut } from './blockText';
 import { slashMatches, type SlashCommand } from './slashCommands';
 import { slashNav } from './slashNav';
 import { applyFormatKey } from './wrapSelection';
+import { makeEditKey } from './blockEditKey';
 import { useReconciled } from './useReconciled';
 
 /**
@@ -53,30 +54,14 @@ export function useBlockInput(
   const slashKey = (e: KeyboardEvent): boolean =>
     slashNav(e, matches, active, { setActive, pick, clear: () => setValue('') });
 
-  // Split at the caret into a new block below. Code blocks return false so the
-  // real newline goes through; everything else prevents the default.
-  const enterKey = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-    const caret = e.currentTarget.selectionStart;
-    if (!onEnter(caret, value)) return;
-    e.preventDefault();
-    // Keep local state in sync with the trimmed source so the follow-on blur
-    // save doesn't clobber the split with the pre-split value.
-    setValue(value.slice(0, caret));
-  };
-
-  // Tab indents, Enter splits, Backspace-on-empty removes. Split out so keyDown
-  // stays a flat chain of guards (keeps its complexity low).
-  const editKey = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Tab') {
-      e.preventDefault();
-      onIndent(e.shiftKey ? 'out' : 'in');
-    } else if (e.key === 'Enter' && !e.shiftKey) {
-      enterKey(e);
-    } else if (e.key === 'Backspace' && value === '') {
-      e.preventDefault();
-      onRemove(block.id);
-    }
-  };
+  // Tab/Enter/Backspace/edge-arrow handling (see makeEditKey).
+  const editKey = makeEditKey({
+    value,
+    onIndent,
+    onEnter,
+    onRemove: () => onRemove(block.id),
+    setValue,
+  });
 
   const keyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (slashKey(e)) return;
