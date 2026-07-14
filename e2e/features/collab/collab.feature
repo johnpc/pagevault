@@ -14,3 +14,23 @@ Feature: Collaborate on a page via an invite link
     When a second user opens the invite link
     And the second user joins the page
     Then the second user sees a block containing "Kickoff on Monday"
+
+  Scenario: An edit-role collaborator's changes persist
+    Given I have a page titled "Editable plan"
+    When I open the page "Editable plan"
+    And I add a block with the text "Draft"
+    And I create an invite link that can "edit"
+    When a second user opens the invite link
+    And the second user joins the page
+    And the second user appends " edited" to the first block
+    Then the second user's first block still reads "Draft edited" after reload
+
+  Scenario: A view-role collaborator cannot edit
+    Given I have a page titled "Readonly plan"
+    When I open the page "Readonly plan"
+    And I add a block with the text "Locked"
+    And I create an invite link that can "view"
+    When a second user opens the invite link
+    And the second user joins the page
+    And the second user appends " hacked" to the first block
+    Then the second user's first block still reads "Locked" after reload
