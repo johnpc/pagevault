@@ -82,7 +82,12 @@ export function markdownToBlocks(md: string): ParsedBlock[] {
   return out;
 }
 
-/** True when text looks like a multi-line / markdown-y paste worth converting. */
+/** True when text looks like a multi-line / markdown-y paste worth converting.
+ * The single-line patterns mirror what markdownToBlocks recognizes (heading,
+ * list, quote, fence, standalone image) so a lone such line converts too. */
 export function looksLikeMarkdown(text: string): boolean {
-  return text.includes('\n') || /^(#{1,3}\s|[-*]\s|\d+\.\s|>\s|```)/.test(text.trim());
+  return (
+    text.includes('\n') ||
+    /^(#{1,3}\s|[-*]\s|\d+\.\s|>\s|```|!\[[^\]]*\]\([^)]+\)$)/.test(text.trim())
+  );
 }
