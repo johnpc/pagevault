@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { usePages, useCreatePage } from './pagesApi';
 import { buildTree } from './pageTree';
@@ -19,6 +19,9 @@ export function Sidebar({ onSearch, onHelp }: { onSearch: () => void; onHelp: ()
   const create = useCreatePage();
   const dnd = usePageDnd(pages ?? []);
   const [collapsed, setCollapsed] = useState(readCollapsed);
+  // Rebuild the tree only when the page list changes — not on every route
+  // change, drag-hover, or collapse toggle that re-renders the sidebar.
+  const tree = useMemo(() => buildTree(pages ?? []), [pages]);
 
   const toggle = (pageId: string) => {
     const next = toggleCollapsed(collapsed, pageId);
@@ -58,7 +61,7 @@ export function Sidebar({ onSearch, onHelp }: { onSearch: () => void; onHelp: ()
           emptyTitle="No pages yet"
           skeletonRows={6}
         >
-          {buildTree(pages ?? []).map((node) => (
+          {tree.map((node) => (
             <SidebarRow
               key={node.page.id}
               node={node}
