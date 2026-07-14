@@ -29,6 +29,18 @@ Feature: Smooth keyboard editing
     And I press ArrowDown in the block
     Then the block containing "Charlie" is focused
 
+  Scenario: Backspace at the start of a block merges it into the one above
+    Given I have a page titled "Merge feel"
+    When I open the page "Merge feel"
+    And I focus the first block
+    And I type "Hello" then Enter
+    And I type "World"
+    Then the page has 2 blocks
+    When I put the caret at the start of the block containing "World"
+    And I press Backspace in the block
+    Then the page has 1 block
+    And the block containing "HelloWorld" is focused
+
   Scenario: Enter continues a bulleted list, and an empty item exits the list
     Given I have a page titled "List feel"
     When I open the page "List feel"

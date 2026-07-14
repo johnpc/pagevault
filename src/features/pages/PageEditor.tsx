@@ -4,7 +4,7 @@ import { usePageEditor } from './usePageEditor';
 import { LoadState } from '../shell/LoadState';
 import { PageHeader } from './PageHeader';
 import { Breadcrumbs } from './Breadcrumbs';
-import { BlockList } from './BlockList';
+import { PageBlocks } from './PageBlocks';
 import { Backlinks } from './Backlinks';
 import { Comments } from '../comments/Comments';
 import { useBlockDnd } from '../blocks/useBlockDnd';
@@ -19,13 +19,8 @@ export function PageEditor() {
   const history = useHistory();
   const { page, blocks, allPages, ...ed } = usePageEditor(id);
   const { setTitle, setIcon, setFavorite, setCover, setCoverImage, setParent, setFullWidth } = ed;
-  const { setFont } = ed;
-  const { addBlock, editBlock, removeBlock, removeBlocks, cloneBlock, indentBlock, indentMany } =
-    ed;
-  const { importMarkdown } = ed;
-  const { splitBlock, uploadImage, focusId, clearFocusId, moveBlockTo } = ed;
-  const { removePage, addSubPage, duplicate, exportMarkdown } = ed;
-  const dnd = useBlockDnd(moveBlockTo);
+  const { setFont, removePage, addSubPage, duplicate, exportMarkdown } = ed;
+  const dnd = useBlockDnd(ed.moveBlockTo);
   const collapse = useCollapseAll(id, blocks.data ?? []);
 
   const onDelete = async () => {
@@ -69,23 +64,12 @@ export function PageEditor() {
                   onFont={setFont}
                   collapse={collapse}
                 />
-                <BlockList
+                <PageBlocks
                   page={page.data}
                   blocks={blocks}
                   dnd={dnd}
-                  onEdit={editBlock}
-                  onRemove={removeBlock}
-                  onRemoveMany={removeBlocks}
-                  onIndentMany={indentMany}
-                  onDuplicate={cloneBlock}
-                  onIndent={indentBlock}
-                  onPasteMarkdown={importMarkdown}
-                  onSplit={splitBlock}
-                  onUpload={uploadImage}
-                  onAddBlock={addBlock}
+                  ed={ed}
                   onSubPage={onSubPage}
-                  focusId={focusId}
-                  onFocused={clearFocusId}
                 />
                 <Backlinks pageId={id} />
                 <Comments pageId={id} />

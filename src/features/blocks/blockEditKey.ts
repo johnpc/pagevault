@@ -6,6 +6,9 @@ interface EditKeyDeps {
   onIndent: (dir: 'in' | 'out') => void;
   onEnter: (caret: number, value: string) => boolean;
   onRemove: () => void;
+  /** Merge this block into the one above (Backspace at the very start).
+   * Returns true when it merged, so the default is prevented. */
+  onMerge: () => boolean;
   setValue: (v: string) => void;
 }
 
@@ -14,7 +17,24 @@ interface EditKeyDeps {
  * edge moves the caret to the adjacent block. Factored out of useBlockInput so
  * both stay under the line limit and each key rule is independently testable. */
 export function makeEditKey(deps: EditKeyDeps) {
-  const { value, onIndent, onEnter, onRemove, setValue } = deps;
+  const { value, onIndent, onEnter, onRemove, onMerge, setValue } = deps;
+
+  // Backspace at the very start of a block: merge into the block above (Notion).
+  // Only for a collapsed caret at offset 0; otherwise let the textarea delete a
+  // character. Returns true when it handled the key.
+  const backspaceKey = (e: KeyboardEvent<HTMLTextAreaElement>): boolean => {
+    if (value === '') {
+      e.preventDefault();
+      onRemove();
+      return true;
+    }
+    const el = e.currentTarget;
+    if (el.selectionStart === 0 && el.selectionEnd === 0 && onMerge()) {
+      e.preventDefault();
+      return true;
+    }
+    return false;
+  };
 
   const enterKey = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     const caret = e.currentTarget.selectionStart;
@@ -37,9 +57,8 @@ export function makeEditKey(deps: EditKeyDeps) {
       onIndent(e.shiftKey ? 'out' : 'in');
     } else if (e.key === 'Enter' && !e.shiftKey) {
       enterKey(e);
-    } else if (e.key === 'Backspace' && value === '') {
-      e.preventDefault();
-      onRemove();
+    } else if (e.key === 'Backspace') {
+      backspaceKey(e);
     } else {
       arrowKey(e);
     }

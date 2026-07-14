@@ -16,7 +16,10 @@ export const SHORTCUTS: Shortcut[] = [
   { keys: '**text**', action: 'Bold (  *text* italic,  `text` inline code )' },
   { keys: 'Enter', action: 'Add a new block below' },
   { keys: '↑ / ↓', action: 'Move the caret to the block above / below (at a block edge)' },
-  { keys: 'Backspace', action: 'Delete an empty block' },
+  {
+    keys: 'Backspace',
+    action: 'Delete an empty block, or merge into the block above (at its start)',
+  },
 ];
 
 /** True when a keypress originated in an editable field (so global single-key

@@ -19,6 +19,7 @@ export function useBlockInput(
   onRemove: (id: string) => void,
   onEnter: (caret: number, value: string) => boolean,
   onIndent: (dir: 'in' | 'out') => void,
+  onMerge: (value: string) => boolean,
 ) {
   const [active, setActive] = useState(0);
   const [focused, setFocused] = useState(false);
@@ -60,6 +61,7 @@ export function useBlockInput(
     onIndent,
     onEnter,
     onRemove: () => onRemove(block.id),
+    onMerge: () => onMerge(value),
     setValue,
   });
 

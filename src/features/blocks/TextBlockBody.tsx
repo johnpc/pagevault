@@ -6,10 +6,10 @@ import { looksLikeMarkdown } from './markdownImport';
 import { useBlockInput } from './useBlockInput';
 import { useMention } from './useMention';
 import { useAutoFocus } from './useAutoFocus';
-import { SlashMenu } from './SlashMenu';
-import { MentionMenu } from './MentionMenu';
+import { useSeedValue } from './useSeedValue';
+import { BlockMenus } from './BlockMenus';
+import { BlockPreview } from './BlockPreview';
 import { CodeBlockChrome } from './CodeBlockChrome';
-import { FormattedText } from './FormattedText';
 
 /** The editable body of a text-ish block: an idle formatted preview (when it
  * has inline markup) that swaps to a raw textarea for editing, plus the slash
@@ -20,8 +20,11 @@ export function TextBlockBody({
   onRemove,
   onEnter,
   onIndent,
+  onMerge,
   onPasteMarkdown,
   autoFocus,
+  autoFocusCaret,
+  autoFocusValue,
   onFocused,
 }: {
   block: BlockRecord;
@@ -29,12 +32,15 @@ export function TextBlockBody({
   onRemove: (id: string) => void;
   onEnter: (caret: number, value: string) => boolean;
   onIndent: (dir: 'in' | 'out') => void;
+  onMerge: (value: string) => boolean;
   onPasteMarkdown: (text: string) => void;
   autoFocus?: boolean;
+  autoFocusCaret?: number;
+  autoFocusValue?: string;
   onFocused?: () => void;
 }) {
   const { value, setValue, change, keyDown, save, focus, focused, matches, active, pick } =
-    useBlockInput(block, onEdit, onRemove, onEnter, onIndent);
+    useBlockInput(block, onEdit, onRemove, onEnter, onIndent, onMerge);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const mention = useMention(block.page, value, setValue, inputRef);
   const showPreview = !focused && hasInlineMarkup(value);
@@ -54,23 +60,15 @@ export function TextBlockBody({
     }
   };
 
-  // When this block was just created by Enter, grab focus so typing flows on.
-  useAutoFocus(autoFocus, inputRef, onFocused);
+  // A Backspace-merge seeds the absorbing block's value (see useSeedValue), then
+  // we focus it with the caret at the join (or the end, for an Enter-created one).
+  useSeedValue(autoFocus, autoFocusValue, value, setValue);
+  useAutoFocus(autoFocus, inputRef, onFocused, autoFocusCaret);
 
   return (
     <>
       {showPreview ? (
-        <div
-          className="pv-block-preview"
-          role="button"
-          tabIndex={0}
-          onClick={() => {
-            focus();
-            requestAnimationFrame(() => inputRef.current?.focus());
-          }}
-        >
-          <FormattedText text={value} />
-        </div>
+        <BlockPreview value={value} onEdit={focus} inputRef={inputRef} />
       ) : (
         <textarea
           ref={inputRef}
@@ -88,10 +86,7 @@ export function TextBlockBody({
         />
       )}
       <CodeBlockChrome block={block} value={value} onEdit={onEdit} />
-      {matches && <SlashMenu commands={matches} active={active} onPick={pick} />}
-      {mention.open && (
-        <MentionMenu pages={mention.matches} active={mention.active} onPick={mention.pick} />
-      )}
+      <BlockMenus matches={matches} active={active} onPick={pick} mention={mention} />
     </>
   );
 }
