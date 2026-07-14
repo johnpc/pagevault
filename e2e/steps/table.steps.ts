@@ -55,6 +55,39 @@ When('I touch-drag table row {int} onto row {int}', async ({ page }, from: numbe
   }
 });
 
+// Touch/pen column reorder via Pointer Events: press the header ⠿ grip, move
+// over the target header cell, release.
+When(
+  'I touch-drag table column {int} onto column {int}',
+  async ({ page }, from: number, to: number) => {
+    const grip = table(page).getByLabel(`Drag column ${from}`);
+    const th = table(page).locator('thead th').nth(to); // nth(0) is the drag-spacer column, so column N is nth(N)
+    const gb = await grip.boundingBox();
+    const tb = await th.boundingBox();
+    if (!gb || !tb) throw new Error('missing column grip or target header');
+    await grip.dispatchEvent('pointerdown', {
+      pointerType: 'touch',
+      pointerId: 1,
+      clientX: gb.x + gb.width / 2,
+      clientY: gb.y + gb.height / 2,
+      bubbles: true,
+    });
+    const x = tb.x + tb.width / 2;
+    const y = tb.y + tb.height / 2;
+    for (const t of ['pointermove', 'pointerup']) {
+      await page.evaluate(
+        ({ t, x, y }) => {
+          const e = new Event(t, { bubbles: true }) as Event & { clientX: number; clientY: number };
+          e.clientX = x;
+          e.clientY = y;
+          document.dispatchEvent(e);
+        },
+        { t, x, y },
+      );
+    }
+  },
+);
+
 When('I focus table cell {string}', async ({ page }, cell: string) => {
   await table(page).getByLabel(`Cell ${cell}`).click();
 });
