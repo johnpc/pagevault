@@ -1,6 +1,7 @@
 import { useCallback, type Dispatch, type SetStateAction } from 'react';
 import { useSplitBlock } from './splitBlockApi';
 import { enterAction } from './enterKey';
+import type { LatestRef } from '../../lib/useLatestRef';
 import type { BlockRecord } from '../../lib/pbClient';
 
 interface Deps {
@@ -14,8 +15,8 @@ interface Deps {
  * below (Notion feel), continue/exit a list, or fall through to a real newline
  * inside code. Returns true when handled (caller then prevents the default).
  */
-export function useEnterSplit(pageId: string, blocks: BlockRecord[], deps: Deps) {
-  const splitBlockMut = useSplitBlock(pageId);
+export function useEnterSplit(pageId: string, blocks: LatestRef<BlockRecord[]>, deps: Deps) {
+  const { mutate: splitMutate } = useSplitBlock(pageId);
   const { indentBlock, editBlock, setFocusId } = deps;
 
   return useCallback(
@@ -25,12 +26,12 @@ export function useEnterSplit(pageId: string, blocks: BlockRecord[], deps: Deps)
       if (action.kind === 'outdent') indentBlock(source.id, 'out');
       else if (action.kind === 'exit-list') editBlock(source.id, { type: 'text' });
       else
-        splitBlockMut.mutate(
-          { source, ...action, blocks },
+        splitMutate(
+          { source, ...action, blocks: blocks.current },
           { onSuccess: (created) => setFocusId(created.id) },
         );
       return true; // handled
     },
-    [splitBlockMut, indentBlock, editBlock, setFocusId, blocks],
+    [splitMutate, indentBlock, editBlock, setFocusId, blocks],
   );
 }

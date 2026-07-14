@@ -1,11 +1,11 @@
 import { useCallback } from 'react';
+import { useLatestRef } from '../../lib/useLatestRef';
 import { useCreateBlock, useDuplicateBlock } from './blocksApi';
 import { useDeleteWithUndo } from './useDeleteWithUndo';
-import { useSetDepths } from './blockBatchApi';
 import { useUpdateBlock } from './updateBlockApi';
 import { useUploadBlockFile } from './uploadBlockFileApi';
 import { useMoveBlock } from './useMoveBlock';
-import { indentUpdates } from './indent';
+import { useIndent } from './useIndent';
 import { useImportMarkdown } from './markdownImportApi';
 import { markdownToBlocks } from './markdownImport';
 import { useEnterSplit } from './useEnterSplit';
@@ -19,62 +19,54 @@ import type { BlockType } from '../../lib/pbTypes';
  * Split out of usePageEditor so each surface stays small and single-purpose.
  */
 export function useBlockActions(pageId: string, blocks: BlockRecord[]) {
-  const createBlock = useCreateBlock(pageId);
-  const updateBlock = useUpdateBlock(pageId);
-  const deleteWithUndo = useDeleteWithUndo(pageId, blocks);
-  const setDepths = useSetDepths(pageId);
-  const duplicateBlock = useDuplicateBlock(pageId);
-  const moveBlockTo = useMoveBlock(pageId, blocks);
-  const uploadFile = useUploadBlockFile(pageId);
-  const importMd = useImportMarkdown(pageId);
+  // Every keystroke optimistically rewrites the blocks cache, so `blocks` gets a
+  // new array identity and useMutation returns a new object. Both would churn
+  // the callbacks below and defeat BlockRow's memo (all rows re-render per key).
+  // So we read blocks via a latest-ref and depend only on the stable `.mutate`.
+  const blocksRef = useLatestRef(blocks);
+  const { mutate: createMutate } = useCreateBlock(pageId);
+  const { mutate: updateMutate } = useUpdateBlock(pageId);
+  const deleteWithUndo = useDeleteWithUndo(pageId, blocksRef);
+  const { indentBlock, indentMany } = useIndent(pageId, blocksRef);
+  const { mutate: duplicateMutate } = useDuplicateBlock(pageId);
+  const moveBlockTo = useMoveBlock(pageId, blocksRef);
+  const { mutate: uploadMutate } = useUploadBlockFile(pageId);
+  const { mutate: importMutate } = useImportMarkdown(pageId);
   const { focusId, focusCaret, focusValue, setFocusId, focusAt, clearFocusId } = useFocusTarget();
-  const { mergeUp, mergeDown } = useBlockMerge(pageId, blocks, { focusAt });
+  const { mergeUp, mergeDown } = useBlockMerge(pageId, blocksRef, { focusAt });
 
   const addBlock = useCallback(
     (type: BlockType = 'text') =>
-      createBlock.mutate(
-        { type, content: '', siblings: blocks },
+      createMutate(
+        { type, content: '', siblings: blocksRef.current },
         { onSuccess: (created) => setFocusId(created.id) },
       ),
-    [createBlock, blocks],
+    [createMutate, blocksRef, setFocusId],
   );
 
   const editBlock = useCallback(
-    (id: string, patch: Partial<BlockRecord>) => updateBlock.mutate({ id, patch }),
-    [updateBlock],
+    (id: string, patch: Partial<BlockRecord>) => updateMutate({ id, patch }),
+    [updateMutate],
   );
 
   const cloneBlock = useCallback(
-    (source: BlockRecord) => duplicateBlock.mutate({ source, blocks }),
-    [duplicateBlock, blocks],
-  );
-
-  const indentMany = useCallback(
-    (ids: string[], dir: 'in' | 'out') => {
-      const updates = indentUpdates(blocks, ids, dir);
-      if (updates.length) setDepths.mutate(updates);
-    },
-    [blocks, setDepths],
-  );
-  // Single-block indent is just a one-id batch (same maxDepthAt cap logic).
-  const indentBlock = useCallback(
-    (id: string, dir: 'in' | 'out') => indentMany([id], dir),
-    [indentMany],
+    (source: BlockRecord) => duplicateMutate({ source, blocks: blocksRef.current }),
+    [duplicateMutate, blocksRef],
   );
 
   const importMarkdown = useCallback(
     (target: BlockRecord, md: string) => {
       const parsed = markdownToBlocks(md);
-      if (parsed.length) importMd.mutate({ target, parsed, blocks });
+      if (parsed.length) importMutate({ target, parsed, blocks: blocksRef.current });
     },
-    [importMd, blocks],
+    [importMutate, blocksRef],
   );
 
-  const splitBlock = useEnterSplit(pageId, blocks, { indentBlock, editBlock, setFocusId });
+  const splitBlock = useEnterSplit(pageId, blocksRef, { indentBlock, editBlock, setFocusId });
 
   const uploadImage = useCallback(
-    (id: string, file: File) => uploadFile.mutate({ id, file }),
-    [uploadFile],
+    (id: string, file: File) => uploadMutate({ id, file }),
+    [uploadMutate],
   );
 
   return {

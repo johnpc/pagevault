@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { useMergeBlock } from './mergeBlockApi';
 import { mergeTarget, forwardMergeTarget, type MergeTarget } from './mergeBlock';
+import type { LatestRef } from '../../lib/useLatestRef';
 import type { BlockRecord } from '../../lib/pbClient';
 
 interface Deps {
@@ -18,14 +19,14 @@ interface Deps {
  * default), false to fall through to normal Backspace/Delete. The LIVE textarea
  * value is passed in because an unsaved edit hasn't reached the cached record.
  */
-export function useBlockMerge(pageId: string, blocks: BlockRecord[], deps: Deps) {
-  const mergeMut = useMergeBlock(pageId);
+export function useBlockMerge(pageId: string, blocks: LatestRef<BlockRecord[]>, deps: Deps) {
+  const { mutate: mergeMutate } = useMergeBlock(pageId);
   const { focusAt } = deps;
 
   const run = useCallback(
     (target: MergeTarget | null): boolean => {
       if (!target) return false;
-      mergeMut.mutate({
+      mergeMutate({
         keepId: target.keepId,
         removeId: target.removeId,
         content: target.content,
@@ -35,15 +36,15 @@ export function useBlockMerge(pageId: string, blocks: BlockRecord[], deps: Deps)
       focusAt(target.focusId, target.caret, target.content);
       return true;
     },
-    [mergeMut, focusAt],
+    [mergeMutate, focusAt],
   );
 
   const mergeUp = useCallback(
-    (id: string, value: string) => run(mergeTarget(blocks, id, value)),
+    (id: string, value: string) => run(mergeTarget(blocks.current, id, value)),
     [blocks, run],
   );
   const mergeDown = useCallback(
-    (id: string, value: string) => run(forwardMergeTarget(blocks, id, value)),
+    (id: string, value: string) => run(forwardMergeTarget(blocks.current, id, value)),
     [blocks, run],
   );
 
