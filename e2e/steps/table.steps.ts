@@ -19,6 +19,42 @@ When('I fill table cell {string} with {string}', async ({ page }, cell: string, 
   await expect(input).toHaveValue(value);
 });
 
+Then('table cell {string} contains {string}', async ({ page }, cell: string, value: string) => {
+  await expect(table(page).getByLabel(`Cell ${cell}`)).toHaveValue(value);
+});
+
+// Touch/pen row reorder via Pointer Events (the native HTML5 drag can't on touch):
+// press the row's ⋮⋮ handle, move over the target row, release.
+When('I touch-drag table row {int} onto row {int}', async ({ page }, from: number, to: number) => {
+  const handle = table(page).getByLabel(`Drag row ${from}`);
+  const target = table(page)
+    .locator('tbody tr')
+    .nth(to - 1);
+  const hb = await handle.boundingBox();
+  const tb = await target.boundingBox();
+  if (!hb || !tb) throw new Error('missing row handle or target');
+  await handle.dispatchEvent('pointerdown', {
+    pointerType: 'touch',
+    pointerId: 1,
+    clientX: hb.x + hb.width / 2,
+    clientY: hb.y + hb.height / 2,
+    bubbles: true,
+  });
+  const cx = tb.x + tb.width / 2;
+  const cy = tb.y + tb.height / 2;
+  for (const t of ['pointermove', 'pointerup']) {
+    await page.evaluate(
+      ({ t, cx, cy }) => {
+        const e = new Event(t, { bubbles: true }) as Event & { clientX: number; clientY: number };
+        e.clientX = cx;
+        e.clientY = cy;
+        document.dispatchEvent(e);
+      },
+      { t, cx, cy },
+    );
+  }
+});
+
 When('I focus table cell {string}', async ({ page }, cell: string) => {
   await table(page).getByLabel(`Cell ${cell}`).click();
 });

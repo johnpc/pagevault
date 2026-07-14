@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import type { TableData } from '../../lib/pbTypes';
 import { visibleRows } from './tableFilter';
 import { visibleColumns } from './tableColumns';
@@ -6,6 +6,8 @@ import type { TitleMap } from './cellText';
 import { TableRow } from './TableRow';
 import { useTableRowActions } from './useTableRowActions';
 import { useTableGridNav } from './useTableGridNav';
+import { useTableRowDnd } from './useTableRowDnd';
+import { TableGroupHeader } from './TableGroupHeader';
 import { isGrouped, tableGroups, isCollapsed, toggleCollapsed } from './tableGrouping';
 
 /** The table body: editable rows honoring the grid's non-destructive filter,
@@ -21,7 +23,6 @@ export function TableBody({
   save: (next: TableData) => void;
   titles?: TitleMap;
 }) {
-  const [dragRow, setDragRow] = useState<number | null>(null);
   const { onCell, onDelete, onDuplicate, moveTo } = useTableRowActions(data, save);
   // Memo on data.columns (not data): setCell preserves the columns array ref, so
   // `columns` stays referentially stable across cell edits — keeping the memoized
@@ -33,17 +34,7 @@ export function TableBody({
   // Spreadsheet keyboard nav (Enter/↑/↓ between rows, ←/→ at the text edge).
   const onKeyDown = useTableGridNav({ rows: data.rows.length, cols: data.columns.length });
 
-  const onDragStart = useCallback((r: number) => setDragRow(r), []);
-  const onDragEnd = useCallback(() => setDragRow(null), []);
-  const onDrop = useCallback(
-    (to: number) => {
-      setDragRow((from) => {
-        if (from !== null) moveTo(from, to);
-        return null;
-      });
-    },
-    [moveTo],
-  );
+  const { dragRow, onDragStart, onDragEnd, onDrop, onPointerDown } = useTableRowDnd(moveTo);
 
   const rowFor = (r: number) => (
     <TableRow
@@ -59,6 +50,7 @@ export function TableBody({
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
       onDrop={onDrop}
+      onPointerDown={onPointerDown}
     />
   );
 
@@ -69,18 +61,14 @@ export function TableBody({
         {tableGroups(data, titles).map((g) => {
           const collapsed = isCollapsed(data, g.value);
           return [
-            <tr key={`h:${g.value}`} className="pv-table-grouphead">
-              <td colSpan={span}>
-                <button
-                  aria-expanded={!collapsed}
-                  aria-label={`Group ${g.label}`}
-                  onClick={() => save(toggleCollapsed(data, g.value))}
-                >
-                  {collapsed ? '▸' : '▾'} {g.label}{' '}
-                  <span className="pv-muted">{g.rows.length}</span>
-                </button>
-              </td>
-            </tr>,
+            <TableGroupHeader
+              key={`h:${g.value}`}
+              label={g.label}
+              count={g.rows.length}
+              collapsed={collapsed}
+              span={span}
+              onToggle={() => save(toggleCollapsed(data, g.value))}
+            />,
             ...(collapsed ? [] : g.rows.map(rowFor)),
           ];
         })}

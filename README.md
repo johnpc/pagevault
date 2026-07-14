@@ -42,7 +42,7 @@ account, no third-party service, no lock-in.
 | Column layouts — 2–4 side-by-side text columns                                   | ✅     |
 | Table of contents block — auto-lists headings, click to scroll                   | ✅     |
 | Table blocks — typed columns (text/number/checkbox/select/date), GFM export      | ✅     |
-| Table rows — drag to reorder, click a header to sort (type-aware)                | ✅     |
+| Table rows — drag to reorder (mouse + touch/pen), click a header to sort         | ✅     |
 | Table keyboard nav — Enter/↑/↓ move between rows, ←/→ across at the text edge    | ✅     |
 | Table rows — duplicate a row (inserts a copy below)                              | ✅     |
 | Table columns — duplicate a column (copies header + cells, refs follow)          | ✅     |

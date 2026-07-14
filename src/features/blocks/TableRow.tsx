@@ -1,4 +1,4 @@
-import { memo, type DragEvent } from 'react';
+import { memo, type DragEvent, type PointerEvent } from 'react';
 import type { VisibleColumn } from './tableColumns';
 import { TableCell } from './TableCell';
 
@@ -14,6 +14,7 @@ interface TableRowProps {
   onDragStart: (r: number) => void;
   onDragEnd: () => void;
   onDrop: (r: number) => void;
+  onPointerDown: (id: string) => (e: PointerEvent) => void;
 }
 
 /** One body row: a drag handle, an editable cell per visible column, and
@@ -32,10 +33,12 @@ function TableRowInner({
   onDragStart,
   onDragEnd,
   onDrop,
+  onPointerDown,
 }: TableRowProps) {
   return (
     <tr
       className={dragging ? 'pv-table-row--dragging' : ''}
+      data-drag-id={r}
       onDragOver={(e: DragEvent) => e.preventDefault()}
       onDrop={(e: DragEvent) => {
         e.preventDefault();
@@ -47,6 +50,7 @@ function TableRowInner({
           aria-label={`Drag row ${r + 1}`}
           draggable
           onDragStart={() => onDragStart(r)}
+          onPointerDown={onPointerDown(String(r))}
           onDragEnd={onDragEnd}
         >
           ⋮⋮
