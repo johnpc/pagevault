@@ -14,3 +14,9 @@ Feature: Reordering pages in the sidebar
     Then the sidebar page order starts with "Charlie" then "Alpha"
     When I reload the app
     Then the sidebar page order starts with "Charlie" then "Alpha"
+
+  Scenario: Touch-drag a page above another and see the new order persist
+    When I touch-drag the sidebar page "Charlie" above "Alpha"
+    Then the sidebar page order starts with "Charlie" then "Alpha"
+    When I reload the app
+    Then the sidebar page order starts with "Charlie" then "Alpha"

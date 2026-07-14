@@ -1,7 +1,8 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState, type PointerEvent } from 'react';
 import type { PageRecord } from '../../lib/pbClient';
 import { reorderSiblings } from './reorderPages';
 import { useReorderPages } from './reorderPagesApi';
+import { usePointerDrag } from '../blocks/usePointerDrag';
 
 export interface PageDndHandlers {
   draggingId: string | null;
@@ -10,6 +11,8 @@ export interface PageDndHandlers {
   onDragOver: (id: string) => void;
   onDrop: (id: string) => void;
   onDragEnd: () => void;
+  /** Touch/pen drag start for a row's grip (native drag handles the mouse). */
+  onPointerDown: (id: string) => (e: PointerEvent) => void;
 }
 
 /**
@@ -40,10 +43,22 @@ export function usePageDnd(pages: PageRecord[]): PageDndHandlers {
     [draggingId, pages, reorder, reset],
   );
 
+  // Touch/pen path: the row's grip drives the same reorder as the native drag
+  // (rows carry data-drag-id); mouse keeps native HTML5 drag.
+  const pointer = usePointerDrag({ onDragStart, onDragOver, onDrop, onDragEnd: reset });
+
   // Memoize the handlers bag so it's stable across renders (only changing with
   // drag state) — lets Sidebar reuse work when only the route/collapse changed.
   return useMemo(
-    () => ({ draggingId, overId, onDragStart, onDragOver, onDrop, onDragEnd: reset }),
-    [draggingId, overId, onDragStart, onDragOver, onDrop, reset],
+    () => ({
+      draggingId,
+      overId,
+      onDragStart,
+      onDragOver,
+      onDrop,
+      onDragEnd: reset,
+      onPointerDown: pointer.onPointerDown,
+    }),
+    [draggingId, overId, onDragStart, onDragOver, onDrop, reset, pointer.onPointerDown],
   );
 }

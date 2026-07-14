@@ -118,6 +118,32 @@
   padding: 2px;
 }
 
+/* Drag grip: hidden until you hover the row (desktop), always shown on touch
+   (no hover) so a finger can grab it. touch-action:none lets Pointer Events
+   drive the drag instead of scrolling the tree. */
+.pv-sidebar-grip {
+  background: none;
+  border: none;
+  color: var(--pv-text-muted);
+  font-size: 11px;
+  flex-shrink: 0;
+  cursor: grab;
+  padding: 0 2px;
+  opacity: 0;
+  touch-action: none;
+}
+.pv-sidebar-grip:active {
+  cursor: grabbing;
+}
+.pv-sidebar-row:hover .pv-sidebar-grip {
+  opacity: 0.6;
+}
+@media (hover: none) {
+  .pv-sidebar-grip {
+    opacity: 0.6;
+  }
+}
+
 .pv-sidebar-open {
   display: flex;
   align-items: center;
