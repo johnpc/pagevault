@@ -44,6 +44,13 @@ describe('blockToMarkdown', () => {
     expect(blockToMarkdown(blk('text', 'Plain'))).toBe('Plain');
   });
 
+  it('rewrites @-mention tokens to Markdown links in prose, but not in code', () => {
+    expect(blockToMarkdown(blk('text', 'see @[Trip](abc) now'))).toBe('see [Trip](/page/abc) now');
+    expect(blockToMarkdown(blk('bullet', '@[Task](t1)'))).toBe('- [Task](/page/t1)');
+    // Code content is literal — a mention-looking token stays verbatim.
+    expect(blockToMarkdown(blk('code', '@[x](y)'))).toBe('```\n@[x](y)\n```');
+  });
+
   it('indents nested list items by depth (2 spaces per level)', () => {
     expect(blockToMarkdown({ ...blk('bullet', 'Sub'), depth: 1 })).toBe('  - Sub');
     expect(blockToMarkdown({ ...blk('numbered', 'Deep'), depth: 2 }, 3)).toBe('    3. Deep');
