@@ -20,12 +20,15 @@ describe('sortByColumn', () => {
     expect(sortByColumn(g, 0, 'desc').rows).toEqual([['cherry'], ['banana'], ['Apple']]);
   });
 
-  it('sorts a number column numerically with blanks last', () => {
+  it('sorts a number column numerically with blanks last, both directions', () => {
     const g: TableData = {
       columns: [{ name: 'n', type: 'number' }],
       rows: [['10'], ['2'], [''], ['1']],
     };
     expect(sortByColumn(g, 0, 'asc').rows).toEqual([['1'], ['2'], ['10'], ['']]);
+    // Descending flips the value order but blanks STILL sort last (Notion/Excel
+    // behavior) — an empty cell is absent, not the largest value.
+    expect(sortByColumn(g, 0, 'desc').rows).toEqual([['10'], ['2'], ['1'], ['']]);
   });
 
   it('sorts a checkbox column checked-first when ascending', () => {
@@ -47,13 +50,13 @@ describe('sortByColumn', () => {
       ['2026-03-01'],
       [''],
     ]);
-    // desc flips the comparator sign (consistent with number columns), so the
-    // latest real date leads among dated rows and blanks move to the front.
+    // desc reverses the dated rows but blanks STILL sort last (an empty date is
+    // absent, not the latest) — matching Notion/Airtable.
     expect(sortByColumn(g, 0, 'desc').rows).toEqual([
-      [''],
       ['2026-03-01'],
       ['2026-01-15'],
       ['2025-12-31'],
+      [''],
     ]);
   });
 
