@@ -37,19 +37,34 @@ describe('useMention', () => {
     expect(result.current.onKeyDown(keyEvent('Enter'))).toBe(false);
   });
 
-  it('opens with matches for an @-query and excludes the current page', () => {
+  const pageIds = (result: { current: MentionApi }) =>
+    result.current.matches.flatMap((m) => (m.kind === 'page' ? [m.page.id] : []));
+
+  it('opens with page matches for an @-query and excludes the current page', () => {
     const ref = createRef<HTMLTextAreaElement>();
+    // "@tr" matches no date keyword (none starts with "tr"), so only pages show.
     const { result } = renderHook(() => useMention('1', '@tr', vi.fn(), ref));
     caretTo(result, 3);
     expect(result.current.open).toBe(true);
-    expect(result.current.matches.map((p) => p.id)).toEqual(['2']);
+    expect(pageIds(result)).toEqual(['2']);
+  });
+
+  it('offers date mentions (@today/@tomorrow) alongside page matches', () => {
+    const ref = createRef<HTMLTextAreaElement>();
+    // "@t" → dates today+tomorrow, then pages "Trip plan"+"Travel".
+    const { result } = renderHook(() => useMention('cur', '@t', vi.fn(), ref));
+    caretTo(result, 2);
+    const dates = result.current.matches.filter((m) => m.kind === 'date');
+    expect(dates.map((m) => (m.kind === 'date' ? m.date.key : ''))).toEqual(['today', 'tomorrow']);
+    expect(pageIds(result)).toEqual(['1', '2']);
   });
 
   it('navigates the active index with arrows and consumes the key', () => {
     const ref = createRef<HTMLTextAreaElement>();
+    // "@t" yields multiple items (dates + pages), so ArrowDown moves to index 1.
     const { result } = renderHook(() => useMention('cur', '@t', vi.fn(), ref));
     caretTo(result, 2);
-    expect(result.current.matches).toHaveLength(2);
+    expect(result.current.matches.length).toBeGreaterThan(1);
     act(() => {
       expect(result.current.onKeyDown(keyEvent('ArrowDown'))).toBe(true);
     });
@@ -65,6 +80,21 @@ describe('useMention', () => {
       result.current.onKeyDown(keyEvent('Enter'));
     });
     expect(setValue).toHaveBeenCalledWith('see @[Travel](2)');
+  });
+
+  it('picking @today inserts a formatted date (not a page token)', () => {
+    const setValue = vi.fn();
+    const ref = createRef<HTMLTextAreaElement>();
+    const { result } = renderHook(() => useMention('cur', 'due @today', setValue, ref));
+    caretTo(result, 10);
+    const todayItem = result.current.matches.find(
+      (m) => m.kind === 'date' && m.date.key === 'today',
+    )!;
+    act(() => result.current.pick(todayItem));
+    const written = setValue.mock.calls[0][0] as string;
+    expect(written.startsWith('due ')).toBe(true);
+    expect(written).not.toContain('@'); // the @today query was replaced by the date
+    expect(written).toMatch(/\w{3} \d{1,2}, \d{4}$/); // "Mon D, YYYY"
   });
 
   it('Escape consumes the key and resets the active index', () => {

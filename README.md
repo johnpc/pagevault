@@ -88,6 +88,7 @@ account, no third-party service, no lock-in.
 | Inline markdown — bold, italic, code, strikethrough, underline                   | ✅     |
 | Formatting shortcuts — Cmd/Ctrl+B/I/E/U + ⇧S wrap the selection (bold…strike)    | ✅     |
 | @-mentions — type `@` to link another page inline                                | ✅     |
+| @-date inserts — `@today` / `@tomorrow` / `@yesterday` / `@now` drop the date    | ✅     |
 | Backlinks — "Linked references" of every page that mentions this one             | ✅     |
 | Page comments — timestamped notes on a page (Cmd/Ctrl+Enter to post)             | ✅     |
 | Block color & background highlight (text + `-bg` palette)                        | ✅     |

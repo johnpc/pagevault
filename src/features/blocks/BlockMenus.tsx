@@ -1,8 +1,8 @@
 import type { BlockType } from '../../lib/pbTypes';
-import type { PageRecord } from '../../lib/pbClient';
 import type { SlashCommand } from './slashCommands';
 import { SlashMenu } from './SlashMenu';
 import { MentionMenu } from './MentionMenu';
+import type { MentionItem } from './useMention';
 
 interface BlockMenusProps {
   matches: SlashCommand[] | null;
@@ -10,9 +10,9 @@ interface BlockMenusProps {
   onPick: (type: BlockType) => void;
   mention: {
     open: boolean;
-    matches: PageRecord[];
+    matches: MentionItem[];
     active: number;
-    pick: (page: PageRecord) => void;
+    pick: (item: MentionItem) => void;
   };
 }
 
@@ -24,7 +24,7 @@ export function BlockMenus({ matches, active, onPick, mention }: BlockMenusProps
     <>
       {matches && <SlashMenu commands={matches} active={active} onPick={onPick} />}
       {mention.open && (
-        <MentionMenu pages={mention.matches} active={mention.active} onPick={mention.pick} />
+        <MentionMenu items={mention.matches} active={mention.active} onPick={mention.pick} />
       )}
     </>
   );
