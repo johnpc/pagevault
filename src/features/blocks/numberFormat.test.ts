@@ -19,6 +19,13 @@ describe('formatNumber', () => {
     expect(formatNumber('1', 'percent')).toBe('100%');
   });
 
+  it('cleans binary-float noise from the ×100 scaling', () => {
+    // 0.07 * 100 === 7.000000000000001 in IEEE 754 — must display as 7%.
+    expect(formatNumber('0.07', 'percent')).toBe('7%');
+    expect(formatNumber('0.29', 'percent')).toBe('29%');
+    expect(formatNumber('0.001', 'percent')).toBe('0.1%');
+  });
+
   it('renders currencies with symbol, 2 decimals, and grouping', () => {
     expect(formatNumber('1000', 'usd')).toBe('$1,000.00');
     expect(formatNumber('5.5', 'eur')).toBe('€5.50');
