@@ -58,9 +58,10 @@ describe('PageHeader', () => {
     expect(onTitle).toHaveBeenCalledWith('Q3 plan');
   });
 
-  it('picks an icon', async () => {
+  it('picks an icon from the picker', async () => {
     const onIcon = vi.fn();
     render(<PageHeader {...props} onIcon={onIcon} />);
+    await userEvent.click(screen.getByLabelText('Page icon'));
     await userEvent.click(screen.getByLabelText('Set icon 🚀'));
     expect(onIcon).toHaveBeenCalledWith('🚀');
   });

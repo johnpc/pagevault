@@ -66,6 +66,14 @@ Feature: Pages and blocks
     And I set the "Ocean" cover
     Then the page shows a cover banner
 
+  Scenario: Search for a page icon and set it, and it persists
+    Given I have a page titled "Rocket plan"
+    When I open the page "Rocket plan"
+    And I search page icons for "rocket" and pick "🚀"
+    Then the page icon is "🚀"
+    When I reopen the page "Rocket plan"
+    Then the page icon is "🚀"
+
   Scenario: The page footer shows a word count
     Given I have a page titled "Stats page"
     When I open the page "Stats page"
