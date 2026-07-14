@@ -1,3 +1,5 @@
+import { LINK_SPECIALS } from './inlineLinks';
+
 /** An inline text segment with optional emphasis, a page mention, or an external
  * link. Pure output of parseInline. A mention carries the linked page id in
  * `mentionId`; an external link carries its destination in `href` — both with the
@@ -14,20 +16,6 @@ export interface Segment {
 }
 
 type Mark = 'bold' | 'italic' | 'code' | 'strike' | 'underline';
-
-// Tokens whose whole match is consumed literally (inner text isn't re-parsed as
-// emphasis), each mapping its captures to a segment. Order only breaks index
-// ties: a mention @[t](id) starts one char before the [t](url) link would, so it
-// wins. A bare-URL autolink is last — a real [t](url) link starts at its '[',
-// earlier than the http:// inside it, so the explicit link always wins.
-const MENTION_RE = /@\[([^\]]+)\]\(([^)]+)\)/;
-const LINK_RE = /\[([^\]]+)\]\(([^)]+)\)/;
-const AUTOLINK_RE = /https?:\/\/[^\s<>()]+/;
-const SPECIALS: { re: RegExp; seg: (m: RegExpExecArray) => Segment }[] = [
-  { re: MENTION_RE, seg: (m) => ({ text: m[1], mentionId: m[2] }) },
-  { re: LINK_RE, seg: (m) => ({ text: m[1], href: m[2] }) },
-  { re: AUTOLINK_RE, seg: (m) => ({ text: m[0], href: m[0] }) },
-];
 
 // Order matters: code first (its contents are literal), then the double-char
 // marks (**, ~~, __) before the single-char italics (*, _). Each captures the
@@ -55,9 +43,12 @@ function firstMatch(text: string): Match | null {
   const consider = (m: Match | null) => {
     if (m && (best === null || m.index < best.index)) best = m;
   };
-  for (const { re, seg } of SPECIALS) {
+  for (const { re, match } of LINK_SPECIALS) {
     const m = re.exec(text);
-    if (m) consider({ index: m.index, length: m[0].length, segment: seg(m) });
+    if (m) {
+      const { length, segment } = match(m);
+      consider({ index: m.index, length, segment });
+    }
   }
   for (const { re, mark } of RULES) {
     const m = re.exec(text);

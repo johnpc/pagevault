@@ -97,6 +97,39 @@ describe('parseInline', () => {
   it('prefers a mention over a same-position link', () => {
     expect(parseInline('@[Page](p1)')).toEqual([{ text: 'Page', mentionId: 'p1' }]);
   });
+
+  it('keeps balanced parens inside a [text](url) link (e.g. Wikipedia)', () => {
+    expect(parseInline('[Notion](https://en.wikipedia.org/wiki/Notion_(software))')).toEqual([
+      { text: 'Notion', href: 'https://en.wikipedia.org/wiki/Notion_(software)' },
+    ]);
+  });
+
+  it('keeps balanced parens in an autolinked URL, dropping the trailing space', () => {
+    expect(parseInline('see https://en.wikipedia.org/wiki/Foo_(bar) now')).toEqual([
+      { text: 'see ' },
+      {
+        text: 'https://en.wikipedia.org/wiki/Foo_(bar)',
+        href: 'https://en.wikipedia.org/wiki/Foo_(bar)',
+      },
+      { text: ' now' },
+    ]);
+  });
+
+  it('drops trailing sentence punctuation from an autolinked URL', () => {
+    expect(parseInline('read https://ex.com/page. Next')).toEqual([
+      { text: 'read ' },
+      { text: 'https://ex.com/page', href: 'https://ex.com/page' },
+      { text: '. Next' },
+    ]);
+  });
+
+  it('drops an unbalanced trailing ) from an autolinked URL (paren-wrapped)', () => {
+    expect(parseInline('(see https://ex.com/x)')).toEqual([
+      { text: '(see ' },
+      { text: 'https://ex.com/x', href: 'https://ex.com/x' },
+      { text: ')' },
+    ]);
+  });
 });
 
 describe('hasInlineMarkup', () => {
