@@ -15,12 +15,34 @@ When('I select all text in the block', async ({ page }) => {
   await input.evaluate((el) => (el as HTMLTextAreaElement).select());
 });
 
+// The chord for each named formatting shortcut (Notion parity).
+const FORMAT_CHORDS: Record<string, string> = {
+  bold: 'ControlOrMeta+b',
+  italic: 'ControlOrMeta+i',
+  underline: 'ControlOrMeta+u',
+  strikethrough: 'ControlOrMeta+Shift+s',
+};
+
+const blurToPreview = (page: Page) =>
+  active(page)
+    .locator('.pv-page')
+    .click({ position: { x: 5, y: 5 } });
+
 When('I press the bold shortcut', async ({ page }) => {
   await focused(page).press('ControlOrMeta+b');
   // Blur so the wrapped value saves and the idle preview renders the bold.
-  await active(page)
-    .locator('.pv-page')
-    .click({ position: { x: 5, y: 5 } });
+  await blurToPreview(page);
+});
+
+When('I press the {word} formatting shortcut', async ({ page }, kind: string) => {
+  await focused(page).press(FORMAT_CHORDS[kind]);
+  await blurToPreview(page);
+});
+
+Then('the block renders {string} underlined', async ({ page }, text: string) => {
+  await expect(
+    active(page).locator('.pv-block-preview u', { hasText: text }).first(),
+  ).toBeVisible();
 });
 
 When('I press the sidebar-toggle shortcut', async ({ page }) => {

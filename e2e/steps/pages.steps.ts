@@ -212,11 +212,15 @@ Then(
 );
 
 Then('the block renders {string} in bold', async ({ page }, text: string) => {
-  await expect(active(page).locator('.pv-block-preview strong', { hasText: text })).toBeVisible();
+  await expect(
+    active(page).locator('.pv-block-preview strong', { hasText: text }).first(),
+  ).toBeVisible();
 });
 
 Then('the block renders {string} struck through', async ({ page }, text: string) => {
-  await expect(active(page).locator('.pv-block-preview del', { hasText: text })).toBeVisible();
+  await expect(
+    active(page).locator('.pv-block-preview del', { hasText: text }).first(),
+  ).toBeVisible();
 });
 
 When('I set the {string} cover', async ({ page }, label: string) => {

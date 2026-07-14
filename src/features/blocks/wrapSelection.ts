@@ -1,9 +1,21 @@
-/** The markdown marker for a keyboard formatting shortcut. */
+/** The markdown marker for a plain (no-Shift) Cmd/Ctrl formatting shortcut. */
 export const FORMAT_MARKERS: Record<string, string> = {
   b: '**', // bold
   i: '*', // italic
   e: '`', // code (Notion uses Cmd+E)
+  u: '__', // underline (Notion uses Cmd+U)
 };
+
+/** Markers for Cmd/Ctrl+Shift shortcuts, keyed by lowercased letter. */
+export const SHIFT_FORMAT_MARKERS: Record<string, string> = {
+  s: '~~', // strikethrough (Notion uses Cmd+Shift+S)
+};
+
+/** The marker for a formatting keystroke, honoring the Shift modifier, or ''. */
+export function markerFor(key: string, shift: boolean): string {
+  const table = shift ? SHIFT_FORMAT_MARKERS : FORMAT_MARKERS;
+  return table[key.toLowerCase()] || '';
+}
 
 export interface WrapResult {
   value: string;
@@ -30,16 +42,18 @@ export function wrapSelection(
 }
 
 /**
- * Handle a Cmd/Ctrl+B/I/E formatting keystroke on a textarea: wrap the selection
- * in the matching marker, apply via `setValue`, and restore the selection.
- * Returns true when handled. Skips code blocks (literal contents). Kept out of
- * useBlockInput so that hook stays small.
+ * Handle a Cmd/Ctrl formatting keystroke on a textarea: B/I/E/U (bold/italic/
+ * code/underline) and Shift+S (strikethrough) wrap the selection in the matching
+ * marker, apply via `setValue`, and restore the selection. Returns true when
+ * handled. Skips code blocks (literal contents). Kept out of useBlockInput so
+ * that hook stays small.
  */
 export function applyFormatKey(
   e: {
     key: string;
     metaKey: boolean;
     ctrlKey: boolean;
+    shiftKey: boolean;
     preventDefault: () => void;
     currentTarget: HTMLTextAreaElement;
   },
@@ -47,7 +61,7 @@ export function applyFormatKey(
   isCode: boolean,
   setValue: (v: string) => void,
 ): boolean {
-  const marker = (e.metaKey || e.ctrlKey) && FORMAT_MARKERS[e.key.toLowerCase()];
+  const marker = (e.metaKey || e.ctrlKey) && markerFor(e.key, e.shiftKey);
   if (!marker || isCode) return false;
   e.preventDefault();
   const el = e.currentTarget;

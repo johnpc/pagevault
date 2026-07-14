@@ -14,6 +14,10 @@ export const SHORTCUTS: Shortcut[] = [
   { keys: '- ', action: 'Bulleted list ( 1. for numbered, [] for to-do )' },
   { keys: '> ', action: 'Quote block ( ``` for code, --- for divider )' },
   { keys: '**text**', action: 'Bold (  *text* italic,  `text` inline code )' },
+  {
+    keys: '⌘B / I / E / U',
+    action: 'Wrap selection: bold / italic / code / underline ( ⇧⌘S strikethrough )',
+  },
   { keys: 'Enter', action: 'Add a new block below' },
   { keys: '↑ / ↓', action: 'Move the caret to the block above / below (at a block edge)' },
   {

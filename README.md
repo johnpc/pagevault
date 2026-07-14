@@ -86,7 +86,7 @@ account, no third-party service, no lock-in.
 | Live cursors — see which block each collaborator is working in                   | ✅     |
 | Self-hosted via `docker compose`                                                 | ✅     |
 | Inline markdown — bold, italic, code, strikethrough, underline                   | ✅     |
-| Formatting shortcuts — Cmd/Ctrl+B/I/E wrap the selection                         | ✅     |
+| Formatting shortcuts — Cmd/Ctrl+B/I/E/U + ⇧S wrap the selection (bold…strike)    | ✅     |
 | @-mentions — type `@` to link another page inline                                | ✅     |
 | Backlinks — "Linked references" of every page that mentions this one             | ✅     |
 | Page comments — timestamped notes on a page (Cmd/Ctrl+Enter to post)             | ✅     |
