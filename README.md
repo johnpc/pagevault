@@ -46,7 +46,7 @@ account, no third-party service, no lock-in.
 | Table keyboard nav — Enter/↑/↓ move between rows, ←/→ across at the text edge    | ✅     |
 | Table rows — duplicate a row (inserts a copy below)                              | ✅     |
 | Table columns — duplicate a column (copies header + cells, refs follow)          | ✅     |
-| Table board view — kanban grouped by a select column (drag cards)                | ✅     |
+| Table board view — kanban grouped by a select column (drag cards, mouse + touch) | ✅     |
 | Table gallery view — browse rows as a responsive grid of cards                   | ✅     |
 | Table calendar view — rows on a month grid by a date column (navigate months)    | ✅     |
 | Grouped table — collapsible sections grouped by a select column                  | ✅     |
@@ -57,7 +57,7 @@ account, no third-party service, no lock-in.
 | Date columns — display format (ISO / medium / long / relative "in 3 days")       | ✅     |
 | Table columns — hide/show via Properties (data preserved)                        | ✅     |
 | Table columns — wrap-text toggle (multi-line cells) per column                   | ✅     |
-| Table columns — drag a header to reorder (cells + filters follow)                | ✅     |
+| Table columns — drag a header to reorder (cells + filters follow; mouse + touch) | ✅     |
 | Multi-select column — tag a row with several options (checklist cell)            | ✅     |
 | Relation column — link a table row to a page (relational databases)              | ✅     |
 | Relation columns sort & filter by the linked page's title                        | ✅     |

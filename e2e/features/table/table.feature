@@ -207,6 +207,15 @@ Feature: Table (database) blocks
     When I reopen the page "Columns"
     Then table row 1 reads "second-col" then "first-col"
 
+  Scenario: Reorder columns by touch-dragging a header grip
+    Given I have a page titled "Touch cols"
+    When I type "/table" into a new block
+    And I choose "Table" from the slash menu
+    And I fill table cell "1,1" with "left-col"
+    And I fill table cell "1,2" with "right-col"
+    And I touch-drag table column 1 onto column 2
+    Then table row 1 reads "right-col" then "left-col"
+
   Scenario: A relation column links a row to a page
     Given I have a page titled "Projects DB"
     When I open the page "Projects DB"

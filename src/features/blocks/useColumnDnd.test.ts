@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useColumnDnd } from './useColumnDnd';
 import type { TableData } from '../../lib/pbTypes';
@@ -45,4 +45,47 @@ describe('useColumnDnd', () => {
     act(() => result.current.handleProps(0).onDragEnd());
     expect(result.current.dragCol).toBeNull();
   });
+
+  it('touch: a pointerdown on the grip then release over another column moves it', () => {
+    // The pointer path resolves the target column via data-drag-id under the
+    // release point; stub elementFromPoint to "over column 1".
+    const th = document.createElement('th');
+    th.setAttribute('data-drag-id', '1');
+    document.body.appendChild(th);
+    document.elementFromPoint = (() => th) as typeof document.elementFromPoint;
+
+    const save = vi.fn();
+    const { result } = renderHook(() => useColumnDnd(grid, save));
+    const down = new Event('pointerdown', { bubbles: true }) as Event & { pointerType: string };
+    down.pointerType = 'touch';
+    const grip = document.createElement('button');
+    document.body.appendChild(grip);
+    grip.addEventListener('pointerdown', (e) =>
+      result.current.handleProps(0).onPointerDown(e as unknown as React.PointerEvent),
+    );
+    act(() => {
+      grip.dispatchEvent(down);
+    });
+    const up = new Event('pointerup', { bubbles: true }) as Event & {
+      clientX: number;
+      clientY: number;
+    };
+    up.clientX = 1;
+    up.clientY = 1;
+    act(() => {
+      document.dispatchEvent(up);
+    });
+    expect(save).toHaveBeenCalledWith(
+      expect.objectContaining({
+        columns: [
+          { name: 'B', type: 'text' },
+          { name: 'A', type: 'text' },
+        ],
+      }),
+    );
+  });
+});
+
+afterEach(() => {
+  document.body.innerHTML = '';
 });

@@ -65,6 +65,7 @@
   padding: 4px 2px;
   font-size: 12px;
   line-height: 1.4;
+  touch-action: none; /* let Pointer Events drive the touch drag, not scroll */
 }
 .pv-block-style:active {
   cursor: grabbing;
@@ -80,6 +81,13 @@
 }
 .pv-block:hover .pv-block-style {
   opacity: 1;
+}
+/* Touch devices have no hover, so keep the drag handle visible or a finger
+   can never grab it to reorder. */
+@media (hover: none) {
+  .pv-block-style {
+    opacity: 0.6;
+  }
 }
 
 .pv-block-input,

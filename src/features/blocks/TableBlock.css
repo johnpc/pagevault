@@ -130,6 +130,7 @@
   font-size: 11px;
   opacity: 0;
   padding: 4px 2px;
+  touch-action: none; /* Pointer Events drive the touch drag, not scroll */
 }
 .pv-table tr:hover .pv-table-drag button {
   opacity: 1;
@@ -257,6 +258,8 @@
   padding: 2px 4px 8px;
 }
 .pv-board-card {
+  display: flex;
+  align-items: center;
   background: var(--pv-surface);
   border: 1px solid var(--pv-border);
   border-radius: 6px;
@@ -265,6 +268,18 @@
   cursor: grab;
 }
 .pv-board-card:active {
+  cursor: grabbing;
+}
+.pv-board-grip {
+  border: none;
+  background: none;
+  color: var(--pv-text-muted);
+  cursor: grab;
+  padding: 0 2px 0 6px;
+  font-size: 12px;
+  touch-action: none; /* let Pointer Events drive the drag, not scroll */
+}
+.pv-board-grip:active {
   cursor: grabbing;
 }
 .pv-board-card--dragging {
@@ -618,9 +633,18 @@
   cursor: grab;
   font-size: 11px;
   padding: 0 2px;
+  touch-action: none; /* Pointer Events drive the touch drag, not scroll */
 }
 .pv-table-colgrip:active {
   cursor: grabbing;
+}
+
+/* Touch devices have no hover, so the row drag grip (hidden until hover on a
+   pointer device) must stay visible or it's unreachable by finger. */
+@media (hover: none) {
+  .pv-table-drag button {
+    opacity: 0.6;
+  }
 }
 .pv-table-col--dragging {
   opacity: 0.5;
