@@ -53,6 +53,37 @@ describe('tableData', () => {
     ]);
   });
 
+  it('normalize preserves refs for already-normal rows/columns (perf: no O(N) churn)', () => {
+    // A grid that's already normal (typed columns, correct-width string rows).
+    const base = normalize({
+      columns: cols('A', 'B'),
+      rows: [
+        ['x', 'y'],
+        ['p', 'q'],
+      ],
+    });
+    const again = normalize(base);
+    // Re-normalizing must reuse the same row + column arrays, so a memoized row
+    // that only re-renders on ref change stays put after an unrelated save.
+    expect(again.rows[0]).toBe(base.rows[0]);
+    expect(again.rows[1]).toBe(base.rows[1]);
+    expect(again.columns[0]).toBe(base.columns[0]);
+    expect(again.columns).toBe(base.columns);
+  });
+
+  it('normalize after a single-cell edit only allocates the edited row', () => {
+    const base = normalize({
+      columns: cols('A', 'B'),
+      rows: [
+        ['x', 'y'],
+        ['p', 'q'],
+      ],
+    });
+    const edited = normalize(setCell(base, 0, 1, 'Y'));
+    expect(edited.rows[0]).toEqual(['x', 'Y']); // the edited row is new
+    expect(edited.rows[1]).toBe(base.rows[1]); // the untouched row keeps its ref
+  });
+
   it('normalize migrates a legacy single filter into filters[]', () => {
     const n = normalize({
       columns: cols('A', 'B'),

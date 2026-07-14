@@ -18,31 +18,34 @@ interface DragBag {
  */
 export function usePointerDrag(dnd: DragBag) {
   const [active, setActive] = useState(false);
-  const dragging = useRef(false);
+  // Hold the bag in a ref so onPointerDown is REFERENTIALLY STABLE even when the
+  // caller passes a fresh {…} literal each render. Otherwise a memoized row that
+  // receives onPointerDown re-renders on every keystroke — an O(rows) cost on a
+  // big table. The ref always reads the latest handlers.
+  const bag = useRef(dnd);
+  bag.current = dnd;
 
   const onPointerDown = useCallback(
     (id: string) => (e: PointerEvent) => {
       if (e.pointerType === 'mouse') return; // native HTML5 drag handles mouse
       e.preventDefault();
-      dragging.current = true;
       setActive(true);
-      dnd.onDragStart(id);
+      bag.current.onDragStart(id);
     },
-    [dnd],
+    [],
   );
 
   useEffect(() => {
     if (!active) return;
     const onMove = (e: globalThis.PointerEvent) => {
       const over = dragIdAtPoint(e.clientX, e.clientY);
-      if (over) dnd.onDragOver(over);
+      if (over) bag.current.onDragOver(over);
     };
     const onUp = (e: globalThis.PointerEvent) => {
-      dragging.current = false;
       setActive(false);
       const over = dragIdAtPoint(e.clientX, e.clientY);
-      if (over) dnd.onDrop(over);
-      else dnd.onDragEnd();
+      if (over) bag.current.onDrop(over);
+      else bag.current.onDragEnd();
     };
     document.addEventListener('pointermove', onMove, { passive: false });
     document.addEventListener('pointerup', onUp);
@@ -52,7 +55,7 @@ export function usePointerDrag(dnd: DragBag) {
       document.removeEventListener('pointerup', onUp);
       document.removeEventListener('pointercancel', onUp);
     };
-  }, [active, dnd]);
+  }, [active]);
 
   return { onPointerDown, active };
 }
