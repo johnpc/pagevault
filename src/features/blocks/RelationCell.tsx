@@ -18,6 +18,11 @@ export function RelationCell({
   const [open, setOpen] = useState(false);
   const linked = (pages.data ?? []).find((p) => p.id === value);
   const text = linked ? displayTitle(linked) : '';
+  // A non-empty value with no matching page = a dangling link (the target page
+  // was deleted/archived). Distinguish it from an empty cell so the broken link
+  // is visible + clearable, not silently blank. Wait for the fetch to settle so
+  // we don't flash "broken" before pages load.
+  const broken = !linked && value !== '' && !pages.isLoading;
 
   return (
     <div className="pv-relation">
@@ -29,6 +34,10 @@ export function RelationCell({
       >
         {text ? (
           <span className="pv-relation-chip">{text}</span>
+        ) : broken ? (
+          <span className="pv-relation-broken" title="Linked page was deleted">
+            ⚠ Broken link
+          </span>
         ) : (
           <span className="pv-muted">—</span>
         )}

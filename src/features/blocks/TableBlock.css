@@ -671,6 +671,12 @@
   padding: 1px 8px;
   font-size: 13px;
 }
+/* A dangling relation (target page deleted): visibly broken, not blank. */
+.pv-relation-broken {
+  display: inline-block;
+  color: var(--pv-c-red);
+  font-size: 13px;
+}
 .pv-relation-menu {
   position: absolute;
   left: 0;

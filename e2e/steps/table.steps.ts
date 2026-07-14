@@ -326,6 +326,25 @@ Then('the table has a relation cell showing {string}', async ({ page }, title: s
   await expect(table(page).locator('.pv-relation-chip', { hasText: title }).first()).toBeVisible();
 });
 
+// Like "I link table cell … to the page …" but matches the option by substring,
+// so it works with per-attempt unique page titles (base name + a suffix).
+When(
+  'I link table cell {string} to the created page {string}',
+  async ({ page }, cell: string, title: string) => {
+    await table(page).getByLabel(`Cell ${cell}`).click();
+    const menu = table(page).getByRole('listbox', { name: new RegExp(`Cell ${cell}`) });
+    await expect(menu).toBeVisible();
+    await menu
+      .getByRole('option', { name: new RegExp(title) })
+      .first()
+      .click();
+  },
+);
+
+Then('the table shows a broken relation link', async ({ page }) => {
+  await expect(table(page).locator('.pv-relation-broken').first()).toBeVisible();
+});
+
 When('I save the current table view as {string}', async ({ page }, name: string) => {
   await wrap(page).getByLabel('Save view name').fill(name);
   await wrap(page).getByRole('button', { name: 'Save view', exact: true }).click();
