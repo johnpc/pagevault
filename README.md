@@ -93,6 +93,7 @@ account, no third-party service, no lock-in.
 | Nested lists — Tab / Shift-Tab to indent & outdent blocks                      | ✅     |
 | Drag-to-reorder blocks (optimistic)                                            | ✅     |
 | Select multiple blocks — Shift+↑/↓, Shift+Click, or Cmd/Ctrl+A — delete/indent | ✅     |
+| Undo a block deletion — an Undo action on the delete toast restores them       | ✅     |
 | Drag-to-reorder pages in the sidebar (same-parent siblings)                    | ✅     |
 | Bookmark blocks — a link card for any URL (domain + link, opens in a tab)      | ✅     |
 | Video/audio embed — native player for media files, iframe for YouTube/Vimeo    | ✅     |

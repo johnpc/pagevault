@@ -43,6 +43,21 @@ Feature: Select and delete multiple blocks
     And I press Backspace to delete the selection
     Then the page has 0 blocks
 
+  Scenario: Undo restores blocks deleted from a selection
+    Given I have a page titled "Undo delete"
+    When I open the page "Undo delete"
+    And I focus the first block
+    And I type "Keep" then Enter
+    And I type "Gone one" then Enter
+    And I type "Gone two"
+    Then the page has 3 blocks
+    When I select the last 2 blocks upward
+    And I press Backspace to delete the selection
+    Then the page has 1 block
+    When I click Undo on the toast
+    Then the page has 3 blocks
+    And I should see "Gone two" in a block
+
   Scenario: Tab indents a whole block selection
     Given I have a page titled "Indent many"
     When I open the page "Indent many"

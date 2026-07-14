@@ -1,19 +1,20 @@
 import { useEffect, useState } from 'react';
-import { onToast } from './toastBus';
+import { onToast, type ToastPayload } from './toastBus';
 import './Toast.css';
 
-/** A single transient toast, bottom-center, for app-level messages (mainly a
- * failed save). Subscribes to the toast bus; each message shows for 4s then
- * auto-dismisses. role=alert so assistive tech announces it. */
+/** A single transient toast, bottom-center, for app-level messages (a failed
+ * save, or a delete with an Undo action). Subscribes to the toast bus; each
+ * message shows for 6s then auto-dismisses. role=alert so assistive tech
+ * announces it. An optional action button (e.g. Undo) runs then dismisses. */
 export function Toast() {
-  const [message, setMessage] = useState<string | null>(null);
+  const [toast, setToast] = useState<ToastPayload | null>(null);
 
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
-    const off = onToast((msg) => {
-      setMessage(msg);
+    const off = onToast((t) => {
+      setToast(t);
       clearTimeout(timer);
-      timer = setTimeout(() => setMessage(null), 4000);
+      timer = setTimeout(() => setToast(null), 6000);
     });
     return () => {
       off();
@@ -21,11 +22,22 @@ export function Toast() {
     };
   }, []);
 
-  if (!message) return null;
+  if (!toast) return null;
   return (
     <div className="pv-toast" role="alert">
-      {message}
-      <button className="pv-toast-close" aria-label="Dismiss" onClick={() => setMessage(null)}>
+      {toast.message}
+      {toast.action && (
+        <button
+          className="pv-toast-action"
+          onClick={() => {
+            toast.action?.run();
+            setToast(null);
+          }}
+        >
+          {toast.action.label}
+        </button>
+      )}
+      <button className="pv-toast-close" aria-label="Dismiss" onClick={() => setToast(null)}>
         ×
       </button>
     </div>

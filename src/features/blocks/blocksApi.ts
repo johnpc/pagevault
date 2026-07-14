@@ -8,6 +8,7 @@ import type { BlockRecord } from '../../lib/pbClient';
 import type { BlockType } from '../../lib/pbTypes';
 import { nextSort } from '../pages/pageTree';
 import { cloneFields, insertAfterUpdates } from './reorder';
+import { restorePayload } from './restoreBlock';
 
 const key = (pageId: string) => ['blocks', pageId];
 
@@ -45,6 +46,20 @@ export function useDeleteBlock(pageId: string) {
     mutationFn: (id: string | string[]) =>
       Promise.all(
         (Array.isArray(id) ? id : [id]).map((one) => pb.collection('blocks').delete(one)),
+      ),
+    onSuccess: () => qc.invalidateQueries({ queryKey: key(pageId) }),
+  });
+}
+
+/** Recreate previously-deleted blocks with their original ids/sort/content, so
+ * an Undo puts them back exactly where they were. Powers the delete toast's
+ * Undo action. */
+export function useRestoreBlocks(pageId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (blocks: BlockRecord[]) =>
+      Promise.all(
+        blocks.map((b) => pb.collection('blocks').create<BlockRecord>(restorePayload(b))),
       ),
     onSuccess: () => qc.invalidateQueries({ queryKey: key(pageId) }),
   });

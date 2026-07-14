@@ -65,6 +65,21 @@ Then('blocks {int} and {int} are indented', async ({ page }, a: number, b: numbe
     .toBe(true);
 });
 
+When('I click Undo on the toast', async ({ page }) => {
+  await page.locator('.pv-toast').getByRole('button', { name: 'Undo' }).click();
+});
+
+Then('I should see {string} in a block', async ({ page }, text: string) => {
+  // Block bodies are textareas, so the content is a value not a text node.
+  await expect
+    .poll(async () =>
+      (
+        await inputs(page).evaluateAll((els) => els.map((e) => (e as HTMLTextAreaElement).value))
+      ).includes(text),
+    )
+    .toBe(true);
+});
+
 Then('the page has {int} blocks', async ({ page }, n: number) => {
   await expect.poll(() => inputs(page).count()).toBe(n);
 });
