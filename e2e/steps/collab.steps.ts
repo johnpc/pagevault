@@ -54,6 +54,29 @@ When('the second user focuses the first block', async () => {
   await expect(active(tab).locator('textarea.pv-block-input:focus')).toBeVisible();
 });
 
+When('the second user appends {string} to the first block', async ({ page }, suffix: string) => {
+  void page;
+  const tab = collabTab;
+  if (!tab) throw new Error('second user tab was not opened');
+  const cell = blockInputs(tab).first();
+  await cell.click();
+  await tab.keyboard.press('End');
+  await tab.keyboard.type(suffix, { delay: 0 });
+  await cell.blur();
+  await tab.waitForTimeout(800);
+});
+
+Then(
+  "the second user's first block still reads {string} after reload",
+  async ({ page }, text: string) => {
+    void page;
+    const tab = collabTab;
+    if (!tab) throw new Error('second user tab was not opened');
+    await tab.reload();
+    await expect.poll(() => blockInputs(tab).first().inputValue(), { timeout: 15_000 }).toBe(text);
+  },
+);
+
 Then('the second user sees a block containing {string}', async ({ page }, text: string) => {
   void page; // the assertion targets the second user's tab, not the fixture page
   const tab = collabTab;
