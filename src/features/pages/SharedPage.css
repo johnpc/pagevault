@@ -23,6 +23,39 @@
   padding: 3px 0;
 }
 
+/* Code blocks render preformatted (never parsed as inline markdown). */
+.pv-shared-code {
+  margin: 4px 0;
+  padding: 12px 14px;
+  background: var(--pv-surface);
+  border: 1px solid var(--pv-border);
+  border-radius: var(--pv-radius-sm);
+  overflow-x: auto;
+  font:
+    13.5px/1.55 ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Consolas,
+    monospace;
+  color: var(--pv-text);
+  white-space: pre;
+}
+
+/* To-do rows show their (read-only) checkbox next to the text. */
+.pv-shared-todo {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.pv-shared-todo input {
+  margin-top: 4px;
+}
+
+.pv-shared-img {
+  max-width: 100%;
+  border-radius: var(--pv-radius-sm);
+}
+
 .pv-shared-foot {
   margin-top: 48px;
   padding-top: 16px;

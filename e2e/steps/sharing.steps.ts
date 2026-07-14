@@ -49,6 +49,11 @@ Then('I should see the shared content {string}', async ({ page }, text: string) 
   await expect(page.locator('.pv-shared-doc')).toContainText(text);
 });
 
+Then('the shared page shows a code block containing {string}', async ({ page }, text: string) => {
+  // Code renders preformatted (a <pre>), not as inline-parsed markdown.
+  await expect(page.locator('.pv-shared-doc pre.pv-shared-code')).toContainText(text);
+});
+
 When('I visit a made-up share link', async ({ page }) => {
   await page.goto('/shared/nonexistent-token-xyz');
 });
