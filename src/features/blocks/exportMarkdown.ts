@@ -21,26 +21,29 @@ const PREFIX: Partial<Record<BlockRecord['type'], (t: string) => string>> = {
   toggle: (t) => `▸ **${t}**`,
 };
 
-/** Serialize one block to its Markdown line. `ordinal` is the 1-based position
- * among consecutive numbered blocks (for `1.`, `2.`, …). Pure. */
-export function blockToMarkdown(
-  block: Pick<BlockRecord, 'type' | 'content' | 'checked' | 'data' | 'lang' | 'emoji'>,
-  ordinal = 1,
-): string {
+/** List block types whose Markdown nests via leading indentation (2 spaces per
+ * depth level, GFM-style). Other blocks always export flush-left. */
+const NESTS = new Set<BlockRecord['type']>(['bullet', 'numbered', 'todo']);
+
+type ExportBlock = Pick<
+  BlockRecord,
+  'type' | 'content' | 'checked' | 'data' | 'lang' | 'emoji' | 'depth'
+>;
+
+/** The non-prefix block renderers (block types with more than a fixed prefix).
+ * Split from blockToMarkdown so that stays low-complexity. `pad` is the depth
+ * indent (already computed) and `ordinal` the numbered-list position. */
+function renderComplex(block: ExportBlock, pad: string, ordinal: number): string {
   const text = block.content;
-  const prefix = PREFIX[block.type];
-  if (prefix) return prefix(text);
   switch (block.type) {
     case 'callout':
-      // Lead with the chosen icon (default 💡) so the intent survives export.
-      return `> ${block.emoji || '💡'} ${text}`;
+      return `> ${block.emoji || '💡'} ${text}`; // lead with the chosen icon
     case 'code':
-      // Emit the fenced language so highlighting survives the round-trip.
-      return '```' + (block.lang ?? '') + '\n' + text + '\n```';
+      return '```' + (block.lang ?? '') + '\n' + text + '\n```'; // fenced language
     case 'numbered':
-      return `${ordinal}. ${text}`;
+      return `${pad}${ordinal}. ${text}`;
     case 'todo':
-      return `- [${block.checked ? 'x' : ' '}] ${text}`;
+      return `${pad}- [${block.checked ? 'x' : ' '}] ${text}`;
     case 'table':
       return tableToMarkdown(block.data as TableData | null);
     case 'columns':
@@ -53,6 +56,15 @@ export function blockToMarkdown(
     default:
       return text;
   }
+}
+
+/** Serialize one block to its Markdown line. `ordinal` is the 1-based position
+ * among consecutive numbered blocks (for `1.`, `2.`, …). List items indent by
+ * their `depth` so nested lists survive the round-trip. Pure. */
+export function blockToMarkdown(block: ExportBlock, ordinal = 1): string {
+  const pad = NESTS.has(block.type) ? '  '.repeat(Math.max(0, block.depth ?? 0)) : '';
+  const prefix = PREFIX[block.type];
+  return prefix ? pad + prefix(block.content) : renderComplex(block, pad, ordinal);
 }
 
 /**
