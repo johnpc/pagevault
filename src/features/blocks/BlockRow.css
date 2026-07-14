@@ -881,3 +881,17 @@
   text-decoration: underline;
   text-underline-offset: 2px;
 }
+
+/* Transient highlight when a block is reached via a copied deep link. */
+@keyframes pv-block-flash-kf {
+  0% {
+    background: var(--pv-accent-soft);
+  }
+  100% {
+    background: transparent;
+  }
+}
+.pv-block-flash {
+  animation: pv-block-flash-kf 1.6s ease-out;
+  border-radius: var(--pv-radius-sm);
+}

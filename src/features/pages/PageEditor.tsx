@@ -1,6 +1,7 @@
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory, useParams, useLocation } from 'react-router-dom';
 import { IonContent, IonPage } from '@ionic/react';
 import { usePageEditor } from './usePageEditor';
+import { useBlockHashScroll } from './useBlockHashScroll';
 import { LoadState } from '../shell/LoadState';
 import { PageHeader } from './PageHeader';
 import { Breadcrumbs } from './Breadcrumbs';
@@ -22,6 +23,8 @@ export function PageEditor() {
   const { setFont, removePage, addSubPage, duplicate, exportMarkdown } = ed;
   const dnd = useBlockDnd(ed.moveBlockTo);
   const collapse = useCollapseAll(id, blocks.data ?? []);
+  // Scroll to + flash a block when arriving via a copied block link (#pv-block-…).
+  useBlockHashScroll(useLocation().hash, !!blocks.data);
 
   const onDelete = async () => {
     await removePage(id);
