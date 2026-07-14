@@ -6,6 +6,7 @@ describe('markdownToBlocks', () => {
     const md = [
       '# Title',
       '## Sub',
+      '### Sub3',
       'A paragraph.',
       '- bullet one',
       '1. first',
@@ -16,6 +17,7 @@ describe('markdownToBlocks', () => {
     expect(markdownToBlocks(md)).toEqual([
       { type: 'heading', content: 'Title' },
       { type: 'subheading', content: 'Sub' },
+      { type: 'subsubheading', content: 'Sub3' },
       { type: 'text', content: 'A paragraph.' },
       { type: 'bullet', content: 'bullet one' },
       { type: 'numbered', content: 'first' },

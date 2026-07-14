@@ -86,6 +86,12 @@ Feature: Pages and blocks
     And I add a block with the text "- Milk"
     Then the last block should be a "bullet" block
 
+  Scenario: The ### shortcut makes a sub-subheading (H3)
+    Given I have a page titled "Headings"
+    When I open the page "Headings"
+    And I add a block with the text "### Fine print"
+    Then the last block should be a "subsubheading" block
+
   Scenario: Duplicate a block
     Given I have a page titled "Dupes"
     When I open the page "Dupes"

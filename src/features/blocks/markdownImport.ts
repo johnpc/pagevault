@@ -10,8 +10,8 @@ export interface ParsedBlock {
 function lineToBlock(line: string): ParsedBlock {
   const rules: [RegExp, BlockType][] = [
     [/^#\s+(.*)/, 'heading'],
+    [/^###\s+(.*)/, 'subsubheading'],
     [/^##\s+(.*)/, 'subheading'],
-    [/^###\s+(.*)/, 'subheading'],
     [/^[-*]\s+(.*)/, 'bullet'],
     [/^\d+\.\s+(.*)/, 'numbered'],
     [/^>\s+(.*)/, 'quote'],

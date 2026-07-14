@@ -233,6 +233,11 @@
   font-size: 19px;
   font-weight: 600;
 }
+.pv-block--subsubheading .pv-block-input,
+.pv-block--subsubheading .pv-block-preview {
+  font-size: 16px;
+  font-weight: 600;
+}
 .pv-block--quote .pv-block-input,
 .pv-block--quote .pv-block-preview {
   border-left: 3px solid var(--pv-border);

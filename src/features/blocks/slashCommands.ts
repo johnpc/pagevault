@@ -17,6 +17,12 @@ export const SLASH_COMMANDS: SlashCommand[] = [
     icon: 'H2',
     keywords: ['subheading', 'h2', 'subtitle'],
   },
+  {
+    type: 'subsubheading',
+    label: 'Sub-subheading',
+    icon: 'H3',
+    keywords: ['subsubheading', 'h3', 'heading 3'],
+  },
   { type: 'bullet', label: 'Bulleted list', icon: '•', keywords: ['bullet', 'unordered', 'list'] },
   {
     type: 'numbered',
