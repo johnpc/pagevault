@@ -19,99 +19,100 @@ account, no third-party service, no lock-in.
 
 ## Features
 
-| Feature                                                                          | Status |
-| -------------------------------------------------------------------------------- | ------ |
-| Email/password accounts (private, owner-scoped)                                  | ✅     |
-| Page templates (Meeting notes, To-do, Blank)                                     | ✅     |
-| Home screen with recently edited pages                                           | ✅     |
-| Nested pages in a collapsible sidebar tree                                       | ✅     |
-| Move / reparent a page (cycle-safe picker)                                       | ✅     |
-| Sub-pages + breadcrumb navigation                                                | ✅     |
-| Archive to trash → restore or delete forever                                     | ✅     |
-| Favorite pages (pinned Favorites section)                                        | ✅     |
-| Page footer: word/block count + last edited                                      | ✅     |
-| Duplicate a page (with all its blocks)                                           | ✅     |
-| Export a page as Markdown                                                        | ✅     |
-| Export the whole workspace as one Markdown file (Settings)                       | ✅     |
-| Blocks — text, 3 heading levels, lists, to-dos, quotes, code, images, callouts   | ✅     |
-| Code blocks — one-click copy button                                              | ✅     |
-| Code blocks — language label/picker (fenced language on export)                  | ✅     |
-| Code blocks — syntax highlighting (highlight.js, lazy-loaded, light/dark themed) | ✅     |
-| Callout blocks — pick the leading icon (💡 / ⚠️ / ✅ …) + background color       | ✅     |
-| Toggle blocks — collapse/expand to fold away nested content                      | ✅     |
-| Collapse all / expand all toggles on a page (one header action)                  | ✅     |
-| Column layouts — 2–4 side-by-side text columns                                   | ✅     |
-| Table of contents block — auto-lists headings, click to scroll                   | ✅     |
-| Table blocks — typed columns (text/number/checkbox/select/date), GFM export      | ✅     |
-| Table rows — drag to reorder (mouse + touch/pen), click a header to sort         | ✅     |
-| Table keyboard nav — Enter/↑/↓ move between rows, ←/→ across at the text edge    | ✅     |
-| Table rows — duplicate a row (inserts a copy below)                              | ✅     |
-| Table columns — duplicate a column (copies header + cells, refs follow)          | ✅     |
-| Table board view — kanban grouped by a select column (drag cards, mouse + touch) | ✅     |
-| Table gallery view — browse rows as a responsive grid of cards                   | ✅     |
-| Table calendar view — rows on a month grid by a date column (navigate months)    | ✅     |
-| Grouped table — collapsible sections grouped by a select column                  | ✅     |
-| Table filter — multi-condition filters, match all (AND) or any (OR)              | ✅     |
-| Saved views — name & switch filter/board/visibility configs on a table           | ✅     |
-| Table summaries — count/sum/avg/min/max/median/range/checked over visible        | ✅     |
-| Number columns — display format (plain / comma / percent / $ € £)                | ✅     |
-| Date columns — display format (ISO / medium / long / relative "in 3 days")       | ✅     |
-| Table columns — hide/show via Properties (data preserved)                        | ✅     |
-| Table columns — wrap-text toggle (multi-line cells) per column                   | ✅     |
-| Table columns — drag a header to reorder (cells + filters follow; mouse + touch) | ✅     |
-| Multi-select column — tag a row with several options (checklist cell)            | ✅     |
-| Relation column — link a table row to a page (relational databases)              | ✅     |
-| Relation columns sort & filter by the linked page's title                        | ✅     |
-| Markdown shortcuts (`# `, `- `, `1. `, `[] `, `> `, ` ``` `)                     | ✅     |
-| Enter splits at the caret into a block below (Notion-smooth typing)              | ✅     |
-| Enter continues a list; an empty item exits / outdents the list                  | ✅     |
-| Slash command menu (`/` to pick a block type)                                    | ✅     |
-| Turn into — convert an existing block to another type, keeping content           | ✅     |
-| Page icons — searchable emoji picker (keyword filter + remove)                   | ✅     |
-| Page cover banners (gradient or uploaded image)                                  | ✅     |
-| Full-width page toggle (per page)                                                | ✅     |
-| Page font style — Default / Serif / Mono (per page)                              | ✅     |
-| Live sync across open tabs/devices (PocketBase realtime)                         | ✅     |
-| Light / dark / system theme (Settings switcher)                                  | ✅     |
-| Skeleton loading placeholders on list screens (sidebar, trash)                   | ✅     |
-| Save-failure toast — a failed change tells you instead of silently reverting     | ✅     |
-| Keyboard shortcut help overlay (?)                                               | ✅     |
-| Accessible popovers — Escape/outside-click close, focus-trapped while open       | ✅     |
-| Toggle the sidebar with ⌘\ / Ctrl+\ (floating restore button)                    | ✅     |
-| Installable PWA                                                                  | ✅     |
-| Mobile sidebar drawer — hamburger opens a slide-over (backdrop, Esc, focus-trap) | ✅     |
-| Public link sharing (read-only /shared/<token>, no login)                        | ✅     |
-| Collaborate — invite another user to a page via link (view/comment/edit)         | ✅     |
-| Live presence — avatars of who else is viewing a page right now                  | ✅     |
-| Live cursors — see which block each collaborator is working in                   | ✅     |
-| Self-hosted via `docker compose`                                                 | ✅     |
-| Inline markdown — bold, italic, code, strikethrough, underline                   | ✅     |
-| Formatting shortcuts — Cmd/Ctrl+B/I/E/U + ⇧S wrap the selection (bold…strike)    | ✅     |
-| @-mentions — type `@` to link another page inline                                | ✅     |
-| @-date inserts — `@today` / `@tomorrow` / `@yesterday` / `@now` drop the date    | ✅     |
-| Backlinks — "Linked references" of every page that mentions this one             | ✅     |
-| Page comments — timestamped notes on a page (Cmd/Ctrl+Enter to post)             | ✅     |
-| Block color & background highlight (text + `-bg` palette)                        | ✅     |
-| Block text alignment (left / center / right)                                     | ✅     |
-| Duplicate a block (inserts below; ⌘D / Ctrl+D or the block menu)                 | ✅     |
-| Nested lists — Tab / Shift-Tab to indent & outdent blocks                        | ✅     |
-| Drag-to-reorder blocks (optimistic; mouse drag + touch/pen pointer drag)         | ✅     |
-| Move a block up/down with the keyboard (⌘/Ctrl+⇧+↑/↓)                            | ✅     |
-| Select multiple blocks — Shift+↑/↓, Shift+Click, or Cmd/Ctrl+A — delete/indent   | ✅     |
-| Undo a block deletion — an Undo action on the delete toast restores them         | ✅     |
-| Undo / redo block edits — ⌘Z / ⌘⇧Z, document-level history                       | ✅     |
-| Arrow-key block navigation — ↑/↓ at a block edge move the caret between blocks   | ✅     |
-| Backspace at a block start merges it into the block above (caret at the join)    | ✅     |
-| Delete at a block end pulls the next block up into it (caret at the join)        | ✅     |
-| Drag-to-reorder pages in the sidebar (same-parent siblings; mouse + touch)       | ✅     |
-| Bookmark blocks — rich link cards (title, blurb, thumbnail, favicon; scraped)    | ✅     |
-| Video/audio embed — media files + YouTube, Vimeo, Spotify, Loom, CodePen, Figma  | ✅     |
-| Inline links — `[text](url)` and bare URLs render as clickable links             | ✅     |
-| Link on paste — select text, paste a URL → it becomes a `[text](url)` link       | ✅     |
-| Image blocks (embed by URL)                                                      | ✅     |
-| Image uploads (stored in PocketBase, served same-origin)                         | ✅     |
-| Quick-find search (⌘K, ranked, match-highlighted, titles + content)              | ✅     |
-| Native iOS / Android builds (Capacitor)                                          | ⬜     |
+| Feature                                                                              | Status |
+| ------------------------------------------------------------------------------------ | ------ |
+| Email/password accounts (private, owner-scoped)                                      | ✅     |
+| Page templates (Meeting notes, To-do, Blank)                                         | ✅     |
+| Home screen with recently edited pages                                               | ✅     |
+| Nested pages in a collapsible sidebar tree                                           | ✅     |
+| Move / reparent a page (cycle-safe picker)                                           | ✅     |
+| Sub-pages + breadcrumb navigation                                                    | ✅     |
+| Archive to trash → restore or delete forever                                         | ✅     |
+| Favorite pages (pinned Favorites section)                                            | ✅     |
+| Page footer: word/block count + last edited                                          | ✅     |
+| Duplicate a page (with all its blocks)                                               | ✅     |
+| Export a page as Markdown                                                            | ✅     |
+| Export the whole workspace as one Markdown file (Settings)                           | ✅     |
+| Blocks — text, 3 heading levels, lists, to-dos, quotes, code, images, callouts       | ✅     |
+| Code blocks — one-click copy button                                                  | ✅     |
+| Code blocks — language label/picker (fenced language on export)                      | ✅     |
+| Code blocks — syntax highlighting (highlight.js, lazy-loaded, light/dark themed)     | ✅     |
+| Callout blocks — pick the leading icon (💡 / ⚠️ / ✅ …) + background color           | ✅     |
+| Toggle blocks — collapse/expand to fold away nested content                          | ✅     |
+| Collapse all / expand all toggles on a page (one header action)                      | ✅     |
+| Column layouts — 2–4 side-by-side text columns                                       | ✅     |
+| Table of contents block — auto-lists headings, click to scroll                       | ✅     |
+| Table blocks — typed columns (text/number/checkbox/select/date), GFM export          | ✅     |
+| Table rows — drag to reorder (mouse + touch/pen), click a header to sort             | ✅     |
+| Table keyboard nav — Enter/↑/↓ move between rows, ←/→ across at the text edge        | ✅     |
+| Table rows — duplicate a row (inserts a copy below)                                  | ✅     |
+| Table columns — duplicate a column (copies header + cells, refs follow)              | ✅     |
+| Table board view — kanban grouped by a select column (drag cards, mouse + touch)     | ✅     |
+| Table gallery view — browse rows as a responsive grid of cards                       | ✅     |
+| Table calendar view — rows on a month grid by a date column (navigate months)        | ✅     |
+| Grouped table — collapsible sections grouped by a select column                      | ✅     |
+| Table filter — multi-condition filters, match all (AND) or any (OR)                  | ✅     |
+| Saved views — name & switch filter/board/visibility configs on a table               | ✅     |
+| Table summaries — count/sum/avg/min/max/median/range/checked over visible            | ✅     |
+| Number columns — display format (plain / comma / percent / $ € £)                    | ✅     |
+| Date columns — display format (ISO / medium / long / relative "in 3 days")           | ✅     |
+| Table columns — hide/show via Properties (data preserved)                            | ✅     |
+| Table columns — wrap-text toggle (multi-line cells) per column                       | ✅     |
+| Table columns — drag a header to reorder (cells + filters follow; mouse + touch)     | ✅     |
+| Multi-select column — tag a row with several options (checklist cell)                | ✅     |
+| Relation column — link a table row to a page (relational databases)                  | ✅     |
+| Relation columns sort & filter by the linked page's title                            | ✅     |
+| Markdown shortcuts (`# `, `- `, `1. `, `[] `, `> `, ` ``` `)                         | ✅     |
+| Enter splits at the caret into a block below (Notion-smooth typing)                  | ✅     |
+| Enter continues a list; an empty item exits / outdents the list                      | ✅     |
+| Slash command menu (`/` to pick a block type)                                        | ✅     |
+| Turn into — convert an existing block to another type, keeping content               | ✅     |
+| Page icons — searchable emoji picker (keyword filter + remove)                       | ✅     |
+| Page cover banners (gradient or uploaded image)                                      | ✅     |
+| Full-width page toggle (per page)                                                    | ✅     |
+| Page font style — Default / Serif / Mono (per page)                                  | ✅     |
+| Live sync across open tabs/devices (PocketBase realtime)                             | ✅     |
+| Light / dark / system theme (Settings switcher)                                      | ✅     |
+| Skeleton loading placeholders on list screens (sidebar, trash)                       | ✅     |
+| Save-failure toast — a failed change tells you instead of silently reverting         | ✅     |
+| Keyboard shortcut help overlay (?)                                                   | ✅     |
+| Accessible popovers — Escape/outside-click close, focus-trapped while open           | ✅     |
+| Toggle the sidebar with ⌘\ / Ctrl+\ (floating restore button)                        | ✅     |
+| Installable PWA                                                                      | ✅     |
+| Mobile sidebar drawer — hamburger opens a slide-over (backdrop, Esc, focus-trap)     | ✅     |
+| Public link sharing (read-only /shared/<token>, no login)                            | ✅     |
+| Collaborate — invite another user to a page via link (view/comment/edit)             | ✅     |
+| Live presence — avatars of who else is viewing a page right now                      | ✅     |
+| Live cursors — see which block each collaborator is working in                       | ✅     |
+| Self-hosted via `docker compose`                                                     | ✅     |
+| Inline markdown — bold, italic, code, strikethrough, underline                       | ✅     |
+| Formatting shortcuts — Cmd/Ctrl+B/I/E/U + ⇧S wrap the selection (bold…strike)        | ✅     |
+| Floating selection toolbar — select text → bold / italic / underline / strike / code | ✅     |
+| @-mentions — type `@` to link another page inline                                    | ✅     |
+| @-date inserts — `@today` / `@tomorrow` / `@yesterday` / `@now` drop the date        | ✅     |
+| Backlinks — "Linked references" of every page that mentions this one                 | ✅     |
+| Page comments — timestamped notes on a page (Cmd/Ctrl+Enter to post)                 | ✅     |
+| Block color & background highlight (text + `-bg` palette)                            | ✅     |
+| Block text alignment (left / center / right)                                         | ✅     |
+| Duplicate a block (inserts below; ⌘D / Ctrl+D or the block menu)                     | ✅     |
+| Nested lists — Tab / Shift-Tab to indent & outdent blocks                            | ✅     |
+| Drag-to-reorder blocks (optimistic; mouse drag + touch/pen pointer drag)             | ✅     |
+| Move a block up/down with the keyboard (⌘/Ctrl+⇧+↑/↓)                                | ✅     |
+| Select multiple blocks — Shift+↑/↓, Shift+Click, or Cmd/Ctrl+A — delete/indent       | ✅     |
+| Undo a block deletion — an Undo action on the delete toast restores them             | ✅     |
+| Undo / redo block edits — ⌘Z / ⌘⇧Z, document-level history                           | ✅     |
+| Arrow-key block navigation — ↑/↓ at a block edge move the caret between blocks       | ✅     |
+| Backspace at a block start merges it into the block above (caret at the join)        | ✅     |
+| Delete at a block end pulls the next block up into it (caret at the join)            | ✅     |
+| Drag-to-reorder pages in the sidebar (same-parent siblings; mouse + touch)           | ✅     |
+| Bookmark blocks — rich link cards (title, blurb, thumbnail, favicon; scraped)        | ✅     |
+| Video/audio embed — media files + YouTube, Vimeo, Spotify, Loom, CodePen, Figma      | ✅     |
+| Inline links — `[text](url)` and bare URLs render as clickable links                 | ✅     |
+| Link on paste — select text, paste a URL → it becomes a `[text](url)` link           | ✅     |
+| Image blocks (embed by URL)                                                          | ✅     |
+| Image uploads (stored in PocketBase, served same-origin)                             | ✅     |
+| Quick-find search (⌘K, ranked, match-highlighted, titles + content)                  | ✅     |
+| Native iOS / Android builds (Capacitor)                                              | ⬜     |
 
 ## Quick start (self-host in two commands)
 

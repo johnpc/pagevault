@@ -87,7 +87,11 @@ serializer we mostly already have in `inlineMarkdown` + `inlineToMarkdown`).
   Cmd/Ctrl+Z / ⇧Z / Ctrl+Y. Edits commit on blur (one undo step each; no per-keystroke
   coalescing needed). Undo/redo reissue the mutation so collaborators converge. No arch change.
   Follow-ups: extend history to add/remove/move/indent + type changes (content-only for now).
-- **Stage 2 — Selection toolbar.** Float on select; reuse `wrapSelection`/`turnInto`; e2e.
+- **Stage 2 — Selection toolbar. ✅ SHIPPED.** `useSelectionToolbar` tracks the textarea
+  selection (via its `select` event) and floats `SelectionToolbar` above the block with
+  bold/italic/underline/strike/code, reusing `wrapSelection`. Anchored at the textarea's
+  top-center (no fragile per-glyph mirror measurement). Buttons use mousedown+preventDefault
+  so the selection survives the click. Follow-ups: link button, turn-into, per-glyph rect.
 - **Stage 3 — WYSIWYG spike.** ONE block type (paragraph) on ProseMirror behind a flag
   (`VITE_PM_EDITOR`), reading/writing the same `content` string. Prove: markdown input rules,
   caret parity, mention + slash + selection toolbar as PM plugins, undo via PM history.

@@ -4,11 +4,13 @@ import { hasInlineMarkup } from './inlineMarkdown';
 import { useBlockInput } from './useBlockInput';
 import { useBlockPaste } from './useBlockPaste';
 import { useMention } from './useMention';
+import { useSelectionToolbar } from './useSelectionToolbar';
 import { useAutoFocus } from './useAutoFocus';
 import { useSeedValue } from './useSeedValue';
 import { BlockMenus } from './BlockMenus';
 import { BlockPreview } from './BlockPreview';
 import { BlockTextarea } from './BlockTextarea';
+import { SelectionToolbar } from './SelectionToolbar';
 import { CodeBlockChrome } from './CodeBlockChrome';
 
 /** The editable body of a text-ish block: an idle formatted preview (when it
@@ -47,6 +49,7 @@ export function TextBlockBody({
     useBlockInput(block, onEdit, onRemove, onEnter, onIndent, onMerge, onMergeForward, onDuplicate);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const mention = useMention(block.page, value, setValue, inputRef);
+  const toolbar = useSelectionToolbar(inputRef, value, setValue, block.type === 'code');
   const showPreview = !focused && hasInlineMarkup(value);
 
   // The @-mention picker gets first crack at Arrow/Enter/Escape; if it doesn't
@@ -54,6 +57,14 @@ export function TextBlockBody({
   const onKeyDown = (e: Parameters<typeof keyDown>[0]) => {
     if (!mention.onKeyDown(e)) keyDown(e);
   };
+
+  // A selection change feeds both the mention picker (caret) and the toolbar;
+  // blur hides the toolbar then saves.
+  const onSelect = (e: Parameters<typeof mention.onSelect>[0]) => {
+    mention.onSelect(e);
+    toolbar.sync();
+  };
+  const onBlur = () => (toolbar.hide(), save());
 
   const onPaste = useBlockPaste(block.type === 'code', value, setValue, onPasteMarkdown);
 
@@ -73,12 +84,13 @@ export function TextBlockBody({
           inputRef={inputRef}
           onFocus={focus}
           onChange={change}
-          onBlur={save}
+          onBlur={onBlur}
           onKeyDown={onKeyDown}
-          onSelect={mention.onSelect}
+          onSelect={onSelect}
           onPaste={onPaste}
         />
       )}
+      <SelectionToolbar anchor={toolbar.anchor} onApply={toolbar.apply} />
       <CodeBlockChrome block={block} value={value} onEdit={onEdit} />
       <BlockMenus matches={matches} active={active} onPick={pick} mention={mention} />
     </>
