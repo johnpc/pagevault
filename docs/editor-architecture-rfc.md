@@ -102,6 +102,19 @@ serializer we mostly already have in `inlineMarkdown` + `inlineToMarkdown`).
   integration, IME/paste sanitization, and a perf check on a 250-block page. If hand-rolled
   contentEditable proves too costly for these, revisit ProseMirror/TipTap (Option A) — the
   content-string bridge is reusable either way.
+
+  **Markdown-input-rules attempt (blocked, deferred):** built + tested `completedMarkerAt`
+  (detects a just-completed inline marker at the caret — the trigger for live restyle). Wiring
+  a live restyle in `onInput` (reseed styled HTML + restore caret) hit the classic
+  contentEditable caret-boundary problem: after a marker closes at the end (`**bold**`), the
+  caret lands adjacent to the just-created `<strong>`, and the next keystroke gets absorbed INTO
+  the bold run (`bold ok` instead of `bold` + ` ok`). Tried caret-after-element + trailing
+  text-node anchors; neither reliably escaped the inline element in Chromium. Deferred rather
+  than ship a caret bug (a WYSIWYG that swallows typing is worse than the textarea). This is
+  strong evidence for **Option A (ProseMirror)** whose input-rules + transactions solve exactly
+  this — the `completedMarkerAt` detector stays useful there. Restyle currently happens on blur
+  (correct, if less flashy). The detector is landed + tested for the next attempt.
+
 - **Stage 4 — Migrate remaining text-ish blocks** to PM; delete the textarea path; fold
   Stage-1 undo into PM history if the spike proves it cleaner.
 - **Stage 5 — Richness on the new base:** richer block gutter menu (color/turn-into/copy-link/
