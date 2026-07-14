@@ -2,6 +2,7 @@ import type { BlockRecord } from '../../lib/pbClient';
 import { ColorMenu } from './ColorMenu';
 import { AlignMenu } from './AlignMenu';
 import { TurnIntoMenu } from './TurnIntoMenu';
+import { CopyLinkButton } from './CopyLinkButton';
 import { canTurnInto } from './turnInto';
 
 /** The hover controls on a block row: turn-into, color, align, duplicate (+
@@ -31,6 +32,7 @@ export function BlockControls({
       {align && (
         <AlignMenu current={block.align ?? ''} onPick={(a) => onEdit(block.id, { align: a })} />
       )}
+      <CopyLinkButton pageId={block.page} blockId={block.id} />
       <button
         className="pv-block-dup"
         aria-label="Duplicate block"

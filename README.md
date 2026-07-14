@@ -95,6 +95,7 @@ account, no third-party service, no lock-in.
 | Block color & background highlight (text + `-bg` palette)                            | ✅     |
 | Block text alignment (left / center / right)                                         | ✅     |
 | Duplicate a block (inserts below; ⌘D / Ctrl+D or the block menu)                     | ✅     |
+| Copy link to a block — deep link scrolls to + flashes it on open                     | ✅     |
 | Nested lists — Tab / Shift-Tab to indent & outdent blocks                            | ✅     |
 | Drag-to-reorder blocks (optimistic; mouse drag + touch/pen pointer drag)             | ✅     |
 | Move a block up/down with the keyboard (⌘/Ctrl+⇧+↑/↓)                                | ✅     |
