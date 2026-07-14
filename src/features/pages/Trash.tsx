@@ -24,6 +24,7 @@ export function Trash() {
             empty={pages.length === 0}
             onRetry={refetch}
             emptyTitle="Trash is empty"
+            skeletonRows={4}
           >
             <ul className="pv-trash-list">
               {pages.map((page) => (

@@ -56,6 +56,7 @@ export function Sidebar({ onSearch, onHelp }: { onSearch: () => void; onHelp: ()
           empty={(pages ?? []).length === 0}
           onRetry={refetch}
           emptyTitle="No pages yet"
+          skeletonRows={6}
         >
           {buildTree(pages ?? []).map((node) => (
             <SidebarRow
