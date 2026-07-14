@@ -2,6 +2,7 @@ import type { DragEvent } from 'react';
 import type { BlockRecord } from '../../lib/pbClient';
 import { cycleType } from './blockText';
 import { colorClass } from './blockColors';
+import { usePointerDrag } from './usePointerDrag';
 import type { BlockDndHandlers } from './BlockRow';
 
 /**
@@ -14,6 +15,7 @@ export function useBlockDrag(
   onEdit: (id: string, patch: Partial<BlockRecord>) => void,
   dnd: BlockDndHandlers,
 ) {
+  const pointer = usePointerDrag(dnd);
   const tint = colorClass(block.color);
   const cls =
     `pv-block pv-block--${block.type}` +
@@ -21,7 +23,10 @@ export function useBlockDrag(
     (dnd.draggingId === block.id ? ' pv-block--dragging' : '') +
     (dnd.overId === block.id && dnd.draggingId !== block.id ? ' pv-block--over' : '');
 
+  // data-drag-id lets touch/pointer reordering find the row under the finger
+  // (dragIdAtPoint); the native drag handlers stay for mouse.
   const rowDrag = {
+    'data-drag-id': block.id,
     onDragOver: (e: DragEvent) => {
       e.preventDefault();
       dnd.onDragOver(block.id);
@@ -39,6 +44,7 @@ export function useBlockDrag(
       aria-label="Drag to reorder or click to change block type"
       draggable
       onDragStart={() => dnd.onDragStart(block.id)}
+      onPointerDown={pointer.onPointerDown(block.id)}
       onClick={() => onEdit(block.id, { type: cycleType(block.type) })}
     >
       ⋮⋮
