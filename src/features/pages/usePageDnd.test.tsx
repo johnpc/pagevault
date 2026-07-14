@@ -19,12 +19,12 @@ describe('usePageDnd', () => {
     const pages = [p('a', 0), p('b', 1), p('c', 2)];
     const { result } = renderHook(() => usePageDnd(pages));
 
-    act(() => result.current.onDragStart('c'));
+    act(() => result.current.handlers.onDragStart('c'));
     expect(result.current.draggingId).toBe('c');
-    act(() => result.current.onDragOver('a'));
+    act(() => result.current.handlers.onDragOver('a'));
     expect(result.current.overId).toBe('a');
 
-    act(() => result.current.onDrop('a'));
+    act(() => result.current.handlers.onDrop('a'));
     expect(mutate).toHaveBeenCalledWith([
       { id: 'c', sort: 0 },
       { id: 'a', sort: 1 },
@@ -37,22 +37,22 @@ describe('usePageDnd', () => {
 
   it('does not mutate when dropping onto itself', () => {
     const { result } = renderHook(() => usePageDnd([p('a', 0), p('b', 1)]));
-    act(() => result.current.onDragStart('a'));
-    act(() => result.current.onDrop('a'));
+    act(() => result.current.handlers.onDragStart('a'));
+    act(() => result.current.handlers.onDrop('a'));
     expect(mutate).not.toHaveBeenCalled();
   });
 
   it('does not mutate a cross-parent drop', () => {
     const { result } = renderHook(() => usePageDnd([p('a', 0, 'x'), p('b', 0, 'y')]));
-    act(() => result.current.onDragStart('a'));
-    act(() => result.current.onDrop('b'));
+    act(() => result.current.handlers.onDragStart('a'));
+    act(() => result.current.handlers.onDrop('b'));
     expect(mutate).not.toHaveBeenCalled();
   });
 
   it('onDragEnd clears state', () => {
     const { result } = renderHook(() => usePageDnd([p('a', 0)]));
-    act(() => result.current.onDragStart('a'));
-    act(() => result.current.onDragEnd());
+    act(() => result.current.handlers.onDragStart('a'));
+    act(() => result.current.handlers.onDragEnd());
     expect(result.current.draggingId).toBeNull();
   });
 });

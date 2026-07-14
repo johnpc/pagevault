@@ -1,11 +1,10 @@
-import { forwardRef, useMemo, useState } from 'react';
+import { forwardRef, useCallback, useMemo, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { usePages, useCreatePage } from './pagesApi';
 import { buildTree } from './pageTree';
 import { FavoritesSection } from './FavoritesSection';
 import { readCollapsed, writeCollapsed, toggleCollapsed } from './expandStore';
-import { LoadState } from '../shell/LoadState';
-import { SidebarRow } from './SidebarRow';
+import { SidebarTree } from './SidebarTree';
 import { usePageDnd } from './usePageDnd';
 import { useAuth } from '../auth/useAuth';
 import { SidebarFooter } from './SidebarFooter';
@@ -33,11 +32,15 @@ export const Sidebar = forwardRef<HTMLElement, SidebarProps>(function Sidebar(
   // change, drag-hover, or collapse toggle that re-renders the sidebar.
   const tree = useMemo(() => buildTree(pages ?? []), [pages]);
 
-  const toggle = (pageId: string) => {
-    const next = toggleCollapsed(collapsed, pageId);
-    writeCollapsed(next);
-    setCollapsed(next);
-  };
+  // Stable identity (functional update) so it doesn't bust the memoized
+  // SidebarRow on every drag-hover / route re-render of the sidebar.
+  const toggle = useCallback((pageId: string) => {
+    setCollapsed((prev) => {
+      const next = toggleCollapsed(prev, pageId);
+      writeCollapsed(next);
+      return next;
+    });
+  }, []);
 
   const newPage = async () => {
     const page = await create.mutateAsync({ siblings: pages ?? [] });
@@ -69,28 +72,17 @@ export const Sidebar = forwardRef<HTMLElement, SidebarProps>(function Sidebar(
 
       <FavoritesSection pages={pages ?? []} activeId={id} />
 
-      <nav className="pv-sidebar-tree">
-        <LoadState
-          loading={isLoading}
-          error={isError}
-          empty={(pages ?? []).length === 0}
-          onRetry={refetch}
-          emptyTitle="No pages yet"
-          skeletonRows={6}
-        >
-          {tree.map((node) => (
-            <SidebarRow
-              key={node.page.id}
-              node={node}
-              depth={0}
-              activeId={id}
-              collapsed={collapsed}
-              onToggle={toggle}
-              dnd={dnd}
-            />
-          ))}
-        </LoadState>
-      </nav>
+      <SidebarTree
+        tree={tree}
+        activeId={id}
+        collapsed={collapsed}
+        onToggle={toggle}
+        dnd={dnd}
+        isLoading={isLoading}
+        isError={isError}
+        isEmpty={(pages ?? []).length === 0}
+        onRetry={refetch}
+      />
 
       <SidebarFooter onHelp={onHelp} />
     </aside>

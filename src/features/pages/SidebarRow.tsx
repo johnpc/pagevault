@@ -1,31 +1,31 @@
 import { useHistory } from 'react-router-dom';
-import type { DragEvent } from 'react';
-import type { PageNode } from './pageTree';
+import { memo, type DragEvent } from 'react';
 import { displayTitle } from './pageTree';
-import type { PageDndHandlers } from './usePageDnd';
-
-interface SidebarRowProps {
-  node: PageNode;
-  depth: number;
-  activeId?: string;
-  collapsed: Set<string>;
-  onToggle: (id: string) => void;
-  dnd: PageDndHandlers;
-}
+import { sidebarRowEqual, type SidebarRowProps } from './sidebarRowEqual';
 
 /** One page in the sidebar tree. Rows with children show a disclosure triangle
  * that expands/collapses their subtree; recurses to render children. Each row is
  * draggable + a drop target for reordering among its siblings. */
-export function SidebarRow({ node, depth, activeId, collapsed, onToggle, dnd }: SidebarRowProps) {
+function SidebarRowInner({
+  node,
+  depth,
+  activeId,
+  collapsed,
+  onToggle,
+  handlers,
+  draggingId,
+  overId,
+}: SidebarRowProps) {
   const history = useHistory();
   const id = node.page.id;
   const active = id === activeId;
   const hasChildren = node.children.length > 0;
   const isCollapsed = collapsed.has(id);
-  const over = dnd.overId === id && dnd.draggingId !== id;
+  const dragging = draggingId === id;
+  const over = overId === id && draggingId !== id;
   const cls =
     `pv-sidebar-row${active ? ' pv-sidebar-row--active' : ''}` +
-    (dnd.draggingId === id ? ' pv-sidebar-row--dragging' : '') +
+    (dragging ? ' pv-sidebar-row--dragging' : '') +
     (over ? ' pv-sidebar-row--over' : '');
 
   return (
@@ -36,20 +36,20 @@ export function SidebarRow({ node, depth, activeId, collapsed, onToggle, dnd }: 
         data-drag-id={id}
         onDragOver={(e: DragEvent) => {
           e.preventDefault();
-          dnd.onDragOver(id);
+          handlers.onDragOver(id);
         }}
         onDrop={(e: DragEvent) => {
           e.preventDefault();
-          dnd.onDrop(id);
+          handlers.onDrop(id);
         }}
-        onDragEnd={dnd.onDragEnd}
+        onDragEnd={handlers.onDragEnd}
       >
         <button
           className="pv-sidebar-grip"
           aria-label={`Drag ${displayTitle(node.page)} to reorder`}
           draggable
-          onDragStart={() => dnd.onDragStart(id)}
-          onPointerDown={dnd.onPointerDown(id)}
+          onDragStart={() => handlers.onDragStart(id)}
+          onPointerDown={handlers.onPointerDown(id)}
         >
           ⋮⋮
         </button>
@@ -80,9 +80,17 @@ export function SidebarRow({ node, depth, activeId, collapsed, onToggle, dnd }: 
             activeId={activeId}
             collapsed={collapsed}
             onToggle={onToggle}
-            dnd={dnd}
+            handlers={handlers}
+            draggingId={draggingId}
+            overId={overId}
           />
         ))}
     </>
   );
 }
+
+/** Memoized with a drag-aware comparator (areEqual) so a drag's continuous
+ * overId/draggingId updates only re-render the two rows whose dragging/over
+ * status flips — not the whole tree. The handlers bag + collapsed set + onToggle
+ * are referentially stable (see usePageDnd / Sidebar). */
+export const SidebarRow = memo(SidebarRowInner, sidebarRowEqual);
