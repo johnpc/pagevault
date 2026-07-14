@@ -6,6 +6,11 @@ describe('SHORTCUTS', () => {
     expect(SHORTCUTS.some((s) => /⌘K/.test(s.keys))).toBe(true);
     expect(SHORTCUTS.some((s) => s.keys === '?')).toBe(true);
   });
+  it('documents the selection formatting shortcuts (incl. underline & strikethrough)', () => {
+    const fmt = SHORTCUTS.find((s) => /underline/i.test(s.action));
+    expect(fmt).toBeDefined();
+    expect(fmt?.action).toMatch(/strikethrough/i);
+  });
   it('every entry has keys and an action', () => {
     for (const s of SHORTCUTS) {
       expect(s.keys.length).toBeGreaterThan(0);
