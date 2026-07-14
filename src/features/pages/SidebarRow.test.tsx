@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { SidebarRow } from './SidebarRow';
@@ -14,6 +14,7 @@ const noopDnd: PageDndHandlers = {
   onDragOver: () => {},
   onDrop: () => {},
   onDragEnd: () => {},
+  onPointerDown: () => () => {},
 };
 
 const mk = (id: string, over: Partial<PageRecord> = {}): PageRecord =>
@@ -37,7 +38,12 @@ const node: PageNode = {
   children: [{ page: mk('child', { title: 'Child' }), children: [] }],
 };
 
-const renderRow = (n: PageNode, collapsed = new Set<string>(), onToggle = vi.fn()) => {
+const renderRow = (
+  n: PageNode,
+  collapsed = new Set<string>(),
+  onToggle = vi.fn(),
+  dnd: PageDndHandlers = noopDnd,
+) => {
   let location = '';
   render(
     <MemoryRouter initialEntries={['/']}>
@@ -47,7 +53,7 @@ const renderRow = (n: PageNode, collapsed = new Set<string>(), onToggle = vi.fn(
         activeId="parent"
         collapsed={collapsed}
         onToggle={onToggle}
-        dnd={noopDnd}
+        dnd={dnd}
       />
       <Route
         path="*"
@@ -87,5 +93,30 @@ describe('SidebarRow', () => {
     renderRow({ page: mk('x', { title: '' }), children: [] });
     expect(screen.getByText('📄')).toBeInTheDocument();
     expect(screen.getByText('Untitled')).toBeInTheDocument();
+  });
+
+  it('wires drag reordering: grip starts the drag, the row is the drop target', () => {
+    const dnd: PageDndHandlers = {
+      ...noopDnd,
+      onDragStart: vi.fn(),
+      onDragOver: vi.fn(),
+      onDrop: vi.fn(),
+      onDragEnd: vi.fn(),
+      onPointerDown: vi.fn(() => vi.fn()),
+    };
+    renderRow({ page: mk('solo', { title: 'Solo' }), children: [] }, new Set(), vi.fn(), dnd);
+    const grip = screen.getByRole('button', { name: /Drag Solo/ });
+    // Native drag starts from the grip; the row is the drop target.
+    fireEvent.dragStart(grip);
+    expect(dnd.onDragStart).toHaveBeenCalledWith('solo');
+    fireEvent.pointerDown(grip);
+    expect(dnd.onPointerDown).toHaveBeenCalledWith('solo');
+    const row = grip.closest('.pv-sidebar-row')!;
+    fireEvent.dragOver(row);
+    expect(dnd.onDragOver).toHaveBeenCalledWith('solo');
+    fireEvent.drop(row);
+    expect(dnd.onDrop).toHaveBeenCalledWith('solo');
+    fireEvent.dragEnd(row);
+    expect(dnd.onDragEnd).toHaveBeenCalled();
   });
 });

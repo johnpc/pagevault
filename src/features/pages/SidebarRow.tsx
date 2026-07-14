@@ -33,8 +33,7 @@ export function SidebarRow({ node, depth, activeId, collapsed, onToggle, dnd }: 
       <div
         className={cls}
         style={{ paddingLeft: `${8 + depth * 16}px` }}
-        draggable
-        onDragStart={() => dnd.onDragStart(id)}
+        data-drag-id={id}
         onDragOver={(e: DragEvent) => {
           e.preventDefault();
           dnd.onDragOver(id);
@@ -45,6 +44,15 @@ export function SidebarRow({ node, depth, activeId, collapsed, onToggle, dnd }: 
         }}
         onDragEnd={dnd.onDragEnd}
       >
+        <button
+          className="pv-sidebar-grip"
+          aria-label={`Drag ${displayTitle(node.page)} to reorder`}
+          draggable
+          onDragStart={() => dnd.onDragStart(id)}
+          onPointerDown={dnd.onPointerDown(id)}
+        >
+          ⋮⋮
+        </button>
         {hasChildren ? (
           <button
             className="pv-sidebar-caret"
