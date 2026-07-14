@@ -373,6 +373,13 @@ When('I duplicate the first block', async ({ page }) => {
   await active(page).getByLabel('Duplicate block').first().click();
 });
 
+When('I duplicate the focused block with the keyboard', async ({ page }) => {
+  // Focus the block's textarea, then press Cmd/Ctrl+D (Notion parity).
+  const input = active(page).locator('textarea.pv-block-input').first();
+  await input.click();
+  await input.press('ControlOrMeta+d');
+});
+
 Then(
   'I should see {int} blocks containing {string}',
   async ({ page }, count: number, text: string) => {

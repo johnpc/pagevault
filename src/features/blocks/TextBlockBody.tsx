@@ -18,6 +18,7 @@ export function TextBlockBody({
   block,
   onEdit,
   onRemove,
+  onDuplicate,
   onEnter,
   onIndent,
   onMerge,
@@ -31,6 +32,7 @@ export function TextBlockBody({
   block: BlockRecord;
   onEdit: (id: string, patch: Partial<BlockRecord>) => void;
   onRemove: (id: string) => void;
+  onDuplicate: () => void;
   onEnter: (caret: number, value: string) => boolean;
   onIndent: (dir: 'in' | 'out') => void;
   onMerge: (value: string) => boolean;
@@ -42,7 +44,7 @@ export function TextBlockBody({
   onFocused?: () => void;
 }) {
   const { value, setValue, change, keyDown, save, focus, focused, matches, active, pick } =
-    useBlockInput(block, onEdit, onRemove, onEnter, onIndent, onMerge, onMergeForward);
+    useBlockInput(block, onEdit, onRemove, onEnter, onIndent, onMerge, onMergeForward, onDuplicate);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const mention = useMention(block.page, value, setValue, inputRef);
   const showPreview = !focused && hasInlineMarkup(value);
