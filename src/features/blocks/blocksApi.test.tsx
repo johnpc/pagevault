@@ -15,7 +15,13 @@ vi.mock('../../lib/pbClient', () => ({
   currentUserId: () => 'u1',
 }));
 
-import { useBlocks, useCreateBlock, useDeleteBlock, useDuplicateBlock } from './blocksApi';
+import {
+  useBlocks,
+  useCreateBlock,
+  useDeleteBlock,
+  useDuplicateBlock,
+  useRestoreBlocks,
+} from './blocksApi';
 import { useUpdateBlock } from './updateBlockApi';
 import { useUploadBlockFile } from './uploadBlockFileApi';
 import type { BlockRecord } from '../../lib/pbClient';
@@ -64,6 +70,21 @@ describe('blocksApi', () => {
     const del = renderHook(() => useDeleteBlock('p1'), { wrapper });
     await del.result.current.mutateAsync('b1');
     expect(blocks.delete).toHaveBeenCalledWith('b1');
+  });
+
+  it('useRestoreBlocks recreates deleted blocks with their original ids and sort', async () => {
+    blocks.create.mockResolvedValue({ id: 'x' });
+    const removed = [
+      { id: 'b1', page: 'p1', type: 'text', content: 'a', sort: 5, owner: 'u1' },
+      { id: 'b2', page: 'p1', type: 'quote', content: 'b', sort: 6, owner: 'u1' },
+    ] as unknown as BlockRecord[];
+    const { result } = renderHook(() => useRestoreBlocks('p1'), { wrapper });
+    await result.current.mutateAsync(removed);
+    expect(blocks.create).toHaveBeenCalledTimes(2);
+    expect(blocks.create).toHaveBeenCalledWith(
+      expect.objectContaining({ id: 'b1', sort: 5, content: 'a', page: 'p1', owner: 'u1' }),
+    );
+    expect(blocks.create).toHaveBeenCalledWith(expect.objectContaining({ id: 'b2', sort: 6 }));
   });
 
   it('useUploadBlockFile sends the file as form data and clears the URL', async () => {

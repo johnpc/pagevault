@@ -15,6 +15,22 @@
   box-shadow: var(--pv-shadow);
   font-size: 14px;
 }
+.pv-toast-action {
+  background: none;
+  border: 1px solid var(--pv-bg);
+  color: inherit;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: var(--pv-radius-sm);
+  opacity: 0.9;
+}
+.pv-toast-action:hover {
+  opacity: 1;
+  background: var(--pv-bg);
+  color: var(--pv-text);
+}
 .pv-toast-close {
   background: none;
   border: none;

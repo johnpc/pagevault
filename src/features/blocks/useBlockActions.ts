@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
-import { useCreateBlock, useDeleteBlock, useDuplicateBlock } from './blocksApi';
+import { useCreateBlock, useDuplicateBlock } from './blocksApi';
+import { useDeleteWithUndo } from './useDeleteWithUndo';
 import { useSetDepths } from './blockBatchApi';
 import { useUpdateBlock } from './updateBlockApi';
 import { useUploadBlockFile } from './uploadBlockFileApi';
@@ -18,7 +19,7 @@ import type { BlockType } from '../../lib/pbTypes';
 export function useBlockActions(pageId: string, blocks: BlockRecord[]) {
   const createBlock = useCreateBlock(pageId);
   const updateBlock = useUpdateBlock(pageId);
-  const deleteBlock = useDeleteBlock(pageId);
+  const deleteWithUndo = useDeleteWithUndo(pageId, blocks);
   const setDepths = useSetDepths(pageId);
   const duplicateBlock = useDuplicateBlock(pageId);
   const moveBlockTo = useMoveBlock(pageId, blocks);
@@ -86,7 +87,7 @@ export function useBlockActions(pageId: string, blocks: BlockRecord[]) {
     uploadImage,
     focusId,
     clearFocusId: () => setFocusId(null),
-    removeBlock: deleteBlock.mutate,
-    removeBlocks: deleteBlock.mutate,
+    removeBlock: deleteWithUndo,
+    removeBlocks: deleteWithUndo,
   };
 }
