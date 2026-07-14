@@ -815,3 +815,47 @@
 .pv-align-item--on {
   font-weight: 600;
 }
+
+/* Floating selection toolbar (appears above a text selection). Fixed to the
+ * viewport at the selection anchor, centered and lifted above the line. */
+.pv-seltoolbar {
+  position: fixed;
+  transform: translate(-50%, calc(-100% - 8px));
+  display: flex;
+  gap: 2px;
+  padding: 4px;
+  background: var(--pv-surface);
+  border: 1px solid var(--pv-border);
+  border-radius: var(--pv-radius-sm);
+  box-shadow: var(--pv-shadow);
+  z-index: 30;
+}
+.pv-seltoolbar-btn {
+  min-width: 28px;
+  height: 28px;
+  padding: 0 6px;
+  border: none;
+  background: none;
+  border-radius: 4px;
+  color: var(--pv-text);
+  cursor: pointer;
+  font-size: 14px;
+}
+.pv-seltoolbar-btn:hover {
+  background: var(--pv-hover);
+}
+.pv-seltoolbar-btn--bold {
+  font-weight: 700;
+}
+.pv-seltoolbar-btn--italic {
+  font-style: italic;
+}
+.pv-seltoolbar-btn--underline {
+  text-decoration: underline;
+}
+.pv-seltoolbar-btn--strike {
+  text-decoration: line-through;
+}
+.pv-seltoolbar-btn--code {
+  font-family: ui-monospace, monospace;
+}

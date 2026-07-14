@@ -14,6 +14,13 @@ Feature: Keyboard formatting shortcuts
     And I press the bold shortcut
     Then the block renders "make me bold" in bold
 
+  Scenario: Bold a selection from the floating toolbar
+    When I open the page "Formatting"
+    And I add a block with the text "toolbar bold"
+    And I select the block text with the keyboard
+    And I click "Bold" on the selection toolbar
+    Then the block renders "toolbar bold" in bold
+
   Scenario: Cmd/Ctrl+U wraps the selected text in underline
     When I open the page "Formatting"
     And I add a block with the text "underline me"

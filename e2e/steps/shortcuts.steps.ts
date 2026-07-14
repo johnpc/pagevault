@@ -45,6 +45,23 @@ Then('the block renders {string} underlined', async ({ page }, text: string) => 
   ).toBeVisible();
 });
 
+// Select the block's text with a REAL gesture (keyboard select-all) so the
+// textarea's `select` event fires and reveals the toolbar — a programmatic
+// el.select() does not dispatch that event.
+When('I select the block text with the keyboard', async ({ page }) => {
+  const input = active(page).locator('textarea.pv-block-input').last();
+  await input.click();
+  await expect(focused(page)).toBeVisible();
+  await input.press('ControlOrMeta+a');
+});
+
+When('I click {string} on the selection toolbar', async ({ page }, label: string) => {
+  const toolbar = active(page).getByRole('toolbar', { name: 'Format selection' });
+  await expect(toolbar).toBeVisible();
+  await toolbar.getByRole('button', { name: label }).click();
+  await blurToPreview(page); // commit + render the idle formatted preview
+});
+
 When('I press the sidebar-toggle shortcut', async ({ page }) => {
   await page.keyboard.press('ControlOrMeta+\\');
 });
