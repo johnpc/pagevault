@@ -13,8 +13,11 @@ interface BlockRowsProps {
   onIndent: (id: string, dir: 'in' | 'out') => void;
   onPasteMarkdown: (block: BlockRecord, text: string) => void;
   onSplit: (block: BlockRecord, caret: number, value: string) => boolean;
+  onMerge: (id: string, value: string) => boolean;
   onUpload: (id: string, file: File) => void;
   focusId: string | null;
+  focusCaret?: number;
+  focusValue?: string;
   onFocused: () => void;
 }
 
@@ -61,7 +64,10 @@ export function BlockRows(props: BlockRowsProps) {
             onPasteMarkdown={row.onPasteMarkdown}
             onUpload={row.onUpload}
             onSplit={row.onSplit}
+            onMerge={row.onMerge}
             autoFocus={block.id === props.focusId}
+            autoFocusCaret={block.id === props.focusId ? props.focusCaret : undefined}
+            autoFocusValue={block.id === props.focusId ? props.focusValue : undefined}
             onFocused={row.onFocused}
             dnd={row.dnd}
           />

@@ -18,10 +18,13 @@ interface BlockListProps {
   onIndent: (id: string, dir: 'in' | 'out') => void;
   onPasteMarkdown: (block: BlockRecord, text: string) => void;
   onSplit: (block: BlockRecord, caret: number, value: string) => boolean;
+  onMerge: (id: string, value: string) => boolean;
   onUpload: (id: string, file: File) => void;
   onAddBlock: (type?: BlockType) => void;
   onSubPage: () => void;
   focusId: string | null;
+  focusCaret?: number;
+  focusValue?: string;
   onFocused: () => void;
 }
 

@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { useCreateBlock, useDuplicateBlock } from './blocksApi';
 import { useDeleteWithUndo } from './useDeleteWithUndo';
 import { useSetDepths } from './blockBatchApi';
@@ -9,6 +9,8 @@ import { indentUpdates } from './indent';
 import { useImportMarkdown } from './markdownImportApi';
 import { markdownToBlocks } from './markdownImport';
 import { useEnterSplit } from './useEnterSplit';
+import { useBackspaceMerge } from './useBackspaceMerge';
+import { useFocusTarget } from './useFocusTarget';
 import type { BlockRecord } from '../../lib/pbClient';
 import type { BlockType } from '../../lib/pbTypes';
 
@@ -25,8 +27,8 @@ export function useBlockActions(pageId: string, blocks: BlockRecord[]) {
   const moveBlockTo = useMoveBlock(pageId, blocks);
   const uploadFile = useUploadBlockFile(pageId);
   const importMd = useImportMarkdown(pageId);
-  // id of the block that should grab focus next (the one just created by Enter).
-  const [focusId, setFocusId] = useState<string | null>(null);
+  const { focusId, focusCaret, focusValue, setFocusId, focusAt, clearFocusId } = useFocusTarget();
+  const mergeBlock = useBackspaceMerge(pageId, blocks, { focusAt });
 
   const addBlock = useCallback(
     (type: BlockType = 'text') =>
@@ -84,9 +86,12 @@ export function useBlockActions(pageId: string, blocks: BlockRecord[]) {
     indentMany,
     importMarkdown,
     splitBlock,
+    mergeBlock,
     uploadImage,
     focusId,
-    clearFocusId: () => setFocusId(null),
+    focusCaret,
+    focusValue,
+    clearFocusId,
     removeBlock: deleteWithUndo,
     removeBlocks: deleteWithUndo,
   };

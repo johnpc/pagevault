@@ -18,7 +18,10 @@ export function TextBlockRow({
   onIndent,
   onPasteMarkdown,
   onSplit,
+  onMerge,
   autoFocus,
+  autoFocusCaret,
+  autoFocusValue,
   onFocused,
 }: {
   block: BlockRecord;
@@ -29,7 +32,10 @@ export function TextBlockRow({
   onIndent: (id: string, dir: 'in' | 'out') => void;
   onPasteMarkdown: (block: BlockRecord, text: string) => void;
   onSplit: (block: BlockRecord, caret: number, value: string) => boolean;
+  onMerge: (id: string, value: string) => boolean;
   autoFocus?: boolean;
+  autoFocusCaret?: number;
+  autoFocusValue?: string;
   onFocused?: () => void;
 }) {
   return (
@@ -46,8 +52,11 @@ export function TextBlockRow({
         onRemove={onRemove}
         onEnter={(caret, value) => onSplit(block, caret, value)}
         onIndent={(dir) => onIndent(block.id, dir)}
+        onMerge={(value) => onMerge(block.id, value)}
         onPasteMarkdown={(text) => onPasteMarkdown(block, text)}
         autoFocus={autoFocus}
+        autoFocusCaret={autoFocusCaret}
+        autoFocusValue={autoFocusValue}
         onFocused={onFocused}
       />
       <BlockControls
