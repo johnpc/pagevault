@@ -28,7 +28,9 @@ describe('useBlockMerge', () => {
 
   it('mergeUp folds a block into the previous one, focusing it at the join', () => {
     const focusAt = vi.fn();
-    const { result } = renderHook(() => useBlockMerge('p1', list, { focusAt }), { wrapper });
+    const { result } = renderHook(() => useBlockMerge('p1', { current: list }, { focusAt }), {
+      wrapper,
+    });
     // Pass the LIVE value ("World") — not a stale cached one.
     expect(result.current.mergeUp('b', 'World')).toBe(true);
     expect(focusAt).toHaveBeenCalledWith('a', 5, 'HelloWorld');
@@ -36,14 +38,18 @@ describe('useBlockMerge', () => {
 
   it('mergeUp is a no-op at the first block', () => {
     const focusAt = vi.fn();
-    const { result } = renderHook(() => useBlockMerge('p1', list, { focusAt }), { wrapper });
+    const { result } = renderHook(() => useBlockMerge('p1', { current: list }, { focusAt }), {
+      wrapper,
+    });
     expect(result.current.mergeUp('a', 'Hello')).toBe(false);
     expect(focusAt).not.toHaveBeenCalled();
   });
 
   it('mergeDown pulls the next block up, keeping focus at the join', () => {
     const focusAt = vi.fn();
-    const { result } = renderHook(() => useBlockMerge('p1', list, { focusAt }), { wrapper });
+    const { result } = renderHook(() => useBlockMerge('p1', { current: list }, { focusAt }), {
+      wrapper,
+    });
     // Delete at the end of "Hello" (live value) pulls "World" up.
     expect(result.current.mergeDown('a', 'Hello')).toBe(true);
     expect(focusAt).toHaveBeenCalledWith('a', 5, 'HelloWorld');
@@ -51,7 +57,9 @@ describe('useBlockMerge', () => {
 
   it('mergeDown is a no-op at the last block', () => {
     const focusAt = vi.fn();
-    const { result } = renderHook(() => useBlockMerge('p1', list, { focusAt }), { wrapper });
+    const { result } = renderHook(() => useBlockMerge('p1', { current: list }, { focusAt }), {
+      wrapper,
+    });
     expect(result.current.mergeDown('b', 'World')).toBe(false);
     expect(focusAt).not.toHaveBeenCalled();
   });
@@ -63,7 +71,10 @@ describe('useBlockMerge', () => {
       mk('d', 'divider', ''),
       mk('b', 'text', 'World'),
     ];
-    const { result } = renderHook(() => useBlockMerge('p1', withDivider, { focusAt }), { wrapper });
+    const { result } = renderHook(
+      () => useBlockMerge('p1', { current: withDivider }, { focusAt }),
+      { wrapper },
+    );
     expect(result.current.mergeUp('b', 'World')).toBe(false);
     expect(result.current.mergeDown('a', 'Hello')).toBe(false);
   });

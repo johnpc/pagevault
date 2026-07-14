@@ -21,7 +21,7 @@ const setup = () => {
   const editBlock = vi.fn();
   const setFocusId = vi.fn();
   const { result } = renderHook(
-    () => useEnterSplit('p1', [mk()], { indentBlock, editBlock, setFocusId }),
+    () => useEnterSplit('p1', { current: [mk()] }, { indentBlock, editBlock, setFocusId }),
     {
       wrapper,
     },

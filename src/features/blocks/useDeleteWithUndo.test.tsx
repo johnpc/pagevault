@@ -37,7 +37,7 @@ describe('useDeleteWithUndo', () => {
   });
 
   it('deletes a single block and offers a singular Undo toast', async () => {
-    const { result } = renderHook(() => useDeleteWithUndo('p1', list), { wrapper });
+    const { result } = renderHook(() => useDeleteWithUndo('p1', { current: list }), { wrapper });
     result.current('b');
     await waitFor(() => expect(toasts).toHaveLength(1));
     expect(blocks.delete).toHaveBeenCalledWith('b');
@@ -46,14 +46,14 @@ describe('useDeleteWithUndo', () => {
   });
 
   it('pluralizes the toast for a multi-block delete', async () => {
-    const { result } = renderHook(() => useDeleteWithUndo('p1', list), { wrapper });
+    const { result } = renderHook(() => useDeleteWithUndo('p1', { current: list }), { wrapper });
     result.current(['a', 'c']);
     await waitFor(() => expect(toasts).toHaveLength(1));
     expect(toasts[0].message).toBe('2 blocks deleted.');
   });
 
   it('restores the exact deleted blocks when Undo runs', async () => {
-    const { result } = renderHook(() => useDeleteWithUndo('p1', list), { wrapper });
+    const { result } = renderHook(() => useDeleteWithUndo('p1', { current: list }), { wrapper });
     result.current(['a', 'c']);
     await waitFor(() => expect(toasts).toHaveLength(1));
     toasts[0].action?.run();
