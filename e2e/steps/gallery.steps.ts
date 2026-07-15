@@ -36,3 +36,16 @@ Then(
 Then('the table is in the gallery view', async ({ page }) => {
   await expect(gallery(page)).toBeVisible();
 });
+
+Then(
+  'the gallery field {string} shows the tag {string} as a colored pill',
+  async ({ page }, label: string, tag: string) => {
+    const pill = gallery(page)
+      .locator('.pv-gallery-field')
+      .filter({ has: page.locator('dt', { hasText: label }) })
+      .locator('.pv-tag', { hasText: tag })
+      .first();
+    await expect(pill).toBeVisible();
+    await expect(pill).toHaveClass(/pv-tag--\w+/);
+  },
+);

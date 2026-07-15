@@ -28,6 +28,8 @@ describe('galleryCards', () => {
     const cards = galleryCards(data());
     expect(cards[0].fields.map((f) => f.label)).toEqual(['Status', 'Owner']);
     expect(cards[0].fields[0].value).toBe('Todo');
+    // Carries the column type so the view can render select values as pills.
+    expect(cards[0].fields.map((f) => f.type)).toEqual(['select', 'relation']);
   });
 
   it('resolves relation fields to the linked page title', () => {
