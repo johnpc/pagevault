@@ -15,6 +15,12 @@ export function useSelectionStart(
   ids: string[],
   setSel: Dispatch<SetStateAction<BlockSelection | null>>,
 ) {
+  // Read `ids` via a latest-ref so the callbacks below keep a STABLE identity
+  // across renders — `ids` is a fresh array every keystroke (the blocks cache is
+  // rewritten optimistically), and selectId is a prop on every memoized BlockRow,
+  // so an unstable identity would re-render every row on each character typed.
+  const idsRef = useRef(ids);
+  idsRef.current = ids;
   // The block index most recently focused — the anchor Shift+Click extends from.
   const focusedIndex = useRef<number | null>(null);
   const noteFocus = useCallback((index: number) => {
@@ -37,14 +43,14 @@ export function useSelectionStart(
     [setSel],
   );
   const selectAll = useCallback(() => {
-    if (ids.length) selectRange(0, ids.length - 1);
-  }, [ids.length, selectRange]);
+    if (idsRef.current.length) selectRange(0, idsRef.current.length - 1);
+  }, [selectRange]);
   const selectId = useCallback(
     (id: string) => {
-      const i = ids.indexOf(id);
+      const i = idsRef.current.indexOf(id);
       if (i !== -1) selectRange(i, i);
     },
-    [ids, selectRange],
+    [selectRange],
   );
 
   return { noteFocus, shiftClick, selectAll, selectId };
