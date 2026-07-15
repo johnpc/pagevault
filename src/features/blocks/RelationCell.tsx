@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { usePages } from '../pages/pagesApi';
 import { displayTitle } from '../pages/pageTree';
+import { usePopover } from '../shell/usePopover';
+import { relationMatches } from './relationMatches';
 
 /** A relation cell: links the row to a page. Stores the page id as its value;
- * renders that page's title with a popover to pick a different page or clear it.
- * Reuses the react-query-cached usePages, so many relation cells share one fetch. */
+ * renders that page's title with a popover to search + pick a different page or
+ * clear it. Reuses react-query-cached usePages, so many relation cells share one
+ * fetch; usePopover gives Escape/outside-click close + focus trap. */
 export function RelationCell({
   value,
   label,
@@ -15,18 +18,23 @@ export function RelationCell({
   onChange: (value: string) => void;
 }) {
   const pages = usePages();
-  const [open, setOpen] = useState(false);
+  const { open, setOpen, close, triggerRef, menuRef, onKeyDown } = usePopover<HTMLDivElement>();
+  const [query, setQuery] = useState('');
   const linked = (pages.data ?? []).find((p) => p.id === value);
   const text = linked ? displayTitle(linked) : '';
-  // A non-empty value with no matching page = a dangling link (the target page
-  // was deleted/archived). Distinguish it from an empty cell so the broken link
-  // is visible + clearable, not silently blank. Wait for the fetch to settle so
-  // we don't flash "broken" before pages load.
+  // A non-empty value with no matching page = a dangling link (target deleted/
+  // archived). Show it as broken + clearable, not silently blank. Wait for the
+  // fetch to settle so we don't flash "broken" before pages load.
   const broken = !linked && value !== '' && !pages.isLoading;
+  const pick = (id: string) => {
+    onChange(id);
+    close();
+  };
 
   return (
-    <div className="pv-relation">
+    <div className="pv-relation" onKeyDown={onKeyDown}>
       <button
+        ref={triggerRef}
         className="pv-relation-btn"
         aria-label={label}
         aria-expanded={open}
@@ -43,38 +51,42 @@ export function RelationCell({
         )}
       </button>
       {open && (
-        <ul className="pv-relation-menu" role="listbox" aria-label={`${label} link a page`}>
-          {value && (
-            <li>
-              <button
-                type="button"
-                className="pv-relation-item pv-relation-clear"
-                onClick={() => {
-                  onChange('');
-                  setOpen(false);
-                }}
-              >
-                Clear
-              </button>
-            </li>
-          )}
-          {(pages.data ?? []).map((p) => (
-            <li key={p.id}>
-              <button
-                type="button"
-                role="option"
-                aria-selected={p.id === value}
-                className={`pv-relation-item${p.id === value ? ' pv-relation-item--on' : ''}`}
-                onClick={() => {
-                  onChange(p.id);
-                  setOpen(false);
-                }}
-              >
-                {displayTitle(p)}
-              </button>
-            </li>
-          ))}
-        </ul>
+        <div ref={menuRef} className="pv-relation-menu" aria-label={`${label} link a page`}>
+          <input
+            type="text"
+            className="pv-relation-search"
+            aria-label={`Search pages to link in ${label}`}
+            placeholder="Search pages…"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+          <ul role="listbox" aria-label={`${label} pages`}>
+            {value && (
+              <li>
+                <button
+                  type="button"
+                  className="pv-relation-item pv-relation-clear"
+                  onClick={() => pick('')}
+                >
+                  Clear
+                </button>
+              </li>
+            )}
+            {relationMatches(pages.data ?? [], query).map((p) => (
+              <li key={p.id}>
+                <button
+                  type="button"
+                  role="option"
+                  aria-selected={p.id === value}
+                  className={`pv-relation-item${p.id === value ? ' pv-relation-item--on' : ''}`}
+                  onClick={() => pick(p.id)}
+                >
+                  {displayTitle(p)}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
     </div>
   );

@@ -704,7 +704,6 @@
   z-index: 20;
   margin: 2px 0 0;
   padding: 4px;
-  list-style: none;
   background: var(--pv-surface);
   border: 1px solid var(--pv-border);
   border-radius: var(--pv-radius-sm);
@@ -712,6 +711,23 @@
   min-width: 180px;
   max-height: 260px;
   overflow-y: auto;
+}
+.pv-relation-menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+/* Search box at the top of the relation picker — filters the page list. */
+.pv-relation-search {
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 4px;
+  padding: 4px 6px;
+  font: inherit;
+  color: var(--pv-text);
+  background: var(--pv-bg);
+  border: 1px solid var(--pv-border);
+  border-radius: var(--pv-radius-sm);
 }
 .pv-relation-item {
   display: block;
