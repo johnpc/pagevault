@@ -185,6 +185,14 @@ Feature: Pages and blocks
     And I favorite the open page
     Then I should see "Team wiki" in the sidebar favorites
 
+  Scenario: Remove a favorite directly from the sidebar
+    Given I have a page titled "Pinned doc"
+    When I open the page "Pinned doc"
+    And I favorite the open page
+    Then I should see "Pinned doc" in the sidebar favorites
+    When I remove "Pinned doc" from the sidebar favorites
+    Then I should not see "Pinned doc" in the sidebar favorites
+
   Scenario: Duplicate a page with its content
     Given I have a page titled "Template"
     When I open the page "Template"

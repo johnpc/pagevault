@@ -194,6 +194,33 @@
   }
 }
 
+/* Unfavorite ★ on a Favorites row: a filled gold star, faint until row hover
+   (it stays discoverable on touch). Clicking removes the page from Favorites. */
+.pv-sidebar-unfav {
+  background: none;
+  border: none;
+  color: var(--pv-accent);
+  font-size: 13px;
+  line-height: 1;
+  flex-shrink: 0;
+  cursor: pointer;
+  padding: 0 4px;
+  border-radius: 4px;
+  opacity: 0.35;
+}
+.pv-sidebar-row:hover .pv-sidebar-unfav,
+.pv-sidebar-unfav:focus-visible {
+  opacity: 1;
+}
+.pv-sidebar-unfav:hover {
+  background: var(--pv-hover);
+}
+@media (hover: none) {
+  .pv-sidebar-unfav {
+    opacity: 0.7;
+  }
+}
+
 .pv-signout {
   text-align: left;
   background: none;

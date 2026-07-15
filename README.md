@@ -29,7 +29,7 @@ account, no third-party service, no lock-in.
 | Move / reparent a page (cycle-safe picker)                                                  | ✅     |
 | Sub-pages + breadcrumb navigation                                                           | ✅     |
 | Archive to trash → restore or delete forever (delete asks to confirm — it's permanent)      | ✅     |
-| Favorite pages (pinned Favorites section)                                                   | ✅     |
+| Favorite pages (pinned Favorites section; unfavorite via the row's ★ in the sidebar)        | ✅     |
 | Page footer: word/block count + last edited                                                 | ✅     |
 | Duplicate a page (with all its blocks)                                                      | ✅     |
 | Export a page as Markdown                                                                   | ✅     |
