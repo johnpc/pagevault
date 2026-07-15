@@ -11,6 +11,7 @@ export function SidebarTree({
   activeId,
   collapsed,
   onToggle,
+  onAddChild,
   dnd,
   isLoading,
   isError,
@@ -21,6 +22,7 @@ export function SidebarTree({
   activeId?: string;
   collapsed: Set<string>;
   onToggle: (id: string) => void;
+  onAddChild: (id: string) => void;
   dnd: PageDnd;
   isLoading: boolean;
   isError: boolean;
@@ -45,6 +47,7 @@ export function SidebarTree({
             activeId={activeId}
             collapsed={collapsed}
             onToggle={onToggle}
+            onAddChild={onAddChild}
             handlers={dnd.handlers}
             draggingId={dnd.draggingId}
             overId={dnd.overId}

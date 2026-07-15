@@ -44,6 +44,7 @@ const renderRow = (
   collapsed = new Set<string>(),
   onToggle = vi.fn(),
   handlers: PageDndHandlers = noopHandlers,
+  onAddChild = vi.fn(),
 ) => {
   let location = '';
   render(
@@ -54,6 +55,7 @@ const renderRow = (
         activeId="parent"
         collapsed={collapsed}
         onToggle={onToggle}
+        onAddChild={onAddChild}
         handlers={handlers}
         draggingId={null}
         overId={null}
@@ -98,6 +100,13 @@ describe('SidebarRow', () => {
     expect(screen.getByText('Untitled')).toBeInTheDocument();
   });
 
+  it('adds a sub-page via the row "+" button', async () => {
+    const onAddChild = vi.fn();
+    renderRow(node, new Set(), vi.fn(), noopHandlers, onAddChild);
+    await userEvent.click(screen.getByLabelText('Add a sub-page in Parent'));
+    expect(onAddChild).toHaveBeenCalledWith('parent');
+  });
+
   it('wires drag reordering: grip starts the drag, the row is the drop target', () => {
     const handlers: PageDndHandlers = {
       onDragStart: vi.fn(),
@@ -130,6 +139,7 @@ describe('sidebarRowEqual (memo comparator)', () => {
     activeId: undefined,
     collapsed: new Set<string>(),
     onToggle: noop,
+    onAddChild: noop,
     handlers: noopHandlers,
     draggingId: null,
     overId: null,
@@ -151,10 +161,11 @@ describe('sidebarRowEqual (memo comparator)', () => {
     expect(sidebarRowEqual(a, { ...a, draggingId: 'b', overId: 'a' })).toBe(false);
   });
 
-  it('re-renders when a non-drag prop changes (active, depth, collapsed)', () => {
+  it('re-renders when a non-drag prop changes (active, depth, collapsed, onAddChild)', () => {
     const a = base();
     expect(sidebarRowEqual(a, { ...a, activeId: 'a' })).toBe(false);
     expect(sidebarRowEqual(a, { ...a, depth: 1 })).toBe(false);
     expect(sidebarRowEqual(a, { ...a, collapsed: new Set(['a']) })).toBe(false);
+    expect(sidebarRowEqual(a, { ...a, onAddChild: () => {} })).toBe(false);
   });
 });

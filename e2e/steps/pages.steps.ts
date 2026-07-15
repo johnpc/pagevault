@@ -241,6 +241,23 @@ When('I collapse the sidebar page {string}', async ({ page, $testInfo }, title: 
   await row.getByRole('button', { name: 'Collapse' }).click();
 });
 
+When(
+  'I add a sub-page from the sidebar row {string}',
+  async ({ page, $testInfo }, title: string) => {
+    const unique = uniqueTitle(title, $testInfo);
+    await page
+      .locator('.pv-sidebar-tree')
+      .getByRole('button', { name: `Add a sub-page in ${unique}` })
+      .first()
+      .click();
+    // Wait for the new empty page to open + the pages refetch to settle before the
+    // caller types a title — else a late realtime refetch remounts the editor and
+    // clobbers the just-typed title (the unfocused-adopt race).
+    await expect(active(page).getByLabel('Page title')).toHaveValue('');
+    await page.waitForTimeout(300);
+  },
+);
+
 When('I move the page to trash', async ({ page }) => {
   await active(page).getByRole('button', { name: 'Move to trash' }).click();
 });

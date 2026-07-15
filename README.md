@@ -25,6 +25,7 @@ account, no third-party service, no lock-in.
 | Page templates (Meeting notes, To-do, Blank)                                                | ✅     |
 | Home screen with recently edited pages                                                      | ✅     |
 | Nested pages in a collapsible sidebar tree                                                  | ✅     |
+| Add a sub-page from a sidebar row's hover "+" (expands the parent, opens the child)         | ✅     |
 | Move / reparent a page (cycle-safe picker)                                                  | ✅     |
 | Sub-pages + breadcrumb navigation                                                           | ✅     |
 | Archive to trash → restore or delete forever                                                | ✅     |

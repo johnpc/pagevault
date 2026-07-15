@@ -5,6 +5,7 @@ import { buildTree } from './pageTree';
 import { FavoritesSection } from './FavoritesSection';
 import { readCollapsed, writeCollapsed, toggleCollapsed } from './expandStore';
 import { SidebarTree } from './SidebarTree';
+import { useAddChildPage } from './useAddChildPage';
 import { usePageDnd } from './usePageDnd';
 import { useAuth } from '../auth/useAuth';
 import { SidebarFooter } from './SidebarFooter';
@@ -47,6 +48,8 @@ export const Sidebar = forwardRef<HTMLElement, SidebarProps>(function Sidebar(
     history.push(`/page/${page.id}`);
   };
 
+  const onAddChild = useAddChildPage(pages, create, history, setCollapsed);
+
   return (
     <aside className="pv-sidebar" ref={ref}>
       <div className="pv-sidebar-head">
@@ -77,6 +80,7 @@ export const Sidebar = forwardRef<HTMLElement, SidebarProps>(function Sidebar(
         activeId={id}
         collapsed={collapsed}
         onToggle={toggle}
+        onAddChild={onAddChild}
         dnd={dnd}
         isLoading={isLoading}
         isError={isError}

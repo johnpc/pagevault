@@ -151,6 +151,13 @@ Feature: Pages and blocks
     When I collapse the sidebar page "Projects"
     Then I should not see "Website redesign" in the sidebar
 
+  Scenario: Add a sub-page from the sidebar row's "+" button
+    Given I have a page titled "Roadmap"
+    When I add a sub-page from the sidebar row "Roadmap"
+    And I name the open page "Q3 goals"
+    Then the breadcrumb for "Q3 goals" should include "Roadmap"
+    And I should see "Q3 goals" in the sidebar
+
   Scenario: Move a page to trash and restore it
     Given I have a page titled "Draft memo"
     When I open the page "Draft memo"

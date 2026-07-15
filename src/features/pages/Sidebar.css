@@ -165,6 +165,35 @@
   white-space: nowrap;
 }
 
+/* Row-level "+" to add a sub-page: hover-revealed at the right edge, like the
+   drag grip. Always visible on touch (no hover). */
+.pv-sidebar-add {
+  background: none;
+  border: none;
+  color: var(--pv-text-muted);
+  font-size: 15px;
+  line-height: 1;
+  flex-shrink: 0;
+  cursor: pointer;
+  padding: 0 4px;
+  border-radius: 4px;
+  opacity: 0;
+}
+.pv-sidebar-row:hover .pv-sidebar-add,
+.pv-sidebar-add:focus-visible {
+  opacity: 0.7;
+}
+.pv-sidebar-add:hover {
+  opacity: 1;
+  color: var(--pv-text);
+  background: var(--pv-hover);
+}
+@media (hover: none) {
+  .pv-sidebar-add {
+    opacity: 0.6;
+  }
+}
+
 .pv-signout {
   text-align: left;
   background: none;
