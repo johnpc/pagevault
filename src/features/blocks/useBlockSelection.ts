@@ -10,6 +10,7 @@ import { handoffSelection, isSelectAllBlocks } from './selectionHandoff';
 import { useActiveSelectionKeys } from './useActiveSelectionKeys';
 import { useSelectionActions } from './useSelectionActions';
 import { handleMoveBlockKey } from './moveBlockKey';
+import type { BlockType } from '../../lib/pbTypes';
 
 /**
  * Keyboard multi-block selection (Notion-style). A Shift+Arrow at a caret edge
@@ -17,15 +18,15 @@ import { handleMoveBlockKey } from './moveBlockKey';
  * listener (useActiveSelectionKeys) then drives ↑/↓ move, Shift+↑/↓ grow,
  * Backspace/Delete, and Escape. `ids` is the visible block ids in order.
  */
+// Operations over a block selection: delete/indent (keyboard), plus the bar's
+// duplicate/color/turn-into. onMoveBlock is the single-block Cmd/Ctrl+Shift+↑/↓.
 interface SelectionActions {
   onDeleteMany: (ids: string[]) => void;
   onIndentMany: (ids: string[], dir: 'in' | 'out') => void;
-  /** Duplicate every selected block (Cmd/Ctrl+D on a selection). */
   onDuplicateMany?: (ids: string[]) => void;
-  /** Move a single block before/after its neighbor (Cmd/Ctrl+Shift+↑/↓). */
   onMoveBlock?: (fromId: string, toId: string) => void;
-  /** Color every selected block (from the selection action bar). */
   onColorMany?: (ids: string[], color: string) => void;
+  onTypeMany?: (ids: string[], type: BlockType) => void;
 }
 
 export function useBlockSelection(ids: string[], actions: SelectionActions) {

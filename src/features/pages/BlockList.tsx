@@ -25,6 +25,7 @@ interface BlockListProps {
   onUpload: (id: string, file: File) => void;
   onMoveBlock: (fromId: string, toId: string) => void;
   onColorMany: (ids: string[], color: string) => void;
+  onTypeMany: (ids: string[], type: BlockType) => void;
   onAddBlock: (type?: BlockType) => void;
   onClickBelow: () => void;
   onSubPage: () => void;

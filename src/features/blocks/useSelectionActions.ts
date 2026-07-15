@@ -1,16 +1,18 @@
 import { useCallback } from 'react';
+import type { BlockType } from '../../lib/pbTypes';
 
 interface SelectionOps {
   onColorMany?: (ids: string[], color: string) => void;
   onDeleteMany: (ids: string[]) => void;
   onDuplicateMany?: (ids: string[]) => void;
+  onTypeMany?: (ids: string[], type: BlockType) => void;
 }
 
-/** The action-bar operations over the currently-selected block ids: color them
- * all, duplicate them all, or delete them all — each clearing the selection
- * afterward. Split from useBlockSelection to keep that hook under the line gate. */
+/** The action-bar operations over the currently-selected block ids: color,
+ * turn-into (change type), duplicate, or delete them all — each clearing the
+ * selection afterward. Split from useBlockSelection to keep it under the gate. */
 export function useSelectionActions(chosen: string[], clear: () => void, ops: SelectionOps) {
-  const { onColorMany, onDeleteMany, onDuplicateMany } = ops;
+  const { onColorMany, onDeleteMany, onDuplicateMany, onTypeMany } = ops;
   const colorSelected = useCallback(
     (color: string) => {
       if (chosen.length) onColorMany?.(chosen, color);
@@ -26,5 +28,12 @@ export function useSelectionActions(chosen: string[], clear: () => void, ops: Se
     if (chosen.length) onDuplicateMany?.(chosen);
     clear();
   }, [chosen, clear, onDuplicateMany]);
-  return { colorSelected, deleteSelected, duplicateSelected };
+  const turnIntoSelected = useCallback(
+    (type: BlockType) => {
+      if (chosen.length) onTypeMany?.(chosen, type);
+      clear();
+    },
+    [chosen, clear, onTypeMany],
+  );
+  return { colorSelected, deleteSelected, duplicateSelected, turnIntoSelected };
 }

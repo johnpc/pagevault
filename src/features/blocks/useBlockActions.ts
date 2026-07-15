@@ -8,6 +8,7 @@ import { useUploadBlockFile } from './uploadBlockFileApi';
 import { useMoveBlock } from './useMoveBlock';
 import { useIndent } from './useIndent';
 import { useSetColors } from './useSetColors';
+import { useSetTypes } from './useSetTypes';
 import { useImportMarkdown } from './markdownImportApi';
 import { markdownToBlocks } from './markdownImport';
 import { useEnterSplit } from './useEnterSplit';
@@ -30,6 +31,7 @@ export function useBlockActions(pageId: string, blocks: BlockRecord[]) {
   const deleteWithUndo = useDeleteWithUndo(pageId, blocksRef);
   const { indentBlock, indentMany } = useIndent(pageId, blocksRef);
   const colorMany = useSetColors(pageId);
+  const typeMany = useSetTypes(pageId);
   const { cloneBlock, duplicateMany } = useCloneBlocks(pageId, blocksRef);
   const moveBlockTo = useMoveBlock(pageId, blocksRef);
   const { mutate: uploadMutate } = useUploadBlockFile(pageId);
@@ -77,6 +79,7 @@ export function useBlockActions(pageId: string, blocks: BlockRecord[]) {
     indentBlock,
     indentMany,
     colorMany,
+    typeMany,
     importMarkdown,
     splitBlock,
     mergeBlock: mergeUp,

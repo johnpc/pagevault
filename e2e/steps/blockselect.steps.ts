@@ -63,6 +63,22 @@ When('I duplicate the selection from the selection bar', async ({ page }) => {
   await bar.getByLabel('Duplicate selected blocks').click();
 });
 
+When('I turn the selection into {string} from the selection bar', async ({ page }, label) => {
+  const bar = active(page).getByRole('toolbar', { name: 'Selected blocks' });
+  await expect(bar).toBeVisible();
+  await bar.getByLabel('Turn into').click();
+  await active(page)
+    .getByRole('option', { name: new RegExp(label) })
+    .click();
+});
+
+Then('blocks {int} and {int} are {string} blocks', async ({ page }, a, b, type) => {
+  const rows = active(page).locator('.pv-block');
+  const cls = (n: number) => rows.nth(n - 1).evaluate((el) => el.className);
+  await expect.poll(() => cls(a)).toContain(`pv-block--${type}`);
+  await expect.poll(() => cls(b)).toContain(`pv-block--${type}`);
+});
+
 When('I color the selection {string} from the selection bar', async ({ page }, label: string) => {
   const bar = active(page).getByRole('toolbar', { name: 'Selected blocks' });
   await expect(bar).toBeVisible();

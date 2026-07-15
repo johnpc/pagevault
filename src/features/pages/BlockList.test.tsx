@@ -65,6 +65,7 @@ const renderList = (data: BlockRecord[]) =>
       onUpload={vi.fn()}
       onMoveBlock={vi.fn()}
       onColorMany={vi.fn()}
+      onTypeMany={vi.fn()}
       onAddBlock={vi.fn()}
       onClickBelow={vi.fn()}
       onSubPage={vi.fn()}
