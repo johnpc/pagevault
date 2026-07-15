@@ -1,3 +1,4 @@
+import type { ClipboardEvent } from 'react';
 import type { TableColumn } from '../../lib/pbTypes';
 import { RelationCell } from './RelationCell';
 import { NumberCell } from './NumberCell';
@@ -15,6 +16,7 @@ export function TableCell({
   onAddOption,
   onRemoveOption,
   onRenameOption,
+  onPasteGrid,
 }: {
   column: TableColumn;
   value: string;
@@ -26,6 +28,8 @@ export function TableCell({
   onRemoveOption: (option: string) => void;
   /** Rename a (multi)select option (updating the column + every cell). */
   onRenameOption: (from: string, to: string) => void;
+  /** Spread pasted spreadsheet/TSV text across cells from here; true if handled. */
+  onPasteGrid: (text: string) => boolean;
 }) {
   if (column.type === 'relation') {
     return <RelationCell value={value} label={label} onChange={onChange} />;
@@ -64,6 +68,12 @@ export function TableCell({
     return <NumberCell value={value} format={column.format} label={label} onChange={onChange} />;
   }
 
+  // Spread a pasted spreadsheet/TSV grid across cells; if it wasn't a grid,
+  // let the browser paste the text into this one cell as usual.
+  const onPaste = (e: ClipboardEvent) => {
+    if (onPasteGrid(e.clipboardData.getData('text/plain'))) e.preventDefault();
+  };
+
   if (column.wrap) {
     return (
       <textarea
@@ -72,6 +82,7 @@ export function TableCell({
         aria-label={label}
         value={value}
         onChange={(e) => onChange(e.target.value)}
+        onPaste={onPaste}
       />
     );
   }
@@ -82,6 +93,7 @@ export function TableCell({
       aria-label={label}
       value={value}
       onChange={(e) => onChange(e.target.value)}
+      onPaste={onPaste}
     />
   );
 }

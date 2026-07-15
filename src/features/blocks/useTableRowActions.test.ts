@@ -118,4 +118,16 @@ describe('useTableRowActions', () => {
     result.current.onRenameOption(0, 'Red', 'Blue'); // collides with existing
     expect(save).not.toHaveBeenCalled();
   });
+
+  it('onPasteGrid spreads a TSV grid and reports true; single-value returns false', () => {
+    const save = vi.fn();
+    const { result } = renderHook(() => useTableRowActions(grid(), save));
+    // A real grid paste spreads + saves + reports handled.
+    expect(result.current.onPasteGrid(0, 0, 'X\tY')).toBe(true);
+    expect(save.mock.calls[0][0].rows[0]).toEqual(['X', 'Y']);
+    save.mockClear();
+    // A single value isn't a grid — no save, returns false (browser pastes it).
+    expect(result.current.onPasteGrid(0, 0, 'plain')).toBe(false);
+    expect(save).not.toHaveBeenCalled();
+  });
 });

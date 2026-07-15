@@ -1,6 +1,7 @@
 import { memo, type DragEvent, type PointerEvent } from 'react';
 import type { VisibleColumn } from './tableColumns';
 import { TableCell } from './TableCell';
+import { TableRowActions } from './TableRowActions';
 
 interface TableRowProps {
   columns: VisibleColumn[]; // the visible columns (stable unless columns change)
@@ -12,6 +13,7 @@ interface TableRowProps {
   onAddOption: (r: number, c: number, option: string) => void;
   onRemoveOption: (c: number, option: string) => void;
   onRenameOption: (c: number, from: string, to: string) => void;
+  onPasteGrid: (r: number, c: number, text: string) => boolean;
   onDelete: (r: number) => void;
   onDuplicate: (r: number) => void;
   onDragStart: (r: number) => void;
@@ -34,6 +36,7 @@ function TableRowInner({
   onAddOption,
   onRemoveOption,
   onRenameOption,
+  onPasteGrid,
   onDelete,
   onDuplicate,
   onDragStart,
@@ -72,23 +75,11 @@ function TableRowInner({
             onAddOption={(opt) => onAddOption(r, c, opt)}
             onRemoveOption={(opt) => onRemoveOption(c, opt)}
             onRenameOption={(from, to) => onRenameOption(c, from, to)}
+            onPasteGrid={(text) => onPasteGrid(r, c, text)}
           />
         </td>
       ))}
-      <td className="pv-table-rowdel">
-        <button
-          className="pv-table-rowdup"
-          aria-label={`Duplicate row ${r + 1}`}
-          onClick={() => onDuplicate(r)}
-        >
-          ⧉
-        </button>
-        {canDelete && (
-          <button aria-label={`Delete row ${r + 1}`} onClick={() => onDelete(r)}>
-            ×
-          </button>
-        )}
-      </td>
+      <TableRowActions r={r} canDelete={canDelete} onDuplicate={onDuplicate} onDelete={onDelete} />
     </tr>
   );
 }

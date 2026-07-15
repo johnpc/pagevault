@@ -19,6 +19,28 @@ When('I fill table cell {string} with {string}', async ({ page }, cell: string, 
   await expect(input).toHaveValue(value);
 });
 
+// Paste TSV (spreadsheet-shaped) text into a cell. Browsers can't be handed a
+// real clipboard here, so dispatch a paste event carrying a synthetic
+// DataTransfer — exactly what the cell's onPaste reads (text/plain).
+When(
+  'I paste the grid {string} into table cell {string}',
+  async ({ page }, tsv: string, cell: string) => {
+    const input = table(page).getByLabel(`Cell ${cell}`);
+    await input.click();
+    await expect(input).toBeFocused(); // settle focus before the synthetic paste
+    await input.evaluate(
+      (el, text) => {
+        const dt = new DataTransfer();
+        dt.setData('text/plain', text);
+        el.dispatchEvent(
+          new ClipboardEvent('paste', { clipboardData: dt, bubbles: true, cancelable: true }),
+        );
+      },
+      tsv.replace(/\\t/g, '\t').replace(/\\n/g, '\n'),
+    );
+  },
+);
+
 Then('table cell {string} contains {string}', async ({ page }, cell: string, value: string) => {
   await expect(table(page).getByLabel(`Cell ${cell}`)).toHaveValue(value);
 });

@@ -22,6 +22,7 @@ describe('TableCell', () => {
         onAddOption={vi.fn()}
         onRemoveOption={vi.fn()}
         onRenameOption={vi.fn()}
+        onPasteGrid={vi.fn()}
       />,
     );
     await userEvent.type(screen.getByLabelText('cell'), 'hi');
@@ -38,6 +39,7 @@ describe('TableCell', () => {
         onAddOption={vi.fn()}
         onRemoveOption={vi.fn()}
         onRenameOption={vi.fn()}
+        onPasteGrid={vi.fn()}
       />,
     );
     expect(screen.getByLabelText('cell')).toHaveProperty('type', 'number');
@@ -54,6 +56,7 @@ describe('TableCell', () => {
         onAddOption={vi.fn()}
         onRemoveOption={vi.fn()}
         onRenameOption={vi.fn()}
+        onPasteGrid={vi.fn()}
       />,
     );
     const input = screen.getByLabelText('cell');
@@ -72,6 +75,7 @@ describe('TableCell', () => {
         onAddOption={vi.fn()}
         onRemoveOption={vi.fn()}
         onRenameOption={vi.fn()}
+        onPasteGrid={vi.fn()}
       />,
     );
     await userEvent.click(screen.getByLabelText('cell'));
@@ -89,6 +93,7 @@ describe('TableCell', () => {
         onAddOption={vi.fn()}
         onRemoveOption={vi.fn()}
         onRenameOption={vi.fn()}
+        onPasteGrid={vi.fn()}
       />,
     );
     await userEvent.click(screen.getByLabelText('cell'));
@@ -106,6 +111,7 @@ describe('TableCell', () => {
         onAddOption={vi.fn()}
         onRemoveOption={vi.fn()}
         onRenameOption={vi.fn()}
+        onPasteGrid={vi.fn()}
       />,
     );
     await userEvent.click(screen.getByLabelText('cell'));
@@ -125,6 +131,7 @@ describe('TableCell', () => {
         onAddOption={vi.fn()}
         onRemoveOption={vi.fn()}
         onRenameOption={vi.fn()}
+        onPasteGrid={vi.fn()}
       />,
     );
     const el = screen.getByLabelText('cell');
@@ -144,6 +151,7 @@ describe('TableCell', () => {
         onAddOption={vi.fn()}
         onRemoveOption={vi.fn()}
         onRenameOption={vi.fn()}
+        onPasteGrid={vi.fn()}
       />,
     );
     await userEvent.click(screen.getByLabelText('cell'));

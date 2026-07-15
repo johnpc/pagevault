@@ -3,6 +3,7 @@ import type { TableData } from '../../lib/pbTypes';
 import { setCell, removeRow } from './tableData';
 import { addColumnOption } from './tableColumns';
 import { removeColumnOption, renameColumnOption } from './tableColumnOptions';
+import { pasteGrid } from './tablePaste';
 import { toggleValue } from './multiSelect';
 import { duplicateRow } from './tableRowOps';
 import { moveRow } from './tableSort';
@@ -66,6 +67,16 @@ export function useTableRowActions(data: TableData, save: (next: TableData) => v
     if (next !== d) s(next);
   }, []);
 
+  // Spread pasted spreadsheet/TSV text across cells from (r,c). Returns whether
+  // it was a grid paste (so the cell can preventDefault the raw text drop).
+  const onPasteGrid = useCallback((r: number, c: number, text: string): boolean => {
+    const { data: d, save: s } = ref.current;
+    const next = pasteGrid(d, r, c, text);
+    if (next === d) return false;
+    s(next);
+    return true;
+  }, []);
+
   return {
     onCell,
     onDelete,
@@ -74,5 +85,6 @@ export function useTableRowActions(data: TableData, save: (next: TableData) => v
     onAddOption,
     onRemoveOption,
     onRenameOption,
+    onPasteGrid,
   };
 }

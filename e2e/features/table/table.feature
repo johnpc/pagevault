@@ -18,6 +18,19 @@ Feature: Table (database) blocks
     Then the table has a cell containing "Apples"
     And the table has 2 body rows
 
+  Scenario: Paste a spreadsheet grid spreads across cells and adds rows
+    Given I have a page titled "Import grid"
+    When I type "/table" into a new block
+    And I choose "Table" from the slash menu
+    And I paste the grid "Apples\tRed\nBananas\tYellow" into table cell "1,1"
+    Then table cell "1,1" contains "Apples"
+    And table cell "1,2" contains "Red"
+    And table cell "2,1" contains "Bananas"
+    And table cell "2,2" contains "Yellow"
+    And the table has 2 body rows
+    When I reopen the page "Import grid"
+    Then table cell "2,2" contains "Yellow"
+
   Scenario: Move between table cells with Enter and Shift+Enter
     Given I have a page titled "Grid nav"
     When I type "/table" into a new block

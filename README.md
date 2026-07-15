@@ -45,6 +45,7 @@ account, no third-party service, no lock-in.
 | Column layouts — 2–4 side-by-side text columns                                              | ✅     |
 | Table of contents block — auto-lists headings, click to scroll                              | ✅     |
 | Table blocks — typed columns (text/number/checkbox/select/date), GFM export                 | ✅     |
+| Table — paste a spreadsheet range (TSV) to fill cells across columns + rows (adds rows)     | ✅     |
 | Select columns — pick from a popover; create / rename / remove options inline from the cell | ✅     |
 | Select / multiselect picker — type to filter options; "Create" only for a genuinely new tag | ✅     |
 | Select / multiselect options render as colored tag pills (auto-colored by name)             | ✅     |
