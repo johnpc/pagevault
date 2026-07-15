@@ -32,3 +32,8 @@ Feature: Accessibility baseline
     And I choose "Table" from the slash menu
     And I fill table cell "1,1" with "Row one"
     Then the page has no serious accessibility violations
+
+  Scenario: The quick-find dialog has no violations and traps focus
+    When I open quick find
+    Then the page has no serious accessibility violations
+    And Tab keeps focus inside the quick-find dialog
