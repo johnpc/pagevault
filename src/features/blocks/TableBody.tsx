@@ -23,7 +23,10 @@ export function TableBody({
   save: (next: TableData) => void;
   titles?: TitleMap;
 }) {
-  const { onCell, onDelete, onDuplicate, moveTo, onAddOption } = useTableRowActions(data, save);
+  const { onCell, onDelete, onDuplicate, moveTo, onAddOption, onRemoveOption } = useTableRowActions(
+    data,
+    save,
+  );
   // Memo on data.columns (not data): setCell preserves the columns array ref, so
   // `columns` stays referentially stable across cell edits — keeping the memoized
   // rows from busting when only a sibling cell changed. visibleColumns reads only
@@ -46,6 +49,7 @@ export function TableBody({
       dragging={dragRow === r}
       onCell={onCell}
       onAddOption={onAddOption}
+      onRemoveOption={onRemoveOption}
       onDelete={onDelete}
       onDuplicate={onDuplicate}
       onDragStart={onDragStart}

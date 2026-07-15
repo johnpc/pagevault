@@ -4,7 +4,13 @@ import userEvent from '@testing-library/user-event';
 import { SelectCell } from './SelectCell';
 
 const opts = ['Open', 'Done'];
-const base = { options: opts, label: 'Status', onChange: vi.fn(), onAddOption: vi.fn() };
+const base = {
+  options: opts,
+  label: 'Status',
+  onChange: vi.fn(),
+  onAddOption: vi.fn(),
+  onRemoveOption: vi.fn(),
+};
 
 describe('SelectCell', () => {
   it('summarizes the chosen value (or a dash when none)', () => {
@@ -48,6 +54,14 @@ describe('SelectCell', () => {
     await userEvent.type(input, '   {Enter}');
     await userEvent.type(input, 'Open{Enter}');
     expect(onAddOption).not.toHaveBeenCalled();
+  });
+
+  it('removes an option via its ✕', async () => {
+    const onRemoveOption = vi.fn();
+    render(<SelectCell {...base} value="" onRemoveOption={onRemoveOption} />);
+    await userEvent.click(screen.getByLabelText('Status'));
+    await userEvent.click(screen.getByLabelText('Remove option Open'));
+    expect(onRemoveOption).toHaveBeenCalledWith('Open');
   });
 
   it('closes on Escape (shared popover behavior)', async () => {

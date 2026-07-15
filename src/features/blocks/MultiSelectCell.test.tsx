@@ -14,6 +14,7 @@ describe('MultiSelectCell', () => {
         label="Tags"
         onChange={vi.fn()}
         onAddOption={vi.fn()}
+        onRemoveOption={vi.fn()}
       />,
     );
     expect(screen.getByLabelText('Tags')).toHaveTextContent('Red, Blue');
@@ -24,6 +25,7 @@ describe('MultiSelectCell', () => {
         label="Tags"
         onChange={vi.fn()}
         onAddOption={vi.fn()}
+        onRemoveOption={vi.fn()}
       />,
     );
     expect(screen.getByLabelText('Tags')).toHaveTextContent('—');
@@ -37,6 +39,7 @@ describe('MultiSelectCell', () => {
         label="Tags"
         onChange={vi.fn()}
         onAddOption={vi.fn()}
+        onRemoveOption={vi.fn()}
       />,
     );
     await userEvent.click(screen.getByLabelText('Tags'));
@@ -53,6 +56,7 @@ describe('MultiSelectCell', () => {
         label="Tags"
         onChange={onChange}
         onAddOption={vi.fn()}
+        onRemoveOption={vi.fn()}
       />,
     );
     await userEvent.click(screen.getByLabelText('Tags'));
@@ -69,6 +73,7 @@ describe('MultiSelectCell', () => {
         label="Tags"
         onChange={onChange}
         onAddOption={vi.fn()}
+        onRemoveOption={vi.fn()}
       />,
     );
     await userEvent.click(screen.getByLabelText('Tags'));
@@ -85,6 +90,7 @@ describe('MultiSelectCell', () => {
         label="Tags"
         onChange={vi.fn()}
         onAddOption={onAddOption}
+        onRemoveOption={vi.fn()}
       />,
     );
     await userEvent.click(screen.getByLabelText('Tags'));
@@ -103,6 +109,7 @@ describe('MultiSelectCell', () => {
         label="Tags"
         onChange={vi.fn()}
         onAddOption={onAddOption}
+        onRemoveOption={vi.fn()}
       />,
     );
     await userEvent.click(screen.getByLabelText('Tags'));
@@ -110,6 +117,23 @@ describe('MultiSelectCell', () => {
     await userEvent.type(input, '   {Enter}'); // blank
     await userEvent.type(input, 'Red{Enter}'); // duplicate
     expect(onAddOption).not.toHaveBeenCalled();
+  });
+
+  it('removes an option via its ✕', async () => {
+    const onRemoveOption = vi.fn();
+    render(
+      <MultiSelectCell
+        value=""
+        options={opts}
+        label="Tags"
+        onChange={vi.fn()}
+        onAddOption={vi.fn()}
+        onRemoveOption={onRemoveOption}
+      />,
+    );
+    await userEvent.click(screen.getByLabelText('Tags'));
+    await userEvent.click(screen.getByLabelText('Remove option Green'));
+    expect(onRemoveOption).toHaveBeenCalledWith('Green');
   });
 
   it('closes on Escape (shared popover behavior)', async () => {
@@ -120,6 +144,7 @@ describe('MultiSelectCell', () => {
         label="Tags"
         onChange={vi.fn()}
         onAddOption={vi.fn()}
+        onRemoveOption={vi.fn()}
       />,
     );
     await userEvent.click(screen.getByLabelText('Tags'));

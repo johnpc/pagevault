@@ -10,6 +10,7 @@ interface TableRowProps {
   dragging: boolean;
   onCell: (r: number, c: number, value: string) => void;
   onAddOption: (r: number, c: number, option: string) => void;
+  onRemoveOption: (c: number, option: string) => void;
   onDelete: (r: number) => void;
   onDuplicate: (r: number) => void;
   onDragStart: (r: number) => void;
@@ -30,6 +31,7 @@ function TableRowInner({
   dragging,
   onCell,
   onAddOption,
+  onRemoveOption,
   onDelete,
   onDuplicate,
   onDragStart,
@@ -66,6 +68,7 @@ function TableRowInner({
             label={`Cell ${r + 1},${c + 1}`}
             onChange={(v) => onCell(r, c, v)}
             onAddOption={(opt) => onAddOption(r, c, opt)}
+            onRemoveOption={(opt) => onRemoveOption(c, opt)}
           />
         </td>
       ))}

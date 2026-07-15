@@ -397,6 +397,22 @@ When(
   },
 );
 
+When(
+  'I remove the option {string} in table cell {string}',
+  async ({ page }, opt: string, cell: string) => {
+    await table(page).getByLabel(`Cell ${cell}`).click();
+    await table(page).getByLabel(`Remove option ${opt}`).click();
+    await page.keyboard.press('Escape'); // close so the summary is read next
+  },
+);
+
+Then(
+  'the multiselect cell {string} does not show {string}',
+  async ({ page }, cell: string, text: string) => {
+    await expect.poll(() => table(page).getByLabel(`Cell ${cell}`).innerText()).not.toContain(text);
+  },
+);
+
 When('I toggle wrap text on table column {int}', async ({ page }, col: number) => {
   const btn = table(page).getByLabel(`Wrap text in column ${col}`);
   await btn.click();

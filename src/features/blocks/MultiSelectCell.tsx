@@ -12,12 +12,14 @@ export function MultiSelectCell({
   label,
   onChange,
   onAddOption,
+  onRemoveOption,
 }: {
   value: string;
   options: string[];
   label: string;
   onChange: (value: string) => void;
   onAddOption: (option: string) => void;
+  onRemoveOption: (option: string) => void;
 }) {
   const { open, setOpen, triggerRef, menuRef, onKeyDown } = usePopover<HTMLUListElement>();
   const [draft, setDraft] = useState('');
@@ -44,7 +46,7 @@ export function MultiSelectCell({
       {open && (
         <ul ref={menuRef} className="pv-multiselect-menu" aria-label={`${label} options`}>
           {options.map((opt) => (
-            <li key={opt}>
+            <li key={opt} className="pv-opt-row">
               <label>
                 <input
                   type="checkbox"
@@ -53,6 +55,14 @@ export function MultiSelectCell({
                 />
                 {opt}
               </label>
+              <button
+                type="button"
+                className="pv-opt-remove"
+                aria-label={`Remove option ${opt}`}
+                onClick={() => onRemoveOption(opt)}
+              >
+                ✕
+              </button>
             </li>
           ))}
           <li className="pv-multiselect-add">
