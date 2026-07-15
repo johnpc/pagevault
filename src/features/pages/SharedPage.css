@@ -81,3 +81,70 @@
   border-top: 1px solid var(--pv-border);
   font-size: 13px;
 }
+
+/* Text-block hierarchy on a shared page — headings, quote, callout, list items
+   keep their visual meaning instead of flattening to body text. */
+.pv-shared-p {
+  margin: 3px 0;
+  line-height: 1.6;
+}
+.pv-shared-h1 {
+  margin: 24px 0 4px;
+  font-size: 1.6em;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.pv-shared-h2 {
+  margin: 20px 0 4px;
+  font-size: 1.3em;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.pv-shared-h3 {
+  margin: 16px 0 4px;
+  font-size: 1.1em;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.pv-shared-quote {
+  margin: 6px 0;
+  padding-left: 14px;
+  border-left: 3px solid var(--pv-border);
+  color: var(--pv-text-muted);
+}
+.pv-shared-callout {
+  display: flex;
+  gap: 8px;
+  margin: 6px 0;
+  padding: 10px 12px;
+  background: var(--pv-surface);
+  border: 1px solid var(--pv-border);
+  border-radius: var(--pv-radius-sm);
+}
+.pv-shared-callout-icon {
+  flex-shrink: 0;
+}
+.pv-shared-bullet,
+.pv-shared-numbered {
+  margin: 2px 0;
+  padding-left: 24px;
+  position: relative;
+  line-height: 1.6;
+}
+.pv-shared-bullet::before {
+  content: '•';
+  position: absolute;
+  left: 8px;
+}
+/* Auto-number consecutive numbered blocks via a CSS counter on the wrapper. */
+.pv-shared-doc {
+  counter-reset: pv-shared-num;
+}
+.pv-shared-numbered {
+  counter-increment: pv-shared-num;
+}
+.pv-shared-numbered::before {
+  content: counter(pv-shared-num) '.';
+  position: absolute;
+  left: 6px;
+}

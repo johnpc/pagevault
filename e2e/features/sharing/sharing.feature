@@ -25,6 +25,18 @@ Feature: Public link sharing
     And I visit the shared link
     Then the shared page shows a code block containing "const x = **not bold**"
 
+  Scenario: A shared page keeps its heading and quote styling
+    Given I am signed in as the test user
+    And I have a page titled "Styled share"
+    When I open the page "Styled share"
+    And I add a block with the text "# Big heading"
+    And I add a block with the text "> a wise quote"
+    And I enable sharing for the page
+    And I sign out
+    And I visit the shared link
+    Then the shared page shows a heading "Big heading"
+    And the shared page shows a quote "a wise quote"
+
   Scenario: An invalid or revoked share link shows a clear "not shared" message
     When I visit a made-up share link
     Then I should see the "not shared" message

@@ -91,7 +91,7 @@ account, no third-party service, no lock-in.
 | Toggle the sidebar with ⌘\ / Ctrl+\ (floating restore button)                               | ✅     |
 | Installable PWA                                                                             | ✅     |
 | Mobile sidebar drawer — hamburger opens a slide-over (backdrop, Esc, focus-trap)            | ✅     |
-| Public link sharing (read-only /shared/<token>, no login)                                   | ✅     |
+| Public link sharing (read-only /shared/<token>, no login; keeps heading/quote/list styling) | ✅     |
 | Collaborate — invite another user to a page via link (view/comment/edit)                    | ✅     |
 | Live presence — avatars of who else is viewing a page right now                             | ✅     |
 | Live cursors — see which block each collaborator is working in                              | ✅     |

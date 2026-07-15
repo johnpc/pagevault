@@ -54,6 +54,14 @@ Then('the shared page shows a code block containing {string}', async ({ page }, 
   await expect(page.locator('.pv-shared-doc pre.pv-shared-code')).toContainText(text);
 });
 
+Then('the shared page shows a heading {string}', async ({ page }, text: string) => {
+  await expect(page.locator('.pv-shared-doc h2.pv-shared-h1', { hasText: text })).toBeVisible();
+});
+
+Then('the shared page shows a quote {string}', async ({ page }, text: string) => {
+  await expect(page.locator('.pv-shared-doc blockquote', { hasText: text })).toBeVisible();
+});
+
 When('I visit a made-up share link', async ({ page }) => {
   await page.goto('/shared/nonexistent-token-xyz');
 });
