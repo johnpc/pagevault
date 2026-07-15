@@ -76,6 +76,14 @@ When('I outdent the current block', async ({ page }) => {
   await expect.poll(() => rowMargin(page)).toBeLessThan(before);
 });
 
+When('I click the empty space below the blocks', async ({ page }) => {
+  await active(page).locator('.pv-click-below').click();
+});
+
+Then('a new empty block is focused', async ({ page }) => {
+  await expect(focused(page)).toHaveValue('');
+});
+
 Then(
   'the document has a {string} block containing {string}',
   async ({ page }, type: string, text: string) => {

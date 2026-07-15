@@ -31,6 +31,17 @@ Feature: Typing a full document
     And the document has a "quote" block containing "travel insurance"
     And the document has an indented block containing "USB-C cable"
 
+  Scenario: Click the empty space below the blocks to start writing
+    Given I have a page titled "Scratchpad"
+    When I open the page "Scratchpad"
+    And I focus the first block
+    And I type "First line" then Enter
+    And I type "Second line"
+    And I click the empty space below the blocks
+    Then a new empty block is focused
+    When I type "Third line"
+    Then the document has a "text" block containing "Third line"
+
   Scenario: Any "N. " prefix (not just "1.") starts a numbered list
     Given I have a page titled "Numbered"
     When I open the page "Numbered"

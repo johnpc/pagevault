@@ -40,6 +40,7 @@ export function PageBlocks({
       onMoveBlock={ed.moveBlockTo}
       onColorMany={ed.colorMany}
       onAddBlock={ed.addBlock}
+      onClickBelow={ed.clickBelow}
       onSubPage={onSubPage}
       focusId={ed.focusId}
       focusCaret={ed.focusCaret}

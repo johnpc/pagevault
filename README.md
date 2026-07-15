@@ -64,6 +64,7 @@ account, no third-party service, no lock-in.
 | Relation columns sort & filter by the linked page's title                                   | ✅     |
 | Markdown shortcuts (`# `, `- `, `1. `, `[] `, `> `, ` ``` `)                                | ✅     |
 | Enter splits at the caret into a block below (Notion-smooth typing)                         | ✅     |
+| Click the empty space below the page to start a new block                                   | ✅     |
 | Enter continues a list; an empty item exits / outdents the list                             | ✅     |
 | Slash command menu (`/` to pick a block type)                                               | ✅     |
 | Turn into — convert an existing block to another type, keeping content                      | ✅     |
