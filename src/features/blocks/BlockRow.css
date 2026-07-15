@@ -92,10 +92,31 @@
 .pv-block:hover .pv-block-style {
   opacity: 1;
 }
-/* Touch devices have no hover, so keep the drag handle visible or a finger
-   can never grab it to reorder. */
+
+/* The "+" gutter button: add an empty block right below this one. Hidden until
+   the row is hovered, mirroring the drag handle. */
+.pv-block-add-here {
+  opacity: 0;
+  background: none;
+  border: none;
+  color: var(--pv-text-muted);
+  cursor: pointer;
+  padding: 4px 2px;
+  font-size: 16px;
+  line-height: 1.1;
+}
+.pv-block:hover .pv-block-add-here {
+  opacity: 1;
+}
+.pv-block-add-here:hover {
+  color: var(--pv-text);
+}
+
+/* Touch devices have no hover, so keep the drag handle + add button visible or
+   a finger can never reach them. */
 @media (hover: none) {
-  .pv-block-style {
+  .pv-block-style,
+  .pv-block-add-here {
     opacity: 0.6;
   }
 }

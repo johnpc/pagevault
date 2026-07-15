@@ -36,7 +36,7 @@ export function useBlockActions(pageId: string, blocks: BlockRecord[]) {
   const { mutate: importMutate } = useImportMarkdown(pageId);
   const { focusId, focusCaret, focusValue, setFocusId, focusAt, clearFocusId } = useFocusTarget();
   const { mergeUp, mergeDown } = useBlockMerge(pageId, blocksRef, { focusAt });
-  const { addBlock, clickBelow } = useAddBlock(pageId, blocksRef, setFocusId);
+  const { addBlock, clickBelow, insertAfter } = useAddBlock(pageId, blocksRef, setFocusId);
 
   const editBlockRaw = useCallback(
     (id: string, patch: Partial<BlockRecord>) => updateMutate({ id, patch }),
@@ -69,6 +69,7 @@ export function useBlockActions(pageId: string, blocks: BlockRecord[]) {
   return {
     addBlock,
     clickBelow,
+    insertAfter,
     editBlock,
     moveBlockTo,
     cloneBlock,

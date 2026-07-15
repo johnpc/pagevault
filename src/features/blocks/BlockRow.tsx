@@ -25,6 +25,7 @@ interface BlockRowProps {
   onEdit: (id: string, patch: Partial<BlockRecord>) => void;
   onRemove: (id: string) => void;
   onDuplicate: (block: BlockRecord) => void;
+  onInsertAfter: (block: BlockRecord) => void;
   onIndent: (id: string, dir: 'in' | 'out') => void;
   onPasteMarkdown: (block: BlockRecord, text: string) => void;
   onUpload: (id: string, file: File) => void;
@@ -42,10 +43,10 @@ interface BlockRowProps {
  * editable text body). Memoized below so a sibling's edit/selection/drag doesn't
  * re-render every row — only rows whose own props change. */
 function BlockRowInner(props: BlockRowProps) {
-  const { block, onEdit, onRemove, onDuplicate, onIndent, onPasteMarkdown } = props;
-  const { onSplit, onMerge, onMergeForward, autoFocus, autoFocusCaret } = props;
-  const { autoFocusValue, onFocused, dnd } = props;
-  const { cls, rowDrag, handle } = useBlockDrag(block, onEdit, dnd);
+  const { block, onEdit, onRemove, onDuplicate, onIndent, onPasteMarkdown, onSplit } = props;
+  const { onMerge, onMergeForward, autoFocus, autoFocusCaret, autoFocusValue, onFocused, dnd } =
+    props;
+  const { cls, rowDrag, handle } = useBlockDrag(block, onEdit, dnd, props.onInsertAfter);
   const focusReport = useReportFocus(block.id);
   const style = { marginLeft: `${(block.depth ?? 0) * 24}px` };
   const rowCls = `${cls} ${alignClass(block.align)}`.trim();
