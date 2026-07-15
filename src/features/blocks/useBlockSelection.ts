@@ -3,35 +3,27 @@ import {
   isSelected,
   indexAfterDelete,
   selectionFromShiftClick,
+  selectedIds,
   type BlockSelection,
 } from './blockSelection';
 import { handoffSelection, isSelectAllBlocks } from './selectionHandoff';
 import { useActiveSelectionKeys } from './useActiveSelectionKeys';
+import { useSelectionActions } from './useSelectionActions';
 import { handleMoveBlockKey } from './moveBlockKey';
 
 /**
- * Keyboard multi-block selection for the block list (Notion-style).
- *
- * The handoff starts from a textarea: Shift+↓ at the caret END (or Shift+↑ at
- * the START) selects the current + next row and BLURS the field. The container
- * onKeyDown catches that (the textarea bubbles to it). Once active the field is
- * blurred, so keys land on <body> — a document-level listener then drives:
- *   ↑/↓         move the selection (collapse to one block)
- *   Shift+↑/↓   grow/shrink it
- *   Backspace / Delete  delete every selected block
- *   Escape      clear it
- *
- * Shift+Click on a block also selects the range from the focused/anchor block to
- * the clicked one (the standard editor gesture) — see `shiftClick`.
- *
- * `ids` is the visible block ids in order; each row is marked data-block-index
- * so a handoff knows its position.
+ * Keyboard multi-block selection (Notion-style). A Shift+Arrow at a caret edge
+ * (or Shift+Click) blurs the field and starts a block selection; a document-level
+ * listener (useActiveSelectionKeys) then drives ↑/↓ move, Shift+↑/↓ grow,
+ * Backspace/Delete, and Escape. `ids` is the visible block ids in order.
  */
 interface SelectionActions {
   onDeleteMany: (ids: string[]) => void;
   onIndentMany: (ids: string[], dir: 'in' | 'out') => void;
   /** Move a single block before/after its neighbor (Cmd/Ctrl+Shift+↑/↓). */
   onMoveBlock?: (fromId: string, toId: string) => void;
+  /** Color every selected block (from the selection action bar). */
+  onColorMany?: (ids: string[], color: string) => void;
 }
 
 export function useBlockSelection(ids: string[], actions: SelectionActions) {
@@ -74,9 +66,8 @@ export function useBlockSelection(ids: string[], actions: SelectionActions) {
       const next = handoffSelection(e, el, ids.length);
       if (!next) return;
       e.preventDefault();
-      // Stop the native event before it bubbles to document: the selection's own
-      // document keydown listener (added by the effect below on this same commit)
-      // would otherwise catch this very keypress and move the focus a second time.
+      // Stop before it bubbles to document, or the selection's own keydown
+      // listener catches this same press and moves focus a second time.
       e.nativeEvent.stopImmediatePropagation();
       el.blur();
       setSel(next);
@@ -87,12 +78,18 @@ export function useBlockSelection(ids: string[], actions: SelectionActions) {
   // While active, own the nav/delete/indent/select-all keys at the document level.
   useActiveSelectionKeys(sel, ids, setSel, actions);
 
+  // The selected block ids (in order) — powers the action bar + its operations.
+  const chosen = sel ? selectedIds(sel, ids) : [];
+  const barActions = useSelectionActions(chosen, clear, actions.onColorMany, actions.onDeleteMany);
+
   return {
     active: sel !== null,
+    count: chosen.length,
     onKeyDown,
     clear,
     shiftClick,
     noteFocus,
+    ...barActions, // colorSelected, deleteSelected
     selectedAt: (index: number) => (sel ? isSelected(sel, index) : false),
     caretIndexAfterDelete: () => (sel ? indexAfterDelete(sel) : 0),
   };

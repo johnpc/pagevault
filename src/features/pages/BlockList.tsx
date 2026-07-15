@@ -22,6 +22,7 @@ interface BlockListProps {
   onMergeForward: (id: string, value: string) => boolean;
   onUpload: (id: string, file: File) => void;
   onMoveBlock: (fromId: string, toId: string) => void;
+  onColorMany: (ids: string[], color: string) => void;
   onAddBlock: (type?: BlockType) => void;
   onSubPage: () => void;
   focusId: string | null;

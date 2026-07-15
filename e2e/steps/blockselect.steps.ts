@@ -53,6 +53,22 @@ When('I press Tab to indent the selection', async ({ page }) => {
   await page.keyboard.press('Tab');
 });
 
+When('I color the selection {string} from the selection bar', async ({ page }, label: string) => {
+  const bar = active(page).getByRole('toolbar', { name: 'Selected blocks' });
+  await expect(bar).toBeVisible();
+  await bar.getByLabel(`Color ${label}`, { exact: true }).click();
+});
+
+Then(
+  'blocks {int} and {int} have the {string} color',
+  async ({ page }, a: number, b: number, token: string) => {
+    const rows = active(page).locator('.pv-block');
+    const has = (n: number) => rows.nth(n - 1).evaluate((el) => el.className);
+    await expect.poll(() => has(a)).toContain(`pv-color--${token}`);
+    await expect.poll(() => has(b)).toContain(`pv-color--${token}`);
+  },
+);
+
 // Blocks 2 and 3 (1-based) carry a non-zero left margin (indented via depth).
 Then('blocks {int} and {int} are indented', async ({ page }, a: number, b: number) => {
   const rows = active(page).locator('.pv-block');

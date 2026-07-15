@@ -1,6 +1,7 @@
 import type { BlockRecord } from '../../lib/pbClient';
 import { BlockRow, type BlockDndHandlers } from '../blocks/BlockRow';
 import { useBlockSelection } from '../blocks/useBlockSelection';
+import { BlockSelectionBar } from '../blocks/BlockSelectionBar';
 
 interface BlockRowsProps {
   visible: BlockRecord[];
@@ -17,6 +18,7 @@ interface BlockRowsProps {
   onMergeForward: (id: string, value: string) => boolean;
   onUpload: (id: string, file: File) => void;
   onMoveBlock: (fromId: string, toId: string) => void;
+  onColorMany: (ids: string[], color: string) => void;
   focusId: string | null;
   focusCaret?: number;
   focusValue?: string;
@@ -28,12 +30,13 @@ interface BlockRowsProps {
  * Delete to remove the range); a click anywhere clears it. Rows carry
  * data-block-index so a textarea handoff knows its position. */
 export function BlockRows(props: BlockRowsProps) {
-  const { visible, onRemoveMany, onIndentMany, onMoveBlock, ...row } = props;
+  const { visible, onRemoveMany, onIndentMany, onMoveBlock, onColorMany, ...row } = props;
   const ids = visible.map((b) => b.id);
   const selection = useBlockSelection(ids, {
     onDeleteMany: onRemoveMany,
     onIndentMany,
     onMoveBlock,
+    onColorMany,
   });
 
   // A plain mousedown clears an active selection; a Shift+mousedown extends the
@@ -77,6 +80,11 @@ export function BlockRows(props: BlockRowsProps) {
           />
         </div>
       ))}
+      <BlockSelectionBar
+        count={selection.count}
+        onColor={selection.colorSelected}
+        onDelete={selection.deleteSelected}
+      />
     </div>
   );
 }
