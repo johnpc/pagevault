@@ -18,6 +18,8 @@ export const SHORTCUTS: Shortcut[] = [
     keys: '⌘B / I / E / U',
     action: 'Wrap selection: bold / italic / code / underline ( ⇧⌘S strikethrough )',
   },
+  { keys: '⇧↑ / ⇧↓', action: 'Grow a multi-block selection up / down' },
+  { keys: '⌘A / Ctrl+A', action: 'Select all blocks ( Shift+Click, or a ⋮⋮ handle, also select )' },
   { keys: '⌘D / Ctrl+D', action: 'Duplicate the current block (or a whole block selection)' },
   { keys: '⌘C / ⌘X', action: 'With blocks selected: copy / cut them as Markdown' },
   { keys: 'Tab / ⇧Tab', action: 'Indent / outdent the block (nest it under the one above)' },

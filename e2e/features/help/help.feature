@@ -9,3 +9,5 @@ Feature: Keyboard shortcut help
   Scenario: Open the shortcut help from the sidebar
     When I open the shortcut help
     Then I should see the quick-find shortcut listed
+    And I should see the multi-block selection shortcut listed
+    And Tab keeps focus inside the shortcut help dialog
