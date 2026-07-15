@@ -1,12 +1,13 @@
-import { useState } from 'react';
 import { usePopover } from '../shell/usePopover';
 import { Tag } from './Tag';
 import { OptionRow } from './OptionRow';
+import { OptionAddBox } from './OptionAddBox';
+import { useOptionPicker } from './useOptionPicker';
 
 /** A single-select cell: a summary button that opens the column's options as a
- * radio list (picking one sets the cell; picking the chosen one clears it). A
- * text input at the bottom creates a new option inline (Enter) and assigns it —
- * the Notion gesture. Focus-trapped + Escape/outside-click via usePopover. */
+ * radio list (picking one sets the cell; picking the chosen one clears it). The
+ * box at the bottom filters options as you type and creates a new one (Enter)
+ * when nothing matches — the Notion gesture. Focus-trapped via usePopover. */
 export function SelectCell({
   value,
   options,
@@ -25,14 +26,7 @@ export function SelectCell({
   onRenameOption: (from: string, to: string) => void;
 }) {
   const { open, setOpen, triggerRef, menuRef, onKeyDown } = usePopover<HTMLUListElement>();
-  const [draft, setDraft] = useState('');
-
-  const add = () => {
-    const opt = draft.trim();
-    if (!opt || options.includes(opt)) return;
-    onAddOption(opt);
-    setDraft('');
-  };
+  const picker = useOptionPicker(options, onAddOption);
 
   return (
     <div className="pv-multiselect" onKeyDown={onKeyDown}>
@@ -47,7 +41,7 @@ export function SelectCell({
       </button>
       {open && (
         <ul ref={menuRef} className="pv-multiselect-menu" aria-label={`${label} options`}>
-          {options.map((opt) => (
+          {picker.filtered.map((opt) => (
             <OptionRow
               key={opt}
               option={opt}
@@ -64,21 +58,7 @@ export function SelectCell({
               </button>
             </OptionRow>
           ))}
-          <li className="pv-multiselect-add">
-            <input
-              type="text"
-              aria-label={`Add an option to ${label}`}
-              placeholder="Add option…"
-              value={draft}
-              onChange={(e) => setDraft(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault();
-                  add();
-                }
-              }}
-            />
-          </li>
+          <OptionAddBox label={label} picker={picker} />
         </ul>
       )}
     </div>

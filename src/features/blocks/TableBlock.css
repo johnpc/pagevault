@@ -169,6 +169,37 @@
   padding: 2px 6px;
 }
 
+/* Picker add/filter box: an input that filters the options + a "Create" button
+   shown when the query matches nothing. */
+.pv-multiselect-add {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 4px 6px;
+}
+.pv-multiselect-add input {
+  width: 100%;
+  font: inherit;
+  color: var(--pv-text);
+  background: var(--pv-surface);
+  border: 1px solid var(--pv-border);
+  border-radius: var(--pv-radius-sm);
+  padding: 2px 6px;
+}
+.pv-opt-create {
+  text-align: left;
+  font: inherit;
+  color: var(--pv-text);
+  background: var(--pv-hover);
+  border: none;
+  border-radius: var(--pv-radius-sm);
+  padding: 3px 6px;
+  cursor: pointer;
+}
+.pv-opt-create:hover {
+  background: var(--pv-accent-soft);
+}
+
 /* Colored option pill (select / multiselect). The hue is derived from the
    label (see tagColor) and maps to a themed --pv-bg-<hue> token. */
 .pv-tag {

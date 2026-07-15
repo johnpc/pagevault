@@ -57,6 +57,27 @@ describe('SelectCell', () => {
     expect(onAddOption).not.toHaveBeenCalled();
   });
 
+  it('filters the options as you type and hides non-matches', async () => {
+    render(<SelectCell {...base} value="" />);
+    await userEvent.click(screen.getByLabelText('Status'));
+    await userEvent.type(screen.getByLabelText('Add an option to Status'), 'op');
+    expect(screen.getByRole('button', { name: 'Open' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Done' })).not.toBeInTheDocument();
+  });
+
+  it('offers a Create action only for a genuinely new name', async () => {
+    const onAddOption = vi.fn();
+    render(<SelectCell {...base} value="" onAddOption={onAddOption} />);
+    await userEvent.click(screen.getByLabelText('Status'));
+    const input = screen.getByLabelText('Add an option to Status');
+    await userEvent.type(input, 'Open'); // exists → no Create
+    expect(screen.queryByRole('button', { name: /^Create/ })).not.toBeInTheDocument();
+    await userEvent.clear(input);
+    await userEvent.type(input, 'Blocked'); // new → Create shows + works
+    await userEvent.click(screen.getByRole('button', { name: /^Create/ }));
+    expect(onAddOption).toHaveBeenCalledWith('Blocked');
+  });
+
   it('removes an option via its ✕', async () => {
     const onRemoveOption = vi.fn();
     render(<SelectCell {...base} value="" onRemoveOption={onRemoveOption} />);
