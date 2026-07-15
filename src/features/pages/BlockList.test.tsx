@@ -64,6 +64,7 @@ const renderList = (data: BlockRecord[]) =>
       onMoveBlock={vi.fn()}
       onColorMany={vi.fn()}
       onAddBlock={vi.fn()}
+      onClickBelow={vi.fn()}
       onSubPage={vi.fn()}
       focusId={null}
       onFocused={vi.fn()}

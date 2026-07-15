@@ -311,3 +311,10 @@
 .pv-add-block:hover {
   color: var(--pv-text);
 }
+
+/* The empty click-to-write zone below the list. A generous min-height so the
+   whitespace under a short page is a real click target (Notion behavior). */
+.pv-click-below {
+  min-height: 40vh;
+  cursor: text;
+}

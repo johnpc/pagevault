@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { useLatestRef } from '../../lib/useLatestRef';
-import { useCreateBlock, useDuplicateBlock } from './blocksApi';
+import { useDuplicateBlock } from './blocksApi';
+import { useAddBlock } from './useAddBlock';
 import { useDeleteWithUndo } from './useDeleteWithUndo';
 import { useUpdateBlock } from './updateBlockApi';
 import { useUploadBlockFile } from './uploadBlockFileApi';
@@ -14,7 +15,6 @@ import { useBlockMerge } from './useBlockMerge';
 import { useFocusTarget } from './useFocusTarget';
 import { usePageHistory } from './usePageHistory';
 import type { BlockRecord } from '../../lib/pbClient';
-import type { BlockType } from '../../lib/pbTypes';
 
 /**
  * The block-list mutations for one page: add, edit, remove, and drag-reorder.
@@ -26,7 +26,6 @@ export function useBlockActions(pageId: string, blocks: BlockRecord[]) {
   // the callbacks below and defeat BlockRow's memo (all rows re-render per key).
   // So we read blocks via a latest-ref and depend only on the stable `.mutate`.
   const blocksRef = useLatestRef(blocks);
-  const { mutate: createMutate } = useCreateBlock(pageId);
   const { mutate: updateMutate } = useUpdateBlock(pageId);
   const deleteWithUndo = useDeleteWithUndo(pageId, blocksRef);
   const { indentBlock, indentMany } = useIndent(pageId, blocksRef);
@@ -37,15 +36,7 @@ export function useBlockActions(pageId: string, blocks: BlockRecord[]) {
   const { mutate: importMutate } = useImportMarkdown(pageId);
   const { focusId, focusCaret, focusValue, setFocusId, focusAt, clearFocusId } = useFocusTarget();
   const { mergeUp, mergeDown } = useBlockMerge(pageId, blocksRef, { focusAt });
-
-  const addBlock = useCallback(
-    (type: BlockType = 'text') =>
-      createMutate(
-        { type, content: '', siblings: blocksRef.current },
-        { onSuccess: (created) => setFocusId(created.id) },
-      ),
-    [createMutate, blocksRef, setFocusId],
-  );
+  const { addBlock, clickBelow } = useAddBlock(pageId, blocksRef, setFocusId);
 
   const editBlockRaw = useCallback(
     (id: string, patch: Partial<BlockRecord>) => updateMutate({ id, patch }),
@@ -77,6 +68,7 @@ export function useBlockActions(pageId: string, blocks: BlockRecord[]) {
 
   return {
     addBlock,
+    clickBelow,
     editBlock,
     moveBlockTo,
     cloneBlock,

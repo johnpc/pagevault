@@ -24,6 +24,7 @@ interface BlockListProps {
   onMoveBlock: (fromId: string, toId: string) => void;
   onColorMany: (ids: string[], color: string) => void;
   onAddBlock: (type?: BlockType) => void;
+  onClickBelow: () => void;
   onSubPage: () => void;
   focusId: string | null;
   focusCaret?: number;
@@ -32,7 +33,14 @@ interface BlockListProps {
 }
 
 /** The editable block list under the header: rows + add-block/sub-page + footer. */
-export function BlockList({ page, blocks, onAddBlock, onSubPage, ...rest }: BlockListProps) {
+export function BlockList({
+  page,
+  blocks,
+  onAddBlock,
+  onClickBelow,
+  onSubPage,
+  ...rest
+}: BlockListProps) {
   const all = blocks.data ?? [];
   // Children of a collapsed toggle are hidden (Notion-style) but stay in the DB.
   const hidden = hiddenBlockIds(all);
@@ -51,6 +59,11 @@ export function BlockList({ page, blocks, onAddBlock, onSubPage, ...rest }: Bloc
       <button className="pv-add-block pv-muted" onClick={onSubPage}>
         + Add a sub-page
       </button>
+      {/* Notion "click below to write": the empty space under the list is a
+          mouse convenience that drops the caret into a fresh block. It's
+          aria-hidden — keyboard/AT users have the real "+ Add a block" button
+          above, so this decorative click target isn't exposed to the a11y tree. */}
+      <div className="pv-click-below" aria-hidden="true" onClick={onClickBelow} />
       <PageInfo page={page} blocks={all} />
     </LoadState>
   );
