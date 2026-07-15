@@ -42,6 +42,7 @@ export function PageBlocks({
       onMoveBlock={ed.moveBlockTo}
       onColorMany={ed.colorMany}
       onTypeMany={ed.typeMany}
+      onCopyMany={ed.copyMany}
       onAddBlock={ed.addBlock}
       onClickBelow={ed.clickBelow}
       onSubPage={onSubPage}

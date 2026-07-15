@@ -14,12 +14,10 @@ import type { BlockType } from '../../lib/pbTypes';
 
 /**
  * Keyboard multi-block selection (Notion-style). A Shift+Arrow at a caret edge
- * (or Shift+Click) blurs the field and starts a block selection; a document-level
- * listener (useActiveSelectionKeys) then drives ↑/↓ move, Shift+↑/↓ grow,
- * Backspace/Delete, and Escape. `ids` is the visible block ids in order.
+ * (or Shift+Click) blurs the field and starts a block selection; useActiveSelection-
+ * Keys then drives move/grow/indent/delete/duplicate/copy/turn-into/color. `ids`
+ * is the visible block ids in order. onMoveBlock is single-block ⌘⇧↑/↓.
  */
-// Operations over a block selection: delete/indent (keyboard), plus the bar's
-// duplicate/color/turn-into. onMoveBlock is the single-block Cmd/Ctrl+Shift+↑/↓.
 interface SelectionActions {
   onDeleteMany: (ids: string[]) => void;
   onIndentMany: (ids: string[], dir: 'in' | 'out') => void;
@@ -27,6 +25,7 @@ interface SelectionActions {
   onMoveBlock?: (fromId: string, toId: string) => void;
   onColorMany?: (ids: string[], color: string) => void;
   onTypeMany?: (ids: string[], type: BlockType) => void;
+  onCopyMany?: (ids: string[]) => void;
 }
 
 export function useBlockSelection(ids: string[], actions: SelectionActions) {

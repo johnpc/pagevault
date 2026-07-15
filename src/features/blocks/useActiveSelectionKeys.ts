@@ -6,6 +6,7 @@ interface SelectionActions {
   onDeleteMany: (ids: string[]) => void;
   onIndentMany: (ids: string[], dir: 'in' | 'out') => void;
   onDuplicateMany?: (ids: string[]) => void;
+  onCopyMany?: (ids: string[]) => void;
 }
 
 /** Apply a classified selection keypress: mutate the selection or fire an action
@@ -23,6 +24,8 @@ function applyKey(
   if (action.kind !== 'clear') e.preventDefault();
   if (action.kind === 'selectAll') setSel({ anchor: 0, focus: ids.length - 1 });
   else if (action.kind === 'duplicate') actions.onDuplicateMany?.(selectedIds(sel, ids));
+  else if (action.kind === 'copy')
+    actions.onCopyMany?.(selectedIds(sel, ids)); // keep selection
   else if (action.kind === 'indent') actions.onIndentMany(selectedIds(sel, ids), action.dir);
   else if (action.kind === 'move')
     setSel((s) => (s ? moveSelection(s, action.delta, action.grow, ids.length) : s));
@@ -36,6 +39,7 @@ function applyKey(
  * While a block selection is active the editing field is blurred, so keys land
  * on <body>. This document-level listener drives the active selection:
  *   Cmd/Ctrl+A   select every block
+ *   Cmd/Ctrl+C   copy the selected blocks to the clipboard (as Markdown)
  *   Cmd/Ctrl+D   duplicate the selected blocks (as a run below the last)
  *   ↑/↓          move (Shift grows/shrinks the range)
  *   Tab / Shift+Tab   indent / outdent the whole selection

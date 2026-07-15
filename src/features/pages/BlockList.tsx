@@ -26,6 +26,7 @@ interface BlockListProps {
   onMoveBlock: (fromId: string, toId: string) => void;
   onColorMany: (ids: string[], color: string) => void;
   onTypeMany: (ids: string[], type: BlockType) => void;
+  onCopyMany: (ids: string[]) => void;
   onAddBlock: (type?: BlockType) => void;
   onClickBelow: () => void;
   onSubPage: () => void;
