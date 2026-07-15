@@ -1,5 +1,5 @@
 import type { KeyboardEvent } from 'react';
-import { edgeArrowDir, focusAdjacentBlock } from './arrowNav';
+import { edgeArrowDir, focusAdjacentBlock, focusPageTitle } from './arrowNav';
 
 interface EditKeyDeps {
   value: string;
@@ -19,15 +19,19 @@ interface EditKeyDeps {
 
 type Evt = KeyboardEvent<HTMLTextAreaElement>;
 
-// Backspace: delete an empty block, or (at offset 0 of a non-empty block) merge
-// into the block above. Otherwise let the textarea delete a character.
+// Backspace: on an empty FIRST block, move up into the page title (keep the
+// block — Notion doesn't delete the last line); on any other empty block, delete
+// it; at offset 0 of a non-empty block, merge into the block above. Otherwise
+// let the textarea delete a character.
 function backspaceKey(e: Evt, d: EditKeyDeps) {
+  const el = e.currentTarget;
   if (d.value === '') {
     e.preventDefault();
-    d.onRemove();
+    const row = el.closest('[data-block-index]');
+    if (row?.getAttribute('data-block-index') === '0') focusPageTitle();
+    else d.onRemove();
     return;
   }
-  const el = e.currentTarget;
   if (el.selectionStart === 0 && el.selectionEnd === 0 && d.onMerge()) e.preventDefault();
 }
 

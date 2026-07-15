@@ -50,6 +50,14 @@ Feature: Typing a full document
     When I type "Body text from the title"
     Then the document has a "text" block containing "Body text from the title"
 
+  Scenario: ArrowUp from the first block goes back into the title
+    Given I have a page titled "Nav up"
+    When I open the page "Nav up"
+    And I focus the first block
+    And I type "Body line"
+    And I press ArrowUp at the start of the first block
+    Then the page title is focused
+
   Scenario: Checking a to-do marks it done (strike-through)
     Given I have a page titled "Chores"
     When I open the page "Chores"

@@ -90,6 +90,17 @@ When('I press Enter in the page title', async ({ page }) => {
   await title.press('Enter');
 });
 
+When('I press ArrowUp at the start of the first block', async ({ page }) => {
+  const first = blockInputs(page).first();
+  await first.click();
+  await first.evaluate((el) => (el as HTMLTextAreaElement).setSelectionRange(0, 0));
+  await first.press('ArrowUp');
+});
+
+Then('the page title is focused', async ({ page }) => {
+  await expect(active(page).getByLabel('Page title')).toBeFocused();
+});
+
 When('I check the first to-do', async ({ page }) => {
   // Click (not .check(), which errors if already checked) the last to-do — the
   // one just typed — and wait for its row to reflect the done state.

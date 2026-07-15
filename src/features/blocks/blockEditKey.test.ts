@@ -1,13 +1,21 @@
 import { describe, it, expect, vi } from 'vitest';
 import { makeEditKey } from './blockEditKey';
 
-// A minimal fake keyboard event over a textarea with a caret/selection.
+// A minimal fake keyboard event over a textarea with a caret/selection. `closest`
+// defaults to a non-first block row (index "1") so the empty-Backspace path hits
+// the normal remove branch; pass a `closest` override to simulate the first row.
 function evt(key: string, over: Record<string, unknown> = {}, ta: Record<string, unknown> = {}) {
   return {
     key,
     shiftKey: false,
     preventDefault: vi.fn(),
-    currentTarget: { selectionStart: 0, selectionEnd: 0, setSelectionRange: vi.fn(), ...ta },
+    currentTarget: {
+      selectionStart: 0,
+      selectionEnd: 0,
+      setSelectionRange: vi.fn(),
+      closest: () => ({ getAttribute: () => '1' }),
+      ...ta,
+    },
     ...over,
   };
 }
@@ -72,6 +80,16 @@ describe('makeEditKey — other keys', () => {
     const d = deps({ value: '' });
     makeEditKey(d)(evt('Backspace') as never);
     expect(d.onRemove).toHaveBeenCalled();
+  });
+
+  it('Backspace on the empty FIRST block does not remove it (moves to title)', () => {
+    const d = deps({ value: '' });
+    // First row (index "0") with no page title in the DOM → focusPageTitle is a
+    // no-op, but crucially onRemove must NOT fire (Notion keeps the last line).
+    const e = evt('Backspace', {}, { closest: () => ({ getAttribute: () => '0' }) });
+    makeEditKey(d)(e as never);
+    expect(d.onRemove).not.toHaveBeenCalled();
+    expect(e.preventDefault).toHaveBeenCalled();
   });
 
   it('Escape blurs the textarea (commit + leave edit)', () => {
