@@ -68,6 +68,7 @@ export function TableBody({
           return [
             <TableGroupHeader
               key={`h:${g.value}`}
+              value={g.value}
               label={g.label}
               count={g.rows.length}
               collapsed={collapsed}

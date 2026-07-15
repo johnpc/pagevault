@@ -25,6 +25,12 @@ describe('TableBoard', () => {
     expect(screen.getByDisplayValue('Ship')).toBeInTheDocument();
   });
 
+  it('shows each column head option as a colored tag pill', () => {
+    render(<TableBoard data={data()} save={vi.fn()} />);
+    expect(screen.getByText('Todo')).toHaveClass('pv-tag');
+    expect(screen.getByText('Done')).toHaveClass('pv-tag');
+  });
+
   it('edits a card title and patches the cell', async () => {
     const save = vi.fn();
     render(<TableBoard data={data()} save={save} />);
