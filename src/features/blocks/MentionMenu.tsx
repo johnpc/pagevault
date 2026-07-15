@@ -1,5 +1,6 @@
 import { displayTitle } from '../pages/pageTree';
 import type { MentionItem } from './useMention';
+import { useScrollActiveIntoView } from './useScrollActiveIntoView';
 import './SlashMenu.css';
 
 /** The label + icon for one @-menu item (a page link or a date insert). */
@@ -24,6 +25,7 @@ export function MentionMenu({
   active: number;
   onPick: (item: MentionItem) => void;
 }) {
+  const activeRef = useScrollActiveIntoView<HTMLButtonElement>(active);
   if (items.length === 0) return null;
   return (
     <ul className="pv-slash" role="listbox" aria-label="Insert a mention">
@@ -32,6 +34,7 @@ export function MentionMenu({
         return (
           <li key={itemKey(item)}>
             <button
+              ref={i === active ? activeRef : undefined}
               type="button"
               role="option"
               aria-selected={i === active}
