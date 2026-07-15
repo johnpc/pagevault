@@ -143,3 +143,36 @@ Native mobile builds; real-time OT/CRDT; synced blocks; formula columns — all 
 
 Proceed with **Stages 1 → 2 immediately** (no arch risk, high felt value). Treat **Stage 3**
 as a spike whose result decides the editing-surface migration. Do **not** big-bang rewrite.
+
+### 7a. Stage-3 spike result → decision (updated 2026-07, post-spike)
+
+The dependency-free `contentEditable` spike (`WysiwygInput` + the `contentToEditableHtml` /
+`domToContent` bridges) **works for display + persistence** behind `VITE_WYSIWYG`, but the
+markdown-input-rules attempt hit an **unresolved caret-boundary bug** in Chromium (a keystroke
+after a just-closed `**bold**` is absorbed into the `<strong>` run; caret-after-element and
+trailing-text-node anchors both failed — see Stage 3 notes above). This is the classic
+contentEditable swamp ProseMirror exists to drain.
+
+**Decision: adopt Option A (ProseMirror/TipTap) for Stage 4** — the hand-rolled surface is not
+worth carrying to parity. What the spike leaves reusable regardless: the **content-string ↔ DOM
+bridges** (`contentToEditableHtml`, `domToContent`, `segmentsToMarkdown`, `inlineToMarkdown`,
+`parseInline`) map cleanly to a PM schema's `parseDOM`/`toDOM` + a markdown serializer, and
+`completedMarkerAt` becomes a PM input-rule predicate. Keep the flag + spike code as the
+comparison baseline until Stage 4 lands, then delete.
+
+**Stage 4 entry checklist (do these as separate, reviewable PRs — NOT one big-bang):**
+
+1. Add ProseMirror (or TipTap) as a **lazy-loaded** chunk (bundle-budget gate: initial load must
+   not regress — mirror the highlight.js lazy pattern).
+2. Define the per-block inline schema (marks: strong/em/code/del/u, nodes: mention, link) with
+   `parseDOM`/`toDOM` reusing the existing bridges; a `toMarkdown` that reuses `inlineToMarkdown`.
+3. Render ONE block's body as a PM instance behind the flag; wire onChange → the same `content`
+   string the textarea path writes (so storage + realtime are untouched). Prove caret/IME/paste.
+4. Port the block-level key handlers (`blockEditKey`, arrow-nav, Enter-split/merge) + the
+   mention/slash pickers + selection toolbar as PM plugins — one PR each.
+5. Resolve §5 open question (per-block vs per-page doc) with the spike data before step 4.
+6. Flip the flag on by default; delete the textarea path + spike; fold Stage-1 undo into PM history.
+
+Until Stage 4 is deliberately scheduled, the shipped textarea+preview hybrid (with Stage-1 undo +
+Stage-2 selection toolbar) remains the correct, proven default. **Do not enable `VITE_WYSIWYG` in
+production** — the spike surface regresses slash/mention/toolbar/caret (they key off textarea APIs).
