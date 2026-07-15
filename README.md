@@ -101,7 +101,7 @@ account, no third-party service, no lock-in.
 | @-mentions — type `@` to link another page inline                                           | ✅     |
 | @-date inserts — `@today` / `@tomorrow` / `@yesterday` / `@now` drop the date               | ✅     |
 | Backlinks — "Linked references" of every page that mentions this one                        | ✅     |
-| Page comments — timestamped notes on a page (Cmd/Ctrl+Enter to post)                        | ✅     |
+| Page comments — timestamped notes (Cmd/Ctrl+Enter to post; edit & delete inline)            | ✅     |
 | Block color & background highlight (text + `-bg` palette)                                   | ✅     |
 | Block text alignment (left / center / right)                                                | ✅     |
 | Duplicate a block (inserts below; ⌘D / Ctrl+D or the block menu)                            | ✅     |

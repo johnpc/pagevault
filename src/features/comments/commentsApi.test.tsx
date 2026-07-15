@@ -3,13 +3,13 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 
-const comments = { getFullList: vi.fn(), create: vi.fn(), delete: vi.fn() };
+const comments = { getFullList: vi.fn(), create: vi.fn(), update: vi.fn(), delete: vi.fn() };
 vi.mock('../../lib/pbClient', () => ({
   pb: { collection: () => comments },
   currentUserId: () => 'u1',
 }));
 
-import { useComments, useAddComment, useDeleteComment } from './commentsApi';
+import { useComments, useAddComment, useUpdateComment, useDeleteComment } from './commentsApi';
 
 const wrapper = ({ children }: { children: ReactNode }) => (
   <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
@@ -39,6 +39,13 @@ describe('commentsApi', () => {
     const { result } = renderHook(() => useAddComment('p1'), { wrapper });
     await result.current.mutateAsync('hello');
     expect(comments.create).toHaveBeenCalledWith({ page: 'p1', body: 'hello', owner: 'u1' });
+  });
+
+  it('useUpdateComment patches the body by id', async () => {
+    comments.update.mockResolvedValue({ id: 'c1' });
+    const { result } = renderHook(() => useUpdateComment('p1'), { wrapper });
+    await result.current.mutateAsync({ id: 'c1', body: 'edited' });
+    expect(comments.update).toHaveBeenCalledWith('c1', { body: 'edited' });
   });
 
   it('useDeleteComment removes by id', async () => {
