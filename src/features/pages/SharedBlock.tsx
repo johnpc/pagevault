@@ -3,10 +3,12 @@ import type { TableData } from '../../lib/pbTypes';
 import { FormattedText } from '../blocks/FormattedText';
 import { safeHref } from '../blocks/safeHref';
 import { SharedTable } from './SharedTable';
+import { SharedTextBlock } from './SharedTextBlock';
 
 /** One block in the read-only public share view, rendered per type so code,
  * to-dos, and images keep their meaning (not everything flattened to inline
- * text). Text-ish blocks use FormattedText (which is XSS-safe); divider is an
+ * text). Text-ish blocks (heading/quote/callout/list/…) go through
+ * SharedTextBlock so the document keeps its visual hierarchy; divider is an
  * <hr>. No editing affordances — this is the logged-out reader's view. */
 export function SharedBlock({ block }: { block: BlockRecord }) {
   switch (block.type) {
@@ -47,6 +49,6 @@ export function SharedBlock({ block }: { block: BlockRecord }) {
       ) : null;
     }
     default:
-      return <FormattedText text={block.content} />;
+      return <SharedTextBlock block={block} />;
   }
 }
