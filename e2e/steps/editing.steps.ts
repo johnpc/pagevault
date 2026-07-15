@@ -146,6 +146,25 @@ Then('no block is focused', async ({ page }) => {
   await expect(focused(page)).toHaveCount(0);
 });
 
+When('I wrap the block value to {string}', async ({ page }, value: string) => {
+  // Replace the focused block's text (e.g. to add **…** markup) via a real input
+  // event so React's onChange fires, then wait for the value to settle.
+  const input = focused(page);
+  await input.fill(value);
+  await expect(input).toHaveValue(value);
+});
+
+When('I click away from the blocks', async ({ page }) => {
+  // Blur the focused textarea so formatted blocks render their idle preview.
+  await active(page)
+    .locator('.pv-page')
+    .click({ position: { x: 5, y: 5 } });
+});
+
+Then('the block {string} shows a formatted preview', async ({ page }, text: string) => {
+  await expect(active(page).locator('.pv-block-preview', { hasText: text }).first()).toBeVisible();
+});
+
 When('I press undo', ({ page }) => page.keyboard.press('ControlOrMeta+z'));
 When('I press redo', ({ page }) => page.keyboard.press('ControlOrMeta+Shift+z'));
 
