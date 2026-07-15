@@ -48,6 +48,25 @@ describe('GalleryView', () => {
     expect(saved.rows).toHaveLength(3);
   });
 
+  it('renders a select field value as a colored tag pill', () => {
+    render(<GalleryView data={data()} save={vi.fn()} />);
+    expect(screen.getByText('Todo')).toHaveClass('pv-tag');
+    expect(screen.getByText('Done')).toHaveClass('pv-tag');
+  });
+
+  it('renders each multiselect tag as its own pill', () => {
+    const grid = data({
+      columns: [
+        { name: 'Task', type: 'text' },
+        { name: 'Tags', type: 'multiselect', options: ['red', 'blue'] },
+      ],
+      rows: [['Write', 'red,blue']],
+    });
+    render(<GalleryView data={grid} save={vi.fn()} />);
+    expect(screen.getByText('red')).toHaveClass('pv-tag');
+    expect(screen.getByText('blue')).toHaveClass('pv-tag');
+  });
+
   it('shows a dash for an empty field value', () => {
     render(<GalleryView data={data({ rows: [['Solo', '']] })} save={vi.fn()} />);
     expect(screen.getByText('—')).toBeInTheDocument();

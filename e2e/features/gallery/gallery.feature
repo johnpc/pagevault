@@ -18,3 +18,12 @@ Feature: Gallery view of a table
     When I reopen the page "Roster"
     Then the table is in the gallery view
     And the gallery card reads "Ada Lovelace"
+
+  Scenario: A gallery card shows a select field as a colored tag pill
+    When I type "/table" into a new block
+    And I choose "Table" from the slash menu
+    And I fill table cell "1,1" with "Ada Lovelace"
+    And I set table column 2 type to "select"
+    And I create the tag "Engineer" in table cell "1,2"
+    And I switch the table to the gallery view
+    Then the gallery field "Notes" shows the tag "Engineer" as a colored pill

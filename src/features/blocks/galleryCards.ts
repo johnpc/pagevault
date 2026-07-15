@@ -1,13 +1,15 @@
-import type { TableData } from '../../lib/pbTypes';
+import type { TableData, TableColumnType } from '../../lib/pbTypes';
 import { visibleRows } from './tableFilter';
 import { visibleColumns } from './tableColumns';
 import { cellText, type TitleMap } from './cellText';
 
 /** One field on a gallery card: the column's label + the cell's display text,
- * plus the real column index so an edit targets the right cell. */
+ * plus the real column index so an edit targets the right cell. `type` lets the
+ * view render select/multiselect values as colored tag pills. */
 export interface GalleryField {
   col: number; // real index into data.columns
   label: string;
+  type: TableColumnType;
   value: string; // display text (relation cells resolved to the page title)
 }
 
@@ -35,6 +37,7 @@ export function galleryCards(data: TableData, titles?: TitleMap): GalleryCard[] 
     fields: fieldCols.map((c) => ({
       col: c.index,
       label: c.column.name,
+      type: c.column.type,
       value: cellText(c.column, row[c.index] ?? '', titles),
     })),
   }));

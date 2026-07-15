@@ -1,7 +1,25 @@
 import type { TableData } from '../../lib/pbTypes';
 import type { TitleMap } from './cellText';
 import { setCell, addRow } from './tableData';
-import { galleryCards } from './galleryCards';
+import { galleryCards, type GalleryField } from './galleryCards';
+import { selectedValues } from './multiSelect';
+import { Tag } from './Tag';
+
+/** A gallery field's value: select/multiselect show as colored tag pills (a
+ * multiselect splits its comma-joined value), everything else as plain text. */
+function FieldValue({ field }: { field: GalleryField }) {
+  if (!field.value) return <span className="pv-muted">—</span>;
+  if (field.type === 'select') return <Tag label={field.value} />;
+  if (field.type === 'multiselect')
+    return (
+      <>
+        {selectedValues(field.value).map((v) => (
+          <Tag key={v} label={v} />
+        ))}
+      </>
+    );
+  return <>{field.value}</>;
+}
 
 /** The gallery view of a table: each visible row is a card whose heading is the
  * first visible column (editable in place) and whose remaining visible columns
@@ -32,7 +50,9 @@ export function GalleryView({
             {card.fields.map((f) => (
               <div key={f.col} className="pv-gallery-field">
                 <dt>{f.label}</dt>
-                <dd>{f.value || <span className="pv-muted">—</span>}</dd>
+                <dd>
+                  <FieldValue field={f} />
+                </dd>
               </div>
             ))}
           </dl>
