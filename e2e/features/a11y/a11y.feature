@@ -37,3 +37,13 @@ Feature: Accessibility baseline
     When I open quick find
     Then the page has no serious accessibility violations
     And Tab keeps focus inside the quick-find dialog
+
+  Scenario: The public shared page has no accessibility violations
+    Given I have a page titled "A11y shared"
+    When I open the page "A11y shared"
+    And I add a block with the text "# A shared heading"
+    And I add a block with the text "Body text a logged-out reader sees"
+    And I enable sharing for the page
+    And I sign out
+    And I visit the shared link
+    Then the page has no serious accessibility violations
