@@ -292,6 +292,46 @@ describe('BlockRow', () => {
     expect(onEdit).toHaveBeenCalledWith('b1', { checked: true });
   });
 
+  it('marks a checked to-do row as done (strike/dim via a class)', () => {
+    const { container } = render(
+      <BlockRow
+        block={mk({ type: 'todo', checked: true, content: 'buy milk' })}
+        onEdit={vi.fn()}
+        onRemove={vi.fn()}
+        onSplit={vi.fn()}
+        onMerge={vi.fn()}
+        onMergeForward={vi.fn()}
+        onDuplicate={vi.fn()}
+        onInsertAfter={vi.fn()}
+        onIndent={vi.fn()}
+        onPasteMarkdown={vi.fn()}
+        onUpload={vi.fn()}
+        dnd={noopDnd}
+      />,
+    );
+    expect(container.querySelector('.pv-block--done')).not.toBeNull();
+  });
+
+  it('does not mark an unchecked to-do row as done', () => {
+    const { container } = render(
+      <BlockRow
+        block={mk({ type: 'todo', checked: false })}
+        onEdit={vi.fn()}
+        onRemove={vi.fn()}
+        onSplit={vi.fn()}
+        onMerge={vi.fn()}
+        onMergeForward={vi.fn()}
+        onDuplicate={vi.fn()}
+        onInsertAfter={vi.fn()}
+        onIndent={vi.fn()}
+        onPasteMarkdown={vi.fn()}
+        onUpload={vi.fn()}
+        dnd={noopDnd}
+      />,
+    );
+    expect(container.querySelector('.pv-block--done')).toBeNull();
+  });
+
   it('converts a text block when a markdown prefix is typed', async () => {
     const onEdit = vi.fn();
     render(

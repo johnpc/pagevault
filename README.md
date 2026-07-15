@@ -39,6 +39,7 @@ account, no third-party service, no lock-in.
 | Code blocks — syntax highlighting (highlight.js, lazy-loaded, light/dark themed)            | ✅     |
 | Callout blocks — pick the leading icon (💡 / ⚠️ / ✅ …) + background color                  | ✅     |
 | Toggle blocks — collapse/expand to fold away nested content                                 | ✅     |
+| To-do blocks — checking one strikes through & dims it (done state)                          | ✅     |
 | Collapse all / expand all toggles on a page (one header action)                             | ✅     |
 | Column layouts — 2–4 side-by-side text columns                                              | ✅     |
 | Table of contents block — auto-lists headings, click to scroll                              | ✅     |

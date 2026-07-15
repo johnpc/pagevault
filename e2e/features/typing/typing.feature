@@ -42,6 +42,15 @@ Feature: Typing a full document
     When I type "Third line"
     Then the document has a "text" block containing "Third line"
 
+  Scenario: Checking a to-do marks it done (strike-through)
+    Given I have a page titled "Chores"
+    When I open the page "Chores"
+    And I focus the first block
+    And I type "[] Buy milk"
+    Then the document has a "todo" block containing "Buy milk"
+    When I check the first to-do
+    Then a to-do block is marked done
+
   Scenario: Any "N. " prefix (not just "1.") starts a numbered list
     Given I have a page titled "Numbered"
     When I open the page "Numbered"

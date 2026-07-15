@@ -84,6 +84,16 @@ Then('a new empty block is focused', async ({ page }) => {
   await expect(focused(page)).toHaveValue('');
 });
 
+When('I check the first to-do', async ({ page }) => {
+  // Click (not .check(), which errors if already checked) the last to-do — the
+  // one just typed — and wait for its row to reflect the done state.
+  await active(page).getByLabel('Toggle to-do').last().click();
+});
+
+Then('a to-do block is marked done', async ({ page }) => {
+  await expect(active(page).locator('.pv-block--done').first()).toBeVisible();
+});
+
 Then(
   'the document has a {string} block containing {string}',
   async ({ page }, type: string, text: string) => {
