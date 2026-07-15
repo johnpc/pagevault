@@ -70,7 +70,7 @@ account, no third-party service, no lock-in.
 | Click the empty space below the page to start a new block                                   | ✅     |
 | Block gutter "+" button — hover a block to add an empty block right below it                | ✅     |
 | Enter continues a list; an empty item exits / outdents the list                             | ✅     |
-| Slash command menu (`/` to pick a block type — works mid-line, not just at the start)       | ✅     |
+| Slash command menu (`/` to pick a block type — mid-line, grouped Basic/Media/Advanced)      | ✅     |
 | Turn into — convert an existing block to another type, keeping content                      | ✅     |
 | Page icons — searchable emoji picker (keyword filter + remove)                              | ✅     |
 | Page cover banners (gradient or uploaded image)                                             | ✅     |

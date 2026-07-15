@@ -16,7 +16,9 @@ const ROOTS = ['src', 'seed'].map((d) => join(process.cwd(), d));
 const SKIP_DIRS = new Set(['node_modules', 'dist', 'build', 'pb_data']);
 // Exempt pure DATA files (records, not logic) — the seed fixtures tree.
 const EXCLUDE_DIRS = ['seed/fixtures'];
-const EXCLUDE_FILES = [];
+// The slash-command catalog is a flat record list (like the seed fixtures), not
+// branching logic — exempt it so adding a block type doesn't hit the line gate.
+const EXCLUDE_FILES = ['src/features/blocks/slashCatalog.ts'];
 const isExcluded = (rel) =>
   EXCLUDE_DIRS.some((p) => rel === p || rel.startsWith(`${p}/`)) || EXCLUDE_FILES.includes(rel);
 
