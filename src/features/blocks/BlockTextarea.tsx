@@ -13,6 +13,8 @@ import { CodeHighlight } from './CodeHighlight';
 interface BlockTextareaProps {
   block: BlockRecord;
   value: string;
+  /** Show the block-type hint — true only while focused (see BlockEditable). */
+  showPlaceholder: boolean;
   inputRef: RefObject<HTMLTextAreaElement | null>;
   onFocus: () => void;
   onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
@@ -36,7 +38,7 @@ export function BlockTextarea(props: BlockTextareaProps) {
       aria-label="Block content"
       rows={1}
       value={value}
-      placeholder={placeholderFor(block.type)}
+      placeholder={props.showPlaceholder ? placeholderFor(block.type) : ''}
       onFocus={props.onFocus as unknown as (e: FocusEvent<HTMLTextAreaElement>) => void}
       onChange={props.onChange}
       onBlur={props.onBlur}
