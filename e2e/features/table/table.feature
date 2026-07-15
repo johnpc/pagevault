@@ -144,6 +144,16 @@ Feature: Table (database) blocks
     When I reopen the page "Tags"
     Then the multiselect cell "1,2" shows "blue"
 
+  Scenario: A new select option can be created inline from the cell
+    Given I have a page titled "New status"
+    When I type "/table" into a new block
+    And I choose "Table" from the slash menu
+    And I set table column 2 type to "select"
+    And I create the tag "Blocked" in table cell "1,2"
+    Then the multiselect cell "1,2" shows "Blocked"
+    When I reopen the page "New status"
+    Then the multiselect cell "1,2" shows "Blocked"
+
   Scenario: A new multi-select tag can be created inline from the cell
     Given I have a page titled "New tags"
     When I type "/table" into a new block

@@ -114,6 +114,13 @@ When('I edit the first block to say {string}', async ({ page }, text: string) =>
     .locator('.pv-page')
     .click({ position: { x: 5, y: 5 } });
   await expect(focused(page)).toHaveCount(0);
+  // Let the write fully SETTLE (server + realtime echo) before the next action.
+  // Otherwise a late realtime refetch of THIS edit can land after a following
+  // undo's optimistic write and, since the block is now unfocused, clobber it
+  // (useReconciled adopts external values while unfocused) — a real race the
+  // rapid edit→edit→undo sequence would otherwise hit intermittently.
+  await expect(inputs(page).first()).toHaveValue(text);
+  await page.waitForTimeout(250);
 });
 
 When('I click the "+" gutter button on the block containing {string}', async ({ page }, text) => {

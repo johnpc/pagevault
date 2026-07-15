@@ -85,7 +85,7 @@ describe('TableCell', () => {
     expect(onChange).toHaveBeenCalledWith('');
   });
 
-  it('renders a select with options and reports the chosen value', async () => {
+  it('renders a select popover and reports the chosen value', async () => {
     const onChange = vi.fn();
     render(
       <TableCell
@@ -96,7 +96,8 @@ describe('TableCell', () => {
         onAddOption={vi.fn()}
       />,
     );
-    await userEvent.selectOptions(screen.getByLabelText('cell'), 'b');
+    await userEvent.click(screen.getByLabelText('cell'));
+    await userEvent.click(screen.getByRole('button', { name: 'b' }));
     expect(onChange).toHaveBeenCalledWith('b');
   });
 
