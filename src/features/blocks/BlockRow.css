@@ -112,9 +112,11 @@
   color: var(--pv-text);
 }
 
-/* Touch devices have no hover, so keep the drag handle + add button visible or
-   a finger can never reach them. */
-@media (hover: none) {
+/* Touch / phone widths have no hover, so keep the gutter handles visible or a
+   finger can never reach them. Both a no-hover query (tablets/styluses) and the
+   ≤640px phone breakpoint (matches Workspace.css). The dup/del/turn/color/align
+   controls get the same treatment AFTER their base rule (see below). */
+@media (hover: none), (max-width: 640px) {
   .pv-block-style,
   .pv-block-add-here {
     opacity: 0.6;
@@ -466,6 +468,15 @@
 .pv-block-dup:hover,
 .pv-block-del:hover {
   color: var(--pv-text);
+}
+/* Touch / phone: reveal the block controls (duplicate/delete + the turn-into/
+   color/align triggers that reuse .pv-block-dup) without hover. Placed after the
+   base opacity:0 rule so it wins on source order at equal specificity. */
+@media (hover: none), (max-width: 640px) {
+  .pv-block-dup,
+  .pv-block-del {
+    opacity: 0.6;
+  }
 }
 
 /* Color picker: a paint button that reveals it, and a floating swatch list. */

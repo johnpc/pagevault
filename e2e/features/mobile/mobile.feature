@@ -18,6 +18,14 @@ Feature: Mobile sidebar drawer
     Then the block editor is shown
     And the sidebar drawer is closed
 
+  Scenario: Block controls are reachable without hover on a phone
+    Given I am signed in on a phone-sized screen
+    When I open the sidebar drawer
+    And I create a page from the drawer
+    And I focus the first block
+    And I type "Note"
+    Then the block controls are reachable without hovering
+
   Scenario: Reorder blocks by touch-dragging the handle
     Given I am signed in on a phone-sized screen
     When I open the sidebar drawer

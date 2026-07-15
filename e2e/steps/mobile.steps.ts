@@ -93,3 +93,12 @@ Then('block {int} contains {string}', async ({ page }, n: number, text: string) 
     )
     .toBe(text);
 });
+
+// On a phone there's no hover, so the block's controls (duplicate/turn-into/…)
+// must be visible without hovering, or they're unreachable by touch.
+Then('the block controls are reachable without hovering', async ({ page }) => {
+  const dup = active(page).locator('.pv-block-dup').first();
+  await expect
+    .poll(() => dup.evaluate((el) => parseFloat(getComputedStyle(el).opacity)))
+    .toBeGreaterThan(0);
+});
