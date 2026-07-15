@@ -1,6 +1,5 @@
 import type { DragEvent } from 'react';
 import type { BlockRecord } from '../../lib/pbClient';
-import { cycleType } from './blockText';
 import { colorClass } from './blockColors';
 import { usePointerDrag } from './usePointerDrag';
 import type { BlockDndHandlers } from './BlockRow';
@@ -8,13 +7,14 @@ import type { BlockDndHandlers } from './BlockRow';
 /**
  * The drag-and-drop wiring for one block row: the wrapper class (with drag/over
  * state), the row's drop-target handlers, and the ⋮⋮ handle element (drag to
- * reorder, click to cycle type). Keeps BlockRow render-only and under length.
+ * reorder, click to select the block — showing the action bar). Keeps BlockRow
+ * render-only and under length.
  */
 export function useBlockDrag(
   block: BlockRecord,
-  onEdit: (id: string, patch: Partial<BlockRecord>) => void,
   dnd: BlockDndHandlers,
   onInsertAfter: (block: BlockRecord) => void,
+  onSelect: (id: string) => void,
 ) {
   const pointer = usePointerDrag(dnd);
   const tint = colorClass(block.color);
@@ -53,11 +53,11 @@ export function useBlockDrag(
       </button>
       <button
         className="pv-block-style"
-        aria-label="Drag to reorder or click to change block type"
+        aria-label="Drag to reorder, or click to select the block"
         draggable
         onDragStart={() => dnd.onDragStart(block.id)}
         onPointerDown={pointer.onPointerDown(block.id)}
-        onClick={() => onEdit(block.id, { type: cycleType(block.type) })}
+        onClick={() => onSelect(block.id)}
       >
         ⋮⋮
       </button>

@@ -36,6 +36,20 @@ When('I shift-click block {int}', async ({ page }, n: number) => {
   await expect(active(page).locator('.pv-block-selected').first()).toBeVisible();
 });
 
+When('I click the drag handle on block {int}', async ({ page }, n: number) => {
+  const rows = active(page).locator('.pv-block');
+  await rows
+    .nth(n - 1)
+    .getByLabel(/click to select the block/i)
+    .click();
+});
+
+Then('a selection bar showing {int} selected is visible', async ({ page }, n: number) => {
+  const bar = active(page).getByRole('toolbar', { name: 'Selected blocks' });
+  await expect(bar).toBeVisible();
+  await expect(bar.getByText(`${n} selected`)).toBeVisible();
+});
+
 When('I select all blocks with the select-all shortcut', async ({ page }) => {
   // Cmd/Ctrl+A once selects the focused block's text; a second press escalates
   // to selecting every block (Notion behavior). Press twice, then confirm.
