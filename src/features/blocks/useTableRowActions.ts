@@ -1,6 +1,8 @@
 import { useCallback, useRef } from 'react';
 import type { TableData } from '../../lib/pbTypes';
 import { setCell, removeRow } from './tableData';
+import { addColumnOption } from './tableColumns';
+import { toggleValue } from './multiSelect';
 import { duplicateRow } from './tableRowOps';
 import { moveRow } from './tableSort';
 
@@ -35,5 +37,19 @@ export function useTableRowActions(data: TableData, save: (next: TableData) => v
     s(moveRow(d, from, to));
   }, []);
 
-  return { onCell, onDelete, onDuplicate, moveTo };
+  // Create a new (multi)select option inline and assign it to the cell in one
+  // save: select → set to it; multiselect → add it to the chosen tags.
+  const onAddOption = useCallback((r: number, c: number, option: string) => {
+    const { data: d, save: s } = ref.current;
+    const withOpt = addColumnOption(d, c, option);
+    if (withOpt === d) return; // blank / duplicate / not a (multi)select
+    const opts = withOpt.columns[c].options ?? [];
+    const value =
+      withOpt.columns[c].type === 'multiselect'
+        ? toggleValue(d.rows[r]?.[c] ?? '', option.trim(), opts)
+        : option.trim();
+    s(setCell(withOpt, r, c, value));
+  }, []);
+
+  return { onCell, onDelete, onDuplicate, moveTo, onAddOption };
 }
