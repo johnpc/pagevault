@@ -3,19 +3,21 @@ import { BLOCK_COLORS } from './blockColors';
 import { TurnIntoMenu } from './TurnIntoMenu';
 
 /** A floating action bar shown while multiple blocks are selected: the count,
- * a row of color swatches (colors the whole selection), turn-into, duplicate,
- * and delete. Buttons use onMouseDown + preventDefault so clicking never clears
- * the block selection (a plain mousedown elsewhere does). Hidden when count 0. */
+ * color swatches, turn-into, copy, duplicate, and delete. Buttons use onMouseDown
+ * + preventDefault so clicking never clears the block selection (a plain
+ * mousedown elsewhere does). Hidden when count is 0. */
 export function BlockSelectionBar({
   count,
   onColor,
   onTurnInto,
+  onCopy,
   onDuplicate,
   onDelete,
 }: {
   count: number;
   onColor: (color: string) => void;
   onTurnInto: (type: BlockType) => void;
+  onCopy: () => void;
   onDuplicate: () => void;
   onDelete: () => void;
 }) {
@@ -41,6 +43,17 @@ export function BlockSelectionBar({
         </button>
       ))}
       <TurnIntoMenu current={'text'} onPick={onTurnInto} />
+      <button
+        type="button"
+        className="pv-selbar-dup"
+        aria-label="Copy selected blocks"
+        onMouseDown={(e) => {
+          e.preventDefault();
+          onCopy();
+        }}
+      >
+        📋
+      </button>
       <button
         type="button"
         className="pv-selbar-dup"

@@ -87,6 +87,7 @@ export function BlockRows(props: BlockRowsProps) {
         count={selection.count}
         onColor={selection.colorSelected}
         onTurnInto={selection.turnIntoSelected}
+        onCopy={selection.copySelected}
         onDuplicate={selection.duplicateSelected}
         onDelete={selection.deleteSelected}
       />

@@ -45,6 +45,17 @@ describe('useSelectionActions', () => {
     expect(clear).toHaveBeenCalled();
   });
 
+  it('copies the chosen ids WITHOUT clearing the selection', () => {
+    const clear = vi.fn();
+    const onCopyMany = vi.fn();
+    const { result } = renderHook(() =>
+      useSelectionActions(['a', 'b'], clear, { onDeleteMany: vi.fn(), onCopyMany }),
+    );
+    result.current.copySelected();
+    expect(onCopyMany).toHaveBeenCalledWith(['a', 'b']);
+    expect(clear).not.toHaveBeenCalled(); // copy keeps the selection
+  });
+
   it('still clears (no-op) when nothing is selected', () => {
     const clear = vi.fn();
     const onColorMany = vi.fn();

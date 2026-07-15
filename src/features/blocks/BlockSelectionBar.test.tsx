@@ -9,6 +9,7 @@ describe('BlockSelectionBar', () => {
         count={0}
         onColor={vi.fn()}
         onTurnInto={vi.fn()}
+        onCopy={vi.fn()}
         onDuplicate={vi.fn()}
         onDelete={vi.fn()}
       />,
@@ -23,6 +24,7 @@ describe('BlockSelectionBar', () => {
         count={3}
         onColor={onColor}
         onTurnInto={vi.fn()}
+        onCopy={vi.fn()}
         onDuplicate={vi.fn()}
         onDelete={vi.fn()}
       />,
@@ -34,6 +36,22 @@ describe('BlockSelectionBar', () => {
     expect(onColor).toHaveBeenCalledWith('yellow-bg');
   });
 
+  it('copies the selection on the copy mousedown', () => {
+    const onCopy = vi.fn();
+    render(
+      <BlockSelectionBar
+        count={2}
+        onColor={vi.fn()}
+        onTurnInto={vi.fn()}
+        onCopy={onCopy}
+        onDuplicate={vi.fn()}
+        onDelete={vi.fn()}
+      />,
+    );
+    fireEvent.mouseDown(screen.getByLabelText('Copy selected blocks'));
+    expect(onCopy).toHaveBeenCalled();
+  });
+
   it('duplicates the selection on the duplicate mousedown', () => {
     const onDuplicate = vi.fn();
     render(
@@ -41,6 +59,7 @@ describe('BlockSelectionBar', () => {
         count={2}
         onColor={vi.fn()}
         onTurnInto={vi.fn()}
+        onCopy={vi.fn()}
         onDuplicate={onDuplicate}
         onDelete={vi.fn()}
       />,
@@ -56,6 +75,7 @@ describe('BlockSelectionBar', () => {
         count={2}
         onColor={vi.fn()}
         onTurnInto={onTurnInto}
+        onCopy={vi.fn()}
         onDuplicate={vi.fn()}
         onDelete={vi.fn()}
       />,
@@ -72,6 +92,7 @@ describe('BlockSelectionBar', () => {
         count={2}
         onColor={vi.fn()}
         onTurnInto={vi.fn()}
+        onCopy={vi.fn()}
         onDuplicate={vi.fn()}
         onDelete={onDelete}
       />,
@@ -86,6 +107,7 @@ describe('BlockSelectionBar', () => {
         count={2}
         onColor={vi.fn()}
         onTurnInto={vi.fn()}
+        onCopy={vi.fn()}
         onDuplicate={vi.fn()}
         onDelete={vi.fn()}
       />,

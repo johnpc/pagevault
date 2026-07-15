@@ -107,6 +107,20 @@ Feature: Select and delete multiple blocks
     And I duplicate the selection from the selection bar
     Then the page has 5 blocks
 
+  Scenario: Copy a block selection from the selection bar's copy button
+    Given I have a page titled "Copy from bar"
+    When I open the page "Copy from bar"
+    And I focus the first block
+    And I type "Uno" then Enter
+    And I type "Dos" then Enter
+    And I type "Tres"
+    Then the page has 3 blocks
+    When I click into block 2
+    And I shift-click block 3
+    And I copy the selection from the selection bar
+    Then the clipboard contains "Dos"
+    And the clipboard contains "Tres"
+
   Scenario: Copy a whole block selection to the clipboard as Markdown
     Given I have a page titled "Copy many"
     When I open the page "Copy many"

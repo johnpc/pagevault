@@ -105,7 +105,7 @@ account, no third-party service, no lock-in.
 | Drag-to-reorder blocks (optimistic; mouse drag + touch/pen pointer drag)                    | ✅     |
 | Move a block up/down with the keyboard (⌘/Ctrl+⇧+↑/↓)                                       | ✅     |
 | Select multiple blocks — Shift+↑/↓, Shift+Click, Cmd/Ctrl+A, or click a ⋮⋮ handle           | ✅     |
-| Multi-block action bar — turn-into, color, duplicate, or delete a whole selection           | ✅     |
+| Multi-block action bar — turn-into, color, copy, duplicate, or delete a whole selection     | ✅     |
 | Duplicate a whole block selection — ⌘D / Ctrl+D copies the selected blocks below            | ✅     |
 | Copy a block selection to the clipboard as Markdown (⌘C / Ctrl+C) — paste anywhere          | ✅     |
 | Cut a block selection (⌘X / Ctrl+X) — copies to the clipboard, then removes them            | ✅     |

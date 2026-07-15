@@ -88,6 +88,13 @@ When('I duplicate the selection from the selection bar', async ({ page }) => {
   await bar.getByLabel('Duplicate selected blocks').click();
 });
 
+When('I copy the selection from the selection bar', async ({ page }) => {
+  await page.context().grantPermissions(['clipboard-read', 'clipboard-write']);
+  const bar = active(page).getByRole('toolbar', { name: 'Selected blocks' });
+  await expect(bar).toBeVisible();
+  await bar.getByLabel('Copy selected blocks').click();
+});
+
 When('I turn the selection into {string} from the selection bar', async ({ page }, label) => {
   const bar = active(page).getByRole('toolbar', { name: 'Selected blocks' });
   await expect(bar).toBeVisible();
