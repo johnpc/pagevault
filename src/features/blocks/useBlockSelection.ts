@@ -82,7 +82,7 @@ export function useBlockSelection(ids: string[], actions: SelectionActions) {
 
   // The selected block ids (in order) — powers the action bar + its operations.
   const chosen = sel ? selectedIds(sel, ids) : [];
-  const barActions = useSelectionActions(chosen, clear, actions.onColorMany, actions.onDeleteMany);
+  const barActions = useSelectionActions(chosen, clear, actions);
 
   return {
     active: sel !== null,

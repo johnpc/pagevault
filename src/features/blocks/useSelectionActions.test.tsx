@@ -7,7 +7,7 @@ describe('useSelectionActions', () => {
     const clear = vi.fn();
     const onColorMany = vi.fn();
     const { result } = renderHook(() =>
-      useSelectionActions(['a', 'b'], clear, onColorMany, vi.fn()),
+      useSelectionActions(['a', 'b'], clear, { onColorMany, onDeleteMany: vi.fn() }),
     );
     result.current.colorSelected('blue');
     expect(onColorMany).toHaveBeenCalledWith(['a', 'b'], 'blue');
@@ -17,25 +17,41 @@ describe('useSelectionActions', () => {
   it('deletes the chosen ids then clears', () => {
     const clear = vi.fn();
     const onDeleteMany = vi.fn();
-    const { result } = renderHook(() => useSelectionActions(['x'], clear, undefined, onDeleteMany));
+    const { result } = renderHook(() => useSelectionActions(['x'], clear, { onDeleteMany }));
     result.current.deleteSelected();
     expect(onDeleteMany).toHaveBeenCalledWith(['x']);
+    expect(clear).toHaveBeenCalled();
+  });
+
+  it('duplicates the chosen ids then clears', () => {
+    const clear = vi.fn();
+    const onDuplicateMany = vi.fn();
+    const { result } = renderHook(() =>
+      useSelectionActions(['a', 'b'], clear, { onDeleteMany: vi.fn(), onDuplicateMany }),
+    );
+    result.current.duplicateSelected();
+    expect(onDuplicateMany).toHaveBeenCalledWith(['a', 'b']);
     expect(clear).toHaveBeenCalled();
   });
 
   it('still clears (no-op) when nothing is selected', () => {
     const clear = vi.fn();
     const onColorMany = vi.fn();
-    const { result } = renderHook(() => useSelectionActions([], clear, onColorMany, vi.fn()));
+    const { result } = renderHook(() =>
+      useSelectionActions([], clear, { onColorMany, onDeleteMany: vi.fn() }),
+    );
     result.current.colorSelected('red');
     expect(onColorMany).not.toHaveBeenCalled();
     expect(clear).toHaveBeenCalled();
   });
 
-  it('tolerates a missing onColorMany', () => {
+  it('tolerates a missing onColorMany / onDuplicateMany', () => {
     const clear = vi.fn();
-    const { result } = renderHook(() => useSelectionActions(['a'], clear, undefined, vi.fn()));
+    const { result } = renderHook(() =>
+      useSelectionActions(['a'], clear, { onDeleteMany: vi.fn() }),
+    );
     expect(() => result.current.colorSelected('red')).not.toThrow();
+    expect(() => result.current.duplicateSelected()).not.toThrow();
     expect(clear).toHaveBeenCalled();
   });
 });

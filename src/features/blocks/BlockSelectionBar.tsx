@@ -1,16 +1,18 @@
 import { BLOCK_COLORS } from './blockColors';
 
 /** A floating action bar shown while multiple blocks are selected: the count,
- * a row of color swatches (colors the whole selection), and delete. Buttons use
- * onMouseDown + preventDefault so clicking never clears the block selection (a
- * plain mousedown elsewhere does). Hidden when count is 0. */
+ * a row of color swatches (colors the whole selection), duplicate, and delete.
+ * Buttons use onMouseDown + preventDefault so clicking never clears the block
+ * selection (a plain mousedown elsewhere does). Hidden when count is 0. */
 export function BlockSelectionBar({
   count,
   onColor,
+  onDuplicate,
   onDelete,
 }: {
   count: number;
   onColor: (color: string) => void;
+  onDuplicate: () => void;
   onDelete: () => void;
 }) {
   if (count === 0) return null;
@@ -34,6 +36,17 @@ export function BlockSelectionBar({
           </span>
         </button>
       ))}
+      <button
+        type="button"
+        className="pv-selbar-dup"
+        aria-label="Duplicate selected blocks"
+        onMouseDown={(e) => {
+          e.preventDefault();
+          onDuplicate();
+        }}
+      >
+        ⧉
+      </button>
       <button
         type="button"
         className="pv-selbar-del"
