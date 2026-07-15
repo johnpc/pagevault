@@ -34,6 +34,17 @@ describe('useSelectionActions', () => {
     expect(clear).toHaveBeenCalled();
   });
 
+  it('turns the chosen ids into a type then clears', () => {
+    const clear = vi.fn();
+    const onTypeMany = vi.fn();
+    const { result } = renderHook(() =>
+      useSelectionActions(['a', 'b'], clear, { onDeleteMany: vi.fn(), onTypeMany }),
+    );
+    result.current.turnIntoSelected('heading');
+    expect(onTypeMany).toHaveBeenCalledWith(['a', 'b'], 'heading');
+    expect(clear).toHaveBeenCalled();
+  });
+
   it('still clears (no-op) when nothing is selected', () => {
     const clear = vi.fn();
     const onColorMany = vi.fn();
@@ -52,6 +63,7 @@ describe('useSelectionActions', () => {
     );
     expect(() => result.current.colorSelected('red')).not.toThrow();
     expect(() => result.current.duplicateSelected()).not.toThrow();
+    expect(() => result.current.turnIntoSelected('quote')).not.toThrow();
     expect(clear).toHaveBeenCalled();
   });
 });

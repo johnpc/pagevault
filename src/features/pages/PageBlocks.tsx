@@ -41,6 +41,7 @@ export function PageBlocks({
       onUpload={ed.uploadImage}
       onMoveBlock={ed.moveBlockTo}
       onColorMany={ed.colorMany}
+      onTypeMany={ed.typeMany}
       onAddBlock={ed.addBlock}
       onClickBelow={ed.clickBelow}
       onSubPage={onSubPage}

@@ -97,6 +97,19 @@ Feature: Select and delete multiple blocks
     And I duplicate the selection from the selection bar
     Then the page has 5 blocks
 
+  Scenario: Turn a whole block selection into headings from the selection bar
+    Given I have a page titled "Turn many"
+    When I open the page "Turn many"
+    And I focus the first block
+    And I type "One" then Enter
+    And I type "Two" then Enter
+    And I type "Three"
+    Then the page has 3 blocks
+    When I click into block 2
+    And I shift-click block 3
+    And I turn the selection into "Heading" from the selection bar
+    Then blocks 2 and 3 are "heading" blocks
+
   Scenario: Color a whole block selection from the selection bar
     Given I have a page titled "Color many"
     When I open the page "Color many"

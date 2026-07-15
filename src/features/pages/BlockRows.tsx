@@ -21,6 +21,7 @@ interface BlockRowsProps {
   onUpload: (id: string, file: File) => void;
   onMoveBlock: (fromId: string, toId: string) => void;
   onColorMany: (ids: string[], color: string) => void;
+  onTypeMany: (ids: string[], type: BlockRecord['type']) => void;
   focusId: string | null;
   focusCaret?: number;
   focusValue?: string;
@@ -32,15 +33,16 @@ interface BlockRowsProps {
  * Delete to remove the range); a click anywhere clears it. Rows carry
  * data-block-index so a textarea handoff knows its position. */
 export function BlockRows(props: BlockRowsProps) {
-  const { visible, onRemoveMany, onIndentMany, onMoveBlock, onColorMany, onDuplicateMany, ...row } =
-    props;
+  const { visible, onRemoveMany, onIndentMany, onMoveBlock } = props;
+  const row = props; // BlockRow reads only the per-row props it names; extras are ignored.
   const ids = visible.map((b) => b.id);
   const selection = useBlockSelection(ids, {
     onDeleteMany: onRemoveMany,
     onIndentMany,
     onMoveBlock,
-    onColorMany,
-    onDuplicateMany,
+    onColorMany: props.onColorMany,
+    onDuplicateMany: props.onDuplicateMany,
+    onTypeMany: props.onTypeMany,
   });
 
   // A plain mousedown clears an active selection; a Shift+mousedown extends the
@@ -88,6 +90,7 @@ export function BlockRows(props: BlockRowsProps) {
       <BlockSelectionBar
         count={selection.count}
         onColor={selection.colorSelected}
+        onTurnInto={selection.turnIntoSelected}
         onDuplicate={selection.duplicateSelected}
         onDelete={selection.deleteSelected}
       />
