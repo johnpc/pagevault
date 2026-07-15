@@ -7,9 +7,11 @@ let list: CommentRecord[] = [];
 let query = { data: [] as CommentRecord[], isLoading: false, isError: false };
 const addMutate = vi.fn();
 const delMutate = vi.fn();
+const editMutate = vi.fn();
 vi.mock('./commentsApi', () => ({
   useComments: () => ({ ...query, data: list }),
   useAddComment: () => ({ mutate: addMutate, isPending: false }),
+  useUpdateComment: () => ({ mutate: editMutate }),
   useDeleteComment: () => ({ mutate: delMutate }),
 }));
 
@@ -71,5 +73,25 @@ describe('Comments', () => {
     render(<Comments pageId="p1" />);
     await userEvent.click(screen.getByLabelText('Delete comment'));
     expect(delMutate).toHaveBeenCalledWith('c1');
+  });
+
+  it('edits a comment inline and saves the new body', async () => {
+    list = [cm('c1', 'typo')];
+    render(<Comments pageId="p1" />);
+    await userEvent.click(screen.getByLabelText('Edit comment'));
+    const box = screen.getByLabelText('Edit comment text');
+    await userEvent.clear(box);
+    await userEvent.type(box, 'fixed');
+    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    expect(editMutate).toHaveBeenCalledWith({ id: 'c1', body: 'fixed' });
+  });
+
+  it('Escape cancels an edit without saving', async () => {
+    list = [cm('c1', 'keep me')];
+    render(<Comments pageId="p1" />);
+    await userEvent.click(screen.getByLabelText('Edit comment'));
+    await userEvent.type(screen.getByLabelText('Edit comment text'), ' changed{Escape}');
+    expect(editMutate).not.toHaveBeenCalled();
+    expect(screen.getByText('keep me')).toBeInTheDocument();
   });
 });

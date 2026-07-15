@@ -1,6 +1,6 @@
-import { useComments, useDeleteComment } from './commentsApi';
+import { useComments, useDeleteComment, useUpdateComment } from './commentsApi';
 import { useCommentInput } from './useCommentInput';
-import { relativeTime } from '../pages/pageStats';
+import { CommentRow } from './CommentRow';
 import './Comments.css';
 
 /** The page comments panel: existing comments (oldest first) + a compose box.
@@ -8,8 +8,10 @@ import './Comments.css';
 export function Comments({ pageId }: { pageId: string }) {
   const { data, isLoading, isError } = useComments(pageId);
   const del = useDeleteComment(pageId);
+  const edit = useUpdateComment(pageId);
   const { draft, setDraft, submit, pending } = useCommentInput(pageId);
   const comments = data ?? [];
+  const now = Date.now();
   // A one-line status under the header for the non-content outcomes; the compose
   // box below always stays available so you can post regardless.
   const status = isError
@@ -27,19 +29,13 @@ export function Comments({ pageId }: { pageId: string }) {
       </h2>
       {status && <p className="pv-comments-status pv-muted">{status}</p>}
       {comments.map((c) => (
-        <div key={c.id} className="pv-comment">
-          <p className="pv-comment-body">{c.body}</p>
-          <div className="pv-comment-meta pv-muted">
-            <span>{relativeTime(c.created, Date.now())}</span>
-            <button
-              className="pv-comment-del"
-              aria-label="Delete comment"
-              onClick={() => del.mutate(c.id)}
-            >
-              ×
-            </button>
-          </div>
-        </div>
+        <CommentRow
+          key={c.id}
+          comment={c}
+          now={now}
+          onSave={(id, body) => edit.mutate({ id, body })}
+          onDelete={(id) => del.mutate(id)}
+        />
       ))}
       <div className="pv-comment-compose">
         <textarea

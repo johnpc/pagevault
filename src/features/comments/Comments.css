@@ -26,24 +26,54 @@
 .pv-comment-meta {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 8px;
   font-size: 12px;
   margin-top: 4px;
 }
+/* The timestamp takes the slack so the actions sit at the right edge. */
+.pv-comment-meta > span:first-child {
+  margin-right: auto;
+}
+.pv-comment-edit,
 .pv-comment-del {
   background: none;
   border: none;
   color: var(--pv-text-muted);
   cursor: pointer;
-  font-size: 14px;
+  font-size: 12px;
   opacity: 0;
   padding: 0 4px;
 }
-.pv-comment:hover .pv-comment-del {
+.pv-comment-del {
+  font-size: 14px;
+}
+.pv-comment:hover .pv-comment-edit,
+.pv-comment:hover .pv-comment-del,
+.pv-comment-edit:focus-visible,
+.pv-comment-del:focus-visible {
   opacity: 1;
+}
+.pv-comment-edit:hover {
+  color: var(--pv-text);
 }
 .pv-comment-del:hover {
   color: var(--pv-danger);
+}
+/* Edit-mode actions: always visible (the row is in an active edit state). */
+.pv-comment-save,
+.pv-comment-cancel {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  padding: 0 4px;
+}
+.pv-comment-save {
+  color: var(--pv-accent);
+}
+.pv-comment-cancel {
+  color: var(--pv-text-muted);
 }
 .pv-comment-compose {
   display: flex;

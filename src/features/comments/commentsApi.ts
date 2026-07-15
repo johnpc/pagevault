@@ -31,6 +31,15 @@ export function useAddComment(pageId: string) {
   });
 }
 
+export function useUpdateComment(pageId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, body }: { id: string; body: string }) =>
+      pb.collection('comments').update<CommentRecord>(id, { body }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: key(pageId) }),
+  });
+}
+
 export function useDeleteComment(pageId: string) {
   const qc = useQueryClient();
   return useMutation({
