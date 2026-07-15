@@ -128,7 +128,8 @@
   flex: 1;
   min-width: 0;
 }
-.pv-opt-remove {
+.pv-opt-remove,
+.pv-opt-rename {
   flex-shrink: 0;
   background: none;
   border: none;
@@ -140,17 +141,32 @@
   opacity: 0;
 }
 .pv-opt-row:hover .pv-opt-remove,
-.pv-opt-remove:focus-visible {
+.pv-opt-row:hover .pv-opt-rename,
+.pv-opt-remove:focus-visible,
+.pv-opt-rename:focus-visible {
   opacity: 1;
 }
-.pv-opt-remove:hover {
+.pv-opt-remove:hover,
+.pv-opt-rename:hover {
   color: var(--pv-text);
   background: var(--pv-hover);
 }
 @media (hover: none), (max-width: 640px) {
-  .pv-opt-remove {
+  .pv-opt-remove,
+  .pv-opt-rename {
     opacity: 0.6;
   }
+}
+/* Inline rename input: fills the row while editing an option's name. */
+.pv-opt-rename-input {
+  flex: 1;
+  min-width: 0;
+  font: inherit;
+  color: var(--pv-text);
+  background: var(--pv-surface);
+  border: 1px solid var(--pv-border);
+  border-radius: var(--pv-radius-sm);
+  padding: 2px 6px;
 }
 
 /* Colored option pill (select / multiselect). The hue is derived from the

@@ -410,6 +410,18 @@ When(
   },
 );
 
+When(
+  'I rename the option {string} to {string} in table cell {string}',
+  async ({ page }, from: string, to: string, cell: string) => {
+    await table(page).getByLabel(`Cell ${cell}`).click();
+    await table(page).getByLabel(`Rename option ${from}`).click();
+    const input = table(page).getByLabel(`New name for ${from}`);
+    await input.fill(to);
+    await input.press('Enter');
+    await page.keyboard.press('Escape'); // close so the summary is read next
+  },
+);
+
 Then(
   'the multiselect cell {string} does not show {string}',
   async ({ page }, cell: string, text: string) => {

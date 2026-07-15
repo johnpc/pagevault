@@ -2,8 +2,7 @@ import type { TableColumn } from '../../lib/pbTypes';
 import { RelationCell } from './RelationCell';
 import { NumberCell } from './NumberCell';
 import { DateCell } from './DateCell';
-import { MultiSelectCell } from './MultiSelectCell';
-import { SelectCell } from './SelectCell';
+import { ChoiceCell } from './ChoiceCell';
 
 /** One table body cell, rendered by its column type. Value is always a string;
  * checkbox uses 'true'/'', select holds one option, relation holds a page id.
@@ -15,6 +14,7 @@ export function TableCell({
   onChange,
   onAddOption,
   onRemoveOption,
+  onRenameOption,
 }: {
   column: TableColumn;
   value: string;
@@ -24,6 +24,8 @@ export function TableCell({
   onAddOption: (option: string) => void;
   /** Remove a (multi)select option from the column (and strip it from cells). */
   onRemoveOption: (option: string) => void;
+  /** Rename a (multi)select option (updating the column + every cell). */
+  onRenameOption: (from: string, to: string) => void;
 }) {
   if (column.type === 'relation') {
     return <RelationCell value={value} label={label} onChange={onChange} />;
@@ -44,28 +46,16 @@ export function TableCell({
     return <DateCell value={value} format={column.format} label={label} onChange={onChange} />;
   }
 
-  if (column.type === 'select') {
+  if (column.type === 'select' || column.type === 'multiselect') {
     return (
-      <SelectCell
+      <ChoiceCell
+        column={column}
         value={value}
-        options={column.options ?? []}
         label={label}
         onChange={onChange}
         onAddOption={onAddOption}
         onRemoveOption={onRemoveOption}
-      />
-    );
-  }
-
-  if (column.type === 'multiselect') {
-    return (
-      <MultiSelectCell
-        value={value}
-        options={column.options ?? []}
-        label={label}
-        onChange={onChange}
-        onAddOption={onAddOption}
-        onRemoveOption={onRemoveOption}
+        onRenameOption={onRenameOption}
       />
     );
   }

@@ -11,6 +11,7 @@ interface TableRowProps {
   onCell: (r: number, c: number, value: string) => void;
   onAddOption: (r: number, c: number, option: string) => void;
   onRemoveOption: (c: number, option: string) => void;
+  onRenameOption: (c: number, from: string, to: string) => void;
   onDelete: (r: number) => void;
   onDuplicate: (r: number) => void;
   onDragStart: (r: number) => void;
@@ -32,6 +33,7 @@ function TableRowInner({
   onCell,
   onAddOption,
   onRemoveOption,
+  onRenameOption,
   onDelete,
   onDuplicate,
   onDragStart,
@@ -69,6 +71,7 @@ function TableRowInner({
             onChange={(v) => onCell(r, c, v)}
             onAddOption={(opt) => onAddOption(r, c, opt)}
             onRemoveOption={(opt) => onRemoveOption(c, opt)}
+            onRenameOption={(from, to) => onRenameOption(c, from, to)}
           />
         </td>
       ))}

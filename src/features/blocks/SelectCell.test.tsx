@@ -10,6 +10,7 @@ const base = {
   onChange: vi.fn(),
   onAddOption: vi.fn(),
   onRemoveOption: vi.fn(),
+  onRenameOption: vi.fn(),
 };
 
 describe('SelectCell', () => {
@@ -62,6 +63,28 @@ describe('SelectCell', () => {
     await userEvent.click(screen.getByLabelText('Status'));
     await userEvent.click(screen.getByLabelText('Remove option Open'));
     expect(onRemoveOption).toHaveBeenCalledWith('Open');
+  });
+
+  it('renames an option via its ✎ (Enter commits the new name)', async () => {
+    const onRenameOption = vi.fn();
+    render(<SelectCell {...base} value="" onRenameOption={onRenameOption} />);
+    await userEvent.click(screen.getByLabelText('Status'));
+    await userEvent.click(screen.getByLabelText('Rename option Open'));
+    const input = screen.getByLabelText('New name for Open');
+    await userEvent.clear(input);
+    await userEvent.type(input, 'Active{Enter}');
+    expect(onRenameOption).toHaveBeenCalledWith('Open', 'Active');
+  });
+
+  it('Escape cancels a rename without reporting it', async () => {
+    const onRenameOption = vi.fn();
+    render(<SelectCell {...base} value="" onRenameOption={onRenameOption} />);
+    await userEvent.click(screen.getByLabelText('Status'));
+    await userEvent.click(screen.getByLabelText('Rename option Open'));
+    await userEvent.type(screen.getByLabelText('New name for Open'), 'X{Escape}');
+    expect(onRenameOption).not.toHaveBeenCalled();
+    // The option button is back (no longer editing).
+    expect(screen.getByRole('button', { name: 'Open' })).toBeInTheDocument();
   });
 
   it('closes on Escape (shared popover behavior)', async () => {

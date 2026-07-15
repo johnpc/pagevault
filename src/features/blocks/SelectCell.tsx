@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { usePopover } from '../shell/usePopover';
 import { Tag } from './Tag';
+import { OptionRow } from './OptionRow';
 
 /** A single-select cell: a summary button that opens the column's options as a
  * radio list (picking one sets the cell; picking the chosen one clears it). A
@@ -13,6 +14,7 @@ export function SelectCell({
   onChange,
   onAddOption,
   onRemoveOption,
+  onRenameOption,
 }: {
   value: string;
   options: string[];
@@ -20,6 +22,7 @@ export function SelectCell({
   onChange: (value: string) => void;
   onAddOption: (option: string) => void;
   onRemoveOption: (option: string) => void;
+  onRenameOption: (from: string, to: string) => void;
 }) {
   const { open, setOpen, triggerRef, menuRef, onKeyDown } = usePopover<HTMLUListElement>();
   const [draft, setDraft] = useState('');
@@ -45,7 +48,12 @@ export function SelectCell({
       {open && (
         <ul ref={menuRef} className="pv-multiselect-menu" aria-label={`${label} options`}>
           {options.map((opt) => (
-            <li key={opt} className="pv-opt-row">
+            <OptionRow
+              key={opt}
+              option={opt}
+              onRename={(to) => onRenameOption(opt, to)}
+              onRemove={() => onRemoveOption(opt)}
+            >
               <button
                 type="button"
                 className={`pv-select-opt${opt === value ? ' pv-select-opt--on' : ''}`}
@@ -54,15 +62,7 @@ export function SelectCell({
               >
                 <Tag label={opt} />
               </button>
-              <button
-                type="button"
-                className="pv-opt-remove"
-                aria-label={`Remove option ${opt}`}
-                onClick={() => onRemoveOption(opt)}
-              >
-                ✕
-              </button>
-            </li>
+            </OptionRow>
           ))}
           <li className="pv-multiselect-add">
             <input
