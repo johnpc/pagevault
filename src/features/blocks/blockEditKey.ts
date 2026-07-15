@@ -80,6 +80,8 @@ export function makeEditKey(deps: EditKeyDeps) {
       e.preventDefault();
       deps.onIndent(e.shiftKey ? 'out' : 'in');
     } else if (e.key === 'Enter' && !e.shiftKey) enterKey(e, deps);
+    else if (e.key === 'Escape')
+      e.currentTarget.blur(); // commit + leave edit (menus consume Esc first)
     else if (e.key === 'Backspace') backspaceKey(e, deps);
     else if (e.key === 'Delete') deleteKey(e, deps);
     else arrowKey(e);

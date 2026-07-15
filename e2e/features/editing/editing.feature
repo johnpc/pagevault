@@ -74,3 +74,11 @@ Feature: Smooth keyboard editing
     Then the first block eventually says "first version"
     When I press redo
     Then the first block eventually says "second version"
+
+  Scenario: Escape leaves edit mode (blurs the block)
+    Given I have a page titled "Escape feel"
+    When I open the page "Escape feel"
+    And I focus the first block
+    And I type "some text" then Enter
+    And I press Escape in the block
+    Then no block is focused

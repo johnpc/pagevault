@@ -116,6 +116,12 @@ When('I edit the first block to say {string}', async ({ page }, text: string) =>
   await expect(focused(page)).toHaveCount(0);
 });
 
+When('I press Escape in the block', ({ page }) => focused(page).press('Escape'));
+
+Then('no block is focused', async ({ page }) => {
+  await expect(focused(page)).toHaveCount(0);
+});
+
 When('I press undo', ({ page }) => page.keyboard.press('ControlOrMeta+z'));
 When('I press redo', ({ page }) => page.keyboard.press('ControlOrMeta+Shift+z'));
 
