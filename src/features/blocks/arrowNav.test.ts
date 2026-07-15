@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { edgeArrowDir, focusAdjacentBlock } from './arrowNav';
+import { edgeArrowDir, focusAdjacentBlock, focusPageTitle } from './arrowNav';
 
 const ev = (key: string, mods: Partial<Record<string, boolean>> = {}) => ({
   key,
@@ -91,5 +91,23 @@ describe('focusAdjacentBlock', () => {
     const orphan = document.createElement('textarea');
     document.body.appendChild(orphan);
     expect(focusAdjacentBlock(orphan, 1)).toBe(false);
+  });
+
+  it('focusPageTitle returns false when there is no title in the DOM', () => {
+    document.body.innerHTML = '';
+    expect(focusPageTitle()).toBe(false);
+  });
+
+  it('moving up (-1) from the first block focuses the page title if present', () => {
+    const title = document.createElement('input');
+    title.className = 'pv-page-title';
+    title.value = 'My page';
+    document.body.appendChild(title);
+    const tas = build();
+    expect(focusAdjacentBlock(tas[0] as HTMLTextAreaElement, -1)).toBe(true);
+    const focused = document.activeElement as HTMLInputElement;
+    expect(focused.className).toBe('pv-page-title');
+    expect(focused.selectionStart).toBe('My page'.length);
+    title.remove();
   });
 });

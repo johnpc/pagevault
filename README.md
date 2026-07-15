@@ -66,6 +66,7 @@ account, no third-party service, no lock-in.
 | Markdown shortcuts (`# `, `- `, `1. `, `[] `, `> `, ` ``` `)                                | ✅     |
 | Enter splits at the caret into a block below (Notion-smooth typing)                         | ✅     |
 | Enter / ↓ in the page title jumps the caret into the first block                            | ✅     |
+| ↑ / Backspace at the start of the first block goes back up into the title                   | ✅     |
 | Click the empty space below the page to start a new block                                   | ✅     |
 | Block gutter "+" button — hover a block to add an empty block right below it                | ✅     |
 | Enter continues a list; an empty item exits / outdents the list                             | ✅     |

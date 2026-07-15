@@ -35,9 +35,22 @@ export function focusAdjacentBlock(el: HTMLTextAreaElement, dir: -1 | 1): boolea
   const container = row.parentElement;
   const target = container?.querySelector(`[data-block-index="${index + dir}"]`);
   const input = target?.querySelector<HTMLTextAreaElement>('textarea.pv-block-input');
-  if (!input) return false;
+  if (!input) return dir === -1 && index === 0 ? focusPageTitle() : false;
   input.focus();
   const caret = dir === -1 ? input.value.length : 0;
   input.setSelectionRange(caret, caret);
+  return true;
+}
+
+/** Move focus up into the page title (↑ at the start of the first block) — the
+ * reverse of Enter/↓ in the title. Caret at the end of the title. DOM-only, so
+ * no callback threading through the block tree. Returns true when the title was
+ * found + focused. */
+export function focusPageTitle(): boolean {
+  const title = document.querySelector<HTMLInputElement>('input.pv-page-title');
+  if (!title) return false;
+  title.focus();
+  const end = title.value.length;
+  title.setSelectionRange(end, end);
   return true;
 }
