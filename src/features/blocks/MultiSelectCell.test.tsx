@@ -17,7 +17,9 @@ describe('MultiSelectCell', () => {
         onRemoveOption={vi.fn()}
       />,
     );
-    expect(screen.getByLabelText('Tags')).toHaveTextContent('Red, Blue');
+    // Each chosen tag renders as its own colored pill (no comma join).
+    expect(screen.getByLabelText('Tags')).toHaveTextContent('Red');
+    expect(screen.getByLabelText('Tags')).toHaveTextContent('Blue');
     rerender(
       <MultiSelectCell
         value=""

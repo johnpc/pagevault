@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { selectedValues, isSelected, toggleValue } from './multiSelect';
 import { usePopover } from '../shell/usePopover';
+import { Tag } from './Tag';
 
 /** A multi-select cell: a chip summary that opens a checklist of the column's
  * options; toggling one adds/removes it from the comma-joined stored value. A
@@ -41,7 +42,7 @@ export function MultiSelectCell({
         aria-expanded={open}
         onClick={() => setOpen((o) => !o)}
       >
-        {chosen.length ? chosen.join(', ') : '—'}
+        {chosen.length ? chosen.map((v) => <Tag key={v} label={v} />) : '—'}
       </button>
       {open && (
         <ul ref={menuRef} className="pv-multiselect-menu" aria-label={`${label} options`}>
@@ -53,7 +54,7 @@ export function MultiSelectCell({
                   checked={isSelected(value, opt)}
                   onChange={() => onChange(toggleValue(value, opt, options))}
                 />
-                {opt}
+                <Tag label={opt} />
               </label>
               <button
                 type="button"
