@@ -62,6 +62,25 @@ When('I click {string} on the selection toolbar', async ({ page }, label: string
   await blurToPreview(page); // commit + render the idle formatted preview
 });
 
+When('I link the selection to {string} via the toolbar', async ({ page }, url: string) => {
+  const toolbar = active(page).getByRole('toolbar', { name: 'Format selection' });
+  await expect(toolbar).toBeVisible();
+  await toolbar.getByRole('button', { name: 'Link' }).click();
+  const input = toolbar.getByLabel('Link URL');
+  await input.fill(url);
+  await input.press('Enter');
+  await blurToPreview(page); // commit + render the idle formatted preview
+});
+
+Then(
+  'the block renders {string} as a link to {string}',
+  async ({ page }, text: string, href: string) => {
+    const link = active(page).locator('.pv-block-preview a.pv-link', { hasText: text }).first();
+    await expect(link).toBeVisible();
+    await expect(link).toHaveAttribute('href', href);
+  },
+);
+
 When('I press the sidebar-toggle shortcut', async ({ page }) => {
   await page.keyboard.press('ControlOrMeta+\\');
 });

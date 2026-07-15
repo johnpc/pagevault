@@ -64,7 +64,8 @@ export function TextBlockBody({
     mention.onSelect(e);
     toolbar.sync();
   };
-  const onBlur = () => (toolbar.hide(), save());
+  // On blur, save + hide the toolbar (unless focus moved into its link prompt).
+  const onBlur = () => (toolbar.hideUnlessInToolbar(), save());
 
   const onPaste = useBlockPaste(block.type === 'code', value, setValue, onPasteMarkdown);
 
@@ -90,7 +91,7 @@ export function TextBlockBody({
           onPaste={onPaste}
         />
       )}
-      <SelectionToolbar anchor={toolbar.anchor} onApply={toolbar.apply} />
+      <SelectionToolbar {...toolbar} />
       <CodeBlockChrome block={block} value={value} onEdit={onEdit} />
       <BlockMenus matches={matches} active={active} onPick={pick} mention={mention} />
     </>

@@ -91,7 +91,9 @@ serializer we mostly already have in `inlineMarkdown` + `inlineToMarkdown`).
   selection (via its `select` event) and floats `SelectionToolbar` above the block with
   bold/italic/underline/strike/code, reusing `wrapSelection`. Anchored at the textarea's
   top-center (no fragile per-glyph mirror measurement). Buttons use mousedown+preventDefault
-  so the selection survives the click. Follow-ups: link button, turn-into, per-glyph rect.
+  so the selection survives the click. The **link button** (✅ shipped) reveals an inline URL
+  prompt and wraps the selection as `[text](url)` via `linkSelection` (normalized, XSS-guarded
+  on render). Follow-ups: turn-into in the toolbar, per-glyph selection rect.
 - **Stage 3 — WYSIWYG spike. 🚧 IN PROGRESS (flag-gated, off by default).** Instead of pulling
   in ProseMirror up front, spiked a dependency-free `contentEditable` surface (`WysiwygInput`)
   behind `VITE_WYSIWYG`, reading/writing the same `content` string via the proven pure bridges

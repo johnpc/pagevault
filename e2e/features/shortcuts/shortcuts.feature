@@ -35,6 +35,13 @@ Feature: Keyboard formatting shortcuts
     And I press the strikethrough formatting shortcut
     Then the block renders "strike me" struck through
 
+  Scenario: Link a selection from the toolbar
+    When I open the page "Formatting"
+    And I add a block with the text "the docs"
+    And I select the block text with the keyboard
+    And I link the selection to "example.com" via the toolbar
+    Then the block renders "the docs" as a link to "https://example.com"
+
   Scenario: Cmd/Ctrl+\ hides and shows the sidebar
     When I open the page "Formatting"
     Then the sidebar is visible
