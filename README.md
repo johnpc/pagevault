@@ -46,6 +46,7 @@ account, no third-party service, no lock-in.
 | Table blocks — typed columns (text/number/checkbox/select/date), GFM export                 | ✅     |
 | Select columns — pick from a popover, or create a new option inline from the cell           | ✅     |
 | Select / multiselect options render as colored tag pills (auto-colored by name)             | ✅     |
+| Board columns & grouped-table headers show the group value as its colored tag               | ✅     |
 | Table rows — drag to reorder (mouse + touch/pen), click a header to sort                    | ✅     |
 | Table keyboard nav — Enter/↑/↓ move between rows, ←/→ across at the text edge               | ✅     |
 | Table rows — duplicate a row (inserts a copy below)                                         | ✅     |

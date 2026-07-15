@@ -15,6 +15,7 @@ Feature: Board (kanban) view of a table
     And I set table column 2 type to "select"
     And I switch the table to the board view
     Then the board has a column "Todo"
+    And the board column "Todo" shows a colored tag pill
     And the board card reads "Design the API"
     When I reopen the page "Sprint"
     Then the table is in the board view

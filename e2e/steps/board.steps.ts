@@ -16,6 +16,15 @@ Then('the board has a column {string}', async ({ page }, label: string) => {
   await expect(board(page).locator('.pv-board-col-head', { hasText: label }).first()).toBeVisible();
 });
 
+Then('the board column {string} shows a colored tag pill', async ({ page }, label: string) => {
+  const pill = board(page)
+    .locator('.pv-board-col-head', { hasText: label })
+    .locator('.pv-tag', { hasText: label })
+    .first();
+  await expect(pill).toBeVisible();
+  await expect(pill).toHaveClass(/pv-tag--\w+/);
+});
+
 Then('the board card reads {string}', async ({ page }, text: string) => {
   await expect
     .poll(() =>

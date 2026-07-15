@@ -3,6 +3,7 @@ import type { TableData } from '../../lib/pbTypes';
 import { setCell, addRow } from './tableData';
 import { groupRows, moveRowToGroup, boardGroupColumn } from './tableGroups';
 import { usePointerDrag } from './usePointerDrag';
+import { Tag } from './Tag';
 
 /** The kanban board view of a table: rows grouped into columns by a `select`
  * column. Drag a card to another column to change its group; the card's title
@@ -48,7 +49,8 @@ export function TableBoard({ data, save }: { data: TableData; save: (next: Table
           }}
         >
           <div className="pv-board-col-head">
-            {g.label} <span className="pv-muted">{g.rows.length}</span>
+            {g.value ? <Tag label={g.value} /> : g.label}{' '}
+            <span className="pv-muted">{g.rows.length}</span>
           </div>
           {g.rows.map((r) => (
             <div

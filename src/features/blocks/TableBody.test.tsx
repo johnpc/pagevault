@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { TableBody } from './TableBody';
 import type { TableData, TableColumn } from '../../lib/pbTypes';
@@ -81,6 +81,13 @@ describe('TableBody', () => {
       'true',
     );
     expect(screen.getByLabelText('Cell 1,1')).toBeInTheDocument();
+  });
+
+  it('shows the group value as a colored tag pill in the header', () => {
+    renderBody(grouped());
+    // "Todo" also appears in the cell pill, so scope to the group header button.
+    const head = screen.getByRole('button', { name: 'Group Todo' });
+    expect(within(head).getByText('Todo')).toHaveClass('pv-tag');
   });
 
   it('collapsing a group hides its rows', async () => {
