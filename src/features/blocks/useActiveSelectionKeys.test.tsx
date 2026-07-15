@@ -30,6 +30,16 @@ describe('useActiveSelectionKeys', () => {
     expect(setSel).not.toHaveBeenCalledWith(null); // copy doesn't clear
   });
 
+  it('Cmd/Ctrl+X cuts: copies then deletes the selected ids and clears', () => {
+    const onCopyMany = vi.fn();
+    const onDeleteMany = vi.fn();
+    const setSel = mount({ onDeleteMany, onIndentMany: vi.fn(), onCopyMany });
+    press('x', { metaKey: true });
+    expect(onCopyMany).toHaveBeenCalledWith(['b', 'c']);
+    expect(onDeleteMany).toHaveBeenCalledWith(['b', 'c']);
+    expect(setSel).toHaveBeenCalledWith(null);
+  });
+
   it('Backspace deletes the selected ids and clears', () => {
     const onDeleteMany = vi.fn();
     const setSel = mount({ onDeleteMany, onIndentMany: vi.fn() });

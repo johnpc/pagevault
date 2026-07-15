@@ -26,6 +26,14 @@ describe('selectionKeyAction', () => {
     expect(selectionKeyAction(ev('c', { metaKey: true }))).toEqual({ kind: 'copy' });
   });
 
+  it('maps Cmd/Ctrl+X to cut', () => {
+    expect(selectionKeyAction(ev('x', { ctrlKey: true }))).toEqual({ kind: 'cut' });
+  });
+
+  it('returns null for an unmapped Cmd/Ctrl chord', () => {
+    expect(selectionKeyAction(ev('z', { metaKey: true }))).toBeNull();
+  });
+
   it('maps Tab / Shift+Tab to indent in / out', () => {
     expect(selectionKeyAction(ev('Tab'))).toEqual({ kind: 'indent', dir: 'in' });
     expect(selectionKeyAction(ev('Tab', { shiftKey: true }))).toEqual({

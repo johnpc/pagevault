@@ -111,6 +111,20 @@ Feature: Select and delete multiple blocks
     Then the clipboard contains "Bravo"
     And the clipboard contains "Charlie"
 
+  Scenario: Cut a whole block selection (copies to clipboard, then removes them)
+    Given I have a page titled "Cut many"
+    When I open the page "Cut many"
+    And I focus the first block
+    And I type "Keep" then Enter
+    And I type "Cut one" then Enter
+    And I type "Cut two"
+    Then the page has 3 blocks
+    When I click into block 2
+    And I shift-click block 3
+    And I press the cut shortcut on the selection
+    Then the page has 1 block
+    And the clipboard contains "Cut two"
+
   Scenario: Turn a whole block selection into headings from the selection bar
     Given I have a page titled "Turn many"
     When I open the page "Turn many"
