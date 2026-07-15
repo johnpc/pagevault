@@ -100,6 +100,7 @@ account, no third-party service, no lock-in.
 | Drag-to-reorder blocks (optimistic; mouse drag + touch/pen pointer drag)                    | ✅     |
 | Move a block up/down with the keyboard (⌘/Ctrl+⇧+↑/↓)                                       | ✅     |
 | Select multiple blocks — Shift+↑/↓, Shift+Click, or Cmd/Ctrl+A — delete/indent              | ✅     |
+| Multi-block action bar — color or delete a whole block selection from a floating bar        | ✅     |
 | Undo a block deletion — an Undo action on the delete toast restores them                    | ✅     |
 | Undo / redo block edits — ⌘Z / ⌘⇧Z, document-level history                                  | ✅     |
 | Arrow-key block navigation — ↑/↓ at a block edge move the caret between blocks              | ✅     |

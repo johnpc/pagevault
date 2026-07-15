@@ -70,3 +70,16 @@ Feature: Select and delete multiple blocks
     And I shift-click block 3
     And I press Tab to indent the selection
     Then blocks 2 and 3 are indented
+
+  Scenario: Color a whole block selection from the selection bar
+    Given I have a page titled "Color many"
+    When I open the page "Color many"
+    And I focus the first block
+    And I type "One" then Enter
+    And I type "Two" then Enter
+    And I type "Three"
+    Then the page has 3 blocks
+    When I click into block 2
+    And I shift-click block 3
+    And I color the selection "Blue" from the selection bar
+    Then blocks 2 and 3 have the "blue" color

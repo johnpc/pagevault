@@ -62,6 +62,7 @@ const renderList = (data: BlockRecord[]) =>
       onMergeForward={vi.fn()}
       onUpload={vi.fn()}
       onMoveBlock={vi.fn()}
+      onColorMany={vi.fn()}
       onAddBlock={vi.fn()}
       onSubPage={vi.fn()}
       focusId={null}

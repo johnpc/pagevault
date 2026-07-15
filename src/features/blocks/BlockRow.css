@@ -912,3 +912,37 @@
   width: 200px;
   outline: none;
 }
+
+/* Floating action bar shown while multiple blocks are selected. */
+.pv-selbar {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  background: var(--pv-surface);
+  border: 1px solid var(--pv-border);
+  border-radius: var(--pv-radius-sm);
+  box-shadow: var(--pv-shadow);
+  z-index: 40;
+}
+.pv-selbar-count {
+  font-size: 13px;
+  color: var(--pv-text-muted);
+  margin-right: 6px;
+  white-space: nowrap;
+}
+.pv-selbar-del {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.pv-selbar-del:hover {
+  background: var(--pv-hover);
+}
