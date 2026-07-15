@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useLatestRef } from '../../lib/useLatestRef';
-import { useDuplicateBlock } from './blocksApi';
 import { useAddBlock } from './useAddBlock';
+import { useCloneBlocks } from './useCloneBlocks';
 import { useDeleteWithUndo } from './useDeleteWithUndo';
 import { useUpdateBlock } from './updateBlockApi';
 import { useUploadBlockFile } from './uploadBlockFileApi';
@@ -30,7 +30,7 @@ export function useBlockActions(pageId: string, blocks: BlockRecord[]) {
   const deleteWithUndo = useDeleteWithUndo(pageId, blocksRef);
   const { indentBlock, indentMany } = useIndent(pageId, blocksRef);
   const colorMany = useSetColors(pageId);
-  const { mutate: duplicateMutate } = useDuplicateBlock(pageId);
+  const { cloneBlock, duplicateMany } = useCloneBlocks(pageId, blocksRef);
   const moveBlockTo = useMoveBlock(pageId, blocksRef);
   const { mutate: uploadMutate } = useUploadBlockFile(pageId);
   const { mutate: importMutate } = useImportMarkdown(pageId);
@@ -45,11 +45,6 @@ export function useBlockActions(pageId: string, blocks: BlockRecord[]) {
   // Wrap edits with document-level undo/redo (Cmd/Ctrl+Z). Records content
   // changes and binds the keyboard; passes non-content patches straight through.
   const editBlock = usePageHistory(editBlockRaw, pageId);
-
-  const cloneBlock = useCallback(
-    (source: BlockRecord) => duplicateMutate({ source, blocks: blocksRef.current }),
-    [duplicateMutate, blocksRef],
-  );
 
   const importMarkdown = useCallback(
     (target: BlockRecord, md: string) => {
@@ -73,6 +68,7 @@ export function useBlockActions(pageId: string, blocks: BlockRecord[]) {
     editBlock,
     moveBlockTo,
     cloneBlock,
+    duplicateMany,
     indentBlock,
     indentMany,
     colorMany,

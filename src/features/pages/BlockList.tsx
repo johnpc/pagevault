@@ -15,6 +15,7 @@ interface BlockListProps {
   onRemoveMany: (ids: string[]) => void;
   onIndentMany: (ids: string[], dir: 'in' | 'out') => void;
   onDuplicate: (block: BlockRecord) => void;
+  onDuplicateMany: (ids: string[]) => void;
   onInsertAfter: (block: BlockRecord) => void;
   onIndent: (id: string, dir: 'in' | 'out') => void;
   onPasteMarkdown: (block: BlockRecord, text: string) => void;

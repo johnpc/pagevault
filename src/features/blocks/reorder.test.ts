@@ -1,5 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import { moveBlock, sortUpdates, cloneFields, insertAfterUpdates } from './reorder';
+import {
+  moveBlock,
+  sortUpdates,
+  cloneFields,
+  insertAfterUpdates,
+  fullCloneFields,
+  insertRunAfterUpdates,
+} from './reorder';
 import type { BlockRecord } from '../../lib/pbClient';
 
 const mk = (id: string, sort: number): BlockRecord =>
@@ -66,6 +73,45 @@ describe('insertAfterUpdates', () => {
       { id: 'clone', sort: 2 },
       { id: 'c', sort: 3 },
       { id: 'd', sort: 4 },
+    ]);
+  });
+});
+
+describe('fullCloneFields', () => {
+  it('copies every content/formatting field (not id/sort/owner/page)', () => {
+    const src = {
+      ...mk('a', 3),
+      depth: 2,
+      color: 'blue',
+      align: 'center',
+      lang: 'js',
+    } as BlockRecord;
+    const cloned = fullCloneFields(src);
+    expect(cloned).toMatchObject({
+      type: 'text',
+      content: 'a',
+      depth: 2,
+      color: 'blue',
+      align: 'center',
+      lang: 'js',
+    });
+    expect(cloned).not.toHaveProperty('id');
+    expect(cloned).not.toHaveProperty('sort');
+  });
+});
+
+describe('insertRunAfterUpdates', () => {
+  it('places a run of clones (in order) directly after the source', () => {
+    const c1 = mk('c1', 4);
+    const c2 = mk('c2', 5);
+    const withClones = [...list(), c1, c2]; // a,b,c,d,c1,c2
+    // Insert c1,c2 after 'b' → a,b,c1,c2,c,d
+    const updates = insertRunAfterUpdates(withClones, [c1, c2], 'b');
+    expect(updates).toEqual([
+      { id: 'c1', sort: 2 },
+      { id: 'c2', sort: 3 },
+      { id: 'c', sort: 4 },
+      { id: 'd', sort: 5 },
     ]);
   });
 });

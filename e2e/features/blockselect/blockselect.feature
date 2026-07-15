@@ -71,6 +71,19 @@ Feature: Select and delete multiple blocks
     And I press Tab to indent the selection
     Then blocks 2 and 3 are indented
 
+  Scenario: The duplicate shortcut copies a whole block selection
+    Given I have a page titled "Duplicate many"
+    When I open the page "Duplicate many"
+    And I focus the first block
+    And I type "One" then Enter
+    And I type "Two" then Enter
+    And I type "Three"
+    Then the page has 3 blocks
+    When I click into block 2
+    And I shift-click block 3
+    And I press the duplicate shortcut on the selection
+    Then the page has 5 blocks
+
   Scenario: Color a whole block selection from the selection bar
     Given I have a page titled "Color many"
     When I open the page "Color many"
