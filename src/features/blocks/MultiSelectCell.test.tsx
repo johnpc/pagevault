@@ -15,6 +15,7 @@ describe('MultiSelectCell', () => {
         onChange={vi.fn()}
         onAddOption={vi.fn()}
         onRemoveOption={vi.fn()}
+        onRenameOption={vi.fn()}
       />,
     );
     // Each chosen tag renders as its own colored pill (no comma join).
@@ -28,6 +29,7 @@ describe('MultiSelectCell', () => {
         onChange={vi.fn()}
         onAddOption={vi.fn()}
         onRemoveOption={vi.fn()}
+        onRenameOption={vi.fn()}
       />,
     );
     expect(screen.getByLabelText('Tags')).toHaveTextContent('—');
@@ -42,6 +44,7 @@ describe('MultiSelectCell', () => {
         onChange={vi.fn()}
         onAddOption={vi.fn()}
         onRemoveOption={vi.fn()}
+        onRenameOption={vi.fn()}
       />,
     );
     await userEvent.click(screen.getByLabelText('Tags'));
@@ -59,6 +62,7 @@ describe('MultiSelectCell', () => {
         onChange={onChange}
         onAddOption={vi.fn()}
         onRemoveOption={vi.fn()}
+        onRenameOption={vi.fn()}
       />,
     );
     await userEvent.click(screen.getByLabelText('Tags'));
@@ -76,6 +80,7 @@ describe('MultiSelectCell', () => {
         onChange={onChange}
         onAddOption={vi.fn()}
         onRemoveOption={vi.fn()}
+        onRenameOption={vi.fn()}
       />,
     );
     await userEvent.click(screen.getByLabelText('Tags'));
@@ -93,6 +98,7 @@ describe('MultiSelectCell', () => {
         onChange={vi.fn()}
         onAddOption={onAddOption}
         onRemoveOption={vi.fn()}
+        onRenameOption={vi.fn()}
       />,
     );
     await userEvent.click(screen.getByLabelText('Tags'));
@@ -112,6 +118,7 @@ describe('MultiSelectCell', () => {
         onChange={vi.fn()}
         onAddOption={onAddOption}
         onRemoveOption={vi.fn()}
+        onRenameOption={vi.fn()}
       />,
     );
     await userEvent.click(screen.getByLabelText('Tags'));
@@ -131,11 +138,33 @@ describe('MultiSelectCell', () => {
         onChange={vi.fn()}
         onAddOption={vi.fn()}
         onRemoveOption={onRemoveOption}
+        onRenameOption={vi.fn()}
       />,
     );
     await userEvent.click(screen.getByLabelText('Tags'));
     await userEvent.click(screen.getByLabelText('Remove option Green'));
     expect(onRemoveOption).toHaveBeenCalledWith('Green');
+  });
+
+  it('renames an option via its ✎', async () => {
+    const onRenameOption = vi.fn();
+    render(
+      <MultiSelectCell
+        value=""
+        options={opts}
+        label="Tags"
+        onChange={vi.fn()}
+        onAddOption={vi.fn()}
+        onRemoveOption={vi.fn()}
+        onRenameOption={onRenameOption}
+      />,
+    );
+    await userEvent.click(screen.getByLabelText('Tags'));
+    await userEvent.click(screen.getByLabelText('Rename option Green'));
+    const input = screen.getByLabelText('New name for Green');
+    await userEvent.clear(input);
+    await userEvent.type(input, 'Olive{Enter}');
+    expect(onRenameOption).toHaveBeenCalledWith('Green', 'Olive');
   });
 
   it('closes on Escape (shared popover behavior)', async () => {
@@ -147,6 +176,7 @@ describe('MultiSelectCell', () => {
         onChange={vi.fn()}
         onAddOption={vi.fn()}
         onRemoveOption={vi.fn()}
+        onRenameOption={vi.fn()}
       />,
     );
     await userEvent.click(screen.getByLabelText('Tags'));

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { selectedValues, isSelected, toggleValue } from './multiSelect';
 import { usePopover } from '../shell/usePopover';
 import { Tag } from './Tag';
+import { OptionRow } from './OptionRow';
 
 /** A multi-select cell: a chip summary that opens a checklist of the column's
  * options; toggling one adds/removes it from the comma-joined stored value. A
@@ -14,6 +15,7 @@ export function MultiSelectCell({
   onChange,
   onAddOption,
   onRemoveOption,
+  onRenameOption,
 }: {
   value: string;
   options: string[];
@@ -21,6 +23,7 @@ export function MultiSelectCell({
   onChange: (value: string) => void;
   onAddOption: (option: string) => void;
   onRemoveOption: (option: string) => void;
+  onRenameOption: (from: string, to: string) => void;
 }) {
   const { open, setOpen, triggerRef, menuRef, onKeyDown } = usePopover<HTMLUListElement>();
   const [draft, setDraft] = useState('');
@@ -47,7 +50,12 @@ export function MultiSelectCell({
       {open && (
         <ul ref={menuRef} className="pv-multiselect-menu" aria-label={`${label} options`}>
           {options.map((opt) => (
-            <li key={opt} className="pv-opt-row">
+            <OptionRow
+              key={opt}
+              option={opt}
+              onRename={(to) => onRenameOption(opt, to)}
+              onRemove={() => onRemoveOption(opt)}
+            >
               <label>
                 <input
                   type="checkbox"
@@ -56,15 +64,7 @@ export function MultiSelectCell({
                 />
                 <Tag label={opt} />
               </label>
-              <button
-                type="button"
-                className="pv-opt-remove"
-                aria-label={`Remove option ${opt}`}
-                onClick={() => onRemoveOption(opt)}
-              >
-                ✕
-              </button>
-            </li>
+            </OptionRow>
           ))}
           <li className="pv-multiselect-add">
             <input

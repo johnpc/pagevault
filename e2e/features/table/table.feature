@@ -164,6 +164,19 @@ Feature: Table (database) blocks
     When I reopen the page "New tags"
     Then the multiselect cell "1,2" shows "urgent"
 
+  Scenario: A multi-select option can be renamed and updates every cell
+    Given I have a page titled "Rename tag"
+    When I type "/table" into a new block
+    And I choose "Table" from the slash menu
+    And I set table column 2 type to "multiselect"
+    And I create the tag "draft" in table cell "1,2"
+    Then the multiselect cell "1,2" shows "draft"
+    When I rename the option "draft" to "final" in table cell "1,2"
+    Then the multiselect cell "1,2" shows "final"
+    And the multiselect cell "1,2" does not show "draft"
+    When I reopen the page "Rename tag"
+    Then the multiselect cell "1,2" shows "final"
+
   Scenario: A select/multiselect option renders as a colored tag pill
     Given I have a page titled "Colored tags"
     When I type "/table" into a new block

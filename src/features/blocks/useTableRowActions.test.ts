@@ -94,4 +94,28 @@ describe('useTableRowActions', () => {
     expect(next.columns[0].options).toEqual(['Blue']);
     expect(next.rows[0][0]).toBe('Blue');
   });
+
+  it('onRenameOption renames the option in the column and every cell', () => {
+    const save = vi.fn();
+    const data: TableData = {
+      columns: [{ name: 'Tags', type: 'multiselect', options: ['Red', 'Blue'] }],
+      rows: [['Red,Blue']],
+    };
+    const { result } = renderHook(() => useTableRowActions(data, save));
+    result.current.onRenameOption(0, 'Red', 'Crimson');
+    const next = save.mock.calls[0][0] as TableData;
+    expect(next.columns[0].options).toEqual(['Crimson', 'Blue']);
+    expect(next.rows[0][0]).toBe('Crimson,Blue');
+  });
+
+  it('onRenameOption is a no-op (no save) when the rename does not apply', () => {
+    const save = vi.fn();
+    const data: TableData = {
+      columns: [{ name: 'Tags', type: 'multiselect', options: ['Red', 'Blue'] }],
+      rows: [['Red']],
+    };
+    const { result } = renderHook(() => useTableRowActions(data, save));
+    result.current.onRenameOption(0, 'Red', 'Blue'); // collides with existing
+    expect(save).not.toHaveBeenCalled();
+  });
 });

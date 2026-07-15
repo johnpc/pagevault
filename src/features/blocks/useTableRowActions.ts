@@ -2,7 +2,7 @@ import { useCallback, useRef } from 'react';
 import type { TableData } from '../../lib/pbTypes';
 import { setCell, removeRow } from './tableData';
 import { addColumnOption } from './tableColumns';
-import { removeColumnOption } from './tableColumnOptions';
+import { removeColumnOption, renameColumnOption } from './tableColumnOptions';
 import { toggleValue } from './multiSelect';
 import { duplicateRow } from './tableRowOps';
 import { moveRow } from './tableSort';
@@ -59,5 +59,20 @@ export function useTableRowActions(data: TableData, save: (next: TableData) => v
     if (next !== d) s(next);
   }, []);
 
-  return { onCell, onDelete, onDuplicate, moveTo, onAddOption, onRemoveOption };
+  // Rename a (multi)select option, updating the column and every cell using it.
+  const onRenameOption = useCallback((c: number, from: string, to: string) => {
+    const { data: d, save: s } = ref.current;
+    const next = renameColumnOption(d, c, from, to);
+    if (next !== d) s(next);
+  }, []);
+
+  return {
+    onCell,
+    onDelete,
+    onDuplicate,
+    moveTo,
+    onAddOption,
+    onRemoveOption,
+    onRenameOption,
+  };
 }

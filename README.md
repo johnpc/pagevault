@@ -44,7 +44,7 @@ account, no third-party service, no lock-in.
 | Column layouts — 2–4 side-by-side text columns                                              | ✅     |
 | Table of contents block — auto-lists headings, click to scroll                              | ✅     |
 | Table blocks — typed columns (text/number/checkbox/select/date), GFM export                 | ✅     |
-| Select columns — pick from a popover, or create a new option inline from the cell           | ✅     |
+| Select columns — pick from a popover; create / rename / remove options inline from the cell | ✅     |
 | Select / multiselect options render as colored tag pills (auto-colored by name)             | ✅     |
 | Board columns & grouped-table headers show the group value as its colored tag               | ✅     |
 | Gallery cards render select / multiselect fields as colored tag pills                       | ✅     |
@@ -64,7 +64,7 @@ account, no third-party service, no lock-in.
 | Table columns — hide/show via Properties (data preserved)                                   | ✅     |
 | Table columns — wrap-text toggle (multi-line cells) per column                              | ✅     |
 | Table columns — drag a header to reorder (cells + filters follow; mouse + touch)            | ✅     |
-| Multi-select column — tag a row with several options; create / remove tags inline           | ✅     |
+| Multi-select column — tag a row with several options; create / rename / remove tags inline  | ✅     |
 | Relation column — link a table row to a page; search the page list, Esc/focus-trap picker   | ✅     |
 | Relation columns sort & filter by the linked page's title                                   | ✅     |
 | Markdown shortcuts (`# `, `- `, `1. `, `[] `, `> `, ` ``` `)                                | ✅     |
