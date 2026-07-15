@@ -53,6 +53,13 @@
 .pv-comment-del:focus-visible {
   opacity: 1;
 }
+/* Touch/phone has no hover, so keep the edit/delete actions reachable. */
+@media (hover: none), (max-width: 640px) {
+  .pv-comment-edit,
+  .pv-comment-del {
+    opacity: 0.6;
+  }
+}
 .pv-comment-edit:hover {
   color: var(--pv-text);
 }
