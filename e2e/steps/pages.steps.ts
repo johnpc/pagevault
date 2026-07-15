@@ -283,6 +283,24 @@ Then(
   },
 );
 
+When('I remove {string} from the sidebar favorites', async ({ page, $testInfo }, title: string) => {
+  await page
+    .getByRole('navigation', { name: 'Favorites' })
+    .getByRole('button', { name: `Remove ${uniqueTitle(title, $testInfo)} from favorites` })
+    .click();
+});
+
+Then(
+  'I should not see {string} in the sidebar favorites',
+  async ({ page, $testInfo }, title: string) => {
+    await expect(
+      page
+        .getByRole('navigation', { name: 'Favorites' })
+        .getByText(uniqueTitle(title, $testInfo), { exact: true }),
+    ).toHaveCount(0);
+  },
+);
+
 // Downloaded file captured by the export step, read by the assertion steps.
 const downloads = new WeakMap<object, { name: string; body: string }>();
 
