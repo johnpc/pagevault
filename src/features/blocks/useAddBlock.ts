@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { useCreateBlock } from './blocksApi';
+import { useInsertBlockAfter } from './insertBlockApi';
 import type { LatestRef } from '../../lib/useLatestRef';
 import type { BlockRecord } from '../../lib/pbClient';
 import type { BlockType } from '../../lib/pbTypes';
@@ -8,8 +9,9 @@ import type { BlockType } from '../../lib/pbTypes';
  * The "add a block" actions for a page. `addBlock` appends a new block and
  * focuses it. `clickBelow` powers Notion's click-empty-space-to-write: it
  * always appends a fresh text block, and moving focus there blurs (and so
- * commits) whatever block was being edited. Split from useBlockActions to keep
- * that hook under length.
+ * commits) whatever block was being edited. `insertAfter` adds an empty block
+ * right below a given one (the "+" gutter) and focuses it. Split from
+ * useBlockActions to keep that hook under length.
  */
 export function useAddBlock(
   pageId: string,
@@ -17,6 +19,7 @@ export function useAddBlock(
   setFocusId: (id: string) => void,
 ) {
   const { mutate: createMutate } = useCreateBlock(pageId);
+  const { mutate: insertMutate } = useInsertBlockAfter(pageId);
 
   const addBlock = useCallback(
     (type: BlockType = 'text') =>
@@ -29,5 +32,14 @@ export function useAddBlock(
 
   const clickBelow = useCallback(() => addBlock('text'), [addBlock]);
 
-  return { addBlock, clickBelow };
+  const insertAfter = useCallback(
+    (source: BlockRecord) =>
+      insertMutate(
+        { source, blocks: blocksRef.current },
+        { onSuccess: (created) => setFocusId(created.id) },
+      ),
+    [insertMutate, blocksRef, setFocusId],
+  );
+
+  return { addBlock, clickBelow, insertAfter };
 }

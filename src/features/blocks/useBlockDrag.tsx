@@ -14,6 +14,7 @@ export function useBlockDrag(
   block: BlockRecord,
   onEdit: (id: string, patch: Partial<BlockRecord>) => void,
   dnd: BlockDndHandlers,
+  onInsertAfter: (block: BlockRecord) => void,
 ) {
   const pointer = usePointerDrag(dnd);
   const tint = colorClass(block.color);
@@ -39,16 +40,27 @@ export function useBlockDrag(
   };
 
   const handle = (
-    <button
-      className="pv-block-style"
-      aria-label="Drag to reorder or click to change block type"
-      draggable
-      onDragStart={() => dnd.onDragStart(block.id)}
-      onPointerDown={pointer.onPointerDown(block.id)}
-      onClick={() => onEdit(block.id, { type: cycleType(block.type) })}
-    >
-      ⋮⋮
-    </button>
+    <>
+      {/* Notion "+" gutter: add an empty block below this one, then focus it.
+          onMouseDown+preventDefault so the click doesn't blur mid-insert. */}
+      <button
+        className="pv-block-add-here"
+        aria-label="Add a block below"
+        onMouseDown={(e) => (e.preventDefault(), onInsertAfter(block))}
+      >
+        +
+      </button>
+      <button
+        className="pv-block-style"
+        aria-label="Drag to reorder or click to change block type"
+        draggable
+        onDragStart={() => dnd.onDragStart(block.id)}
+        onPointerDown={pointer.onPointerDown(block.id)}
+        onClick={() => onEdit(block.id, { type: cycleType(block.type) })}
+      >
+        ⋮⋮
+      </button>
+    </>
   );
 
   return { cls, rowDrag, handle };

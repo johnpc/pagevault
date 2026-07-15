@@ -116,6 +116,23 @@ When('I edit the first block to say {string}', async ({ page }, text: string) =>
   await expect(focused(page)).toHaveCount(0);
 });
 
+When('I click the "+" gutter button on the block containing {string}', async ({ page }, text) => {
+  // Find the row index whose textarea holds `text` (value isn't a DOM attribute,
+  // so read it live), then click that row's "+" gutter button. The button is
+  // opacity:0 until hover but present + sized, so click({force}).
+  const rows = active(page).locator('.pv-block');
+  const idx = await rows.evaluateAll(
+    (els, t) =>
+      els.findIndex(
+        (el) =>
+          (el.querySelector('textarea.pv-block-input') as HTMLTextAreaElement | null)?.value === t,
+      ),
+    text,
+  );
+  expect(idx).toBeGreaterThanOrEqual(0);
+  await rows.nth(idx).getByLabel('Add a block below').click({ force: true });
+});
+
 When('I press Escape in the block', ({ page }) => focused(page).press('Escape'));
 
 Then('no block is focused', async ({ page }) => {

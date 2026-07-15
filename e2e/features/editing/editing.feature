@@ -75,6 +75,17 @@ Feature: Smooth keyboard editing
     When I press redo
     Then the first block eventually says "second version"
 
+  Scenario: The "+" gutter button adds an empty block right below
+    Given I have a page titled "Plus gutter"
+    When I open the page "Plus gutter"
+    And I focus the first block
+    And I type "Alpha" then Enter
+    And I type "Bravo"
+    Then the page has 2 blocks
+    When I click the "+" gutter button on the block containing "Alpha"
+    Then the page has 3 blocks
+    And a new empty block is focused
+
   Scenario: Escape leaves edit mode (blurs the block)
     Given I have a page titled "Escape feel"
     When I open the page "Escape feel"

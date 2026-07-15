@@ -11,6 +11,7 @@ interface BlockRowsProps {
   onRemoveMany: (ids: string[]) => void;
   onIndentMany: (ids: string[], dir: 'in' | 'out') => void;
   onDuplicate: (block: BlockRecord) => void;
+  onInsertAfter: (block: BlockRecord) => void;
   onIndent: (id: string, dir: 'in' | 'out') => void;
   onPasteMarkdown: (block: BlockRecord, text: string) => void;
   onSplit: (block: BlockRecord, caret: number, value: string) => boolean;
@@ -66,6 +67,7 @@ export function BlockRows(props: BlockRowsProps) {
             onEdit={row.onEdit}
             onRemove={row.onRemove}
             onDuplicate={row.onDuplicate}
+            onInsertAfter={row.onInsertAfter}
             onIndent={row.onIndent}
             onPasteMarkdown={row.onPasteMarkdown}
             onUpload={row.onUpload}

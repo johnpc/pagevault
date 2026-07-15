@@ -65,6 +65,7 @@ account, no third-party service, no lock-in.
 | Markdown shortcuts (`# `, `- `, `1. `, `[] `, `> `, ` ``` `)                                | ✅     |
 | Enter splits at the caret into a block below (Notion-smooth typing)                         | ✅     |
 | Click the empty space below the page to start a new block                                   | ✅     |
+| Block gutter "+" button — hover a block to add an empty block right below it                | ✅     |
 | Enter continues a list; an empty item exits / outdents the list                             | ✅     |
 | Slash command menu (`/` to pick a block type — works mid-line, not just at the start)       | ✅     |
 | Turn into — convert an existing block to another type, keeping content                      | ✅     |
