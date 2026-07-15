@@ -87,6 +87,17 @@ Then('a new empty block is focused', async ({ page }) => {
   await expect(focused(page)).toHaveValue('');
 });
 
+// Only the focused empty block carries the placeholder hint; unfocused empty
+// blocks have an empty placeholder attribute (no repeated "Type '/' …" prompts).
+Then('only the focused empty block shows its placeholder hint', async ({ page }) => {
+  await expect(focused(page)).not.toHaveAttribute('placeholder', '');
+  const unfocused = await blockInputs(page).evaluateAll((els) =>
+    els.filter((el) => el !== document.activeElement).map((el) => el.getAttribute('placeholder')),
+  );
+  expect(unfocused.length).toBeGreaterThan(0);
+  expect(unfocused.every((p) => p === '')).toBe(true);
+});
+
 When('I press Enter in the page title', async ({ page }) => {
   const title = active(page).getByLabel('Page title');
   await title.click();

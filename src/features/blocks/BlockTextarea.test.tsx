@@ -15,6 +15,7 @@ const noop = () => {};
 const props = (block: BlockRecord) => ({
   block,
   value: block.content,
+  showPlaceholder: true,
   inputRef: createRef<HTMLTextAreaElement>(),
   onFocus: noop,
   onChange: noop,
@@ -42,5 +43,17 @@ describe('BlockTextarea', () => {
     );
     expect(getByTestId('highlight')).toBeInTheDocument();
     expect(container.querySelector('.pv-code-wrap')).not.toBeNull();
+  });
+
+  it('shows the block-type hint when showPlaceholder is true', () => {
+    const { getByLabelText } = render(<BlockTextarea {...props(mk())} showPlaceholder />);
+    expect(
+      (getByLabelText('Block content') as HTMLTextAreaElement).placeholder.length,
+    ).toBeGreaterThan(0);
+  });
+
+  it('hides the block-type hint when showPlaceholder is false', () => {
+    const { getByLabelText } = render(<BlockTextarea {...props(mk())} showPlaceholder={false} />);
+    expect((getByLabelText('Block content') as HTMLTextAreaElement).placeholder).toBe('');
   });
 });

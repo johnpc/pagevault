@@ -137,6 +137,9 @@
 .pv-block-input:focus {
   outline: none;
 }
+.pv-block-input::placeholder {
+  color: var(--pv-text-muted);
+}
 
 .pv-block-preview {
   cursor: text;

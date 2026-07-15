@@ -22,6 +22,9 @@ const WYSIWYG = import.meta.env.VITE_WYSIWYG === '1';
 export function BlockEditable(props: {
   block: BlockRecord;
   value: string;
+  /** Show the block-type hint (placeholder) — true only while focused, so blank
+   * unfocused blocks don't repeat the "Type '/' …" prompt down the page. */
+  showPlaceholder: boolean;
   inputRef: RefObject<HTMLTextAreaElement | null>;
   onFocus: () => void;
   onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
@@ -36,7 +39,7 @@ export function BlockEditable(props: {
     return (
       <WysiwygInput
         value={props.value}
-        placeholder={placeholderFor(props.block.type)}
+        placeholder={props.showPlaceholder ? placeholderFor(props.block.type) : ''}
         onChange={(content) =>
           props.onChange({ target: { value: content } } as ChangeEvent<HTMLTextAreaElement>)
         }

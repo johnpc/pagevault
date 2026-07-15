@@ -42,6 +42,14 @@ Feature: Typing a full document
     When I type "Third line"
     Then the document has a "text" block containing "Third line"
 
+  Scenario: The block-type hint shows only on the focused empty block
+    Given I have a page titled "Hint focus"
+    When I open the page "Hint focus"
+    And I focus the first block
+    And I press Enter in the focused block
+    And I press Enter in the focused block
+    Then only the focused empty block shows its placeholder hint
+
   Scenario: Enter in the title jumps into the first block
     Given I have a page titled "Title flow"
     When I open the page "Title flow"

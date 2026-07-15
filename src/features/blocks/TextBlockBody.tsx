@@ -79,6 +79,7 @@ export function TextBlockBody({
         <BlockEditable
           block={block}
           value={value}
+          showPlaceholder={focused}
           inputRef={inputRef}
           onFocus={focus}
           onChange={change}
