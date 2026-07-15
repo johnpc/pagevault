@@ -42,6 +42,14 @@ Feature: Typing a full document
     When I type "Third line"
     Then the document has a "text" block containing "Third line"
 
+  Scenario: Enter in the title jumps into the first block
+    Given I have a page titled "Title flow"
+    When I open the page "Title flow"
+    And I press Enter in the page title
+    Then a new empty block is focused
+    When I type "Body text from the title"
+    Then the document has a "text" block containing "Body text from the title"
+
   Scenario: Checking a to-do marks it done (strike-through)
     Given I have a page titled "Chores"
     When I open the page "Chores"
