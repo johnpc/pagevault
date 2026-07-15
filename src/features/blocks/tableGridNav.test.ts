@@ -61,6 +61,36 @@ describe('gridNavTarget', () => {
     expect(gridNavTarget(k('a'), { r: 0, c: 0 }, bounds, bothEdges)).toBeNull();
     expect(gridNavTarget(k('Escape'), { r: 0, c: 0 }, bounds, bothEdges)).toBeNull();
   });
+
+  it('Tab advances to the next cell, wrapping to the next row at a row end', () => {
+    // mid-row → next column (bounds = 3 rows × 2 cols)
+    expect(gridNavTarget(k('Tab'), { r: 0, c: 0 }, bounds, bothEdges)).toEqual({ r: 0, c: 1 });
+    // row end → first cell of the next row
+    expect(gridNavTarget(k('Tab'), { r: 0, c: 1 }, bounds, bothEdges)).toEqual({ r: 1, c: 0 });
+    // last cell of the grid → null (Tab leaves the table)
+    expect(gridNavTarget(k('Tab'), { r: 2, c: 1 }, bounds, bothEdges)).toBeNull();
+  });
+
+  it('Shift+Tab goes to the previous cell, wrapping to the prior row at a row start', () => {
+    expect(gridNavTarget(k('Tab', true), { r: 1, c: 1 }, bounds, bothEdges)).toEqual({
+      r: 1,
+      c: 0,
+    });
+    // row start → last cell of the previous row
+    expect(gridNavTarget(k('Tab', true), { r: 1, c: 0 }, bounds, bothEdges)).toEqual({
+      r: 0,
+      c: 1,
+    });
+    // first cell of the grid → null (Tab leaves the table backwards)
+    expect(gridNavTarget(k('Tab', true), { r: 0, c: 0 }, bounds, bothEdges)).toBeNull();
+  });
+
+  it('Tab ignores the caret edge — it always advances (unlike arrows)', () => {
+    // caret mid-text still tabs to the next cell
+    expect(
+      gridNavTarget(k('Tab'), { r: 0, c: 0 }, bounds, { atStart: false, atEnd: false }),
+    ).toEqual({ r: 0, c: 1 });
+  });
 });
 
 describe('cellPosOf', () => {

@@ -32,7 +32,11 @@ export const SHORTCUTS: Shortcut[] = [
     action: 'Delete an empty block, or merge into the block above (at its start)',
   },
   { keys: 'Delete', action: 'Merge the next block up into this one (at its end)' },
-  { keys: 'Enter / ↑ ↓', action: 'In a table: move between cells (Tab moves across)' },
+  { keys: 'Enter / ↑ ↓ (table)', action: 'In a table: move between rows' },
+  {
+    keys: 'Tab / ⇧Tab (table)',
+    action: 'In a table: move to the next / previous cell (wraps rows)',
+  },
 ];
 
 /** True when a keypress originated in an editable field (so global single-key

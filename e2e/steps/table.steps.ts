@@ -94,6 +94,8 @@ When('I focus table cell {string}', async ({ page }, cell: string) => {
 
 When('I press Enter in the table', ({ page }) => page.keyboard.press('Enter'));
 When('I press Shift+Enter in the table', ({ page }) => page.keyboard.press('Shift+Enter'));
+When('I press Tab in the table', ({ page }) => page.keyboard.press('Tab'));
+When('I press Shift+Tab in the table', ({ page }) => page.keyboard.press('Shift+Tab'));
 
 Then('table cell {string} is focused', async ({ page }, cell: string) => {
   await expect(table(page).getByLabel(`Cell ${cell}`)).toBeFocused();

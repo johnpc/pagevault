@@ -30,16 +30,11 @@ export function caretEdges(el: HTMLElement): { atStart: boolean; atEnd: boolean 
 }
 
 /**
- * Where a keypress in a table cell should move focus — spreadsheet navigation:
- *   Enter / ArrowDown → the cell one row down
- *   Shift+Enter / ArrowUp → the cell one row up
- *   ArrowLeft / ArrowRight → only at the text edge (so they still move the caret
- *     within a text input); handled by the caller via `atEdge`.
- * Returns the target cell, or null to let the input handle the key normally.
- * `rows`/`cols` are the grid bounds (clamped, never wraps). Pure.
- *
- * `atStart`/`atEnd` describe the caret within a text input (both true for
- * non-text controls like checkbox/select, where left/right should move cells).
+ * Where a keypress in a table cell should move focus — spreadsheet navigation.
+ * Delegates to the per-direction helpers below (Tab across cells, Enter/arrows
+ * between rows, ←/→ across columns at the text edge). Returns the target cell,
+ * or null to let the input handle the key normally. `bounds` clamps (no wrap
+ * except Tab); `edge` is the caret position within a text input. Pure.
  */
 export function gridNavTarget(
   e: Pick<KeyboardEvent, 'key' | 'shiftKey'>,
@@ -47,12 +42,50 @@ export function gridNavTarget(
   bounds: { rows: number; cols: number },
   edge: { atStart: boolean; atEnd: boolean },
 ): CellPos | null {
-  const { r, c } = pos;
+  if (e.key === 'Tab') return tabTarget(pos, bounds, e.shiftKey);
+  return rowTarget(e, pos, bounds) ?? colTarget(e, pos, bounds, edge);
+}
+
+/** Enter/Shift+Enter/↑/↓ → one row down or up (clamped, no wrap). Pure. */
+function rowTarget(
+  e: Pick<KeyboardEvent, 'key' | 'shiftKey'>,
+  { r, c }: CellPos,
+  bounds: { rows: number; cols: number },
+): CellPos | null {
   const down = (e.key === 'Enter' && !e.shiftKey) || e.key === 'ArrowDown';
   const up = (e.key === 'Enter' && e.shiftKey) || e.key === 'ArrowUp';
   if (down && r < bounds.rows - 1) return { r: r + 1, c };
   if (up && r > 0) return { r: r - 1, c };
+  return null;
+}
+
+/** ←/→ → one column, but only at the text edge (so mid-text they move the
+ * caret, not the cell). Clamped, no wrap. Pure. */
+function colTarget(
+  e: Pick<KeyboardEvent, 'key'>,
+  { r, c }: CellPos,
+  bounds: { rows: number; cols: number },
+  edge: { atStart: boolean; atEnd: boolean },
+): CellPos | null {
   if (e.key === 'ArrowRight' && edge.atEnd && c < bounds.cols - 1) return { r, c: c + 1 };
   if (e.key === 'ArrowLeft' && edge.atStart && c > 0) return { r, c: c - 1 };
   return null;
+}
+
+/** The next (Shift → previous) cell for Tab, wrapping across rows. Null at the
+ * grid's very last (or first) cell so Tab escapes the table there. Pure. */
+function tabTarget(
+  pos: CellPos,
+  bounds: { rows: number; cols: number },
+  back: boolean,
+): CellPos | null {
+  const { r, c } = pos;
+  if (back) {
+    if (c > 0) return { r, c: c - 1 };
+    if (r > 0) return { r: r - 1, c: bounds.cols - 1 };
+    return null; // first cell — let Tab escape backwards
+  }
+  if (c < bounds.cols - 1) return { r, c: c + 1 };
+  if (r < bounds.rows - 1) return { r: r + 1, c: 0 };
+  return null; // last cell — let Tab escape forwards
 }

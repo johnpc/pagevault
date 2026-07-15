@@ -51,7 +51,7 @@ account, no third-party service, no lock-in.
 | Board columns & grouped-table headers show the group value as its colored tag               | ✅     |
 | Gallery cards render select / multiselect fields as colored tag pills                       | ✅     |
 | Table rows — drag to reorder (mouse + touch/pen), click a header to sort                    | ✅     |
-| Table keyboard nav — Enter/↑/↓ move between rows, ←/→ across at the text edge               | ✅     |
+| Table keyboard nav — Enter/↑/↓ rows, ←/→ at the text edge, Tab/⇧Tab across cells (wraps)    | ✅     |
 | Table rows — duplicate a row (inserts a copy below)                                         | ✅     |
 | Table columns — duplicate a column (copies header + cells, refs follow)                     | ✅     |
 | Table board view — kanban grouped by a select column (drag cards, mouse + touch)            | ✅     |

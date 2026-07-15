@@ -29,6 +29,19 @@ Feature: Table (database) blocks
     When I press Shift+Enter in the table
     Then table cell "1,1" is focused
 
+  Scenario: Tab moves across cells and wraps to the next row (Shift+Tab reverses)
+    Given I have a page titled "Tab nav"
+    When I type "/table" into a new block
+    And I choose "Table" from the slash menu
+    And I add a table row
+    And I focus table cell "1,1"
+    And I press Tab in the table
+    Then table cell "1,2" is focused
+    When I press Tab in the table
+    Then table cell "2,1" is focused
+    When I press Shift+Tab in the table
+    Then table cell "1,2" is focused
+
   Scenario: Reorder rows by touch-dragging the row handle
     Given I have a page titled "Row order"
     When I type "/table" into a new block
