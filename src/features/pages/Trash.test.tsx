@@ -48,10 +48,23 @@ describe('Trash', () => {
     expect(restore.mutate).toHaveBeenCalledWith('p1');
   });
 
-  it('permanently deletes a page', async () => {
+  it('permanently deletes a page only after confirming', async () => {
+    archived.data = [mk('p1', 'Old notes')];
+    render(<Trash />);
+    // First click arms — it does NOT delete yet.
+    await userEvent.click(screen.getByRole('button', { name: 'Delete forever' }));
+    expect(remove.mutate).not.toHaveBeenCalled();
+    // Confirm actually deletes.
+    await userEvent.click(screen.getByRole('button', { name: 'Confirm delete' }));
+    expect(remove.mutate).toHaveBeenCalledWith('p1');
+  });
+
+  it('Cancel disarms the delete without removing the page', async () => {
     archived.data = [mk('p1', 'Old notes')];
     render(<Trash />);
     await userEvent.click(screen.getByRole('button', { name: 'Delete forever' }));
-    expect(remove.mutate).toHaveBeenCalledWith('p1');
+    await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+    expect(remove.mutate).not.toHaveBeenCalled();
+    expect(screen.getByRole('button', { name: 'Delete forever' })).toBeInTheDocument();
   });
 });

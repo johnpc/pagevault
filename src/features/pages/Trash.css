@@ -43,7 +43,9 @@
 }
 
 .pv-trash-restore,
-.pv-trash-delete {
+.pv-trash-delete,
+.pv-trash-confirm,
+.pv-trash-cancel {
   background: none;
   border: 1px solid var(--pv-border);
   font: inherit;
@@ -60,4 +62,16 @@
 .pv-trash-delete:hover {
   border-color: var(--pv-danger);
   color: var(--pv-danger);
+}
+/* Armed confirm: filled danger, so the irreversible action is unmistakable. */
+.pv-trash-confirm {
+  background: var(--pv-danger);
+  border-color: var(--pv-danger);
+  color: #fff;
+}
+.pv-trash-cancel {
+  border-color: transparent;
+}
+.pv-trash-cancel:hover {
+  border-color: var(--pv-border);
 }
