@@ -1,9 +1,9 @@
 import { useRef } from 'react';
 import type { BlockRecord } from '../../lib/pbClient';
 import { hasInlineMarkup } from './inlineMarkdown';
-import { useBlockInput } from './useBlockInput';
+import { useBlockInput, type BlockEdits } from './useBlockInput';
 import { useBlockPaste } from './useBlockPaste';
-import { useMention } from './useMention';
+import { useBlockMenus } from './useBlockMenus';
 import { useSelectionToolbar } from './useSelectionToolbar';
 import { useAutoFocus } from './useAutoFocus';
 import { useSeedValue } from './useSeedValue';
@@ -30,38 +30,37 @@ export function TextBlockBody({
   autoFocusCaret,
   autoFocusValue,
   onFocused,
-}: {
+}: BlockEdits & {
   block: BlockRecord;
   onEdit: (id: string, patch: Partial<BlockRecord>) => void;
   onRemove: (id: string) => void;
-  onDuplicate: () => void;
-  onEnter: (caret: number, value: string) => boolean;
-  onIndent: (dir: 'in' | 'out') => void;
-  onMerge: (value: string) => boolean;
-  onMergeForward: (value: string) => boolean;
   onPasteMarkdown: (text: string) => void;
   autoFocus?: boolean;
   autoFocusCaret?: number;
   autoFocusValue?: string;
   onFocused?: () => void;
 }) {
-  const { value, setValue, change, keyDown, save, focus, focused, matches, active, pick } =
-    useBlockInput(block, onEdit, onRemove, onEnter, onIndent, onMerge, onMergeForward, onDuplicate);
+  const edits = { onEnter, onIndent, onMerge, onMergeForward, onDuplicate };
+  const { value, setValue, change, keyDown, save, focus, focused } = useBlockInput(
+    block,
+    onEdit,
+    onRemove,
+    edits,
+  );
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const mention = useMention(block.page, value, setValue, inputRef);
+  const menus = useBlockMenus(block, value, setValue, inputRef, onEdit);
   const toolbar = useSelectionToolbar(inputRef, value, setValue, block.type === 'code');
   const showPreview = !focused && hasInlineMarkup(value);
 
-  // The @-mention picker gets first crack at Arrow/Enter/Escape; if it doesn't
-  // consume the key, the block's own handler runs.
+  // The menu pickers get first crack at Arrow/Enter/Escape; if neither consumes
+  // the key, the block's own handler runs.
   const onKeyDown = (e: Parameters<typeof keyDown>[0]) => {
-    if (!mention.onKeyDown(e)) keyDown(e);
+    if (!menus.onKeyDown(e)) keyDown(e);
   };
 
-  // A selection change feeds both the mention picker (caret) and the toolbar;
-  // blur hides the toolbar then saves.
-  const onSelect = (e: Parameters<typeof mention.onSelect>[0]) => {
-    mention.onSelect(e);
+  // A selection change feeds the pickers' caret trackers and the toolbar.
+  const onSelect = (e: Parameters<typeof menus.onSelect>[0]) => {
+    menus.onSelect(e);
     toolbar.sync();
   };
   // On blur, save + hide the toolbar (unless focus moved into its link prompt).
@@ -93,7 +92,7 @@ export function TextBlockBody({
       )}
       <SelectionToolbar {...toolbar} />
       <CodeBlockChrome block={block} value={value} onEdit={onEdit} />
-      <BlockMenus matches={matches} active={active} onPick={pick} mention={mention} />
+      <BlockMenus slash={menus.slash} mention={menus.mention} />
     </>
   );
 }

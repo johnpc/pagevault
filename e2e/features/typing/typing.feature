@@ -49,6 +49,15 @@ Feature: Typing a full document
     And I type "3. Third item" then Enter
     Then the document has a "numbered" block containing "Third item"
 
+  Scenario: Open the slash menu mid-line and convert the block, keeping the text
+    Given I have a page titled "Slash mid-line"
+    When I open the page "Slash mid-line"
+    And I focus the first block
+    And I type "Remember this "
+    And I type "/quote"
+    And I choose "Quote" from the slash menu
+    Then the document has a "quote" block containing "Remember this"
+
   Scenario: Share the typed document via link, readable signed out
     Given I have a page titled "Shared notes"
     When I open the page "Shared notes"
