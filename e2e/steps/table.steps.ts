@@ -431,6 +431,30 @@ Then(
   },
 );
 
+When(
+  'I type {string} in the option filter for table cell {string}',
+  async ({ page }, query: string, cell: string) => {
+    await table(page).getByLabel(`Cell ${cell}`).click();
+    await table(page).getByLabel(`Add an option to Cell ${cell}`).fill(query);
+  },
+);
+
+Then(
+  'the option {string} is offered in table cell {string}',
+  async ({ page }, opt: string, cell: string) => {
+    const menu = table(page).getByLabel(`Cell ${cell} options`);
+    await expect(menu.getByText(opt, { exact: true })).toBeVisible();
+  },
+);
+
+Then(
+  'the option {string} is not offered in table cell {string}',
+  async ({ page }, opt: string, cell: string) => {
+    const menu = table(page).getByLabel(`Cell ${cell} options`);
+    await expect(menu.getByText(opt, { exact: true })).toHaveCount(0);
+  },
+);
+
 Then(
   'the table cell {string} shows the tag {string} as a colored pill',
   async ({ page }, cell: string, tag: string) => {

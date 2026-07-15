@@ -1,8 +1,9 @@
-import { useState } from 'react';
 import { selectedValues, isSelected, toggleValue } from './multiSelect';
 import { usePopover } from '../shell/usePopover';
 import { Tag } from './Tag';
 import { OptionRow } from './OptionRow';
+import { OptionAddBox } from './OptionAddBox';
+import { useOptionPicker } from './useOptionPicker';
 
 /** A multi-select cell: a chip summary that opens a checklist of the column's
  * options; toggling one adds/removes it from the comma-joined stored value. A
@@ -26,14 +27,7 @@ export function MultiSelectCell({
   onRenameOption: (from: string, to: string) => void;
 }) {
   const { open, setOpen, triggerRef, menuRef, onKeyDown } = usePopover<HTMLUListElement>();
-  const [draft, setDraft] = useState('');
-
-  const add = () => {
-    const opt = draft.trim();
-    if (!opt || options.includes(opt)) return;
-    onAddOption(opt);
-    setDraft('');
-  };
+  const picker = useOptionPicker(options, onAddOption);
   const chosen = selectedValues(value);
 
   return (
@@ -49,7 +43,7 @@ export function MultiSelectCell({
       </button>
       {open && (
         <ul ref={menuRef} className="pv-multiselect-menu" aria-label={`${label} options`}>
-          {options.map((opt) => (
+          {picker.filtered.map((opt) => (
             <OptionRow
               key={opt}
               option={opt}
@@ -66,21 +60,7 @@ export function MultiSelectCell({
               </label>
             </OptionRow>
           ))}
-          <li className="pv-multiselect-add">
-            <input
-              type="text"
-              aria-label={`Add an option to ${label}`}
-              placeholder="Add option…"
-              value={draft}
-              onChange={(e) => setDraft(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault();
-                  add();
-                }
-              }}
-            />
-          </li>
+          <OptionAddBox label={label} picker={picker} />
         </ul>
       )}
     </div>

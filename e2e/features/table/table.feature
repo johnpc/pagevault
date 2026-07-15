@@ -177,6 +177,17 @@ Feature: Table (database) blocks
     When I reopen the page "Rename tag"
     Then the multiselect cell "1,2" shows "final"
 
+  Scenario: Typing in the option box filters the existing options
+    Given I have a page titled "Filter tags"
+    When I type "/table" into a new block
+    And I choose "Table" from the slash menu
+    And I set table column 2 type to "multiselect"
+    And I create the tag "urgent" in table cell "1,2"
+    And I create the tag "later" in table cell "1,2"
+    And I type "urg" in the option filter for table cell "1,2"
+    Then the option "urgent" is offered in table cell "1,2"
+    And the option "later" is not offered in table cell "1,2"
+
   Scenario: A select/multiselect option renders as a colored tag pill
     Given I have a page titled "Colored tags"
     When I type "/table" into a new block

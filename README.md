@@ -45,6 +45,7 @@ account, no third-party service, no lock-in.
 | Table of contents block — auto-lists headings, click to scroll                              | ✅     |
 | Table blocks — typed columns (text/number/checkbox/select/date), GFM export                 | ✅     |
 | Select columns — pick from a popover; create / rename / remove options inline from the cell | ✅     |
+| Select / multiselect picker — type to filter options; "Create" only for a genuinely new tag | ✅     |
 | Select / multiselect options render as colored tag pills (auto-colored by name)             | ✅     |
 | Board columns & grouped-table headers show the group value as its colored tag               | ✅     |
 | Gallery cards render select / multiselect fields as colored tag pills                       | ✅     |
