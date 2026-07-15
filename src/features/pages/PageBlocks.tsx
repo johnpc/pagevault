@@ -31,6 +31,7 @@ export function PageBlocks({
       onRemoveMany={ed.removeBlocks}
       onIndentMany={ed.indentMany}
       onDuplicate={ed.cloneBlock}
+      onDuplicateMany={ed.duplicateMany}
       onInsertAfter={ed.insertAfter}
       onIndent={ed.indentBlock}
       onPasteMarkdown={ed.importMarkdown}

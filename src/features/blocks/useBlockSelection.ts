@@ -20,6 +20,8 @@ import { handleMoveBlockKey } from './moveBlockKey';
 interface SelectionActions {
   onDeleteMany: (ids: string[]) => void;
   onIndentMany: (ids: string[], dir: 'in' | 'out') => void;
+  /** Duplicate every selected block (Cmd/Ctrl+D on a selection). */
+  onDuplicateMany?: (ids: string[]) => void;
   /** Move a single block before/after its neighbor (Cmd/Ctrl+Shift+↑/↓). */
   onMoveBlock?: (fromId: string, toId: string) => void;
   /** Color every selected block (from the selection action bar). */
