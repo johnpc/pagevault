@@ -153,6 +153,34 @@
   }
 }
 
+/* Colored option pill (select / multiselect). The hue is derived from the
+   label (see tagColor) and maps to a themed --pv-bg-<hue> token. */
+.pv-tag {
+  display: inline-block;
+  padding: 1px 8px;
+  margin: 1px 3px 1px 0;
+  border-radius: 10px;
+  font-size: 0.85em;
+  line-height: 1.5;
+  color: var(--pv-text);
+  white-space: nowrap;
+}
+.pv-tag--gray {
+  background: var(--pv-bg-gray);
+}
+.pv-tag--yellow {
+  background: var(--pv-bg-yellow);
+}
+.pv-tag--green {
+  background: var(--pv-bg-green);
+}
+.pv-tag--blue {
+  background: var(--pv-bg-blue);
+}
+.pv-tag--pink {
+  background: var(--pv-bg-pink);
+}
+
 /* Single-select option row: full-width clickable, highlighted when chosen. */
 .pv-select-opt {
   display: block;

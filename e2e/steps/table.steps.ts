@@ -419,6 +419,18 @@ Then(
   },
 );
 
+Then(
+  'the table cell {string} shows the tag {string} as a colored pill',
+  async ({ page }, cell: string, tag: string) => {
+    // The pill is a .pv-tag with a hue modifier (.pv-tag--<hue>) inside the cell.
+    const pill = table(page)
+      .getByLabel(`Cell ${cell}`, { exact: true })
+      .locator('.pv-tag', { hasText: tag });
+    await expect(pill).toBeVisible();
+    await expect(pill).toHaveClass(/pv-tag--\w+/);
+  },
+);
+
 When('I toggle wrap text on table column {int}', async ({ page }, col: number) => {
   const btn = table(page).getByLabel(`Wrap text in column ${col}`);
   await btn.click();

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { usePopover } from '../shell/usePopover';
+import { Tag } from './Tag';
 
 /** A single-select cell: a summary button that opens the column's options as a
  * radio list (picking one sets the cell; picking the chosen one clears it). A
@@ -39,7 +40,7 @@ export function SelectCell({
         aria-expanded={open}
         onClick={() => setOpen((o) => !o)}
       >
-        {value || '—'}
+        {value ? <Tag label={value} /> : '—'}
       </button>
       {open && (
         <ul ref={menuRef} className="pv-multiselect-menu" aria-label={`${label} options`}>
@@ -51,7 +52,7 @@ export function SelectCell({
                 aria-pressed={opt === value}
                 onClick={() => onChange(opt === value ? '' : opt)}
               >
-                {opt}
+                <Tag label={opt} />
               </button>
               <button
                 type="button"

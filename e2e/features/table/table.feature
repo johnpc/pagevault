@@ -164,6 +164,16 @@ Feature: Table (database) blocks
     When I reopen the page "New tags"
     Then the multiselect cell "1,2" shows "urgent"
 
+  Scenario: A select/multiselect option renders as a colored tag pill
+    Given I have a page titled "Colored tags"
+    When I type "/table" into a new block
+    And I choose "Table" from the slash menu
+    And I set table column 2 type to "select"
+    And I create the tag "Priority" in table cell "1,2"
+    Then the table cell "1,2" shows the tag "Priority" as a colored pill
+    When I reopen the page "Colored tags"
+    Then the table cell "1,2" shows the tag "Priority" as a colored pill
+
   Scenario: A multi-select option can be removed and disappears from cells
     Given I have a page titled "Remove tag"
     When I type "/table" into a new block
