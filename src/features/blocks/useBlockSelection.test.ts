@@ -100,6 +100,20 @@ describe('useBlockSelection', () => {
     expect(result.current.active).toBe(false);
   });
 
+  it('keeps selectId identity stable when ids gets a new array (memo safety)', () => {
+    // selectId is a prop on every memoized BlockRow; a fresh `ids` array each
+    // keystroke must NOT churn its identity or every row re-renders per char.
+    const { result, rerender } = renderHook(({ list }) => useBlockSelection(list, actions()), {
+      initialProps: { list: ['a', 'b', 'c', 'd'] },
+    });
+    const before = result.current.selectId;
+    rerender({ list: ['a', 'b', 'c', 'd'] }); // same values, new array
+    expect(result.current.selectId).toBe(before);
+    // …and it still resolves against the latest ids.
+    act(() => result.current.selectId('d'));
+    expect(result.current.selectedAt(3)).toBe(true);
+  });
+
   it('shift-click extends an existing selection, then Backspace deletes the range', () => {
     const onDelete = vi.fn();
     const { result } = renderHook(() => useBlockSelection(ids, actions(onDelete)));
