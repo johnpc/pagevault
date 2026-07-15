@@ -122,6 +122,7 @@ account, no third-party service, no lock-in.
 | Link on paste — select text, paste a URL → it becomes a `[text](url)` link                  | ✅     |
 | Image blocks (embed by URL)                                                                 | ✅     |
 | Image uploads (stored in PocketBase, served same-origin)                                    | ✅     |
+| Paste an image from the clipboard — a screenshot becomes an image block                     | ✅     |
 | Quick-find search (⌘K, ranked, match-highlighted, titles + content)                         | ✅     |
 | Native iOS / Android builds (Capacitor)                                                     | ⬜     |
 

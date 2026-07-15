@@ -96,3 +96,27 @@ Then(
     await expect(link).toHaveAttribute('href', href);
   },
 );
+
+// Fire a native paste event carrying a 1×1 PNG file at the focused empty block —
+// the OS clipboard can't hold a File in headless Chromium, so build the
+// DataTransfer in-page and dispatch it on the focused textarea.
+When('I paste an image into a fresh block', async ({ page }) => {
+  await active(page).getByRole('button', { name: '+ Add a block' }).click();
+  const input = blockInputs(page).last();
+  await input.click();
+  await input.evaluate((el) => {
+    const png =
+      'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
+    const bytes = Uint8Array.from(atob(png), (c) => c.charCodeAt(0));
+    const file = new File([bytes], 'pasted.png', { type: 'image/png' });
+    const dt = new DataTransfer();
+    dt.items.add(file);
+    el.dispatchEvent(
+      new ClipboardEvent('paste', { clipboardData: dt, bubbles: true, cancelable: true }),
+    );
+  });
+});
+
+Then('the page has an image block', async ({ page }) => {
+  await expect(active(page).locator('.pv-block--image').first()).toBeVisible();
+});
