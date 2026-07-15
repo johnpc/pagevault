@@ -11,6 +11,11 @@ describe('SHORTCUTS', () => {
     expect(fmt).toBeDefined();
     expect(fmt?.action).toMatch(/strikethrough/i);
   });
+  it('documents indent/outdent (Tab) and the mid-line slash menu', () => {
+    expect(SHORTCUTS.some((s) => /Tab/.test(s.keys) && /indent/i.test(s.action))).toBe(true);
+    const slash = SHORTCUTS.find((s) => s.keys === '/');
+    expect(slash?.action).toMatch(/anywhere/i);
+  });
   it('every entry has keys and an action', () => {
     for (const s of SHORTCUTS) {
       expect(s.keys.length).toBeGreaterThan(0);
