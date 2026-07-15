@@ -26,6 +26,15 @@ Feature: Mobile sidebar drawer
     And I type "Note"
     Then the block controls are reachable without hovering
 
+  Scenario: Comment edit/delete are reachable without hover on a phone
+    Given I am signed in on a phone-sized screen
+    When I open the sidebar drawer
+    And I create a page from the drawer
+    And I add the comment "on my phone"
+    Then the page shows the comment "on my phone"
+    And the ".pv-comment-edit" control is reachable without hovering
+    And the ".pv-comment-del" control is reachable without hovering
+
   Scenario: Reorder blocks by touch-dragging the handle
     Given I am signed in on a phone-sized screen
     When I open the sidebar drawer

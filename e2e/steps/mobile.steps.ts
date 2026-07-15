@@ -102,3 +102,13 @@ Then('the block controls are reachable without hovering', async ({ page }) => {
     .poll(() => dup.evaluate((el) => parseFloat(getComputedStyle(el).opacity)))
     .toBeGreaterThan(0);
 });
+
+// A generic touch-reachability check: an element (by CSS class) must be visible
+// (non-zero opacity) without hover, or a touch user can never activate it.
+Then('the {string} control is reachable without hovering', async ({ page }, selector: string) => {
+  const el = active(page).locator(selector).first();
+  await expect(el).toBeVisible();
+  await expect
+    .poll(() => el.evaluate((n) => parseFloat(getComputedStyle(n).opacity)))
+    .toBeGreaterThan(0);
+});

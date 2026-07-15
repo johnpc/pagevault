@@ -28,8 +28,15 @@
   opacity: 0;
   padding: 2px 4px;
 }
-.pv-column:hover .pv-column-del {
+.pv-column:hover .pv-column-del,
+.pv-column-del:focus-visible {
   opacity: 1;
+}
+/* Touch/phone has no hover, so keep the column delete reachable. */
+@media (hover: none), (max-width: 640px) {
+  .pv-column-del {
+    opacity: 0.6;
+  }
 }
 .pv-column-add {
   align-self: stretch;
