@@ -326,6 +326,43 @@ When('I restore {string} from the trash', async ({ page, $testInfo }, title: str
   await row.getByRole('button', { name: 'Restore' }).click();
 });
 
+const trashRow = (page: Page, title: string, info: TestInfo) =>
+  active(page)
+    .locator('.pv-trash-row')
+    .filter({ hasText: uniqueTitle(title, info) })
+    .first();
+
+When('I open the trash', async ({ page }) => {
+  await page.getByRole('button', { name: 'Trash', exact: true }).click();
+});
+
+When('I arm delete for {string} in the trash', async ({ page, $testInfo }, title: string) => {
+  await trashRow(page, title, $testInfo).getByRole('button', { name: 'Delete forever' }).click();
+});
+
+When(
+  'I cancel the delete for {string} in the trash',
+  async ({ page, $testInfo }, title: string) => {
+    await trashRow(page, title, $testInfo).getByRole('button', { name: 'Cancel' }).click();
+  },
+);
+
+When('I confirm delete for {string} in the trash', async ({ page, $testInfo }, title: string) => {
+  await trashRow(page, title, $testInfo).getByRole('button', { name: 'Confirm delete' }).click();
+});
+
+Then('I should see {string} in the trash', async ({ page, $testInfo }, title: string) => {
+  await expect(trashRow(page, title, $testInfo)).toBeVisible();
+});
+
+Then('I should not see {string} in the trash', async ({ page, $testInfo }, title: string) => {
+  await expect(
+    active(page)
+      .locator('.pv-trash-row')
+      .filter({ hasText: uniqueTitle(title, $testInfo) }),
+  ).toHaveCount(0);
+});
+
 const blockInputs = (page: import('@playwright/test').Page) =>
   active(page).locator('textarea.pv-block-input');
 

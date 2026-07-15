@@ -166,6 +166,19 @@ Feature: Pages and blocks
     When I restore "Draft memo" from the trash
     Then I should see "Draft memo" in the sidebar
 
+  Scenario: Delete forever asks to confirm; cancel keeps the page, confirm removes it
+    Given I have a page titled "Junk note"
+    When I open the page "Junk note"
+    And I move the page to trash
+    And I open the trash
+    Then I should see "Junk note" in the trash
+    When I arm delete for "Junk note" in the trash
+    And I cancel the delete for "Junk note" in the trash
+    Then I should see "Junk note" in the trash
+    When I arm delete for "Junk note" in the trash
+    And I confirm delete for "Junk note" in the trash
+    Then I should not see "Junk note" in the trash
+
   Scenario: Favorite a page and see it pinned in the sidebar
     Given I have a page titled "Team wiki"
     When I open the page "Team wiki"

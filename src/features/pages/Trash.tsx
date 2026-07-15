@@ -1,7 +1,7 @@
 import { IonContent, IonPage } from '@ionic/react';
 import { useArchivedPages, useRestorePage, useDeletePage } from './pagesApi';
-import { displayTitle } from './pageTree';
 import { LoadState } from '../shell/LoadState';
+import { TrashRow } from './TrashRow';
 import './Trash.css';
 
 /** The trash: archived pages with restore / delete-forever. Soft-deleted pages
@@ -28,19 +28,12 @@ export function Trash() {
           >
             <ul className="pv-trash-list">
               {pages.map((page) => (
-                <li key={page.id} className="pv-trash-row">
-                  <span className="pv-trash-title">
-                    {page.icon || '📄'} {displayTitle(page)}
-                  </span>
-                  <span className="pv-trash-actions">
-                    <button className="pv-trash-restore" onClick={() => restore.mutate(page.id)}>
-                      Restore
-                    </button>
-                    <button className="pv-trash-delete" onClick={() => remove.mutate(page.id)}>
-                      Delete forever
-                    </button>
-                  </span>
-                </li>
+                <TrashRow
+                  key={page.id}
+                  page={page}
+                  onRestore={(id) => restore.mutate(id)}
+                  onDelete={(id) => remove.mutate(id)}
+                />
               ))}
             </ul>
           </LoadState>

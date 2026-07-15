@@ -28,7 +28,7 @@ account, no third-party service, no lock-in.
 | Add a sub-page from a sidebar row's hover "+" (expands the parent, opens the child)         | ✅     |
 | Move / reparent a page (cycle-safe picker)                                                  | ✅     |
 | Sub-pages + breadcrumb navigation                                                           | ✅     |
-| Archive to trash → restore or delete forever                                                | ✅     |
+| Archive to trash → restore or delete forever (delete asks to confirm — it's permanent)      | ✅     |
 | Favorite pages (pinned Favorites section)                                                   | ✅     |
 | Page footer: word/block count + last edited                                                 | ✅     |
 | Duplicate a page (with all its blocks)                                                      | ✅     |
