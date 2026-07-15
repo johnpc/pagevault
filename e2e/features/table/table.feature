@@ -247,6 +247,15 @@ Feature: Table (database) blocks
     When I reopen the page "Projects DB"
     Then the table has a relation cell showing "Reading list"
 
+  Scenario: The relation picker filters pages by a search query
+    Given I have a page titled "Search rel"
+    When I open the page "Search rel"
+    And I type "/table" into a new block
+    And I choose "Table" from the slash menu
+    And I set table column 2 type to "relation"
+    And I search "Reading" then link table cell "1,2" to the page "Reading list"
+    Then the table has a relation cell showing "Reading list"
+
   Scenario: A relation to a deleted page shows a broken-link indicator
     Given I have a page titled "Disposable target"
     And I have a page titled "Links DB"

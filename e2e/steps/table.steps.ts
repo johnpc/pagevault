@@ -341,6 +341,16 @@ When(
   },
 );
 
+When(
+  'I search {string} then link table cell {string} to the page {string}',
+  async ({ page }, query: string, cell: string, title: string) => {
+    await table(page).getByLabel(`Cell ${cell}`).click();
+    await table(page).getByLabel(`Search pages to link in Cell ${cell}`).fill(query);
+    const menu = table(page).getByRole('listbox', { name: new RegExp(`Cell ${cell}`) });
+    await menu.getByRole('option', { name: title, exact: true }).click();
+  },
+);
+
 Then('the table shows a broken relation link', async ({ page }) => {
   await expect(table(page).locator('.pv-relation-broken').first()).toBeVisible();
 });

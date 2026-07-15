@@ -58,4 +58,15 @@ describe('RelationCell', () => {
     await userEvent.click(screen.getByText('Clear'));
     expect(onChange).toHaveBeenCalledWith('');
   });
+
+  it('filters the page list by the search query', async () => {
+    render(<RelationCell value="" label="rel" onChange={vi.fn()} />);
+    await userEvent.click(screen.getByLabelText('rel'));
+    expect(screen.getByRole('option', { name: 'Roadmap' })).toBeInTheDocument();
+    await userEvent.type(screen.getByLabelText('Search pages to link in rel'), 'road');
+    expect(screen.getByRole('option', { name: 'Roadmap' })).toBeInTheDocument();
+    await userEvent.clear(screen.getByLabelText('Search pages to link in rel'));
+    await userEvent.type(screen.getByLabelText('Search pages to link in rel'), 'zzz');
+    expect(screen.queryByRole('option', { name: 'Roadmap' })).not.toBeInTheDocument();
+  });
 });
