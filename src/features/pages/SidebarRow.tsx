@@ -1,22 +1,22 @@
-import { useHistory } from 'react-router-dom';
-import { memo, type DragEvent } from 'react';
-import { displayTitle } from './pageTree';
+import { memo } from 'react';
 import { sidebarRowEqual, type SidebarRowProps } from './sidebarRowEqual';
+import { SidebarRowBar } from './SidebarRowBar';
 
 /** One page in the sidebar tree. Rows with children show a disclosure triangle
  * that expands/collapses their subtree; recurses to render children. Each row is
- * draggable + a drop target for reordering among its siblings. */
+ * draggable + a drop target for reordering among its siblings, and carries a "+"
+ * to add a sub-page under it (see SidebarRowBar). */
 function SidebarRowInner({
   node,
   depth,
   activeId,
   collapsed,
   onToggle,
+  onAddChild,
   handlers,
   draggingId,
   overId,
 }: SidebarRowProps) {
-  const history = useHistory();
   const id = node.page.id;
   const active = id === activeId;
   const hasChildren = node.children.length > 0;
@@ -30,46 +30,16 @@ function SidebarRowInner({
 
   return (
     <>
-      <div
+      <SidebarRowBar
+        node={node}
+        depth={depth}
         className={cls}
-        style={{ paddingLeft: `${8 + depth * 16}px` }}
-        data-drag-id={id}
-        onDragOver={(e: DragEvent) => {
-          e.preventDefault();
-          handlers.onDragOver(id);
-        }}
-        onDrop={(e: DragEvent) => {
-          e.preventDefault();
-          handlers.onDrop(id);
-        }}
-        onDragEnd={handlers.onDragEnd}
-      >
-        <button
-          className="pv-sidebar-grip"
-          aria-label={`Drag ${displayTitle(node.page)} to reorder`}
-          draggable
-          onDragStart={() => handlers.onDragStart(id)}
-          onPointerDown={handlers.onPointerDown(id)}
-        >
-          ⋮⋮
-        </button>
-        {hasChildren ? (
-          <button
-            className="pv-sidebar-caret"
-            aria-label={isCollapsed ? 'Expand' : 'Collapse'}
-            aria-expanded={!isCollapsed}
-            onClick={() => onToggle(id)}
-          >
-            {isCollapsed ? '▸' : '▾'}
-          </button>
-        ) : (
-          <span className="pv-sidebar-caret" aria-hidden="true" />
-        )}
-        <button className="pv-sidebar-open" onClick={() => history.push(`/page/${id}`)}>
-          <span className="pv-sidebar-icon">{node.page.icon || '📄'}</span>
-          <span className="pv-sidebar-title">{displayTitle(node.page)}</span>
-        </button>
-      </div>
+        hasChildren={hasChildren}
+        isCollapsed={isCollapsed}
+        onToggle={onToggle}
+        onAddChild={onAddChild}
+        handlers={handlers}
+      />
       {hasChildren &&
         !isCollapsed &&
         node.children.map((child) => (
@@ -80,6 +50,7 @@ function SidebarRowInner({
             activeId={activeId}
             collapsed={collapsed}
             onToggle={onToggle}
+            onAddChild={onAddChild}
             handlers={handlers}
             draggingId={draggingId}
             overId={overId}
