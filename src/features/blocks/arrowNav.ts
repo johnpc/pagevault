@@ -34,12 +34,32 @@ export function focusAdjacentBlock(el: HTMLTextAreaElement, dir: -1 | 1): boolea
   const index = Number(row.getAttribute('data-block-index'));
   const container = row.parentElement;
   const target = container?.querySelector(`[data-block-index="${index + dir}"]`);
-  const input = target?.querySelector<HTMLTextAreaElement>('textarea.pv-block-input');
-  if (!input) return dir === -1 && index === 0 ? focusPageTitle() : false;
+  if (!target) return dir === -1 && index === 0 ? focusPageTitle() : false;
+
+  const input = target.querySelector<HTMLTextAreaElement>('textarea.pv-block-input');
+  if (input) {
+    focusWithCaret(input, dir);
+    return true;
+  }
+  // A formatted block that isn't being edited renders a read-only preview (no
+  // textarea). Click it to switch to its raw textarea, then land the caret once
+  // the textarea mounts (next frame).
+  const preview = target.querySelector<HTMLElement>('.pv-block-preview');
+  if (!preview) return dir === -1 && index === 0 ? focusPageTitle() : false;
+  preview.click();
+  requestAnimationFrame(() => {
+    const ta = target.querySelector<HTMLTextAreaElement>('textarea.pv-block-input');
+    if (ta) focusWithCaret(ta, dir);
+  });
+  return true;
+}
+
+/** Focus a block textarea with the caret at the end (moving up) or start (moving
+ * down), so navigation between blocks feels continuous. */
+function focusWithCaret(input: HTMLTextAreaElement, dir: -1 | 1): void {
   input.focus();
   const caret = dir === -1 ? input.value.length : 0;
   input.setSelectionRange(caret, caret);
-  return true;
 }
 
 /** Move focus up into the page title (↑ at the start of the first block) — the

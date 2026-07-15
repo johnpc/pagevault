@@ -93,6 +93,58 @@ describe('focusAdjacentBlock', () => {
     expect(focusAdjacentBlock(orphan, 1)).toBe(false);
   });
 
+  it('enters a formatted preview block (no textarea) and lands the caret next frame', async () => {
+    // Row 0 = a normal textarea; row 1 = a formatted block showing a preview
+    // (no textarea until clicked). Clicking the preview swaps in a textarea, the
+    // way TextBlockBody flips to edit mode.
+    const container = document.createElement('div');
+    const src = document.createElement('div');
+    src.setAttribute('data-block-index', '0');
+    const srcTa = document.createElement('textarea');
+    srcTa.className = 'pv-block-input';
+    srcTa.value = 'plain';
+    src.appendChild(srcTa);
+
+    const dst = document.createElement('div');
+    dst.setAttribute('data-block-index', '1');
+    const preview = document.createElement('div');
+    preview.className = 'pv-block-preview';
+    preview.addEventListener('click', () => {
+      const ta = document.createElement('textarea');
+      ta.className = 'pv-block-input';
+      ta.value = 'bold text';
+      dst.appendChild(ta);
+    });
+    dst.appendChild(preview);
+    container.append(src, dst);
+    document.body.appendChild(container);
+
+    expect(focusAdjacentBlock(srcTa, 1)).toBe(true);
+    await new Promise((r) => requestAnimationFrame(r));
+    const focused = document.activeElement as HTMLTextAreaElement;
+    expect(focused.value).toBe('bold text');
+    expect(focused.selectionStart).toBe(0); // moving down → caret at start
+    container.remove();
+  });
+
+  it('returns false into a formatted block with neither textarea nor preview', () => {
+    const container = document.createElement('div');
+    [0, 1].forEach((i) => {
+      const row = document.createElement('div');
+      row.setAttribute('data-block-index', String(i));
+      if (i === 0) {
+        const ta = document.createElement('textarea');
+        ta.className = 'pv-block-input';
+        row.appendChild(ta);
+      }
+      container.appendChild(row);
+    });
+    document.body.appendChild(container);
+    const srcTa = container.querySelector('textarea') as HTMLTextAreaElement;
+    expect(focusAdjacentBlock(srcTa, 1)).toBe(false);
+    container.remove();
+  });
+
   it('focusPageTitle returns false when there is no title in the DOM', () => {
     document.body.innerHTML = '';
     expect(focusPageTitle()).toBe(false);

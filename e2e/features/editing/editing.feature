@@ -29,6 +29,22 @@ Feature: Smooth keyboard editing
     And I press ArrowDown in the block
     Then the block containing "Charlie" is focused
 
+  Scenario: Arrow keys navigate into a formatted (preview) block
+    Given I have a page titled "Arrow into format"
+    When I open the page "Arrow into format"
+    And I focus the first block
+    And I type "Alpha" then Enter
+    And I type "Bravo" then Enter
+    And I type "Charlie"
+    Then the page has 3 blocks
+    When I put the caret at the start of the block containing "Bravo"
+    And I wrap the block value to "**Bravo**"
+    And I click away from the blocks
+    Then the block "Bravo" shows a formatted preview
+    When I put the caret at the start of the block containing "Charlie"
+    And I press ArrowUp in the block
+    Then the block containing "**Bravo**" is focused
+
   Scenario: Backspace at the start of a block merges it into the one above
     Given I have a page titled "Merge feel"
     When I open the page "Merge feel"
