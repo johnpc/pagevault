@@ -3,6 +3,7 @@ import { RelationCell } from './RelationCell';
 import { NumberCell } from './NumberCell';
 import { DateCell } from './DateCell';
 import { MultiSelectCell } from './MultiSelectCell';
+import { SelectCell } from './SelectCell';
 
 /** One table body cell, rendered by its column type. Value is always a string;
  * checkbox uses 'true'/'', select holds one option, relation holds a page id.
@@ -42,14 +43,13 @@ export function TableCell({
 
   if (column.type === 'select') {
     return (
-      <select aria-label={label} value={value} onChange={(e) => onChange(e.target.value)}>
-        <option value="">—</option>
-        {(column.options ?? []).map((opt) => (
-          <option key={opt} value={opt}>
-            {opt}
-          </option>
-        ))}
-      </select>
+      <SelectCell
+        value={value}
+        options={column.options ?? []}
+        label={label}
+        onChange={onChange}
+        onAddOption={onAddOption}
+      />
     );
   }
 

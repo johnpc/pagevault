@@ -116,6 +116,26 @@
   margin: 0;
 }
 
+/* Single-select option row: full-width clickable, highlighted when chosen. */
+.pv-select-opt {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 4px 6px;
+  background: none;
+  border: none;
+  border-radius: var(--pv-radius-sm);
+  font: inherit;
+  color: var(--pv-text);
+  cursor: pointer;
+}
+.pv-select-opt:hover {
+  background: var(--pv-hover);
+}
+.pv-select-opt--on {
+  background: var(--pv-accent-soft);
+}
+
 /* Row drag handle column: narrow, faint grip that darkens on row hover. */
 .pv-table-drag {
   width: 22px;

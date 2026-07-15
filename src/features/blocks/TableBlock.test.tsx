@@ -111,14 +111,16 @@ describe('TableBlock', () => {
     });
   });
 
-  it('renders a select cell with the column options', () => {
+  it('renders a select cell showing its value, with options in a popover', async () => {
     const data: TableData = {
       columns: [{ name: 'Tag', type: 'select', options: ['red', 'blue'] }],
       rows: [['blue']],
     };
     render(<TableBlock block={mk(data)} onEdit={vi.fn()} />);
-    expect(screen.getByLabelText('Cell 1,1')).toHaveValue('blue');
-    expect(screen.getByRole('option', { name: 'red' })).toBeInTheDocument();
+    const cell = screen.getByLabelText('Cell 1,1');
+    expect(cell).toHaveTextContent('blue');
+    await userEvent.click(cell);
+    expect(screen.getByRole('button', { name: 'red' })).toBeInTheDocument();
   });
 
   it('adds a row', async () => {
