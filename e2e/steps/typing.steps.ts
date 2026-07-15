@@ -84,6 +84,12 @@ Then('a new empty block is focused', async ({ page }) => {
   await expect(focused(page)).toHaveValue('');
 });
 
+When('I press Enter in the page title', async ({ page }) => {
+  const title = active(page).getByLabel('Page title');
+  await title.click();
+  await title.press('Enter');
+});
+
 When('I check the first to-do', async ({ page }) => {
   // Click (not .check(), which errors if already checked) the last to-do — the
   // one just typed — and wait for its row to reflect the done state.

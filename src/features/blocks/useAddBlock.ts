@@ -32,6 +32,14 @@ export function useAddBlock(
 
   const clickBelow = useCallback(() => addBlock('text'), [addBlock]);
 
+  // Enter/↓ from the page title lands in the first block (adding one if the page
+  // is empty) — the Notion title→body flow.
+  const focusFirstOrAdd = useCallback(() => {
+    const first = blocksRef.current[0];
+    if (first) setFocusId(first.id);
+    else addBlock('text');
+  }, [blocksRef, setFocusId, addBlock]);
+
   const insertAfter = useCallback(
     (source: BlockRecord) =>
       insertMutate(
@@ -41,5 +49,5 @@ export function useAddBlock(
     [insertMutate, blocksRef, setFocusId],
   );
 
-  return { addBlock, clickBelow, insertAfter };
+  return { addBlock, clickBelow, insertAfter, focusFirstOrAdd };
 }

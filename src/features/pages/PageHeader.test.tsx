@@ -44,6 +44,7 @@ const props = {
   onMove: vi.fn(),
   onFullWidth: vi.fn(),
   onFont: vi.fn(),
+  onLeaveTitleDown: vi.fn(),
   collapse: { hasToggles: false, willCollapse: true, collapseAll: vi.fn() },
 };
 
@@ -56,6 +57,26 @@ describe('PageHeader', () => {
     await userEvent.type(input, 'Q3 plan');
     await userEvent.tab();
     expect(onTitle).toHaveBeenCalledWith('Q3 plan');
+  });
+
+  it('Enter in the title hands off to the first block and saves', async () => {
+    const onLeaveTitleDown = vi.fn();
+    const onTitle = vi.fn();
+    render(<PageHeader {...props} onTitle={onTitle} onLeaveTitleDown={onLeaveTitleDown} />);
+    const input = screen.getByLabelText('Page title');
+    await userEvent.click(input);
+    await userEvent.keyboard('{Enter}');
+    expect(onLeaveTitleDown).toHaveBeenCalled();
+    expect(onTitle).toHaveBeenCalled();
+  });
+
+  it('ArrowDown at the end of the title hands off to the first block', async () => {
+    const onLeaveTitleDown = vi.fn();
+    render(<PageHeader {...props} onLeaveTitleDown={onLeaveTitleDown} />);
+    const input = screen.getByLabelText('Page title');
+    await userEvent.click(input); // caret lands at the end of the existing title
+    await userEvent.keyboard('{ArrowDown}');
+    expect(onLeaveTitleDown).toHaveBeenCalled();
   });
 
   it('picks an icon from the picker', async () => {

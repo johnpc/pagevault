@@ -5,6 +5,7 @@ import { IconPicker } from './IconPicker';
 import { PageActions } from './PageActions';
 import { PagePresence } from '../presence/PagePresence';
 import { useReconciled } from '../blocks/useReconciled';
+import { titleKeyLeaves } from './titleKey';
 import type { CollapseAll } from '../blocks/useCollapseAll';
 
 interface PageHeaderProps {
@@ -21,6 +22,8 @@ interface PageHeaderProps {
   onMove: (parent: string) => void;
   onFullWidth: (fullWidth: boolean) => void;
   onFont: (font: string) => void;
+  /** Enter/↓ from the title moves the caret into the first block (Notion flow). */
+  onLeaveTitleDown: () => void;
   collapse: CollapseAll;
 }
 
@@ -39,6 +42,7 @@ export function PageHeader({
   onMove,
   onFullWidth,
   onFont,
+  onLeaveTitleDown,
   collapse,
 }: PageHeaderProps) {
   // The header stays mounted across /page/:id changes. useReconciled adopts the
@@ -65,6 +69,13 @@ export function PageHeader({
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         onFocus={() => setFocused(true)}
+        onKeyDown={(e) => {
+          // Enter or ↓-at-end hands off to the first block (Notion title→body).
+          if (!titleKeyLeaves(e.key, e.currentTarget.selectionStart === title.length)) return;
+          e.preventDefault();
+          onTitle(title);
+          onLeaveTitleDown();
+        }}
         onBlur={() => {
           setFocused(false);
           onTitle(title);

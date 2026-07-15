@@ -65,6 +65,7 @@ export function PageEditor() {
                   onDuplicate={onDuplicate}
                   onFullWidth={setFullWidth}
                   onFont={setFont}
+                  onLeaveTitleDown={ed.focusFirstOrAdd}
                   collapse={collapse}
                 />
                 <PageBlocks

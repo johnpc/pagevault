@@ -38,6 +38,22 @@ describe('useAddBlock', () => {
     expect(createMutate.mock.calls[0][0]).toMatchObject({ type: 'text', content: '' });
   });
 
+  it('focusFirstOrAdd focuses the existing first block', () => {
+    const setFocusId = vi.fn();
+    const blocks = ref([blk('first', 'text', 'hi'), blk('b', 'text', 'yo')]);
+    const { result } = renderHook(() => useAddBlock('p1', blocks, setFocusId));
+    result.current.focusFirstOrAdd();
+    expect(setFocusId).toHaveBeenCalledWith('first');
+    expect(createMutate).not.toHaveBeenCalled();
+  });
+
+  it('focusFirstOrAdd adds a block when the page is empty', () => {
+    const setFocusId = vi.fn();
+    const { result } = renderHook(() => useAddBlock('p1', ref([]), setFocusId));
+    result.current.focusFirstOrAdd();
+    expect(createMutate).toHaveBeenCalledTimes(1);
+  });
+
   it('insertAfter inserts below the source and focuses the created block', () => {
     const setFocusId = vi.fn();
     const source = blk('a', 'text', 'written');
