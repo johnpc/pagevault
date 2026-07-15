@@ -9,6 +9,24 @@ When('I open the home screen', async ({ page }) => {
   await expect(page.getByRole('button', { name: 'New page' })).toBeVisible();
 });
 
+When('I open quick find', async ({ page }) => {
+  await page
+    .getByRole('button', { name: /Search/ })
+    .first()
+    .click();
+  await expect(page.getByRole('dialog', { name: 'Quick find' })).toBeVisible();
+});
+
+Then('Tab keeps focus inside the quick-find dialog', async ({ page }) => {
+  const dialog = page.getByRole('dialog', { name: 'Quick find' });
+  // Tab several times; focus must never leave the dialog (it's focus-trapped).
+  for (let i = 0; i < 5; i++) {
+    await page.keyboard.press('Tab');
+    const inside = await dialog.evaluate((d) => d.contains(document.activeElement));
+    expect(inside).toBe(true);
+  }
+});
+
 // Scans the current page with axe-core and fails on any serious/critical
 // violation (WCAG 2 A/AA). Keeps the baseline honest — color contrast, landmark
 // nesting, labels, etc. regressions get caught in CI, not by eye.

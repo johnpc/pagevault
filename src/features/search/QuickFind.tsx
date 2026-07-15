@@ -1,10 +1,11 @@
-import { useState, type KeyboardEvent } from 'react';
+import { useRef, useState, type KeyboardEvent } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useSearch } from './searchApi';
 import { useDebounced } from './useDebounced';
 import { nextActiveIndex } from './searchResults';
 import { QuickFindResult } from './QuickFindResult';
 import { LoadState } from '../shell/LoadState';
+import { useDialogFocusTrap } from '../shell/useDialogFocusTrap';
 import './QuickFind.css';
 
 interface QuickFindProps {
@@ -22,6 +23,9 @@ export function QuickFind({ onClose }: QuickFindProps) {
   const debounced = useDebounced(query);
   const { data, isLoading, isError, refetch } = useSearch(debounced);
   const results = data ?? [];
+  // Trap Tab within the dialog so focus can't wander to the page behind it.
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useDialogFocusTrap(dialogRef, true);
 
   const go = (pageId: string) => {
     onClose();
@@ -41,8 +45,10 @@ export function QuickFind({ onClose }: QuickFindProps) {
   return (
     <div className="pv-qf-backdrop" onClick={onClose}>
       <div
+        ref={dialogRef}
         className="pv-qf"
         role="dialog"
+        aria-modal="true"
         aria-label="Quick find"
         onClick={(e) => e.stopPropagation()}
       >
