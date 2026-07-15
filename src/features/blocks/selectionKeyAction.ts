@@ -3,6 +3,7 @@
 export type SelectionKeyAction =
   | { kind: 'selectAll' }
   | { kind: 'duplicate' }
+  | { kind: 'copy' }
   | { kind: 'indent'; dir: 'in' | 'out' }
   | { kind: 'move'; delta: 1 | -1; grow: boolean }
   | { kind: 'delete' }
@@ -20,6 +21,7 @@ export function selectionKeyAction(e: {
   const mod = e.metaKey || e.ctrlKey;
   const key = e.key.toLowerCase();
   if (mod && key === 'a') return { kind: 'selectAll' };
+  if (mod && key === 'c') return { kind: 'copy' };
   if (mod && key === 'd') return { kind: 'duplicate' };
   if (e.key === 'Tab') return { kind: 'indent', dir: e.shiftKey ? 'out' : 'in' };
   if (e.key === 'ArrowDown') return { kind: 'move', delta: 1, grow: e.shiftKey };

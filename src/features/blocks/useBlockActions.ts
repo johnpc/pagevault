@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 import { useLatestRef } from '../../lib/useLatestRef';
 import { useAddBlock } from './useAddBlock';
 import { useCloneBlocks } from './useCloneBlocks';
+import { useCopyBlocks } from './useCopyBlocks';
 import { useDeleteWithUndo } from './useDeleteWithUndo';
 import { useUpdateBlock } from './updateBlockApi';
 import { useUploadBlockFile } from './uploadBlockFileApi';
@@ -33,6 +34,7 @@ export function useBlockActions(pageId: string, blocks: BlockRecord[]) {
   const colorMany = useSetColors(pageId);
   const typeMany = useSetTypes(pageId);
   const { cloneBlock, duplicateMany } = useCloneBlocks(pageId, blocksRef);
+  const copyMany = useCopyBlocks(blocksRef);
   const moveBlockTo = useMoveBlock(pageId, blocksRef);
   const { mutate: uploadMutate } = useUploadBlockFile(pageId);
   const { mutate: importMutate } = useImportMarkdown(pageId);
@@ -76,6 +78,7 @@ export function useBlockActions(pageId: string, blocks: BlockRecord[]) {
     moveBlockTo,
     cloneBlock,
     duplicateMany,
+    copyMany,
     indentBlock,
     indentMany,
     colorMany,

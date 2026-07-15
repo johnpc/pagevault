@@ -107,6 +107,7 @@ account, no third-party service, no lock-in.
 | Select multiple blocks — Shift+↑/↓, Shift+Click, or Cmd/Ctrl+A — delete/indent              | ✅     |
 | Multi-block action bar — turn-into, color, duplicate, or delete a whole selection           | ✅     |
 | Duplicate a whole block selection — ⌘D / Ctrl+D copies the selected blocks below            | ✅     |
+| Copy a block selection to the clipboard as Markdown (⌘C / Ctrl+C) — paste anywhere          | ✅     |
 | Undo a block deletion — an Undo action on the delete toast restores them                    | ✅     |
 | Undo / redo block edits — ⌘Z / ⌘⇧Z, document-level history                                  | ✅     |
 | Arrow-key block navigation — ↑/↓ at a block edge move the caret between blocks              | ✅     |

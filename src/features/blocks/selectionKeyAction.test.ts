@@ -22,6 +22,10 @@ describe('selectionKeyAction', () => {
     expect(selectionKeyAction(ev('d', { ctrlKey: true }))).toEqual({ kind: 'duplicate' });
   });
 
+  it('maps Cmd/Ctrl+C to copy', () => {
+    expect(selectionKeyAction(ev('c', { metaKey: true }))).toEqual({ kind: 'copy' });
+  });
+
   it('maps Tab / Shift+Tab to indent in / out', () => {
     expect(selectionKeyAction(ev('Tab'))).toEqual({ kind: 'indent', dir: 'in' });
     expect(selectionKeyAction(ev('Tab', { shiftKey: true }))).toEqual({

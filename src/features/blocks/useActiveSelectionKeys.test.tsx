@@ -22,6 +22,14 @@ describe('useActiveSelectionKeys', () => {
     expect(onDuplicateMany).toHaveBeenCalledWith(['b', 'c']);
   });
 
+  it('Cmd/Ctrl+C copies the selected ids and keeps the selection', () => {
+    const onCopyMany = vi.fn();
+    const setSel = mount({ onDeleteMany: vi.fn(), onIndentMany: vi.fn(), onCopyMany });
+    press('c', { metaKey: true });
+    expect(onCopyMany).toHaveBeenCalledWith(['b', 'c']);
+    expect(setSel).not.toHaveBeenCalledWith(null); // copy doesn't clear
+  });
+
   it('Backspace deletes the selected ids and clears', () => {
     const onDeleteMany = vi.fn();
     const setSel = mount({ onDeleteMany, onIndentMany: vi.fn() });

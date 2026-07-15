@@ -57,6 +57,12 @@ When('I press the duplicate shortcut on the selection', async ({ page }) => {
   await page.keyboard.press('ControlOrMeta+d');
 });
 
+When('I press the copy shortcut on the selection', async ({ page }) => {
+  // Chromium needs explicit clipboard permission for navigator.clipboard in tests.
+  await page.context().grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.keyboard.press('ControlOrMeta+c');
+});
+
 When('I duplicate the selection from the selection bar', async ({ page }) => {
   const bar = active(page).getByRole('toolbar', { name: 'Selected blocks' });
   await expect(bar).toBeVisible();

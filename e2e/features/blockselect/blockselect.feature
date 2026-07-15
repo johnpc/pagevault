@@ -97,6 +97,20 @@ Feature: Select and delete multiple blocks
     And I duplicate the selection from the selection bar
     Then the page has 5 blocks
 
+  Scenario: Copy a whole block selection to the clipboard as Markdown
+    Given I have a page titled "Copy many"
+    When I open the page "Copy many"
+    And I focus the first block
+    And I type "Alpha" then Enter
+    And I type "Bravo" then Enter
+    And I type "Charlie"
+    Then the page has 3 blocks
+    When I click into block 2
+    And I shift-click block 3
+    And I press the copy shortcut on the selection
+    Then the clipboard contains "Bravo"
+    And the clipboard contains "Charlie"
+
   Scenario: Turn a whole block selection into headings from the selection bar
     Given I have a page titled "Turn many"
     When I open the page "Turn many"
