@@ -14,6 +14,7 @@ export function TableCell({
   label,
   onChange,
   onAddOption,
+  onRemoveOption,
 }: {
   column: TableColumn;
   value: string;
@@ -21,6 +22,8 @@ export function TableCell({
   onChange: (value: string) => void;
   /** Create a new (multi)select option inline and assign it to this cell. */
   onAddOption: (option: string) => void;
+  /** Remove a (multi)select option from the column (and strip it from cells). */
+  onRemoveOption: (option: string) => void;
 }) {
   if (column.type === 'relation') {
     return <RelationCell value={value} label={label} onChange={onChange} />;
@@ -49,6 +52,7 @@ export function TableCell({
         label={label}
         onChange={onChange}
         onAddOption={onAddOption}
+        onRemoveOption={onRemoveOption}
       />
     );
   }
@@ -61,6 +65,7 @@ export function TableCell({
         label={label}
         onChange={onChange}
         onAddOption={onAddOption}
+        onRemoveOption={onRemoveOption}
       />
     );
   }

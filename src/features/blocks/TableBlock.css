@@ -116,6 +116,43 @@
   margin: 0;
 }
 
+/* An option row in a (multi)select popover: the option fills the width, a faint
+   ✕ to remove it sits at the end (visible on row hover). */
+.pv-opt-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.pv-opt-row > label,
+.pv-opt-row > .pv-select-opt {
+  flex: 1;
+  min-width: 0;
+}
+.pv-opt-remove {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  color: var(--pv-text-muted);
+  cursor: pointer;
+  font-size: 11px;
+  padding: 2px 4px;
+  border-radius: 4px;
+  opacity: 0;
+}
+.pv-opt-row:hover .pv-opt-remove,
+.pv-opt-remove:focus-visible {
+  opacity: 1;
+}
+.pv-opt-remove:hover {
+  color: var(--pv-text);
+  background: var(--pv-hover);
+}
+@media (hover: none), (max-width: 640px) {
+  .pv-opt-remove {
+    opacity: 0.6;
+  }
+}
+
 /* Single-select option row: full-width clickable, highlighted when chosen. */
 .pv-select-opt {
   display: block;

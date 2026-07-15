@@ -20,6 +20,7 @@ describe('TableCell', () => {
         label="cell"
         onChange={onChange}
         onAddOption={vi.fn()}
+        onRemoveOption={vi.fn()}
       />,
     );
     await userEvent.type(screen.getByLabelText('cell'), 'hi');
@@ -34,6 +35,7 @@ describe('TableCell', () => {
         label="cell"
         onChange={vi.fn()}
         onAddOption={vi.fn()}
+        onRemoveOption={vi.fn()}
       />,
     );
     expect(screen.getByLabelText('cell')).toHaveProperty('type', 'number');
@@ -48,6 +50,7 @@ describe('TableCell', () => {
         label="cell"
         onChange={onChange}
         onAddOption={vi.fn()}
+        onRemoveOption={vi.fn()}
       />,
     );
     const input = screen.getByLabelText('cell');
@@ -64,6 +67,7 @@ describe('TableCell', () => {
         label="cell"
         onChange={onChange}
         onAddOption={vi.fn()}
+        onRemoveOption={vi.fn()}
       />,
     );
     await userEvent.click(screen.getByLabelText('cell'));
@@ -79,6 +83,7 @@ describe('TableCell', () => {
         label="cell"
         onChange={onChange}
         onAddOption={vi.fn()}
+        onRemoveOption={vi.fn()}
       />,
     );
     await userEvent.click(screen.getByLabelText('cell'));
@@ -94,6 +99,7 @@ describe('TableCell', () => {
         label="cell"
         onChange={onChange}
         onAddOption={vi.fn()}
+        onRemoveOption={vi.fn()}
       />,
     );
     await userEvent.click(screen.getByLabelText('cell'));
@@ -111,6 +117,7 @@ describe('TableCell', () => {
         label="cell"
         onChange={onChange}
         onAddOption={vi.fn()}
+        onRemoveOption={vi.fn()}
       />,
     );
     const el = screen.getByLabelText('cell');
@@ -128,6 +135,7 @@ describe('TableCell', () => {
         label="cell"
         onChange={onChange}
         onAddOption={vi.fn()}
+        onRemoveOption={vi.fn()}
       />,
     );
     await userEvent.click(screen.getByLabelText('cell'));

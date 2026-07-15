@@ -382,7 +382,11 @@ When(
 Then(
   'the multiselect cell {string} shows {string}',
   async ({ page }, cell: string, text: string) => {
-    await expect.poll(() => table(page).getByLabel(`Cell ${cell}`).innerText()).toContain(text);
+    // Match the summary button exactly — getByLabel is substring by default, so
+    // an open popover ("… options" / "Add an option to …") would also match.
+    await expect
+      .poll(() => table(page).getByLabel(`Cell ${cell}`, { exact: true }).innerText())
+      .toContain(text);
   },
 );
 
@@ -394,6 +398,24 @@ When(
     await input.fill(tag);
     await input.press('Enter');
     await page.keyboard.press('Escape'); // close so the summary is read next
+  },
+);
+
+When(
+  'I remove the option {string} in table cell {string}',
+  async ({ page }, opt: string, cell: string) => {
+    await table(page).getByLabel(`Cell ${cell}`).click();
+    await table(page).getByLabel(`Remove option ${opt}`).click();
+    await page.keyboard.press('Escape'); // close so the summary is read next
+  },
+);
+
+Then(
+  'the multiselect cell {string} does not show {string}',
+  async ({ page }, cell: string, text: string) => {
+    await expect
+      .poll(() => table(page).getByLabel(`Cell ${cell}`, { exact: true }).innerText())
+      .not.toContain(text);
   },
 );
 

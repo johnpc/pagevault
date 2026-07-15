@@ -81,4 +81,17 @@ describe('useTableRowActions', () => {
     expect(next.columns[0].options).toEqual(['Open']);
     expect(next.rows[0][0]).toBe('Open');
   });
+
+  it('onRemoveOption drops the option from the column and cells', () => {
+    const save = vi.fn();
+    const data: TableData = {
+      columns: [{ name: 'Tags', type: 'multiselect', options: ['Red', 'Blue'] }],
+      rows: [['Red,Blue']],
+    };
+    const { result } = renderHook(() => useTableRowActions(data, save));
+    result.current.onRemoveOption(0, 'Red');
+    const next = save.mock.calls[0][0] as TableData;
+    expect(next.columns[0].options).toEqual(['Blue']);
+    expect(next.rows[0][0]).toBe('Blue');
+  });
 });

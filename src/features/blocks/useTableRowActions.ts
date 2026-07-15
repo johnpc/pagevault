@@ -2,6 +2,7 @@ import { useCallback, useRef } from 'react';
 import type { TableData } from '../../lib/pbTypes';
 import { setCell, removeRow } from './tableData';
 import { addColumnOption } from './tableColumns';
+import { removeColumnOption } from './tableColumnOptions';
 import { toggleValue } from './multiSelect';
 import { duplicateRow } from './tableRowOps';
 import { moveRow } from './tableSort';
@@ -51,5 +52,12 @@ export function useTableRowActions(data: TableData, save: (next: TableData) => v
     s(setCell(withOpt, r, c, value));
   }, []);
 
-  return { onCell, onDelete, onDuplicate, moveTo, onAddOption };
+  // Remove a (multi)select option from the column and strip it from every cell.
+  const onRemoveOption = useCallback((c: number, option: string) => {
+    const { data: d, save: s } = ref.current;
+    const next = removeColumnOption(d, c, option);
+    if (next !== d) s(next);
+  }, []);
+
+  return { onCell, onDelete, onDuplicate, moveTo, onAddOption, onRemoveOption };
 }

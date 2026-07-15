@@ -164,6 +164,18 @@ Feature: Table (database) blocks
     When I reopen the page "New tags"
     Then the multiselect cell "1,2" shows "urgent"
 
+  Scenario: A multi-select option can be removed and disappears from cells
+    Given I have a page titled "Remove tag"
+    When I type "/table" into a new block
+    And I choose "Table" from the slash menu
+    And I set table column 2 type to "multiselect"
+    And I create the tag "temp" in table cell "1,2"
+    Then the multiselect cell "1,2" shows "temp"
+    When I remove the option "temp" in table cell "1,2"
+    Then the multiselect cell "1,2" does not show "temp"
+    When I reopen the page "Remove tag"
+    Then the multiselect cell "1,2" does not show "temp"
+
   Scenario: A date column displays a friendly medium format
     Given I have a page titled "Dates"
     When I type "/table" into a new block
