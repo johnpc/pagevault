@@ -101,6 +101,10 @@ Then('the page title is focused', async ({ page }) => {
   await expect(active(page).getByLabel('Page title')).toBeFocused();
 });
 
+Then('the slash menu shows no matching blocks', async ({ page }) => {
+  await expect(active(page).getByText('No matching blocks')).toBeVisible();
+});
+
 When('I check the first to-do', async ({ page }) => {
   // Click (not .check(), which errors if already checked) the last to-do — the
   // one just typed — and wait for its row to reflect the done state.

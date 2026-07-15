@@ -67,6 +67,13 @@ Feature: Typing a full document
     When I check the first to-do
     Then a to-do block is marked done
 
+  Scenario: The slash menu shows "No matching blocks" for an unknown query
+    Given I have a page titled "Slash empty"
+    When I open the page "Slash empty"
+    And I focus the first block
+    And I type "/zzzzz"
+    Then the slash menu shows no matching blocks
+
   Scenario: Any "N. " prefix (not just "1.") starts a numbered list
     Given I have a page titled "Numbered"
     When I open the page "Numbered"

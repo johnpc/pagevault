@@ -49,6 +49,24 @@ describe('useSlashMenu', () => {
     expect(convert).toHaveBeenCalledWith('quote', 'note ');
   });
 
+  it('stays open with zero matches (No results), but does not consume ↑/↓/Enter', () => {
+    const ref = createRef<HTMLTextAreaElement>();
+    const { result } = renderHook(() => useSlashMenu(true, '/zzz', ref, { convert: vi.fn() }));
+    caretTo(result, 4);
+    expect(result.current.open).toBe(true);
+    expect(result.current.matches).toHaveLength(0);
+    // With no matches, movement/pick keys fall through to the textarea…
+    expect(result.current.onKeyDown(keyEvent('ArrowDown'))).toBe(false);
+    expect(result.current.onKeyDown(keyEvent('Enter'))).toBe(false);
+    // …but Escape still dismisses the (empty) menu.
+    let consumed = false;
+    act(() => {
+      consumed = result.current.onKeyDown(keyEvent('Escape'));
+    });
+    expect(consumed).toBe(true);
+    expect(result.current.open).toBe(false);
+  });
+
   it('Arrow keys move the active index and are consumed', () => {
     const ref = createRef<HTMLTextAreaElement>();
     const { result } = renderHook(() => useSlashMenu(true, '/', ref, { convert: vi.fn() }));

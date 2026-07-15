@@ -12,7 +12,16 @@ interface SlashMenuProps {
 /** The floating "/" command palette shown under a block while filtering. */
 export function SlashMenu({ commands, active, onPick }: SlashMenuProps) {
   const activeRef = useScrollActiveIntoView<HTMLButtonElement>(active);
-  if (commands.length === 0) return null;
+  // The parent only mounts this while a slash query is active, so an empty
+  // command list means the query matched nothing — show "No results" rather
+  // than vanishing (so the user knows they're still in slash mode).
+  if (commands.length === 0) {
+    return (
+      <ul className="pv-slash" role="listbox" aria-label="Block types">
+        <li className="pv-slash-empty">No matching blocks</li>
+      </ul>
+    );
+  }
   return (
     <ul className="pv-slash" role="listbox" aria-label="Block types">
       {commands.map((cmd, i) => (
