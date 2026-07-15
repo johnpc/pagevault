@@ -15,7 +15,9 @@ import { HomeScreen } from './HomeScreen';
 const renderHome = () => {
   let path = '';
   render(
-    <QueryClientProvider client={new QueryClient()}>
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
       <MemoryRouter>
         <HomeScreen />
         <Route
@@ -56,11 +58,25 @@ describe('HomeScreen', () => {
       { id: 'p2', title: 'Newer', icon: '🚀', archived: false, updated: '2026-03-01T00:00:00Z' },
     ]);
     const getPath = renderHome();
-    await waitFor(() => expect(screen.getByText('Recently edited')).toBeInTheDocument());
+    // Wait for the cards to actually render (the heading now shows during the
+    // loading state too, so wait on a card, not just the section heading).
+    await waitFor(() => expect(screen.getByText('Newer')).toBeInTheDocument());
     // Newest first.
     const cards = screen.getAllByText(/Older|Newer/);
     expect(cards[0]).toHaveTextContent('Newer');
     await userEvent.click(screen.getByText('Newer'));
     expect(getPath()).toBe('/page/p2');
+  });
+
+  it('surfaces a retryable error if pages fail to load (welcome stays usable)', async () => {
+    pages.getFullList.mockRejectedValue(new Error('network'));
+    renderHome();
+    // The data-independent welcome + template picker still render…
+    expect(screen.getByText('Welcome to PageVault')).toBeInTheDocument();
+    expect(screen.getByText('Meeting notes')).toBeInTheDocument();
+    // …and the recent section shows a retry instead of silently vanishing.
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Retry' })).toBeInTheDocument());
+    await userEvent.click(screen.getByRole('button', { name: 'Retry' }));
+    expect(pages.getFullList).toHaveBeenCalledTimes(2); // retry re-fetches
   });
 });

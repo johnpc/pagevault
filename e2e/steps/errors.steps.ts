@@ -21,3 +21,20 @@ Then('I see a {string} toast', async ({ page }, text: string) => {
   await active(page).locator('textarea.pv-block-input:focus').blur();
   await expect(page.getByRole('alert').filter({ hasText: text })).toBeVisible();
 });
+
+// Make the pages LIST fetch (GET /collections/pages/records) fail, so a screen
+// that reads usePages() must surface an error state instead of a silent blank.
+When('the backend starts rejecting page loads', async ({ page }) => {
+  await page.route('**/api/collections/pages/records**', (route) =>
+    route.request().method() === 'GET'
+      ? route.fulfill({ status: 500, contentType: 'application/json', body: '{"message":"boom"}' })
+      : route.continue(),
+  );
+});
+
+Then("the home screen's recent section offers a retry", async ({ page }) => {
+  const section = active(page).locator('.pv-home-recent');
+  await expect(section.getByRole('button', { name: 'Retry' })).toBeVisible();
+  // The data-independent welcome + templates stay usable.
+  await expect(active(page).getByText('Welcome to PageVault')).toBeVisible();
+});
