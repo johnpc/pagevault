@@ -44,6 +44,33 @@ When('I paste the markdown:', async ({ page, context }, markdown: string) => {
     .toBeGreaterThan(before);
 });
 
+// Paste markdown into the currently-focused (empty) block — used with the "+"
+// gutter to target an empty block that has blocks after it, proving the import
+// lands the parsed rows in the target's slot rather than at the page end.
+When(
+  'I paste the markdown into the focused block:',
+  async ({ page, context }, markdown: string) => {
+    await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+    const before = await blockRows(page).count();
+    await page.evaluate((text) => navigator.clipboard.writeText(text), markdown);
+    // Import only fires on an empty target; find the empty block by value (a
+    // dropped :focus between steps must not leave nothing matched) and paste.
+    await expect
+      .poll(async () => {
+        const inputs = blockInputs(page);
+        for (let i = 0; i < (await inputs.count()); i++) {
+          if ((await inputs.nth(i).inputValue()) === '') {
+            await inputs.nth(i).click();
+            await inputs.nth(i).press('ControlOrMeta+v');
+            break;
+          }
+        }
+        return blockRows(page).count();
+      })
+      .toBeGreaterThan(before);
+  },
+);
+
 // Type into a fresh block, then select all of it and paste a URL — exercising
 // the "paste a URL over a selection → markdown link" gesture.
 When(

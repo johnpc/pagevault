@@ -109,6 +109,7 @@ account, no third-party service, no lock-in.
 | Duplicate a whole block selection — ⌘D / Ctrl+D copies the selected blocks below            | ✅     |
 | Copy a block selection to the clipboard as Markdown (⌘C / Ctrl+C) — paste anywhere          | ✅     |
 | Cut a block selection (⌘X / Ctrl+X) — copies to the clipboard, then removes them            | ✅     |
+| Paste Markdown as blocks — pasted blocks land at the paste location, not the page end       | ✅     |
 | Undo a block deletion — an Undo action on the delete toast restores them                    | ✅     |
 | Undo / redo block edits — ⌘Z / ⌘⇧Z, document-level history                                  | ✅     |
 | Arrow-key block navigation — ↑/↓ at a block edge move the caret between blocks              | ✅     |

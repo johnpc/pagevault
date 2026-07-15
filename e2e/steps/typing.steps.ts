@@ -51,6 +51,9 @@ function stripShortcutPrefix(text: string): string {
 When('I type {string}', async ({ page }, text: string) => {
   await focused(page).pressSequentially(text);
 });
+When('I press Enter in the focused block', async ({ page }) => {
+  await focused(page).press('Enter');
+});
 When('type {string} then Enter', async ({ page }, text: string) => {
   const input = focused(page);
   await input.pressSequentially(text);
