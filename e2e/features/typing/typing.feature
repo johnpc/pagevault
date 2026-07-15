@@ -74,6 +74,15 @@ Feature: Typing a full document
     And I type "/zzzzz"
     Then the slash menu shows no matching blocks
 
+  Scenario: The slash menu groups commands under section headers
+    Given I have a page titled "Slash groups"
+    When I open the page "Slash groups"
+    And I focus the first block
+    And I type "/"
+    Then the slash menu shows a "Basic" section header
+    And the slash menu shows a "Media" section header
+    And the slash menu shows a "Advanced" section header
+
   Scenario: Any "N. " prefix (not just "1.") starts a numbered list
     Given I have a page titled "Numbered"
     When I open the page "Numbered"

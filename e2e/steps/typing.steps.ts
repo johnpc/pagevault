@@ -108,6 +108,11 @@ Then('the slash menu shows no matching blocks', async ({ page }) => {
   await expect(active(page).getByText('No matching blocks')).toBeVisible();
 });
 
+Then('the slash menu shows a {string} section header', async ({ page }, label: string) => {
+  const menu = active(page).getByRole('listbox', { name: 'Block types' });
+  await expect(menu.locator('.pv-slash-group', { hasText: label })).toBeVisible();
+});
+
 When('I check the first to-do', async ({ page }) => {
   // Click (not .check(), which errors if already checked) the last to-do — the
   // one just typed — and wait for its row to reflect the done state.
