@@ -17,6 +17,12 @@ beforeEach(() => {
   }
 });
 
+// jsdom doesn't implement scrollIntoView; stub it so components that scroll an
+// active row/element into view (quick-find, block deep-links) don't throw.
+if (!Element.prototype.scrollIntoView) {
+  Element.prototype.scrollIntoView = function () {};
+}
+
 // Mock matchMedia (Ionic + theme code + useIsMobile query it).
 window.matchMedia =
   window.matchMedia ||
