@@ -15,3 +15,8 @@ Feature: Save-failure feedback
     And I focus the first block
     And I type " and then broke"
     Then I see a "Couldn’t save" toast
+
+  Scenario: A failed page load shows a retry on the home screen, not a silent blank
+    When the backend starts rejecting page loads
+    And I go to the home screen
+    Then the home screen's recent section offers a retry
