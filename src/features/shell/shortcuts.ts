@@ -8,7 +8,7 @@ export const SHORTCUTS: Shortcut[] = [
   { keys: '⌘K / Ctrl+K', action: 'Open quick find (search pages & content)' },
   { keys: '⌘\\ / Ctrl+\\', action: 'Show or hide the sidebar' },
   { keys: '?', action: 'Show this shortcut help' },
-  { keys: 'Esc', action: 'Close a dialog or menu' },
+  { keys: 'Esc', action: 'Close a menu, or leave edit mode in a block' },
   { keys: '/', action: 'Open the block-type menu in an empty block' },
   { keys: '# ', action: 'Turn a block into a heading (## for subheading)' },
   { keys: '- ', action: 'Bulleted list ( 1. for numbered, [] for to-do )' },

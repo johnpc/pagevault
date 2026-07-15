@@ -73,4 +73,11 @@ describe('makeEditKey — other keys', () => {
     makeEditKey(d)(evt('Backspace') as never);
     expect(d.onRemove).toHaveBeenCalled();
   });
+
+  it('Escape blurs the textarea (commit + leave edit)', () => {
+    const d = deps({ value: 'hi' });
+    const blur = vi.fn();
+    makeEditKey(d)(evt('Escape', {}, { blur }) as never);
+    expect(blur).toHaveBeenCalled();
+  });
 });
