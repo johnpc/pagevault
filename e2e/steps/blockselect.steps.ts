@@ -57,6 +57,12 @@ When('I press the duplicate shortcut on the selection', async ({ page }) => {
   await page.keyboard.press('ControlOrMeta+d');
 });
 
+When('I duplicate the selection from the selection bar', async ({ page }) => {
+  const bar = active(page).getByRole('toolbar', { name: 'Selected blocks' });
+  await expect(bar).toBeVisible();
+  await bar.getByLabel('Duplicate selected blocks').click();
+});
+
 When('I color the selection {string} from the selection bar', async ({ page }, label: string) => {
   const bar = active(page).getByRole('toolbar', { name: 'Selected blocks' });
   await expect(bar).toBeVisible();

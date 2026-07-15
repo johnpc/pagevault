@@ -5,14 +5,16 @@ import { BlockSelectionBar } from './BlockSelectionBar';
 describe('BlockSelectionBar', () => {
   it('renders nothing when no blocks are selected', () => {
     const { container } = render(
-      <BlockSelectionBar count={0} onColor={vi.fn()} onDelete={vi.fn()} />,
+      <BlockSelectionBar count={0} onColor={vi.fn()} onDuplicate={vi.fn()} onDelete={vi.fn()} />,
     );
     expect(container).toBeEmptyDOMElement();
   });
 
   it('shows the selected count and colors the selection on a swatch mousedown', () => {
     const onColor = vi.fn();
-    render(<BlockSelectionBar count={3} onColor={onColor} onDelete={vi.fn()} />);
+    render(
+      <BlockSelectionBar count={3} onColor={onColor} onDuplicate={vi.fn()} onDelete={vi.fn()} />,
+    );
     expect(screen.getByText('3 selected')).toBeInTheDocument();
     fireEvent.mouseDown(screen.getByLabelText('Color Red'));
     expect(onColor).toHaveBeenCalledWith('red');
@@ -20,15 +22,33 @@ describe('BlockSelectionBar', () => {
     expect(onColor).toHaveBeenCalledWith('yellow-bg');
   });
 
+  it('duplicates the selection on the duplicate mousedown', () => {
+    const onDuplicate = vi.fn();
+    render(
+      <BlockSelectionBar
+        count={2}
+        onColor={vi.fn()}
+        onDuplicate={onDuplicate}
+        onDelete={vi.fn()}
+      />,
+    );
+    fireEvent.mouseDown(screen.getByLabelText('Duplicate selected blocks'));
+    expect(onDuplicate).toHaveBeenCalled();
+  });
+
   it('deletes the selection on the trash mousedown', () => {
     const onDelete = vi.fn();
-    render(<BlockSelectionBar count={2} onColor={vi.fn()} onDelete={onDelete} />);
+    render(
+      <BlockSelectionBar count={2} onColor={vi.fn()} onDuplicate={vi.fn()} onDelete={onDelete} />,
+    );
     fireEvent.mouseDown(screen.getByLabelText('Delete selected blocks'));
     expect(onDelete).toHaveBeenCalled();
   });
 
   it('prevents default on mousedown so the block selection is not cleared', () => {
-    render(<BlockSelectionBar count={2} onColor={vi.fn()} onDelete={vi.fn()} />);
+    render(
+      <BlockSelectionBar count={2} onColor={vi.fn()} onDuplicate={vi.fn()} onDelete={vi.fn()} />,
+    );
     const evt = fireEvent.mouseDown(screen.getByLabelText('Delete selected blocks'));
     expect(evt).toBe(false); // a handler called preventDefault
   });

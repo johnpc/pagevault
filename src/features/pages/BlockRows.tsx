@@ -88,6 +88,7 @@ export function BlockRows(props: BlockRowsProps) {
       <BlockSelectionBar
         count={selection.count}
         onColor={selection.colorSelected}
+        onDuplicate={selection.duplicateSelected}
         onDelete={selection.deleteSelected}
       />
     </div>

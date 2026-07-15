@@ -84,6 +84,19 @@ Feature: Select and delete multiple blocks
     And I press the duplicate shortcut on the selection
     Then the page has 5 blocks
 
+  Scenario: Duplicate a whole block selection from the selection bar
+    Given I have a page titled "Dup from bar"
+    When I open the page "Dup from bar"
+    And I focus the first block
+    And I type "One" then Enter
+    And I type "Two" then Enter
+    And I type "Three"
+    Then the page has 3 blocks
+    When I click into block 2
+    And I shift-click block 3
+    And I duplicate the selection from the selection bar
+    Then the page has 5 blocks
+
   Scenario: Color a whole block selection from the selection bar
     Given I have a page titled "Color many"
     When I open the page "Color many"

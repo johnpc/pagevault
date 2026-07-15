@@ -956,6 +956,7 @@
   margin-right: 6px;
   white-space: nowrap;
 }
+.pv-selbar-dup,
 .pv-selbar-del {
   border: none;
   background: none;
@@ -964,6 +965,7 @@
   padding: 2px 6px;
   border-radius: 4px;
 }
+.pv-selbar-dup:hover,
 .pv-selbar-del:hover {
   background: var(--pv-hover);
 }
