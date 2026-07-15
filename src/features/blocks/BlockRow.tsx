@@ -39,9 +39,8 @@ interface BlockRowProps {
   dnd: BlockDndHandlers;
 }
 
-/** One block row: drag handle + a type-specific body (divider/image/media or the
- * editable text body). Memoized below so a sibling's edit/selection/drag doesn't
- * re-render every row — only rows whose own props change. */
+/** One block row: drag handle + a type-specific body (media or editable text).
+ * Memoized below so a sibling's edit/selection/drag re-renders only this row. */
 function BlockRowInner(props: BlockRowProps) {
   const { block, onEdit, onRemove, onDuplicate, onIndent, onPasteMarkdown, onSplit } = props;
   const { onMerge, onMergeForward, autoFocus, autoFocusCaret, autoFocusValue, onFocused, dnd } =
@@ -84,6 +83,7 @@ function BlockRowInner(props: BlockRowProps) {
         onDuplicate={onDuplicate}
         onIndent={onIndent}
         onPasteMarkdown={onPasteMarkdown}
+        onUpload={props.onUpload}
         onSplit={onSplit}
         onMerge={onMerge}
         onMergeForward={onMergeForward}

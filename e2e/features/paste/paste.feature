@@ -46,6 +46,11 @@ Feature: Pasting markdown into a document
     And block 3 contains "Pasted body"
     And block 4 contains "Trailing line"
 
+  Scenario: Pasting an image from the clipboard creates an image block
+    When I open the page "Imported notes"
+    And I paste an image into a fresh block
+    Then the page has an image block
+
   Scenario: Pasting an indented list keeps the nesting
     When I open the page "Imported notes"
     And I focus a fresh empty block

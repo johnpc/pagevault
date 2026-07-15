@@ -17,6 +17,7 @@ export function TextBlockRow({
   onDuplicate,
   onIndent,
   onPasteMarkdown,
+  onUpload,
   onSplit,
   onMerge,
   onMergeForward,
@@ -32,6 +33,7 @@ export function TextBlockRow({
   onDuplicate: (block: BlockRecord) => void;
   onIndent: (id: string, dir: 'in' | 'out') => void;
   onPasteMarkdown: (block: BlockRecord, text: string) => void;
+  onUpload: (id: string, file: File) => void;
   onSplit: (block: BlockRecord, caret: number, value: string) => boolean;
   onMerge: (id: string, value: string) => boolean;
   onMergeForward: (id: string, value: string) => boolean;
@@ -58,6 +60,11 @@ export function TextBlockRow({
         onMerge={(value) => onMerge(block.id, value)}
         onMergeForward={(value) => onMergeForward(block.id, value)}
         onPasteMarkdown={(text) => onPasteMarkdown(block, text)}
+        onPasteImage={(file) => {
+          // Turn the empty block into an image block, then upload the file into it.
+          onEdit(block.id, { type: 'image' });
+          onUpload(block.id, file);
+        }}
         autoFocus={autoFocus}
         autoFocusCaret={autoFocusCaret}
         autoFocusValue={autoFocusValue}

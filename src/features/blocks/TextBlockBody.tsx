@@ -26,6 +26,7 @@ export function TextBlockBody({
   onMerge,
   onMergeForward,
   onPasteMarkdown,
+  onPasteImage,
   autoFocus,
   autoFocusCaret,
   autoFocusValue,
@@ -35,18 +36,15 @@ export function TextBlockBody({
   onEdit: (id: string, patch: Partial<BlockRecord>) => void;
   onRemove: (id: string) => void;
   onPasteMarkdown: (text: string) => void;
+  onPasteImage: (file: File) => void;
   autoFocus?: boolean;
   autoFocusCaret?: number;
   autoFocusValue?: string;
   onFocused?: () => void;
 }) {
   const edits = { onEnter, onIndent, onMerge, onMergeForward, onDuplicate };
-  const { value, setValue, change, keyDown, save, focus, focused } = useBlockInput(
-    block,
-    onEdit,
-    onRemove,
-    edits,
-  );
+  const io = useBlockInput(block, onEdit, onRemove, edits);
+  const { value, setValue, change, keyDown, save, focus, focused } = io;
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const menus = useBlockMenus(block, value, setValue, inputRef, onEdit);
   const toolbar = useSelectionToolbar(inputRef, value, setValue, block.type === 'code');
@@ -66,7 +64,7 @@ export function TextBlockBody({
   // On blur, save + hide the toolbar (unless focus moved into its link prompt).
   const onBlur = () => (toolbar.hideUnlessInToolbar(), save());
 
-  const onPaste = useBlockPaste(block.type === 'code', value, setValue, onPasteMarkdown);
+  const onPaste = useBlockPaste(block.type === 'code', value, { setValue, onPasteMarkdown, onPasteImage }); // prettier-ignore
 
   // A Backspace-merge seeds the absorbing block's value (see useSeedValue), then
   // we focus it with the caret at the join (or the end, for an Enter-created one).
