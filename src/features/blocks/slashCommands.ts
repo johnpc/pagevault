@@ -80,15 +80,14 @@ export const SLASH_COMMANDS: SlashCommand[] = [
 ];
 
 /**
- * If `value` is a slash query ("/" then an optional filter), return the matching
- * commands (label/keyword prefix match), else null (not in slash mode). Pure.
+ * The commands matching a slash query (the text after '/', without the slash):
+ * everything for an empty query, else a label-substring or keyword-prefix match.
+ * Pure. Shared by the start-of-line and mid-line slash paths.
  */
-export function slashMatches(value: string): SlashCommand[] | null {
-  if (!value.startsWith('/')) return null;
-  const query = value.slice(1).trim().toLowerCase();
-  if (query === '') return SLASH_COMMANDS;
+export function filterCommands(query: string): SlashCommand[] {
+  const q = query.trim().toLowerCase();
+  if (q === '') return SLASH_COMMANDS;
   return SLASH_COMMANDS.filter(
-    (cmd) =>
-      cmd.label.toLowerCase().includes(query) || cmd.keywords.some((k) => k.startsWith(query)),
+    (cmd) => cmd.label.toLowerCase().includes(q) || cmd.keywords.some((k) => k.startsWith(q)),
   );
 }
