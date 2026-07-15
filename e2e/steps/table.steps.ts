@@ -376,6 +376,17 @@ Then(
   },
 );
 
+When(
+  'I create the tag {string} in table cell {string}',
+  async ({ page }, tag: string, cell: string) => {
+    await table(page).getByLabel(`Cell ${cell}`).click();
+    const input = table(page).getByLabel(`Add an option to Cell ${cell}`);
+    await input.fill(tag);
+    await input.press('Enter');
+    await page.keyboard.press('Escape'); // close so the summary is read next
+  },
+);
+
 When('I toggle wrap text on table column {int}', async ({ page }, col: number) => {
   const btn = table(page).getByLabel(`Wrap text in column ${col}`);
   await btn.click();

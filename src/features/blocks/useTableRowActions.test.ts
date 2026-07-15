@@ -54,4 +54,31 @@ describe('useTableRowActions', () => {
     rerender({ d: grid() }); // new data object, same actions
     expect(result.current.onCell).toBe(first);
   });
+
+  const selectGrid = (): TableData => ({
+    columns: [{ name: 'Tags', type: 'multiselect', options: ['Red'] }],
+    rows: [['Red']],
+  });
+
+  it('onAddOption creates the option AND assigns it to the cell (multiselect toggles in)', () => {
+    const save = vi.fn();
+    const { result } = renderHook(() => useTableRowActions(selectGrid(), save));
+    result.current.onAddOption(0, 0, 'Blue');
+    const next = save.mock.calls[0][0] as TableData;
+    expect(next.columns[0].options).toEqual(['Red', 'Blue']);
+    expect(next.rows[0][0]).toBe('Red,Blue'); // added to the existing tags
+  });
+
+  it('onAddOption on a select column sets the cell to the new option', () => {
+    const save = vi.fn();
+    const data: TableData = {
+      columns: [{ name: 'Status', type: 'select', options: [] }],
+      rows: [['']],
+    };
+    const { result } = renderHook(() => useTableRowActions(data, save));
+    result.current.onAddOption(0, 0, 'Open');
+    const next = save.mock.calls[0][0] as TableData;
+    expect(next.columns[0].options).toEqual(['Open']);
+    expect(next.rows[0][0]).toBe('Open');
+  });
 });

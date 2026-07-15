@@ -18,6 +18,19 @@ function seedOptions(data: TableData, c: number): string[] {
   return [...new Set(raw.filter(Boolean))];
 }
 
+/** Add a new (multi)select option to a column so a cell can create a tag inline
+ * (Notion). Pure + idempotent: unchanged if blank/duplicate/not a (multi)select. */
+export function addColumnOption(data: TableData, c: number, option: string): TableData {
+  const opt = option.trim();
+  const col = data.columns[c];
+  if (!opt || !col || (col.type !== 'select' && col.type !== 'multiselect')) return data;
+  if ((col.options ?? []).includes(opt)) return data;
+  const columns = data.columns.map((cc, j) =>
+    j === c ? { ...cc, options: [...(cc.options ?? []), opt] } : cc,
+  );
+  return { ...data, columns };
+}
+
 /** Change one column's type (and seed select/multiselect options from distinct
  * cell values). Type change drops any incompatible summary/options. */
 export function setColumnType(data: TableData, c: number, type: TableColumnType): TableData {

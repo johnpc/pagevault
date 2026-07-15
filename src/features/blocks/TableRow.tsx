@@ -9,6 +9,7 @@ interface TableRowProps {
   canDelete: boolean; // false when it's the only row (keep at least one)
   dragging: boolean;
   onCell: (r: number, c: number, value: string) => void;
+  onAddOption: (r: number, c: number, option: string) => void;
   onDelete: (r: number) => void;
   onDuplicate: (r: number) => void;
   onDragStart: (r: number) => void;
@@ -28,6 +29,7 @@ function TableRowInner({
   canDelete,
   dragging,
   onCell,
+  onAddOption,
   onDelete,
   onDuplicate,
   onDragStart,
@@ -63,6 +65,7 @@ function TableRowInner({
             value={row[c] ?? ''}
             label={`Cell ${r + 1},${c + 1}`}
             onChange={(v) => onCell(r, c, v)}
+            onAddOption={(opt) => onAddOption(r, c, opt)}
           />
         </td>
       ))}

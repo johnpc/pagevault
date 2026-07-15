@@ -12,11 +12,14 @@ export function TableCell({
   value,
   label,
   onChange,
+  onAddOption,
 }: {
   column: TableColumn;
   value: string;
   label: string;
   onChange: (value: string) => void;
+  /** Create a new (multi)select option inline and assign it to this cell. */
+  onAddOption: (option: string) => void;
 }) {
   if (column.type === 'relation') {
     return <RelationCell value={value} label={label} onChange={onChange} />;
@@ -57,6 +60,7 @@ export function TableCell({
         options={column.options ?? []}
         label={label}
         onChange={onChange}
+        onAddOption={onAddOption}
       />
     );
   }

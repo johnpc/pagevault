@@ -1,21 +1,33 @@
+import { useState } from 'react';
 import { selectedValues, isSelected, toggleValue } from './multiSelect';
 import { usePopover } from '../shell/usePopover';
 
 /** A multi-select cell: a chip summary that opens a checklist of the column's
- * options; toggling one adds/removes it from the comma-joined stored value.
- * Focus-trapped + closes on Escape/outside-click via usePopover. Render-only. */
+ * options; toggling one adds/removes it from the comma-joined stored value. A
+ * text input at the bottom creates a new option inline (Enter) and assigns it —
+ * the Notion tagging gesture. Focus-trapped + Escape/outside-click via usePopover. */
 export function MultiSelectCell({
   value,
   options,
   label,
   onChange,
+  onAddOption,
 }: {
   value: string;
   options: string[];
   label: string;
   onChange: (value: string) => void;
+  onAddOption: (option: string) => void;
 }) {
   const { open, setOpen, triggerRef, menuRef, onKeyDown } = usePopover<HTMLUListElement>();
+  const [draft, setDraft] = useState('');
+
+  const add = () => {
+    const opt = draft.trim();
+    if (!opt || options.includes(opt)) return;
+    onAddOption(opt);
+    setDraft('');
+  };
   const chosen = selectedValues(value);
 
   return (
@@ -43,6 +55,21 @@ export function MultiSelectCell({
               </label>
             </li>
           ))}
+          <li className="pv-multiselect-add">
+            <input
+              type="text"
+              aria-label={`Add an option to ${label}`}
+              placeholder="Add option…"
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  add();
+                }
+              }}
+            />
+          </li>
         </ul>
       )}
     </div>

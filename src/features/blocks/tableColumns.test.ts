@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { visibleColumns, toggleColumnHidden, moveColumn } from './tableColumns';
+import { visibleColumns, toggleColumnHidden, moveColumn, addColumnOption } from './tableColumns';
 import { setColumnFormat, setColumnSummary, setColumnWrap } from './tableColumnFields';
 import type { TableData } from '../../lib/pbTypes';
 
@@ -11,6 +11,26 @@ const grid = (over: Partial<TableData> = {}): TableData => ({
   ],
   rows: [['1', '2', '3']],
   ...over,
+});
+
+describe('addColumnOption', () => {
+  const sel = (): TableData => ({
+    columns: [{ name: 'Tags', type: 'multiselect', options: ['Red'] }],
+    rows: [['Red']],
+  });
+
+  it('appends a trimmed new option to a (multi)select column', () => {
+    const next = addColumnOption(sel(), 0, '  Blue  ');
+    expect(next.columns[0].options).toEqual(['Red', 'Blue']);
+  });
+
+  it('is a no-op for a blank, duplicate, or non-(multi)select column', () => {
+    const base = sel();
+    expect(addColumnOption(base, 0, '   ')).toBe(base);
+    expect(addColumnOption(base, 0, 'Red')).toBe(base); // duplicate
+    const text = grid();
+    expect(addColumnOption(text, 0, 'x')).toBe(text); // text column
+  });
 });
 
 describe('moveColumn', () => {

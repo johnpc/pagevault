@@ -60,7 +60,7 @@ account, no third-party service, no lock-in.
 | Table columns — hide/show via Properties (data preserved)                                   | ✅     |
 | Table columns — wrap-text toggle (multi-line cells) per column                              | ✅     |
 | Table columns — drag a header to reorder (cells + filters follow; mouse + touch)            | ✅     |
-| Multi-select column — tag a row with several options (checklist cell)                       | ✅     |
+| Multi-select column — tag a row with several options; create a new tag inline               | ✅     |
 | Relation column — link a table row to a page (relational databases)                         | ✅     |
 | Relation columns sort & filter by the linked page's title                                   | ✅     |
 | Markdown shortcuts (`# `, `- `, `1. `, `[] `, `> `, ` ``` `)                                | ✅     |
