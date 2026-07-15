@@ -298,6 +298,14 @@
   padding-top: 1px;
 }
 
+/* A checked to-do reads as done: strike through + dim its text (both the raw
+   textarea and the idle formatted preview). Notion's completion feedback. */
+.pv-block--done .pv-block-input,
+.pv-block--done .pv-block-preview {
+  text-decoration: line-through;
+  color: var(--pv-text-muted);
+}
+
 /* Bulleted list: a marker before the textarea. */
 .pv-block--bullet::before {
   content: '•';

@@ -21,6 +21,7 @@ export function useBlockDrag(
   const cls =
     `pv-block pv-block--${block.type}` +
     (tint ? ` ${tint}` : '') +
+    (block.type === 'todo' && block.checked ? ' pv-block--done' : '') +
     (dnd.draggingId === block.id ? ' pv-block--dragging' : '') +
     (dnd.overId === block.id && dnd.draggingId !== block.id ? ' pv-block--over' : '');
 
