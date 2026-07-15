@@ -63,6 +63,11 @@ When('I press the copy shortcut on the selection', async ({ page }) => {
   await page.keyboard.press('ControlOrMeta+c');
 });
 
+When('I press the cut shortcut on the selection', async ({ page }) => {
+  await page.context().grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.keyboard.press('ControlOrMeta+x');
+});
+
 When('I duplicate the selection from the selection bar', async ({ page }) => {
   const bar = active(page).getByRole('toolbar', { name: 'Selected blocks' });
   await expect(bar).toBeVisible();

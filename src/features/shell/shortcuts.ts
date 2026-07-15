@@ -19,6 +19,7 @@ export const SHORTCUTS: Shortcut[] = [
     action: 'Wrap selection: bold / italic / code / underline ( ⇧⌘S strikethrough )',
   },
   { keys: '⌘D / Ctrl+D', action: 'Duplicate the current block (or a whole block selection)' },
+  { keys: '⌘C / ⌘X', action: 'With blocks selected: copy / cut them as Markdown' },
   { keys: 'Tab / ⇧Tab', action: 'Indent / outdent the block (nest it under the one above)' },
   { keys: '⌘⇧↑ / ↓', action: 'Move the current block up / down' },
   { keys: '⌘Z / ⌘⇧Z', action: 'Undo / redo a block edit' },

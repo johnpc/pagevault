@@ -26,7 +26,12 @@ function applyKey(
   else if (action.kind === 'duplicate') actions.onDuplicateMany?.(selectedIds(sel, ids));
   else if (action.kind === 'copy')
     actions.onCopyMany?.(selectedIds(sel, ids)); // keep selection
-  else if (action.kind === 'indent') actions.onIndentMany(selectedIds(sel, ids), action.dir);
+  else if (action.kind === 'cut') {
+    const chosen = selectedIds(sel, ids);
+    actions.onCopyMany?.(chosen);
+    actions.onDeleteMany(chosen);
+    setSel(null);
+  } else if (action.kind === 'indent') actions.onIndentMany(selectedIds(sel, ids), action.dir);
   else if (action.kind === 'move')
     setSel((s) => (s ? moveSelection(s, action.delta, action.grow, ids.length) : s));
   else if (action.kind === 'delete') {
@@ -40,6 +45,7 @@ function applyKey(
  * on <body>. This document-level listener drives the active selection:
  *   Cmd/Ctrl+A   select every block
  *   Cmd/Ctrl+C   copy the selected blocks to the clipboard (as Markdown)
+ *   Cmd/Ctrl+X   cut — copy the selected blocks, then delete them
  *   Cmd/Ctrl+D   duplicate the selected blocks (as a run below the last)
  *   ↑/↓          move (Shift grows/shrinks the range)
  *   Tab / Shift+Tab   indent / outdent the whole selection
