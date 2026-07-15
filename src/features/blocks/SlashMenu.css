@@ -34,6 +34,14 @@
   background: var(--pv-accent-soft);
 }
 
+/* Shown when a slash query matches nothing — keeps the menu present (in slash
+   mode) instead of silently vanishing. */
+.pv-slash-empty {
+  padding: 7px 10px;
+  color: var(--pv-text-muted);
+  font: inherit;
+}
+
 .pv-slash-icon {
   display: inline-flex;
   align-items: center;

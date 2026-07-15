@@ -37,7 +37,9 @@ export function useSlashMenu(
     () => (query ? filterCommands(query.query) : []),
     [query],
   );
-  const open = matches.length > 0 && query?.start !== dismissed;
+  // Open whenever a (non-dismissed) slash query is active — even with zero
+  // matches, so the menu can show "No results" instead of silently vanishing.
+  const open = !!query && query.start !== dismissed;
 
   const onSelect = (e: SyntheticEvent<HTMLTextAreaElement>) =>
     setCaret(e.currentTarget.selectionStart);
@@ -60,10 +62,18 @@ export function useSlashMenu(
 
   const onKeyDown = (e: KeyboardEvent): boolean => {
     if (!open) return false;
+    // Escape always dismisses; the movement/pick keys only apply with matches
+    // (on a "No results" query, let ↑/↓/Enter fall through to the textarea).
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      setActive(0);
+      setDismissed(query?.start ?? null);
+      return true;
+    }
+    if (matches.length === 0) return false;
     const nav: Record<string, () => void> = {
       ArrowDown: () => setActive((a) => (a + 1) % matches.length),
       ArrowUp: () => setActive((a) => (a - 1 + matches.length) % matches.length),
-      Escape: () => (setActive(0), setDismissed(query?.start ?? null)),
       Enter: () => pick(matches[active].type),
     };
     if (!nav[e.key]) return false;
