@@ -10,6 +10,12 @@ describe('ShortcutHelp', () => {
     expect(screen.getByText(/Open quick find/)).toBeInTheDocument();
   });
 
+  it('documents how to make a multi-block selection', () => {
+    render(<ShortcutHelp onClose={vi.fn()} />);
+    expect(screen.getByText(/Grow a multi-block selection/)).toBeInTheDocument();
+    expect(screen.getByText(/Select all blocks/)).toBeInTheDocument();
+  });
+
   it('closes via the Close button and the backdrop', async () => {
     const onClose = vi.fn();
     render(<ShortcutHelp onClose={onClose} />);

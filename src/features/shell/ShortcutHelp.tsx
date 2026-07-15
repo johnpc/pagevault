@@ -1,13 +1,20 @@
+import { useRef } from 'react';
 import { SHORTCUTS } from './shortcuts';
+import { useDialogFocusTrap } from './useDialogFocusTrap';
 import './ShortcutHelp.css';
 
-/** The "?" keyboard-shortcut reference overlay. */
+/** The "?" keyboard-shortcut reference overlay. A modal dialog: focus is
+ * trapped inside it (Tab cycles) and it's announced as aria-modal. */
 export function ShortcutHelp({ onClose }: { onClose: () => void }) {
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useDialogFocusTrap(dialogRef, true);
   return (
     <div className="pv-help-backdrop" onClick={onClose}>
       <div
+        ref={dialogRef}
         className="pv-help"
         role="dialog"
+        aria-modal="true"
         aria-label="Keyboard shortcuts"
         onClick={(e) => e.stopPropagation()}
       >
