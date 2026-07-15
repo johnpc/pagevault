@@ -1,23 +1,15 @@
-import { useCallback, useRef, useState, type KeyboardEvent } from 'react';
-import {
-  isSelected,
-  indexAfterDelete,
-  selectionFromShiftClick,
-  selectedIds,
-  type BlockSelection,
-} from './blockSelection';
+import { useCallback, useState, type KeyboardEvent } from 'react';
+import { isSelected, indexAfterDelete, selectedIds, type BlockSelection } from './blockSelection';
 import { handoffSelection, isSelectAllBlocks } from './selectionHandoff';
 import { useActiveSelectionKeys } from './useActiveSelectionKeys';
 import { useSelectionActions } from './useSelectionActions';
+import { useSelectionStart } from './useSelectionStart';
 import { handleMoveBlockKey } from './moveBlockKey';
 import type { BlockType } from '../../lib/pbTypes';
 
-/**
- * Keyboard multi-block selection (Notion-style). A Shift+Arrow at a caret edge
- * (or Shift+Click) blurs the field and starts a block selection; useActiveSelection-
- * Keys then drives move/grow/indent/delete/duplicate/copy/turn-into/color. `ids`
- * is the visible block ids in order. onMoveBlock is single-block ⌘⇧↑/↓.
- */
+/** Multi-block selection (Notion-style): Shift+Arrow/Shift+Click/⋮⋮-click start
+ * it; useActiveSelectionKeys drives move/indent/delete/duplicate/copy/turn/color.
+ * onMoveBlock is single-block ⌘⇧↑/↓. */
 interface SelectionActions {
   onDeleteMany: (ids: string[]) => void;
   onIndentMany: (ids: string[], dir: 'in' | 'out') => void;
@@ -31,26 +23,7 @@ interface SelectionActions {
 export function useBlockSelection(ids: string[], actions: SelectionActions) {
   const [sel, setSel] = useState<BlockSelection | null>(null);
   const clear = useCallback(() => setSel(null), []);
-  // The block index most recently focused (a textarea got focus) — the anchor a
-  // Shift+Click extends from when no selection is active yet.
-  const focusedIndex = useRef<number | null>(null);
-  const noteFocus = useCallback((index: number) => {
-    focusedIndex.current = index;
-  }, []);
-
-  // Shift+Click a block: start/extend the selection to that block and blur any
-  // field so the document listener owns subsequent nav/delete keys.
-  const shiftClick = useCallback((index: number) => {
-    setSel((s) => selectionFromShiftClick(s, index, focusedIndex.current));
-    (document.activeElement as HTMLElement | null)?.blur();
-  }, []);
-
-  // Select every block (Cmd/Ctrl+A escalation) and blur the field.
-  const selectAll = useCallback(() => {
-    if (ids.length === 0) return;
-    setSel({ anchor: 0, focus: ids.length - 1 });
-    (document.activeElement as HTMLElement | null)?.blur();
-  }, [ids.length]);
+  const { noteFocus, shiftClick, selectAll, selectId } = useSelectionStart(ids, setSel);
 
   // Container keydown from a block textarea: block-move (Cmd/Ctrl+Shift+↑/↓),
   // select-all escalation (Cmd/Ctrl+A), and the Shift+Arrow selection handoff.
@@ -90,6 +63,7 @@ export function useBlockSelection(ids: string[], actions: SelectionActions) {
     onKeyDown,
     clear,
     shiftClick,
+    selectId,
     noteFocus,
     ...barActions, // colorSelected, deleteSelected
     selectedAt: (index: number) => (sel ? isSelected(sel, index) : false),

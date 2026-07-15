@@ -68,6 +68,7 @@ export function BlockRows(props: BlockRowsProps) {
             onRemove={row.onRemove}
             onDuplicate={row.onDuplicate}
             onInsertAfter={row.onInsertAfter}
+            onSelectBlock={selection.selectId}
             onIndent={row.onIndent}
             onPasteMarkdown={row.onPasteMarkdown}
             onUpload={row.onUpload}

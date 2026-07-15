@@ -6,6 +6,16 @@ Feature: Select and delete multiple blocks
   Background:
     Given I am signed in as the test user
 
+  Scenario: Clicking a block's drag handle selects it and shows the action bar
+    Given I have a page titled "Handle select"
+    When I open the page "Handle select"
+    And I focus the first block
+    And I type "Alpha" then Enter
+    And I type "Bravo"
+    Then the page has 2 blocks
+    When I click the drag handle on block 1
+    Then a selection bar showing 1 selected is visible
+
   Scenario: Shift+Arrow selects a range of blocks and Backspace deletes them
     Given I have a page titled "Bulk edit"
     When I open the page "Bulk edit"

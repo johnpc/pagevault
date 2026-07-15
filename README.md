@@ -104,7 +104,7 @@ account, no third-party service, no lock-in.
 | Nested lists — Tab / Shift-Tab to indent & outdent blocks                                   | ✅     |
 | Drag-to-reorder blocks (optimistic; mouse drag + touch/pen pointer drag)                    | ✅     |
 | Move a block up/down with the keyboard (⌘/Ctrl+⇧+↑/↓)                                       | ✅     |
-| Select multiple blocks — Shift+↑/↓, Shift+Click, or Cmd/Ctrl+A — delete/indent              | ✅     |
+| Select multiple blocks — Shift+↑/↓, Shift+Click, Cmd/Ctrl+A, or click a ⋮⋮ handle           | ✅     |
 | Multi-block action bar — turn-into, color, duplicate, or delete a whole selection           | ✅     |
 | Duplicate a whole block selection — ⌘D / Ctrl+D copies the selected blocks below            | ✅     |
 | Copy a block selection to the clipboard as Markdown (⌘C / Ctrl+C) — paste anywhere          | ✅     |

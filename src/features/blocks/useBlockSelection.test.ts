@@ -85,6 +85,21 @@ describe('useBlockSelection', () => {
     expect(result.current.selectedAt(3)).toBe(false);
   });
 
+  it('selectId selects exactly one block by id (⋮⋮ handle click)', () => {
+    const { result } = renderHook(() => useBlockSelection(ids, actions()));
+    act(() => result.current.selectId('c'));
+    expect(result.current.active).toBe(true);
+    expect(result.current.count).toBe(1);
+    expect(result.current.selectedAt(2)).toBe(true);
+    expect(result.current.selectedAt(1)).toBe(false);
+  });
+
+  it('selectId ignores an unknown id', () => {
+    const { result } = renderHook(() => useBlockSelection(ids, actions()));
+    act(() => result.current.selectId('nope'));
+    expect(result.current.active).toBe(false);
+  });
+
   it('shift-click extends an existing selection, then Backspace deletes the range', () => {
     const onDelete = vi.fn();
     const { result } = renderHook(() => useBlockSelection(ids, actions(onDelete)));

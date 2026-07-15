@@ -26,6 +26,7 @@ interface BlockRowProps {
   onRemove: (id: string) => void;
   onDuplicate: (block: BlockRecord) => void;
   onInsertAfter: (block: BlockRecord) => void;
+  onSelectBlock: (id: string) => void;
   onIndent: (id: string, dir: 'in' | 'out') => void;
   onPasteMarkdown: (block: BlockRecord, text: string) => void;
   onUpload: (id: string, file: File) => void;
@@ -39,13 +40,15 @@ interface BlockRowProps {
   dnd: BlockDndHandlers;
 }
 
-/** One block row: drag handle + a type-specific body (media or editable text).
- * Memoized below so a sibling's edit/selection/drag re-renders only this row. */
+/** One block row: drag handle + a media or editable-text body; memoized. */
 function BlockRowInner(props: BlockRowProps) {
-  const { block, onEdit, onRemove, onDuplicate, onIndent, onPasteMarkdown, onSplit } = props;
-  const { onMerge, onMergeForward, autoFocus, autoFocusCaret, autoFocusValue, onFocused, dnd } =
-    props;
-  const { cls, rowDrag, handle } = useBlockDrag(block, onEdit, dnd, props.onInsertAfter);
+  const { block, onEdit, onRemove, onDuplicate, dnd } = props;
+  const { cls, rowDrag, handle } = useBlockDrag(
+    block,
+    dnd,
+    props.onInsertAfter,
+    props.onSelectBlock,
+  );
   const focusReport = useReportFocus(block.id);
   const style = { marginLeft: `${(block.depth ?? 0) * 24}px` };
   const rowCls = `${cls} ${alignClass(block.align)}`.trim();
@@ -75,23 +78,9 @@ function BlockRowInner(props: BlockRowProps) {
       {...rowDrag}
       {...focusReport}
     >
-      <TextBlockRow
-        block={block}
-        handle={handle}
-        onEdit={onEdit}
-        onRemove={onRemove}
-        onDuplicate={onDuplicate}
-        onIndent={onIndent}
-        onPasteMarkdown={onPasteMarkdown}
-        onUpload={props.onUpload}
-        onSplit={onSplit}
-        onMerge={onMerge}
-        onMergeForward={onMergeForward}
-        autoFocus={autoFocus}
-        autoFocusCaret={autoFocusCaret}
-        autoFocusValue={autoFocusValue}
-        onFocused={onFocused}
-      />
+      {/* TextBlockRow reads only the per-row props it declares; spread props +
+          the computed handle (extras like onInsertAfter/dnd are ignored). */}
+      <TextBlockRow {...props} handle={handle} />
     </div>
   );
 }
