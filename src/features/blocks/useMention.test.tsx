@@ -97,10 +97,12 @@ describe('useMention', () => {
     expect(written).toMatch(/\w{3} \d{1,2}, \d{4}$/); // "Mon D, YYYY"
   });
 
-  it('Escape consumes the key and resets the active index', () => {
+  it('Escape consumes the key, resets active, and closes the menu (keeping text)', () => {
     const ref = createRef<HTMLTextAreaElement>();
-    const { result } = renderHook(() => useMention('cur', '@t', vi.fn(), ref));
+    const setValue = vi.fn();
+    const { result } = renderHook(() => useMention('cur', '@t', setValue, ref));
     caretTo(result, 2);
+    expect(result.current.open).toBe(true);
     act(() => {
       result.current.onKeyDown(keyEvent('ArrowDown'));
     });
@@ -111,6 +113,9 @@ describe('useMention', () => {
     });
     expect(consumed).toBe(true);
     expect(result.current.active).toBe(0);
+    // Menu is dismissed for this "@", but the typed text is untouched.
+    expect(result.current.open).toBe(false);
+    expect(setValue).not.toHaveBeenCalled();
   });
 
   it('focuses the textarea and restores the caret after a pick (rAF)', async () => {

@@ -28,6 +28,10 @@ export function useMention(
   const { data: pages } = usePages();
   const [active, setActive] = useState(0);
   const [caret, setCaret] = useState(0);
+  // The start index of a query the user dismissed with Escape; the menu stays
+  // hidden for that same "@" (keeping the typed text) and reopens once the query
+  // moves to a different mention. null = nothing dismissed.
+  const [dismissed, setDismissed] = useState<number | null>(null);
 
   const query = useMemo<MentionQuery | null>(() => mentionQuery(value, caret), [value, caret]);
   // Date inserts (@today/@now/…) lead, then matching page links. Date resolution
@@ -45,7 +49,7 @@ export function useMention(
     }));
     return [...dates, ...pageItems];
   }, [query, pages, pageId]);
-  const open = matches.length > 0;
+  const open = matches.length > 0 && query?.start !== dismissed;
 
   const onSelect = (e: SyntheticEvent<HTMLTextAreaElement>) =>
     setCaret(e.currentTarget.selectionStart);
@@ -74,7 +78,7 @@ export function useMention(
     const nav: Record<string, () => void> = {
       ArrowDown: () => setActive((a) => (a + 1) % matches.length),
       ArrowUp: () => setActive((a) => (a - 1 + matches.length) % matches.length),
-      Escape: () => setActive(0),
+      Escape: () => (setActive(0), setDismissed(query?.start ?? null)),
       Enter: () => pick(matches[active]),
     };
     if (!nav[e.key]) return false;
